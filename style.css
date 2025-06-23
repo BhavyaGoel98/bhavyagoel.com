@@ -1,0 +1,188 @@
+body {
+  background-color: #f0f8ff;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  text-align: center;
+  margin-top: 100px;
+  color: #333;
+}
+
+h1 {
+  font-size: 36px;
+  color: #0077cc;
+}
+body {
+  background-color: #e0f7fa;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  text-align: center;
+  padding-top: 100px;
+  color: #004d40;
+}
+
+h1 {
+  font-size: 36px;
+  color: #006064;
+  margin-bottom: 20px;
+}
+body {
+  background: linear-gradient(to right, #d0f0c0, #fefcea);
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  text-align: center;
+  padding: 50px;
+  color: #2e3b2c;
+}
+
+h1 {
+  color: #00897b;
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.profile-img {
+  width: 250px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  margin: 20px 0;
+}
+
+p {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #ff7043;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #f4511e;
+}
+body {
+  background: linear-gradient(to right, #fceabb, #f8b500);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  padding: 50px;
+  color: #2e2e2e;
+}
+
+h1 {
+  color: #4e342e;
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.profile-img {
+  width: 250px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  margin: 20px 0;
+}
+
+p {
+  font-size: 20px;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #6a1b9a;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #4a148c;
+}
+body {
+  background-color: #d0e7ff; /* your preferred background color */
+}
+body {
+  background: linear-gradient(to right, #FFA500, #1E90FF); /* Orange to Blue gradient */
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  padding: 60px;
+  color: #fff; /* White text for contrast */
+}
+
+h1 {
+  font-size: 40px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.profile-img {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  margin-top: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+p {
+  font-size: 18px;
+  padding: 0 30px;
+  margin: 25px 0;
+  color: #fff; /* White text for better readability */
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #FF4500; /* Orangish button color */
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #FF6347; /* Slightly lighter orange on hover */
+}
+a {
+  a {
+  background-color: #f28b82;  /* light red */
+  color: gold;                /* gold text */
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 10px;
+  display: inline-block;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+a:hover {
+  background-color: #fcb9b2; /* lighter red when hovered */
+}
+a {
+  background-color: #f28b82;  /* light red */
+  color: gold;                /* gold text */
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 10px;
+  display: inline-block;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+a:hover {
+  background-color: #fcb9b2;  /* lighter red on hover */
+}
+body {
+  background: linear-gradient(135deg, pink, orange, gold);
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  padding: 60px;
+  color: #333;
+}
