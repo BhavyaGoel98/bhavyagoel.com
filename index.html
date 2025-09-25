@@ -2,118 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fun with Bhavya Goel</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Video Website</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      color: #333;
+    }
+
+    header {
+      background-color: #ff5722;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .video-section {
+      padding: 20px;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .video-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .video-card:hover {
+      transform: scale(1.02);
+    }
+
+    .video-card img {
+      width: 100%;
+      display: block;
+    }
+
+    .video-info {
+      padding: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+
+    /* ✅ Responsive design */
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.2em;
+        padding: 10px;
+      }
+
+      .video-section {
+        padding: 10px;
+      }
+
+      .video-grid {
+        grid-template-columns: 1fr 1fr; /* 2 per row on tablets */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .video-grid {
+        grid-template-columns: 1fr; /* 1 per row on mobile */
+      }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- Navbar -->
-  <header class="navbar">
-    <div class="logo">🎉 Fun with Bhavya Goel</div>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#videos">Videos</a></li>
-      </ul>
-    </nav>
+  <header>
+    My Video Website
   </header>
 
-  <!-- Banner -->
-  <section class="banner">
-    <h1>Welcome to My World 🌟</h1>
-    <p>Enjoy my fun and exciting videos!</p>
-  </section>
-
-  <!-- Videos Grid -->
-  <section id="videos" class="video-grid">
-    <h2>🎥 My Videos</h2>
-    <div class="grid">
-
-      <!-- Video Card Example -->
-      <div class="card">
-        <a href="https://youtu.be/puj2FtOyuvo" target="_blank">
-          <img src="https://img.youtube.com/vi/puj2FtOyuvo/hqdefault.jpg" alt="Jim Corbett Part 1">
-          <p>Jim Corbett Part 1</p>
-        </a>
+  <section class="video-section">
+    <div class="video-grid">
+      <div class="video-card">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video 1">
+        <div class="video-info">Video Title 1</div>
       </div>
-
-      <div class="card">
-        <a href="https://youtu.be/GcwLRyjyzas" target="_blank">
-          <img src="https://img.youtube.com/vi/GcwLRyjyzas/hqdefault.jpg" alt="Jim Corbett Part 2">
-          <p>Jim Corbett Part 2</p>
-        </a>
+      <div class="video-card">
+        <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg" alt="Video 2">
+        <div class="video-info">Video Title 2</div>
       </div>
-
-      <div class="card">
-        <a href="https://youtu.be/c6q3onWkzyQ" target="_blank">
-          <img src="https://img.youtube.com/vi/c6q3onWkzyQ/hqdefault.jpg" alt="Together We Can Change the World">
-          <p>Together We Can Change the World</p>
-        </a>
+      <div class="video-card">
+        <img src="https://img.youtube.com/vi/tgbNymZ7vqY/hqdefault.jpg" alt="Video 3">
+        <div class="video-info">Video Title 3</div>
       </div>
-
-      <div class="card">
-        <a href="https://youtu.be/N8138Pf1ZJc" target="_blank">
-          <img src="https://img.youtube.com/vi/N8138Pf1ZJc/hqdefault.jpg" alt="Hymn for the Weekend">
-          <p>Hymn for the Weekend</p>
-        </a>
-      </div>
-
-      <div class="card">
-        <a href="https://youtu.be/VtkgZtGhcKk" target="_blank">
-          <img src="https://img.youtube.com/vi/VtkgZtGhcKk/hqdefault.jpg" alt="Trees Song by Me">
-          <p>Trees Song by Me</p>
-        </a>
-      </div>
-
-      <div class="card">
-        <a href="https://youtu.be/yTM-OABU77E" target="_blank">
-          <img src="https://img.youtube.com/vi/yTM-OABU77E/hqdefault.jpg" alt="Wavin' Flag">
-          <p>Wavin' Flag</p>
-        </a>
-      </div>
-
-      <div class="card">
-        <a href="https://youtu.be/T9U3DQlOtwE" target="_blank">
-          <img src="https://img.youtube.com/vi/T9U3DQlOtwE/hqdefault.jpg" alt="Vrindavan">
-          <p>Vrindavan</p>
-        </a>
-      </div>
-
-      <div class="card">
-        <a href="https://youtu.be/gp8-I4SJ00Y" target="_blank">
-          <img src="https://img.youtube.com/vi/gp8-I4SJ00Y/hqdefault.jpg" alt="Trip to Goa 🚗">
-          <p>Trip to Goa 🚗</p>
-        </a>
-      </div>
-
-      <div class="card">
-        <a href="https://youtu.be/BjNyFHuFhXA" target="_blank">
-          <img src="https://img.youtube.com/vi/BjNyFHuFhXA/hqdefault.jpg" alt="Football Facts">
-          <p>Football 🏈 Facts</p>
-        </a>
-      </div>
-
-      <div class="card">
-        <a href="https://youtu.be/d4DC77q0r3Y" target="_blank">
-          <img src="https://img.youtube.com/vi/d4DC77q0r3Y/hqdefault.jpg" alt="Hare Krishna Orchid">
-          <p>Hare Krishna Orchid</p>
-        </a>
-      </div>
-
-      <div class="card">
-        <a href="https://www.youtube.com/watch?v=fgWvIlJoQa0" target="_blank">
-          <img src="https://img.youtube.com/vi/fgWvIlJoQa0/hqdefault.jpg" alt="Yellow Inn">
-          <p>Yellow Inn</p>
-        </a>
-      </div>
-
+      <!-- Add more video cards here -->
     </div>
   </section>
 
-  <!-- Footer -->
   <footer>
-    <p>🙏 Thank you for visiting! Please subscribe to my channel 💛</p>
+    © 2025 My Website | All Rights Reserved
   </footer>
-
 </body>
 </html>
