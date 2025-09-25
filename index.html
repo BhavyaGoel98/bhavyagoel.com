@@ -1,3 +1,6 @@
+Perfect bhai! 😎
+Yeh raha full updated index.html tere videos ke saath, profile photo header me, mobile friendly, aur popup video player included:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,4 +183,66 @@
             <img src="https://img.youtube.com/vi/yTM-OABU77E/hqdefault.jpg" alt="Wavin' Flag">
             <div class="title">🎥 Wavin' Flag</div>
           </div>
-          <div class="card" data-video-id="T9U3DQlOtw
+          <div class="card" data-video-id="T9U3DQlOtwE">
+            <img src="https://img.youtube.com/vi/T9U3DQlOtwE/hqdefault.jpg" alt="Vrindavan">
+            <div class="title">🎥 Vrindavan</div>
+          </div>
+          <div class="card" data-video-id="gp8-I4SJ00Y">
+            <img src="https://img.youtube.com/vi/gp8-I4SJ00Y/hqdefault.jpg" alt="Trip to Goa">
+            <div class="title">🎥 Trip to Goa</div>
+          </div>
+          <div class="card" data-video-id="BjNyFHuFhXA">
+            <img src="https://img.youtube.com/vi/BjNyFHuFhXA/hqdefault.jpg" alt="Football 🏈 Facts">
+            <div class="title">🎥 Football 🏈 Facts</div>
+          </div>
+          <div class="card" data-video-id="d4DC77q0r3Y">
+            <img src="https://img.youtube.com/vi/d4DC77q0r3Y/hqdefault.jpg" alt="Hare Krishna Orchid">
+            <div class="title">🎥 Hare Krishna Orchid</div>
+          </div>
+          <div class="card" data-video-id="fgWvIlJoQa0">
+            <img src="https://img.youtube.com/vi/fgWvIlJoQa0/hqdefault.jpg" alt="Yellow Inn">
+            <div class="title">🎥 Yellow Inn</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="subscribe">
+      Thank you for visiting! Subscribe to my channel: <a href="https://m.youtube.com/@funwiththetalent" target="_blank" style="color:#fff; text-decoration:underline;">Subscribe</a>
+    </footer>
+  </main>
+
+  <div class="modal" id="videoModal">
+    <div class="modal-box">
+      <button class="close-btn" id="closeModal">&times;</button>
+      <div class="video-wrap">
+        <iframe id="modalVideo" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.card, .featured');
+    const modal = document.getElementById('videoModal');
+    const iframe = document.getElementById('modalVideo');
+    const closeBtn = document.getElementById('closeModal');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const videoId = card.dataset.videoId;
+        iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1";
+        modal.classList.add('open');
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      iframe.src = "";
+      modal.classList.remove('open');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) {
+        iframe.src = "";
+        modal.classList.remove('open');
+      }
+    });
