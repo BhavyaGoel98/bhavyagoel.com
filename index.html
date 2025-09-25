@@ -1,115 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fun with Bhavya Goel</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fun with Bhavya Goel — Videos</title>
+
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f8f8f8;
-      color: #333;
+    /* === COLORS / QUICK EDIT ===
+       If you want to change main colors, edit these variables */
+    :root{
+      --accent: #ff7043; /* navbar & footer accent */
+      --card-bg: #ffffff;
+      --text: #222;
+      --gradient: linear-gradient(135deg, pink, orange, gold); /* your chosen gradient */
     }
 
-    header {
-      background-color: #ff5722;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-      font-size: 1.5em;
-      font-weight: bold;
+    /* Reset / base */
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif; color:var(--text); -webkit-font-smoothing:antialiased}
+    a{color:inherit; text-decoration:none}
+
+    /* Page background */
+    body{
+      background: var(--gradient);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
     }
 
-    .video-section {
-      padding: 20px;
+    /* Container */
+    .container{width:95%; max-width:1100px; margin:0 auto; padding:0 12px}
+
+    /* Sticky Navbar */
+    header.navbar{
+      position:sticky; top:0; z-index:1000;
+      background: rgba(255,255,255,0.06); /* slight translucent over gradient */
+      backdrop-filter: blur(4px);
+      border-bottom: 2px solid rgba(255,255,255,0.06);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .nav-inner{display:flex; align-items:center; gap:12px; justify-content:space-between; padding:12px 0}
+    .logo{font-size:20px; font-weight:800; display:flex; align-items:center; gap:10px}
+    .logo .emoji{font-size:22px}
+    nav.nav-links{display:flex; gap:16px; align-items:center}
+    nav.nav-links a{color:#fff; background:var(--accent); padding:8px 12px; border-radius:10px; font-weight:700; box-shadow: 0 2px 6px rgba(0,0,0,0.15)}
+    nav.nav-links a:hover{opacity:0.95}
+
+    /* Banner / Hero */
+    .banner{padding:32px 0; text-align:center}
+    .banner h1{font-size:30px; margin:6px 0 6px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,0.35)}
+    .banner p{margin:0; color:#fff; opacity:0.95; margin-bottom:18px}
+
+    /* Featured (clickable thumbnail) */
+    .featured {
+      max-width:900px;
+      margin: 0 auto;
+      position:relative;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      cursor:pointer;
+    }
+    .featured img{width:100%; height:auto; display:block}
+    .featured .play-overlay{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      pointer-events:none;
+    }
+    .play-btn{
+      width:84px; height:84px; border-radius:50%; background:rgba(255,255,255,0.9);
+      display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.3);
+    }
+    .play-btn:after{
+      content:""; display:block; margin-left:6px; width:0; height:0; border-left:18px solid var(--accent);
+      border-top:10px solid transparent; border-bottom:10px solid transparent;
     }
 
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+    /* Video grid */
+    section#videos{padding:28px 0 56px}
+    section#videos h2{font-size:22px; margin:6px 0 18px; color:#fff; text-align:center; text-shadow:0 2px 6px rgba(0,0,0,0.2)}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap:18px;
+      align-items:start;
     }
-
-    .video-card {
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+    .card{
+      background: var(--card-bg);
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      transition: transform .18s ease, box-shadow .18s ease;
+      cursor:pointer;
+      display:flex; flex-direction:column;
     }
+    .card:hover{ transform: translateY(-6px); box-shadow: 0 14px 30px rgba(0,0,0,0.22) }
+    .card img{width:100%; height:130px; object-fit:cover; display:block}
+    .card .title{padding:12px; font-weight:700; text-align:center; color:#222; font-size:15px; background:linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.95))}
 
-    .video-card:hover {
-      transform: scale(1.02);
+    /* Footer */
+    footer{background:var(--accent); color:#fff; padding:18px 0; text-align:center; font-weight:700; margin-top:14px}
+
+    /* Modal (video popup) */
+    .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.75); z-index:2000; padding:20px }
+    .modal.open{ display:flex }
+    .modal .modal-box{ width:100%; max-width:940px; background:transparent; border-radius:10px; overflow:hidden; position:relative }
+    .modal .close-btn{
+      position:absolute; right:-6px; top:-6px; background:#fff; color:#111; border-radius:50%; width:40px; height:40px; border:0; font-size:18px; font-weight:700;
+      box-shadow:0 6px 18px rgba(0,0,0,0.3); cursor:pointer; z-index:3;
     }
+    .video-wrap{ position:relative; padding-top:56.25%; background:#000; }
+    .video-wrap iframe{ position:absolute; top:0; left:0; width:100%; height:100%; border:0 }
 
-    .video-card img {
-      width: 100%;
-      display: block;
+    /* mobile readability tweaks */
+    @media (max-width: 900px){
+      .banner h1{font-size:26px}
+      .card img{height:140px}
     }
-
-    .video-info {
-      padding: 10px;
-      font-weight: bold;
-      text-align: center;
+    @media (max-width: 600px){
+      .nav-inner{padding:10px 0}
+      nav.nav-links a{padding:7px 10px; font-size:14px}
+      .banner h1{font-size:22px}
+      .featured .play-btn{width:64px; height:64px}
+      .card img{height:160px}
+      .card .title{font-size:14px; padding:10px}
     }
-
-    footer {
-      background-color: #222;
-      color: #fff;
-      text-align: center;
-      padding: 15px;
-      margin-top: 30px;
-    }
-
-    /* ✅ Responsive design */
-    @media (max-width: 768px) {
-      header {
-        font-size: 1.2em;
-        padding: 10px;
-      }
-
-      .video-section {
-        padding: 10px;
-      }
-
-      .video-grid {
-        grid-template-columns: 1fr 1fr; /* 2 per row on tablets */
-      }
-    }
-
-    @media (max-width: 480px) {
-      .video-grid {
-        grid-template-columns: 1fr; /* 1 per row on mobile */
-      }
+    @media (max-width:420px){
+      .card img{height:200px}
+      .grid{gap:14px}
     }
   </style>
 </head>
 <body>
-  <header>
-  Fun with Bhavya Goel
+
+  <!-- NAVBAR -->
+  <header class="navbar" role="banner">
+    <div class="container nav-inner">
+      <div class="logo"><span class="emoji">🎉</span> Fun with Bhavya Goel</div>
+      <nav class="nav-links" role="navigation" aria-label="Main">
+        <a href="#videos">Videos</a>
+        <a href="#subscribe">Subscribe</a>
+      </nav>
+    </div>
   </header>
 
-  <section class="video-section">
-    <div class="video-grid">
-      <div class="video-card">
-        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video 1">
-        <div class="video-info">Video Title 1</div>
-      </div>
-      <div class="video-card">
-        <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg" alt="Video 2">
-        <div class="video-info">Video Title 2</div>
-      </div>
-      <div class="video-card">
-        <img src="https://img.youtube.com/vi/tgbNymZ7vqY/hqdefault.jpg" alt="Video 3">
-        <div class="video-info">Video Title 3</div>
-      </div>
-      <!-- Add more video cards here -->
-    </div>
-  </section>
+  <!-- BANNER / FEATURED VIDEO -->
+  <main>
+    <section class="banner">
+      <div class="container">
+        <h1>Welcome to Fun with Bhavya Goel!</h1>
+        <p>Click any thumbnail to watch — opens in a player popup so visitors don't leave your page.</p>
 
-  <footer>
-    © 2025 Fun with Bhavya Goel | All Rights Reserved
+        <!-- Featured (uses first video ID) -->
+        <div class="featured" data-video-id="puj2FtOyuvo" aria-label="Play featured video">
+          <img src="https://img.youtube.com/vi/puj2FtOyuvo/hqdefault.jpg" alt="Jim Corbett Part 1 — featured">
+          <div class="play-overlay"><div class="play-btn" aria-hidden="true"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIDEOS GRID -->
+    <section id="videos">
+      <div class="container">
+        <h2>🎥 My Videos</h2>
+
+        <div class="grid">
+          <!-- Each card: data-video-id must be the YouTube ID -->
+          <div class="card" data-video-id="puj2FtOyuvo">
+            <img src="https://img.youtube.com/vi/puj2FtOyuvo/hqdefault.jpg" alt="Jim Corbett Part 1">
+            <div class="title">🎥 Jim Corbett Part 1</div>
+          </div>
+
+          <div class="card" data-video-id="GcwLRyjyzas">
+            <img src="https://img.youtube.com/vi/GcwLRyjyzas/hqdefault.jpg" alt="Jim Corbett Part 2">
+            <div class="title">🎥 Jim Corbett Part 2</div>
+          </div>
+
+          <div class="card" data-video-id="c6q3onWkzyQ">
+            <img src="https://img.youtube.com/vi/c6q3onWkzyQ/hqdefault.jpg" alt="Together We Can Change the World">
+            <div class="title">🎥 Together We Can Change the World</div>
+          </div>
+
+          <div class="card" data-video-id="N8138Pf1ZJc">
+            <img src="https://img.youtube.com/vi/N8138Pf1ZJc/hqdefault.jpg" alt="Hymn for the Weekend">
+            <div class="title">🎥 Hymn for the Weekend</div>
+          </div>
+
+          <div class="card" data-video-id="VtkgZtGhcKk">
+            <img src="https://img.youtube.com/vi/VtkgZtGhcKk/hqdefault.jpg" alt="Trees Song by Me">
+            <div class="title">🎥 Trees Song by Me</div>
+          </div>
+
+          <div class="card" data-video-id="yTM-OABU77E">
+            <img src="https://img.youtube.com/vi/yTM-OABU77E/hqdefault.jpg" alt="Wavin' Flag">
+            <div class="title">🎥 Wavin' Flag</div>
+          </div>
+
+          <div class="card" data-video-id="T9U3DQlOtwE">
+            <img src="https://img.youtube.com/vi/T9U3DQlOtwE/hqdefault.jpg" alt="Vrindavan">
+            <div class="title">🎥 Vrindavan</div>
+          </div>
+
+          <div class="card" data-video-id="gp8-I4SJ00Y">
+            <img src="https://img.youtube.com/vi/gp8-I4SJ00Y/hqdefault.jpg" alt="Trip to Goa">
+            <div class="title">🎥 Trip to Goa 🚗</div>
+          </div>
+
+          <div class="card" data-video-id="BjNyFHuFhXA">
+            <img src="https://img.youtube.com/vi/BjNyFHuFhXA/hqdefault.jpg" alt="Football Facts">
+            <div class="title">🎥 Football 🏈 Facts</div>
+          </div>
+
+          <div class="card" data-video-id="d4DC77q0r3Y">
+            <img src="https://img.youtube.com/vi/d4DC77q0r3Y/hqdefault.jpg" alt="Hare Krishna Orchid">
+            <div class="title">🎥 Hare Krishna Orchid</div>
+          </div>
+
+          <div class="card" data-video-id="fgWvIlJoQa0">
+            <img src="https://img.youtube.com/vi/fgWvIlJoQa0/hqdefault.jpg" alt="Yellow Inn">
+            <div class="title">🎥 Yellow Inn</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- VIDEO MODAL -->
+  <div id="videoModal" class="modal" aria-hidden="true" role="dialog" aria-label="Video player">
+    <div class="modal-box">
+      <button class="close-btn" aria-label="Close player">✕</button>
+      <div class="video-wrap" id="videoWrap"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="subscribe">
+    🙏🏻 Thank you for visiting — Please subscribe to my channel!
   </footer>
+
+  <script>
+    // JS: open modal with clicked video, close modal, stop playback
+    (function(){
+      const modal = document.getElementById('videoModal');
+      const videoWrap = document.getElementById('videoWrap');
+      const closeBtn = modal.querySelector('.close-btn');
+
+      // open modal and embed iframe autoplay
+      function openVideo(id){
+        videoWrap.innerHTML = '';
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0&showinfo=0';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        videoWrap.appendChild(iframe);
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      // close modal and stop video
+      function closeVideo(){
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden','true');
+        videoWrap.innerHTML = '';
+        document.body.style.overflow = '';
+      }
+
+      // click on any .card to play
+      document.addEventListener('click', function(e){
+        const card = e.target.closest('.card');
+        if(card && card.dataset.videoId){
+          openVideo(card.dataset.videoId);
+        }
+
+        const featured = e.target.closest('.featured');
+        if(featured && featured.dataset.videoId){
+          openVideo(featured.dataset.videoId);
+        }
+      });
+
+      // close button
+      closeBtn.addEventListener('click', closeVideo);
+
+      // click outside modal-box closes
+      modal.addEventListener('click', function(e){
+        if(e.target === modal) closeVideo();
+      });
+
+      // ESC to close
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' && modal.classList.contains('open')) closeVideo();
+      });
+
+      // lazy-load thumbnails (optional improvement)
+      // If you want to optimize, thumbnails can be replaced with low-res placeholders first.
+    })();
+  </script>
+
 </body>
 </html>
