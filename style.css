@@ -1,91 +1,118 @@
-/* General Style */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, pink, orange, gold);
-  color: #333;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Video Website</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      color: #333;
+    }
 
-/* Navbar */
-.navbar {
-  background: #ff7043;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-}
-.navbar .logo {
-  font-size: 22px;
-  font-weight: bold;
-}
-.navbar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-.navbar ul li {
-  margin-left: 20px;
-}
-.navbar ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-}
-.navbar ul li a:hover {
-  text-decoration: underline;
-}
+    header {
+      background-color: #ff5722;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      position: sticky;   /* ✅ makes it stick */
+      top: 0;
+      z-index: 1000;
+    }
 
-/* Banner */
-.banner {
-  text-align: center;
-  padding: 50px 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #333;
-}
-.banner h1 {
-  font-size: 40px;
-  margin-bottom: 10px;
-}
+    .video-section {
+      padding: 20px;
+    }
 
-/* Video Grid */
-.video-grid {
-  padding: 50px 20px;
-  text-align: center;
-}
-.video-grid h2 {
-  font-size: 28px;
-  margin-bottom: 30px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-.card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-.card img {
-  width: 100%;
-  display: block;
-}
-.card p {
-  padding: 10px;
-  font-weight: bold;
-}
-.card:hover {
-  transform: scale(1.05);
-}
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
 
-/* Footer */
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #ff7043;
-  color: white;
-}
+    .video-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .video-card:hover {
+      transform: scale(1.02);
+    }
+
+    .video-card img {
+      width: 100%;
+      display: block;
+    }
+
+    .video-info {
+      padding: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    footer {
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+
+    /* ✅ Responsive design */
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.2em;
+        padding: 10px;
+      }
+
+      .video-section {
+        padding: 10px;
+      }
+
+      .video-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    My Video Website
+  </header>
+
+  <section class="video-section">
+    <div class="video-grid">
+      <div class="video-card">
+        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video 1">
+        <div class="video-info">Video Title 1</div>
+      </div>
+      <div class="video-card">
+        <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg" alt="Video 2">
+        <div class="video-info">Video Title 2</div>
+      </div>
+      <div class="video-card">
+        <img src="https://img.youtube.com/vi/tgbNymZ7vqY/hqdefault.jpg" alt="Video 3">
+        <div class="video-info">Video Title 3</div>
+      </div>
+      <!-- Add more video cards here -->
+    </div>
+  </section>
+
+  <footer>
+    © 2025 My Website | All Rights Reserved
+  </footer>
+</body>
+</html>
