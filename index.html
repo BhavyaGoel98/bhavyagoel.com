@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Fun with Bhavya Goel — Videos</title>
-
   <style>
     :root{
       --accent: #ff7043;
@@ -13,16 +12,22 @@
       --gradient: linear-gradient(135deg, pink, orange, gold);
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif; color:var(--text); -webkit-font-smoothing:antialiased}
-    a{color:inherit; text-decoration:none}
+    *{box-sizing:border-box;}
+    html, body{
+      height:100%;
+      margin:0;
+      font-family: 'Brush Script MT', cursive, 'Comic Sans MS', Arial, sans-serif;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:inherit; text-decoration:none;}
 
     body{
       background: var(--gradient);
       line-height:1.35;
     }
 
-    .container{width:95%; max-width:1100px; margin:0 auto; padding:0 12px}
+    .container{width:95%; max-width:1100px; margin:0 auto; padding:0 12px;}
 
     header.navbar{
       position:sticky; top:0; z-index:1000;
@@ -31,7 +36,7 @@
       border-bottom: 2px solid rgba(255,255,255,0.06);
       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
-    .nav-inner{display:flex; align-items:center; gap:12px; justify-content:space-between; padding:12px 0}
+    .nav-inner{display:flex; align-items:center; gap:12px; justify-content:space-between; padding:12px 0;}
     .logo{font-size:20px; font-weight:800; display:flex; align-items:center; gap:10px; color:#fff;}
     .logo .profile-header-img{
       width:36px;
@@ -42,39 +47,23 @@
       border:2px solid #fff;
       vertical-align:middle;
     }
-    nav.nav-links{display:flex; gap:16px; align-items:center}
-    nav.nav-links a{color:#fff; background:var(--accent); padding:8px 12px; border-radius:10px; font-weight:700; box-shadow: 0 2px 6px rgba(0,0,0,0.15)}
-    nav.nav-links a:hover{opacity:0.95}
+    nav.nav-links{display:flex; gap:16px; align-items:center;}
+    nav.nav-links a{
+      color:#fff;
+      background:var(--accent);
+      padding:8px 12px;
+      border-radius:10px;
+      font-weight:700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    nav.nav-links a:hover{opacity:0.95;}
 
-    .banner{padding:32px 0; text-align:center}
-    .banner h1{font-size:30px; margin:6px 0 6px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,0.35)}
-    .banner p{margin:0; color:#fff; opacity:0.95; margin-bottom:18px}
+    .banner{padding:32px 0; text-align:center;}
+    .banner h1{font-size:30px; margin:6px 0 6px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,0.35);}
+    .banner p{margin:0; color:#fff; opacity:0.95; margin-bottom:18px;}
 
-    .featured {
-      max-width:900px;
-      margin: 0 auto;
-      position:relative;
-      border-radius:12px;
-      overflow:hidden;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      cursor:pointer;
-    }
-    .featured img{width:100%; height:auto; display:block}
-    .featured .play-overlay{
-      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-      pointer-events:none;
-    }
-    .play-btn{
-      width:84px; height:84px; border-radius:50%; background:rgba(255,255,255,0.9);
-      display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.3);
-    }
-    .play-btn:after{
-      content:""; display:block; margin-left:6px; width:0; height:0; border-left:18px solid var(--accent);
-      border-top:10px solid transparent; border-bottom:10px solid transparent;
-    }
-
-    section#videos{padding:28px 0 56px}
-    section#videos h2{font-size:22px; margin:6px 0 18px; color:#fff; text-align:center; text-shadow:0 2px 6px rgba(0,0,0,0.2)}
+    section#videos{padding:28px 0 56px;}
+    section#videos h2{font-size:22px; margin:6px 0 18px; color:#fff; text-align:center; text-shadow:0 2px 6px rgba(0,0,0,0.2);}
     .grid{
       display:grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -90,37 +79,40 @@
       cursor:pointer;
       display:flex; flex-direction:column;
     }
-    .card:hover{ transform: translateY(-6px); box-shadow: 0 14px 30px rgba(0,0,0,0.22) }
-    .card img{width:100%; height:130px; object-fit:cover; display:block}
-    .card .title{padding:12px; font-weight:700; text-align:center; color:#222; font-size:15px; background:linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.95))}
-
-    footer{background:var(--accent); color:#fff; padding:18px 0; text-align:center; font-weight:700; margin-top:14px}
-
-    .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.75); z-index:2000; padding:20px }
-    .modal.open{ display:flex }
-    .modal .modal-box{ width:100%; max-width:940px; background:transparent; border-radius:10px; overflow:hidden; position:relative }
-    .modal .close-btn{
-      position:absolute; right:-6px; top:-6px; background:#fff; color:#111; border-radius:50%; width:40px; height:40px; border:0; font-size:18px; font-weight:700;
-      box-shadow:0 6px 18px rgba(0,0,0,0.3); cursor:pointer; z-index:3;
+    .card:hover{ transform: translateY(-6px); box-shadow: 0 14px 30px rgba(0,0,0,0.22); }
+    .card img{width:100%; height:130px; object-fit:cover; display:block;}
+    .card .title{
+      padding:12px;
+      font-weight:700;
+      text-align:center;
+      color:#222;
+      font-size:15px;
+      background:linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
     }
-    .video-wrap{ position:relative; padding-top:56.25%; background:#000; }
-    .video-wrap iframe{ position:absolute; top:0; left:0; width:100%; height:100%; border:0 }
+
+    footer{
+      background:var(--accent);
+      color:#fff;
+      padding:18px 0;
+      text-align:center;
+      font-weight:700;
+      margin-top:14px;
+    }
 
     @media (max-width: 900px){
-      .banner h1{font-size:26px}
-      .card img{height:140px}
+      .banner h1{font-size:26px;}
+      .card img{height:140px;}
     }
     @media (max-width: 600px){
-      .nav-inner{padding:10px 0}
-      nav.nav-links a{padding:7px 10px; font-size:14px}
-      .banner h1{font-size:22px}
-      .featured .play-btn{width:64px; height:64px}
-      .card img{height:160px}
-      .card .title{font-size:14px; padding:10px}
+      .nav-inner{padding:10px 0;}
+      nav.nav-links a{padding:7px 10px; font-size:14px;}
+      .banner h1{font-size:22px;}
+      .card img{height:160px;}
+      .card .title{font-size:14px; padding:10px;}
     }
     @media (max-width:420px){
-      .card img{height:200px}
-      .grid{gap:14px}
+      .card img{height:200px;}
+      .grid{gap:14px;}
     }
   </style>
 </head>
@@ -134,7 +126,7 @@
       </div>
       <nav class="nav-links">
         <a href="#videos">Videos</a>
-        <a href="https://m.youtube.com/@funwiththetalent">Subscribe</a>
+        <a href="https://m.youtube.com/@funwiththetalent" target="_blank">Subscribe</a>
       </nav>
     </div>
   </header>
@@ -142,13 +134,8 @@
   <main>
     <section class="banner">
       <div class="container">
-        <h1>Welcome to Fun with Bhavya Goel!</h1>
-        <p>Click any thumbnail to watch — opens in a player popup so visitors don't leave your page.</p>
-
-        <div class="featured" data-video-id="puj2FtOyuvo">
-          <img src="https://img.youtube.com/vi/puj2FtOyuvo/hqdefault.jpg" alt="Jim Corbett Part 1 — featured">
-          <div class="play-overlay"><div class="play-btn"></div></div>
-        </div>
+        <h1>Fun with Bhavya Goel</h1>
+        <p>Click any thumbnail to watch the video on YouTube!</p>
       </div>
     </section>
 
@@ -156,6 +143,7 @@
       <div class="container">
         <h2>🎥 My Videos</h2>
         <div class="grid">
+          <!-- Video Cards -->
           <div class="card" data-video-id="puj2FtOyuvo">
             <img src="https://img.youtube.com/vi/puj2FtOyuvo/hqdefault.jpg" alt="Jim Corbett Part 1">
             <div class="title">🎥 Jim Corbett Part 1</div>
@@ -189,8 +177,8 @@
             <div class="title">🎥 Trip to Goa</div>
           </div>
           <div class="card" data-video-id="BjNyFHuFhXA">
-            <img src="https://img.youtube.com/vi/BjNyFHuFhXA/hqdefault.jpg" alt="Football 🏈 Facts">
-            <div class="title">🎥 Football 🏈 Facts</div>
+            <img src="https://img.youtube.com/vi/BjNyFHuFhXA/hqdefault.jpg" alt="Football Facts">
+            <div class="title">🎥 Football Facts</div>
           </div>
           <div class="card" data-video-id="d4DC77q0r3Y">
             <img src="https://img.youtube.com/vi/d4DC77q0r3Y/hqdefault.jpg" alt="Hare Krishna Orchid">
@@ -204,42 +192,21 @@
       </div>
     </section>
 
-    <footer id="subscribe">
-      Thank you for visiting! Subscribe to my channel: <a href="https://m.youtube.com/@funwiththetalent" target="_blank" style="color:#fff; text-decoration:underline;">Subscribe</a>
+    <footer>
+      Thank you for visiting! Subscribe to my channel: 
+      <a href="https://m.youtube.com/@funwiththetalent" target="_blank" style="color:#fff; text-decoration:underline;">Subscribe</a>
     </footer>
   </main>
 
-  <div class="modal" id="videoModal">
-    <div class="modal-box">
-      <button class="close-btn" id="closeModal">&times;</button>
-      <div class="video-wrap">
-        <iframe id="modalVideo" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </div>
-  </div>
-
   <script>
-    const cards = document.querySelectorAll('.card, .featured');
-    const modal = document.getElementById('videoModal');
-    const iframe = document.getElementById('modalVideo');
-    const closeBtn = document.getElementById('closeModal');
+    const cards = document.querySelectorAll('.card');
 
     cards.forEach(card => {
       card.addEventListener('click', () => {
         const videoId = card.dataset.videoId;
-        iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1";
-        modal.classList.add('open');
+        window.open("https://www.youtube.com/watch?v=" + videoId, "_blank");
       });
     });
-
-    closeBtn.addEventListener('click', () => {
-      iframe.src = "";
-      modal.classList.remove('open');
-    });
-
-    modal.addEventListener('click', (e) => {
-      if(e.target === modal) {
-        iframe.src = "";
-        modal.classList.remove('open');
-      }
-    });
+  </script>
+</body>
+</html>
