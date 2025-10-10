@@ -1,212 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fun with Bhavya Goel — Videos</title>
-  <style>
-    :root{
-      --accent: #ff7043;
-      --card-bg: #ffffff;
-      --text: #222;
-      --gradient: linear-gradient(135deg, pink, orange, gold);
-    }
-
-    *{box-sizing:border-box;}
-    html, body{
-      height:100%;
-      margin:0;
-      font-family: 'Brush Script MT', cursive, 'Comic Sans MS', Arial, sans-serif;
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-    }
-    a{color:inherit; text-decoration:none;}
-
-    body{
-      background: var(--gradient);
-      line-height:1.35;
-    }
-
-    .container{width:95%; max-width:1100px; margin:0 auto; padding:0 12px;}
-
-    header.navbar{
-      position:sticky; top:0; z-index:1000;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(4px);
-      border-bottom: 2px solid rgba(255,255,255,0.06);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-    .nav-inner{display:flex; align-items:center; gap:12px; justify-content:space-between; padding:12px 0;}
-    .logo{font-size:20px; font-weight:800; display:flex; align-items:center; gap:10px; color:#fff;}
-    .logo .profile-header-img{
-      width:36px;
-      height:36px;
-      border-radius:50%;
-      object-fit:cover;
-      margin-right:8px;
-      border:2px solid #fff;
-      vertical-align:middle;
-    }
-    nav.nav-links{display:flex; gap:16px; align-items:center;}
-    nav.nav-links a{
-      color:#fff;
-      background:var(--accent);
-      padding:8px 12px;
-      border-radius:10px;
-      font-weight:700;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    nav.nav-links a:hover{opacity:0.95;}
-
-    .banner{padding:32px 0; text-align:center;}
-    .banner h1{font-size:30px; margin:6px 0 6px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,0.35);}
-    .banner p{margin:0; color:#fff; opacity:0.95; margin-bottom:18px;}
-
-    section#videos{padding:28px 0 56px;}
-    section#videos h2{font-size:22px; margin:6px 0 18px; color:#fff; text-align:center; text-shadow:0 2px 6px rgba(0,0,0,0.2);}
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap:18px;
-      align-items:start;
-    }
-    .card{
-      background: var(--card-bg);
-      border-radius:10px;
-      overflow:hidden;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-      transition: transform .18s ease, box-shadow .18s ease;
-      cursor:pointer;
-      display:flex; flex-direction:column;
-    }
-    .card:hover{ transform: translateY(-6px); box-shadow: 0 14px 30px rgba(0,0,0,0.22); }
-    .card img{width:100%; height:130px; object-fit:cover; display:block;}
-    .card .title{
-      padding:12px;
-      font-weight:700;
-      text-align:center;
-      color:#222;
-      font-size:15px;
-      background:linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
-    }
-
-    footer{
-      background:var(--accent);
-      color:#fff;
-      padding:18px 0;
-      text-align:center;
-      font-weight:700;
-      margin-top:14px;
-    }
-
-    @media (max-width: 900px){
-      .banner h1{font-size:26px;}
-      .card img{height:140px;}
-    }
-    @media (max-width: 600px){
-      .nav-inner{padding:10px 0;}
-      nav.nav-links a{padding:7px 10px; font-size:14px;}
-      .banner h1{font-size:22px;}
-      .card img{height:160px;}
-      .card .title{font-size:14px; padding:10px;}
-    }
-    @media (max-width:420px){
-      .card img{height:200px;}
-      .grid{gap:14px;}
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun with Bhavya Goel and Knowledge with Bhavya</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <header class="navbar">
-    <div class="container nav-inner">
-      <div class="logo">
-        <img src="https://i.ibb.co/BKTVWH4d/profile.jpg" alt="Bhavya Goel" class="profile-header-img">
-        Fun with Bhavya Goel
-      </div>
-      <nav class="nav-links">
-        <a href="#videos">Videos</a>
-        <a href="https://m.youtube.com/@funwiththetalent" target="_blank">Subscribe</a>
-      </nav>
+  <header class="curved-header">
+    <div class="header-content">
+      <button class="channel-btn fun">Fun with Bhavya Goel</button>
+      <h1>Welcome to bhavyagoel.com</h1>
+      <button class="channel-btn knowledge">Knowledge with Bhavya</button>
     </div>
   </header>
 
-  <main>
-    <section class="banner">
-      <div class="container">
-        <h1>Fun with Bhavya Goel</h1>
-        <p>Click any thumbnail to watch the video on YouTube!</p>
-      </div>
-    </section>
-
-    <section id="videos">
-      <div class="container">
-        <h2>🎥 My Videos</h2>
-        <div class="grid">
-          <!-- Video Cards -->
-          <div class="card" data-video-id="puj2FtOyuvo">
-            <img src="https://img.youtube.com/vi/puj2FtOyuvo/hqdefault.jpg" alt="Jim Corbett Part 1">
-            <div class="title">🎥 Jim Corbett Part 1</div>
-          </div>
-          <div class="card" data-video-id="GcwLRyjyzas">
-            <img src="https://img.youtube.com/vi/GcwLRyjyzas/hqdefault.jpg" alt="Jim Corbett Part 2">
-            <div class="title">🎥 Jim Corbett Part 2</div>
-          </div>
-          <div class="card" data-video-id="c6q3onWkzyQ">
-            <img src="https://img.youtube.com/vi/c6q3onWkzyQ/hqdefault.jpg" alt="Together We Can Change the World">
-            <div class="title">🎥 Together We Can Change the World</div>
-          </div>
-          <div class="card" data-video-id="N8138Pf1ZJc">
-            <img src="https://img.youtube.com/vi/N8138Pf1ZJc/hqdefault.jpg" alt="Hymn for the Weekend">
-            <div class="title">🎥 Hymn for the Weekend</div>
-          </div>
-          <div class="card" data-video-id="VtkgZtGhcKk">
-            <img src="https://img.youtube.com/vi/VtkgZtGhcKk/hqdefault.jpg" alt="Trees Song by Me">
-            <div class="title">🎥 Trees Song by Me</div>
-          </div>
-          <div class="card" data-video-id="yTM-OABU77E">
-            <img src="https://img.youtube.com/vi/yTM-OABU77E/hqdefault.jpg" alt="Wavin' Flag">
-            <div class="title">🎥 Wavin' Flag</div>
-          </div>
-          <div class="card" data-video-id="T9U3DQlOtwE">
-            <img src="https://img.youtube.com/vi/T9U3DQlOtwE/hqdefault.jpg" alt="Vrindavan">
-            <div class="title">🎥 Vrindavan</div>
-          </div>
-          <div class="card" data-video-id="gp8-I4SJ00Y">
-            <img src="https://img.youtube.com/vi/gp8-I4SJ00Y/hqdefault.jpg" alt="Trip to Goa">
-            <div class="title">🎥 Trip to Goa</div>
-          </div>
-          <div class="card" data-video-id="BjNyFHuFhXA">
-            <img src="https://img.youtube.com/vi/BjNyFHuFhXA/hqdefault.jpg" alt="Football Facts">
-            <div class="title">🎥 Football Facts</div>
-          </div>
-          <div class="card" data-video-id="d4DC77q0r3Y">
-            <img src="https://img.youtube.com/vi/d4DC77q0r3Y/hqdefault.jpg" alt="Hare Krishna Orchid">
-            <div class="title">🎥 Hare Krishna Orchid</div>
-          </div>
-          <div class="card" data-video-id="fgWvIlJoQa0">
-            <img src="https://img.youtube.com/vi/fgWvIlJoQa0/hqdefault.jpg" alt="Yellow Inn">
-            <div class="title">🎥 Yellow Inn</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      Thank you for visiting! Subscribe to my channel: 
-      <a href="https://m.youtube.com/@funwiththetalent" target="_blank" style="color:#fff; text-decoration:underline;">Subscribe</a>
-    </footer>
-  </main>
-
-  <script>
-    const cards = document.querySelectorAll('.card');
-
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        const videoId = card.dataset.videoId;
-        window.open("https://www.youtube.com/watch?v=" + videoId, "_blank");
-      });
-    });
-  </script>
+  <section class="welcome">
+    <h2>Welcome to the Official Combined Website of FBG and KWB</h2>
+    <p>Explore fun videos, learning content, and more — all in one place!</p>
+  </section>
 </body>
 </html>
