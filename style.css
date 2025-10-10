@@ -1,118 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Video Website</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f8f8f8;
-      color: #333;
-    }
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    header {
-      background-color: #ff5722;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-      font-size: 1.5em;
-      font-weight: bold;
-      position: sticky;   /* ✅ makes it stick */
-      top: 0;
-      z-index: 1000;
-    }
+/* Body */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fdfdfd;
+  color: #222;
+  text-align: center;
+}
 
-    .video-section {
-      padding: 20px;
-    }
+/* Curved Header */
+.curved-header {
+  position: relative;
+  background: linear-gradient(135deg, #f1c40f, #f39c12);
+  color: white;
+  padding: 60px 20px 120px;
+  border-bottom-left-radius: 50% 15%;
+  border-bottom-right-radius: 50% 15%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
 
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
+/* Header Content */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
 
-    .video-card {
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-    }
+/* Title */
+header h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+}
 
-    .video-card:hover {
-      transform: scale(1.02);
-    }
+/* Channel Buttons */
+.channel-btn {
+  background: white;
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-    .video-card img {
-      width: 100%;
-      display: block;
-    }
+.channel-btn:hover {
+  transform: scale(1.05);
+}
 
-    .video-info {
-      padding: 10px;
-      font-weight: bold;
-      text-align: center;
-    }
+/* Fun with Bhavya Goel */
+.fun {
+  background: #3498db;
+  color: white;
+}
 
-    footer {
-      background-color: #222;
-      color: #fff;
-      text-align: center;
-      padding: 15px;
-      margin-top: 30px;
-    }
+/* Knowledge with Bhavya */
+.knowledge {
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
+  color: white;
+}
 
-    /* ✅ Responsive design */
-    @media (max-width: 768px) {
-      header {
-        font-size: 1.2em;
-        padding: 10px;
-      }
+/* Welcome Section */
+.welcome {
+  padding: 60px 20px;
+}
 
-      .video-section {
-        padding: 10px;
-      }
+.welcome h2 {
+  font-size: 2em;
+  color: #f39c12;
+  margin-bottom: 10px;
+}
 
-      .video-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .video-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    My Video Website
-  </header>
-
-  <section class="video-section">
-    <div class="video-grid">
-      <div class="video-card">
-        <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video 1">
-        <div class="video-info">Video Title 1</div>
-      </div>
-      <div class="video-card">
-        <img src="https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg" alt="Video 2">
-        <div class="video-info">Video Title 2</div>
-      </div>
-      <div class="video-card">
-        <img src="https://img.youtube.com/vi/tgbNymZ7vqY/hqdefault.jpg" alt="Video 3">
-        <div class="video-info">Video Title 3</div>
-      </div>
-      <!-- Add more video cards here -->
-    </div>
-  </section>
-
-  <footer>
-    © 2025 My Website | All Rights Reserved
-  </footer>
-</body>
-</html>
+.welcome p {
+  font-size: 1.1em;
+  color: #555;
+}
