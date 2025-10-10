@@ -11,7 +11,7 @@ body {
   text-align: center;
 }
 
-/* Header */
+/* Header (Home) */
 .curved-header {
   background: linear-gradient(135deg, #f1c40f, #f39c12);
   color: white;
@@ -35,12 +35,11 @@ header h1 {
 }
 
 .channel-btn {
-  border: none;
+  text-decoration: none;
   border-radius: 25px;
   padding: 10px 20px;
   font-size: 1em;
   font-weight: 600;
-  cursor: pointer;
   transition: 0.3s;
 }
 
@@ -74,17 +73,42 @@ header h1 {
   color: #555;
 }
 
+/* Sub-pages Header */
+.sub-header {
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+}
+
+.fun-header {
+  background: #3498db;
+}
+
+.knowledge-header {
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
+}
+
+.back-btn {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
 /* Video Sections */
 .video-section {
   padding: 60px 20px;
   text-align: center;
-}
-
-.video-section h2 {
-  font-size: 2em;
-  margin-bottom: 20px;
-  color: #f39c12;
-  font-weight: 700;
 }
 
 .video-grid {
@@ -113,7 +137,6 @@ header h1 {
   width: 100%;
   height: 220px;
   border: none;
-  border-bottom: 3px solid #f39c12;
 }
 
 .video-card p {
@@ -122,14 +145,6 @@ header h1 {
   font-weight: 500;
   color: #333;
   background: #fff8e1;
-}
-
-.fun-section h2 {
-  color: #3498db;
-}
-
-.fun-section .video-card iframe {
-  border-bottom: 3px solid #3498db;
 }
 
 .fun-section .video-card p {
