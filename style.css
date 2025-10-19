@@ -1,11 +1,12 @@
+/* General body background */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #000;
-  color: #333;
+  background-color: #000; /* Black content background below header */
+  color: #333; /* Default text color */
 }
 
-/* Homepage header with multi-color gradient */
+/* Header styles for homepage (gold, pink, blue, orange) */
 .header-homepage {
   background: linear-gradient(135deg, #f2c94c, #ff6f91, #50a8e8, #ffa500);
   padding: 15px 30px;
@@ -18,7 +19,8 @@ body {
   color: #fff;
 }
 
-.home-btn {
+.header-homepage .home-btn,
+.header-category .home-btn {
   background: #000;
   color: #f2c94c;
   padding: 8px 15px;
@@ -26,29 +28,8 @@ body {
   text-decoration: none;
   font-weight: bold;
   box-shadow: 0 4px 15px rgba(242, 201, 76, 0.6);
-  display: flex;
-  align-items: center;
 }
 
-.home-btn img {
-  height: 32px;
-  margin-right: 8px;
-}
-
-/* Category header style for knowledge and fun tabs */
-.header-category {
-  background: linear-gradient(135deg, #c9a23f, #50a8e8, #ff6f91);
-  padding: 15px 30px;
-  border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;
-  box-shadow: 0 5px 15px rgba(201, 162, 63, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #fff;
-}
-
-/* Header title styling */
 .header-homepage h1,
 .header-category h1 {
   flex: 1;
@@ -59,7 +40,7 @@ body {
   color: #fff;
 }
 
-/* Subscribe button style */
+/* Subscribe button */
 .subscribe-btn {
   background: linear-gradient(90deg, #f44336, #d32f2f);
   color: #fff;
@@ -76,7 +57,20 @@ body {
   box-shadow: 0 6px 20px rgba(255, 69, 58, 0.9);
 }
 
-/* Video gallery styles */
+/* Header for knowledge tab (golden, blue, pink blend) */
+.header-category {
+  background: linear-gradient(135deg, #c9a23f, #50a8e8, #ff6f91);
+  padding: 15px 30px;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+  box-shadow: 0 5px 15px rgba(201, 162, 63, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+
+/* Video gallery, black background */
 .video-gallery {
   padding: 30px 15px;
   max-width: 1200px;
