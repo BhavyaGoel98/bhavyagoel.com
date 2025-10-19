@@ -1,22 +1,105 @@
-.subscribe-section {
-  text-align: center;
-  margin: 25px 0;
+/* General Body Styling */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #000; /* Black background */
+  color: #c9a23f; /* Golden text */
 }
 
-.subscribe-btn {
-  display: inline-block;
+/* Header with curved background */
+.curved-header {
   background: linear-gradient(90deg, #c9a23f, #f2c94c);
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+  padding: 15px 0;
+  box-shadow: 0 5px 15px rgba(201, 162, 63, 0.7);
+}
+
+/* Header Content layout */
+.header-content {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+}
+
+/* Home button on header */
+.channel-btn.home {
   color: #000;
+  text-decoration: none;
   font-weight: bold;
   font-size: 18px;
-  text-decoration: none;
-  padding: 12px 28px;
-  border-radius: 50px;
+  padding: 8px 15px;
+  background-color: #f2c94c;
+  border-radius: 30px;
   box-shadow: 0 4px 15px rgba(242, 201, 76, 0.4);
   transition: all 0.3s ease;
 }
 
-.subscribe-btn:hover {
-  transform: scale(1.05);
+.channel-btn.home:hover {
   box-shadow: 0 6px 20px rgba(242, 201, 76, 0.6);
+  transform: scale(1.05);
+}
+
+/* Header title styling */
+h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Subscribe Button in Header */
+.header-subscribe {
+  background: linear-gradient(90deg, #c9a23f, #f2c94c);
+  color: #000;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(242, 201, 76, 0.4);
+  transition: all 0.3s ease;
+}
+
+.header-subscribe:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(242, 201, 76, 0.6);
+}
+
+/* Video gallery container */
+.video-gallery {
+  max-width: 1200px;
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 0 15px;
+}
+
+/* Responsive iframes */
+.video-gallery iframe {
+  width: 100%;
+  height: 160px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(201, 162, 63, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.video-gallery iframe:hover {
+  transform: scale(1.03);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #111;
+  color: #c9a23f;
+  font-size: 14px;
+  box-shadow: inset 0 1px 0 #333;
+  margin-top: 40px;
 }
