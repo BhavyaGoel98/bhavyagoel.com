@@ -118,4 +118,89 @@ footer {
   aspect-ratio: 9 / 16; /* for Shorts */
   max-width: 360px;
 }
+/* =========================
+   MOBILE RESPONSIVE FIXES
+   ========================= */
+
+/* Small devices (phones) */
+@media (max-width: 768px) {
+
+  /* HEADER */
+  .header-homepage,
+  .header-category {
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    text-align: center;
+  }
+
+  .header-title {
+    font-size: 20px;
+    margin: 5px 0;
+  }
+
+  .nav-button,
+  .subscribe-btn {
+    font-size: 14px;
+    padding: 8px 18px;
+  }
+
+  /* WELCOME SECTION */
+  .welcome-main {
+    font-size: 18px;
+  }
+
+  .welcome-sub {
+    font-size: 14px;
+  }
+
+  /* VIDEO GRID */
+  .video-gallery {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 20px 12px;
+  }
+
+  .video-gallery iframe {
+    max-width: 100%;
+    aspect-ratio: 9 / 16;
+  }
+
+  footer {
+    font-size: 12px;
+    padding: 15px 0;
+  }
+}
+
+/* Very small devices */
+@media (max-width: 420px) {
+
+  .header-title {
+    font-size: 18px;
+  }
+
+  .nav-button,
+  .subscribe-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Instagram button style */
+.instagram-btn {
+  background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(221, 42, 123, 0.7);
+  transition: transform 0.3s ease;
+}
+
+.instagram-btn:hover {
+  transform: scale(1.05);
+}
 
