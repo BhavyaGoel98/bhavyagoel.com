@@ -239,3 +239,106 @@ body:not(.fun-page) footer {
     width: 140px;
   }
 }
+/* =========================
+   HOMEPAGE ONLY CSS
+   (bhavyagoel.com)
+========================= */
+
+/* BODY BACKGROUND (neeche black) */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #000;
+  color: #fff;
+}
+
+/* HEADER */
+.header-homepage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px;
+
+  /* Yellow + Pink + Blue + Gold mix */
+  background: linear-gradient(
+    135deg,
+    #feda75,   /* yellow */
+    #ff69b4,   /* pink */
+    #4f5bd5,   /* blue */
+    #d4af37    /* gold */
+  );
+
+  box-shadow: 0 6px 25px rgba(0,0,0,0.45);
+}
+
+/* HEADER TITLE (gold text – already in HTML, safe here) */
+.header-homepage .header-title {
+  color: #ffd700;
+  font-size: 26px;
+  text-align: center;
+}
+
+/* COMMON NAV BUTTON STYLE (circle / pill) */
+.header-homepage .nav-button {
+  padding: 14px 26px;
+  border-radius: 999px; /* full circle / pill */
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Hover effect */
+.header-homepage .nav-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+/* LEFT BUTTON – Fun with Bhavya Goel (Fun colors) */
+.header-homepage .left-button {
+  background: linear-gradient(45deg, #ff4d9d, #ffb347);
+}
+
+/* RIGHT BUTTON – Knowledge with Bhavya (Knowledge colors) */
+.header-homepage .right-button {
+  background: linear-gradient(45deg, #0a2a66, #d4af37);
+}
+
+/* WELCOME SECTION */
+.welcome-section {
+  text-align: center;
+  padding: 80px 20px;
+  background: #000;
+}
+
+.welcome-main {
+  font-size: 22px;
+  color: #ffd700;
+  margin-bottom: 12px;
+}
+
+.welcome-sub {
+  font-size: 16px;
+  color: #ccc;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #000;
+  color: #888;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .header-homepage {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .header-homepage .header-title {
+    font-size: 22px;
+  }
+}
+
