@@ -1,206 +1,241 @@
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #000; /* Black background below header */
-  color: #fff;
+/* =====================
+   GLOBAL / COMMON
+===================== */
+
+* {
+  box-sizing: border-box;
 }
 
-.header-homepage, .header-category {
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* =====================
+   HEADER (COMMON)
+===================== */
+
+.header-category {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 30px;
-  border-bottom-left-radius: 70px;
-  border-bottom-right-radius: 70px;
-  box-shadow: 0 5px 15px rgba(255, 165, 0, 0.7);
-  color: #fff;
-}
-
-.header-homepage {
-  background: linear-gradient(135deg, #f2c94c, #ff6f91, #50a8e8, #ffa500);
-}
-
-.header-category {
-  background: linear-gradient(135deg, #c9a23f, #50a8e8, #ff6f91);
-  box-shadow: 0 5px 15px rgba(201, 162, 63, 0.7);
-}
-
-.nav-button {
-  background: transparent;
-  border: 2px solid #fff;
-  padding: 10px 20px;
-  border-radius: 25px;
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s, color 0.3s;
-  white-space: nowrap;
-}
-
-.nav-button:hover {
-  background: #fff;
-  color: #000;
+  padding: 15px 25px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
 }
 
 .header-title {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  margin: 0 20px;
-}
-
-.welcome-section {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 0 15px;
-  text-align: center;
-  color: #f2c94c;
-}
-
-.welcome-main {
   font-size: 22px;
   font-weight: bold;
-  margin-bottom: 12px;
 }
 
-.welcome-sub {
-  font-size: 16px;
-  color: #fff;
-  font-style: italic;
+.nav-button {
+  color: inherit;
+  font-weight: bold;
 }
+
+.header-actions a {
+  margin-left: 12px;
+  padding: 9px 16px;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* YouTube Subscribe */
+.subscribe-btn {
+  background: #ff0000;
+}
+
+/* Instagram */
+.instagram-btn {
+  background: linear-gradient(45deg,
+    #feda75,
+    #fa7e1e,
+    #d62976,
+    #962fbf,
+    #4f5bd5);
+}
+
+/* =====================
+   HERO (COMMON STRUCTURE)
+===================== */
+
+.brand-hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.brand-logo {
+  text-align: center;
+  z-index: 2;
+}
+
+.brand-logo-img {
+  width: 180px;
+  border-radius: 50%;
+}
+
+.tagline {
+  margin-top: 15px;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+/* Floating keywords */
+.floating {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  opacity: 0.85;
+}
+
+.floating span {
+  font-size: 18px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.left { left: 5%; }
+.right { right: 5%; text-align: right; }
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0); }
+}
+
+/* =====================
+   VIDEO GALLERY (COMMON)
+===================== */
 
 .video-gallery {
-  padding: 30px 15px;
-  max-width: 1200px;
-  margin: auto;
+  padding: 60px 5%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  background-color: #000;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
 }
 
 .video-gallery iframe {
   width: 100%;
-  height: 160px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  height: 200px;
+  border-radius: 15px;
 }
 
-.subscribe-btn {
-  background: linear-gradient(90deg, #f44336, #d32f2f);
-  color: #fff;
-  padding: 10px 22px;
-  border-radius: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.7);
-  transition: transform 0.3s ease;
-  white-space: nowrap;
-}
-
-.subscribe-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(255, 69, 58, 0.9);
-}
+/* =====================
+   FOOTER
+===================== */
 
 footer {
   text-align: center;
-  padding: 20px 0;
-  background-color: #111;
+  padding: 20px;
   font-size: 14px;
-  color: #c9a23f;
-  box-shadow: inset 0 1px 0 #333;
-  margin-top: 60px;
-}
-.video-gallery iframe {
-  width: 100%;
-  aspect-ratio: 9 / 16; /* for Shorts */
-  max-width: 360px;
-}
-/* =========================
-   MOBILE RESPONSIVE FIXES
-   ========================= */
-
-/* Small devices (phones) */
-@media (max-width: 768px) {
-
-  /* HEADER */
-  .header-homepage,
-  .header-category {
-    flex-direction: column;
-    gap: 12px;
-    padding: 15px;
-    border-bottom-left-radius: 40px;
-    border-bottom-right-radius: 40px;
-    text-align: center;
-  }
-
-  .header-title {
-    font-size: 20px;
-    margin: 5px 0;
-  }
-
-  .nav-button,
-  .subscribe-btn {
-    font-size: 14px;
-    padding: 8px 18px;
-  }
-
-  /* WELCOME SECTION */
-  .welcome-main {
-    font-size: 18px;
-  }
-
-  .welcome-sub {
-    font-size: 14px;
-  }
-
-  /* VIDEO GRID */
-  .video-gallery {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 20px 12px;
-  }
-
-  .video-gallery iframe {
-    max-width: 100%;
-    aspect-ratio: 9 / 16;
-  }
-
-  footer {
-    font-size: 12px;
-    padding: 15px 0;
-  }
 }
 
-/* Very small devices */
-@media (max-width: 420px) {
+/* =====================
+   KNOWLEDGE WITH BHAVYA
+===================== */
 
-  .header-title {
-    font-size: 18px;
-  }
-
-  .nav-button,
-  .subscribe-btn {
-    width: 100%;
-    text-align: center;
-  }
-}
-
-/* Instagram button style */
-.instagram-btn {
-  background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af);
+body:not(.fun-page) {
+  background: radial-gradient(circle at top, #0a2a66, #000);
   color: #fff;
-  padding: 10px 22px;
-  border-radius: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  box-shadow: 0 4px 15px rgba(221, 42, 123, 0.7);
-  transition: transform 0.3s ease;
 }
 
-.instagram-btn:hover {
-  transform: scale(1.05);
+body:not(.fun-page) .header-category {
+  background: linear-gradient(90deg, #000, #0a2a66, #d4af37);
 }
 
+body:not(.fun-page) .header-title {
+  color: #ffd700;
+}
+
+body:not(.fun-page) .brand-logo-img {
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.75);
+}
+
+body:not(.fun-page) .tagline {
+  color: #ffd700;
+}
+
+body:not(.fun-page) .floating span {
+  color: #9ecbff;
+}
+
+body:not(.fun-page) .video-gallery {
+  background: #000;
+}
+
+body:not(.fun-page) .video-gallery iframe {
+  border: 2px solid #d4af37;
+  box-shadow: 0 10px 25px rgba(10, 42, 102, 0.6);
+}
+
+body:not(.fun-page) footer {
+  background: #000;
+  color: #aaa;
+}
+
+/* =====================
+   FUN WITH BHAVYA GOEL
+===================== */
+
+.fun-page {
+  background: radial-gradient(circle at top, #ffb6c1, #ffffff);
+  color: #000;
+}
+
+.fun-page .header-category {
+  background: linear-gradient(90deg, #0a2a66, #ff69b4, #d4af37);
+}
+
+.fun-page .brand-hero {
+  background: radial-gradient(circle at center, #ffffff, #ffd1e8);
+}
+
+.fun-page .brand-logo-img {
+  box-shadow: 0 0 45px rgba(255, 105, 180, 0.7);
+}
+
+.fun-page .tagline {
+  color: #ff1493;
+}
+
+.fun-page .floating span {
+  color: #ff69b4;
+}
+
+.fun-page .video-gallery {
+  background: linear-gradient(180deg, #ffffff, #ffe6f2);
+}
+
+.fun-page .video-gallery iframe {
+  border: 2px solid #ff69b4;
+  box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
+}
+
+.fun-page footer {
+  background: #fff;
+  color: #555;
+}
+
+/* =====================
+   MOBILE
+===================== */
+
+@media (max-width: 768px) {
+  .floating {
+    display: none;
+  }
+
+  .brand-logo-img {
+    width: 140px;
+  }
+}
