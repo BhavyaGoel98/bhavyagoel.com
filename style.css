@@ -1,4 +1,37 @@
 /* =====================
+   CSS VARIABLES
+===================== */
+
+:root {
+  /* Knowledge with Bhavya colors */
+  --knowledge-primary: #d4af37;
+  --knowledge-secondary: #0a2a66;
+  --knowledge-text: #ffd700;
+  --knowledge-accent: #9ecbff;
+  
+  /* Fun with Bhavya colors */
+  --fun-primary: #ff69b4;
+  --fun-secondary: #ff1493;
+  --fun-light: #ffd1e8;
+  --fun-lighter: #ffe6f2;
+  
+  /* Common colors */
+  --youtube-red: #ff0000;
+  --text-dark: #000;
+  --text-light: #fff;
+  --text-gray: #555;
+  --text-light-gray: #aaa;
+  --text-medium-gray: #888;
+  --text-lighter-gray: #ccc;
+  
+  /* Spacing */
+  --spacing-sm: 12px;
+  --spacing-md: 20px;
+  --spacing-lg: 25px;
+  --spacing-xl: 60px;
+}
+
+/* =====================
    GLOBAL / COMMON
 ===================== */
 
@@ -23,7 +56,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 25px;
+  padding: 15px var(--spacing-lg);
   box-shadow: 0 5px 20px rgba(0,0,0,0.4);
 }
 
@@ -35,20 +68,32 @@ a {
 .nav-button {
   color: inherit;
   font-weight: bold;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.nav-button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
 .header-actions a {
-  margin-left: 12px;
+  margin-left: var(--spacing-sm);
   padding: 9px 16px;
   border-radius: 22px;
   font-size: 14px;
   font-weight: bold;
-  color: #fff;
+  color: var(--text-light);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.header-actions a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 /* YouTube Subscribe */
 .subscribe-btn {
-  background: #ff0000;
+  background: var(--youtube-red);
 }
 
 /* Instagram */
@@ -82,6 +127,11 @@ a {
 .brand-logo-img {
   width: 180px;
   border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.brand-logo-img:hover {
+  transform: scale(1.05);
 }
 
 .tagline {
@@ -102,10 +152,29 @@ a {
 .floating span {
   font-size: 18px;
   animation: float 6s ease-in-out infinite;
+  will-change: transform;
 }
 
-.left { left: 5%; }
-.right { right: 5%; text-align: right; }
+.floating span:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.floating span:nth-child(3) {
+  animation-delay: 2s;
+}
+
+.floating span:nth-child(4) {
+  animation-delay: 3s;
+}
+
+.left { 
+  left: 5%; 
+}
+
+.right { 
+  right: 5%; 
+  text-align: right; 
+}
 
 @keyframes float {
   0% { transform: translateY(0); }
@@ -118,16 +187,22 @@ a {
 ===================== */
 
 .video-gallery {
-  padding: 60px 5%;
+  padding: var(--spacing-xl) 5%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
+  gap: var(--spacing-lg);
 }
 
 .video-gallery iframe {
   width: 100%;
   height: 200px;
   border-radius: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-gallery iframe:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 /* =====================
@@ -136,7 +211,7 @@ a {
 
 footer {
   text-align: center;
-  padding: 20px;
+  padding: var(--spacing-md);
   font-size: 14px;
 }
 
@@ -145,16 +220,16 @@ footer {
 ===================== */
 
 body:not(.fun-page) {
-  background: radial-gradient(circle at top, #0a2a66, #000);
-  color: #fff;
+  background: radial-gradient(circle at top, var(--knowledge-secondary), var(--text-dark));
+  color: var(--text-light);
 }
 
 body:not(.fun-page) .header-category {
-  background: linear-gradient(90deg, #000, #0a2a66, #d4af37);
+  background: linear-gradient(90deg, var(--text-dark), var(--knowledge-secondary), var(--knowledge-primary));
 }
 
 body:not(.fun-page) .header-title {
-  color: #ffd700;
+  color: var(--knowledge-text);
 }
 
 body:not(.fun-page) .brand-logo-img {
@@ -162,25 +237,29 @@ body:not(.fun-page) .brand-logo-img {
 }
 
 body:not(.fun-page) .tagline {
-  color: #ffd700;
+  color: var(--knowledge-text);
 }
 
 body:not(.fun-page) .floating span {
-  color: #9ecbff;
+  color: var(--knowledge-accent);
 }
 
 body:not(.fun-page) .video-gallery {
-  background: #000;
+  background: var(--text-dark);
 }
 
 body:not(.fun-page) .video-gallery iframe {
-  border: 2px solid #d4af37;
+  border: 2px solid var(--knowledge-primary);
   box-shadow: 0 10px 25px rgba(10, 42, 102, 0.6);
 }
 
+body:not(.fun-page) .video-gallery iframe:hover {
+  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5);
+}
+
 body:not(.fun-page) footer {
-  background: #000;
-  color: #aaa;
+  background: var(--text-dark);
+  color: var(--text-light-gray);
 }
 
 /* =====================
@@ -188,16 +267,16 @@ body:not(.fun-page) footer {
 ===================== */
 
 .fun-page {
-  background: radial-gradient(circle at top, #ffb6c1, #ffffff);
-  color: #000;
+  background: radial-gradient(circle at top, #ffb6c1, var(--text-light));
+  color: var(--text-dark);
 }
 
 .fun-page .header-category {
-  background: linear-gradient(90deg, #0a2a66, #ff69b4, #d4af37);
+  background: linear-gradient(90deg, var(--knowledge-secondary), var(--fun-primary), var(--knowledge-primary));
 }
 
 .fun-page .brand-hero {
-  background: radial-gradient(circle at center, #ffffff, #ffd1e8);
+  background: radial-gradient(circle at center, var(--text-light), var(--fun-light));
 }
 
 .fun-page .brand-logo-img {
@@ -205,25 +284,29 @@ body:not(.fun-page) footer {
 }
 
 .fun-page .tagline {
-  color: #ff1493;
+  color: var(--fun-secondary);
 }
 
 .fun-page .floating span {
-  color: #ff69b4;
+  color: var(--fun-primary);
 }
 
 .fun-page .video-gallery {
-  background: linear-gradient(180deg, #ffffff, #ffe6f2);
+  background: linear-gradient(180deg, var(--text-light), var(--fun-lighter));
 }
 
 .fun-page .video-gallery iframe {
-  border: 2px solid #ff69b4;
+  border: 2px solid var(--fun-primary);
   box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
 }
 
+.fun-page .video-gallery iframe:hover {
+  box-shadow: 0 12px 30px rgba(255, 105, 180, 0.6);
+}
+
 .fun-page footer {
-  background: #fff;
-  color: #555;
+  background: var(--text-light);
+  color: var(--text-gray);
 }
 
 /* =====================
@@ -238,7 +321,24 @@ body:not(.fun-page) footer {
   .brand-logo-img {
     width: 140px;
   }
+  
+  .video-gallery {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 30px 5%;
+  }
+  
+  .header-title {
+    font-size: 18px;
+  }
+  
+  .header-actions a {
+    margin-left: 8px;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
 }
+
 /* =========================
    HOMEPAGE ONLY CSS
    (bhavyagoel.com)
@@ -248,8 +348,8 @@ body:not(.fun-page) footer {
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #000;
-  color: #fff;
+  background: var(--text-dark);
+  color: var(--text-light);
 }
 
 /* HEADER */
@@ -263,17 +363,17 @@ body {
   background: linear-gradient(
     135deg,
     #feda75,   /* yellow */
-    #ff69b4,   /* pink */
+    var(--fun-primary),   /* pink */
     #4f5bd5,   /* blue */
-    #d4af37    /* gold */
+    var(--knowledge-primary)    /* gold */
   );
 
   box-shadow: 0 6px 25px rgba(0,0,0,0.45);
 }
 
-/* HEADER TITLE (gold text – already in HTML, safe here) */
+/* HEADER TITLE (gold text) */
 .header-homepage .header-title {
-  color: #ffd700;
+  color: var(--knowledge-text);
   font-size: 26px;
   text-align: center;
 }
@@ -284,7 +384,7 @@ body {
   border-radius: 999px; /* full circle / pill */
   font-weight: bold;
   text-decoration: none;
-  color: #fff;
+  color: var(--text-light);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -301,33 +401,33 @@ body {
 
 /* RIGHT BUTTON – Knowledge with Bhavya (Knowledge colors) */
 .header-homepage .right-button {
-  background: linear-gradient(45deg, #0a2a66, #d4af37);
+  background: linear-gradient(45deg, var(--knowledge-secondary), var(--knowledge-primary));
 }
 
 /* WELCOME SECTION */
 .welcome-section {
   text-align: center;
   padding: 80px 20px;
-  background: #000;
+  background: var(--text-dark);
 }
 
 .welcome-main {
   font-size: 22px;
-  color: #ffd700;
-  margin-bottom: 12px;
+  color: var(--knowledge-text);
+  margin-bottom: var(--spacing-sm);
 }
 
 .welcome-sub {
   font-size: 16px;
-  color: #ccc;
+  color: var(--text-lighter-gray);
 }
 
 /* FOOTER */
 footer {
   text-align: center;
-  padding: 20px;
-  background: #000;
-  color: #888;
+  padding: var(--spacing-md);
+  background: var(--text-dark);
+  color: var(--text-medium-gray);
 }
 
 /* MOBILE */
@@ -341,4 +441,3 @@ footer {
     font-size: 22px;
   }
 }
-
