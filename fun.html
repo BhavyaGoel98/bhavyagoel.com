@@ -1,94 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fun with Bhavya Goel</title>
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0a0a0f;--gold:#f5c842;--gold-dim:#c9a12e;--white:#f0ede6;--muted:#7a7880;--card-bg:#15151e;--border:rgba(245,200,66,0.15)}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+    .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.16}
+    .blob-1{width:480px;height:480px;background:var(--gold);top:-120px;right:-80px;animation:d1 12s ease-in-out infinite alternate}
+    .blob-2{width:360px;height:360px;background:#f54264;bottom:-80px;left:-60px;animation:d2 14s ease-in-out infinite alternate}
+    @keyframes d1{from{transform:translate(0,0)}to{transform:translate(-40px,50px) scale(1.1)}}
+    @keyframes d2{from{transform:translate(0,0)}to{transform:translate(40px,-40px) scale(1.1)}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2.5rem;background:rgba(10,10,15,.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--gold);text-decoration:none}
+    .nav-logo span{color:var(--white)}
+    .nav-links{display:flex;gap:2rem;align-items:center}
+    .nav-links a{text-decoration:none;color:var(--muted);font-size:.88rem;transition:color .2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+    .nav-links .cta{background:var(--gold);color:#000;font-weight:500;padding:.4rem 1.1rem;border-radius:100px}
+    .nav-links .cta:hover{background:var(--gold-dim);color:#000}
+    .hero{position:relative;z-index:1;padding:9rem 1.5rem 3rem;text-align:center;display:flex;flex-direction:column;align-items:center}
+    .hero-logo{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 0 40px rgba(245,200,66,.35);margin-bottom:1.5rem;animation:fadeUp .6s ease both}
+    .eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.38rem 1rem;border-radius:100px;margin-bottom:1rem;animation:fadeUp .7s .05s ease both}
+    .eyebrow::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%}
+    h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,5rem);line-height:1.05;letter-spacing:-.04em;color:var(--white);animation:fadeUp .8s .1s ease both}
+    h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+    .tags{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;margin-top:1.3rem;animation:fadeUp .8s .2s ease both}
+    .tag{font-size:.76rem;padding:.32rem .85rem;border-radius:100px;border:1px solid var(--border);color:var(--muted)}
+    .actions{display:flex;gap:1rem;margin-top:1.8rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .3s ease both}
+    .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.7rem;border-radius:100px;font-size:.9rem;font-weight:500;text-decoration:none;transition:all .2s;font-family:'DM Sans',sans-serif}
+    .btn-gold{background:var(--gold);color:#000}
+    .btn-gold:hover{background:var(--gold-dim);transform:translateY(-2px)}
+    .btn-ghost{border:1px solid var(--border);color:var(--white)}
+    .btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+    .section{position:relative;z-index:1;padding:3.5rem 1.5rem;max-width:1060px;margin:0 auto}
+    .sec-label{font-size:.73rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem}
+    .sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:1.6rem}
+    .content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem}
+    .ctag{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.2rem;text-align:center;transition:transform .25s,border-color .25s}
+    .ctag:hover{transform:translateY(-4px);border-color:rgba(245,200,66,.35)}
+    .ctag-emoji{font-size:1.9rem;margin-bottom:.65rem;display:block}
+    .ctag-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--white)}
+
+    /* VIDEO GRID */
+    .vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.3rem}
+    .vid-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;cursor:pointer}
+    .vid-card:hover{transform:translateY(-4px);border-color:rgba(245,200,66,.4);box-shadow:0 16px 40px rgba(0,0,0,.6)}
+    .vid-card.playing{border-color:var(--gold)!important;box-shadow:0 0 0 2px rgba(245,200,66,.3),0 20px 50px rgba(0,0,0,.7)!important;transform:none!important}
+    .v-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#111}
+    .v-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+    .vid-card:hover .v-thumb img{transform:scale(1.04)}
+    .play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);transition:background .25s}
+    .vid-card:hover .play-overlay{background:rgba(0,0,0,.15)}
+    .play-btn{width:52px;height:52px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 22px rgba(245,200,66,.5);transition:transform .2s}
+    .vid-card:hover .play-btn{transform:scale(1.12)}
+    .play-btn svg{width:20px;height:20px;fill:#000;margin-left:4px}
+    .v-player{display:none;aspect-ratio:16/9;background:#000}
+    .v-player iframe{width:100%;height:100%;border:none;display:block}
+    .vid-card.playing .v-thumb{display:none}
+    .vid-card.playing .v-player{display:block}
+    .v-info{padding:.8rem 1rem}
+    .v-title{font-size:.82rem;font-weight:500;color:var(--white);line-height:1.4}
+
+    footer{position:relative;z-index:1;padding:2rem 1.5rem;text-align:center;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border)}
+    footer span{color:var(--gold)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    @media(max-width:600px){nav{padding:1rem 1.25rem}.nav-links a:not(.cta){display:none}}
+  </style>
 </head>
-
-<body class="fun-page">
-
-  <!-- HEADER -->
-  <header class="header-category fun-header">
-    
-    <a href="index.html" class="nav-button left-button">
-      Home
-    </a>
-
-    <h1 class="header-title">
-      Fun with Bhavya Goel
-    </h1>
-
-    <div class="header-actions">
-      <a href="https://www.youtube.com/@funwiththetalent"
-         target="_blank"
-         class="subscribe-btn">
-        Subscribe
-      </a>
-
-      <a href="https://www.instagram.com/funwithbhavyagoel/"
-         target="_blank"
-         class="instagram-btn">
-        Instagram
-      </a>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <nav>
+    <a class="nav-logo" href="index.html">Bhavya<span>Goel</span></a>
+    <div class="nav-links">
+      <a href="fun.html" class="active">Fun</a>
+      <a href="knowledge.html">Knowledge</a>
+      <a href="portfolio.html" class="cta">Portfolio</a>
     </div>
+  </nav>
 
-  </header>
-
-  <!-- HERO SECTION -->
-  <section class="brand-hero fun-hero">
-
-    <div class="floating left fun-float">
-      <span>Fun</span>
-      <span>Enjoy</span>
-      <span>Travel</span>
+  <div class="hero">
+    <!-- Channel logo: using YouTube channel avatar via a video thumbnail as fallback -->
+    <img class="hero-logo"
+      src="https://i.ibb.co/F1Xw9sM/Chat-GPT-Image-Mar-6-2026-at-02-27-30-PM.png"
+      alt="Fun with Bhavya Goel"
+      referrerpolicy="no-referrer"
+    />
+    <div class="eyebrow">YouTube Channel</div>
+    <h1>Fun with<br/><span class="outline">Bhavya Goel</span></h1>
+    <div class="tags">
+      <span class="tag">Fun</span><span class="tag">Enjoy</span>
+      <span class="tag">Travel</span><span class="tag">Singing</span>
+      <span class="tag">Vlogs</span><span class="tag">Memories</span>
     </div>
-
-    <div class="brand-logo">
-      <img src="https://i.ibb.co/gQnPMBc/469720227-1106116800910659-6037158360372944225-n.jpg"
-           alt="Fun with Bhavya Goel Logo"
-           class="brand-logo-img fun-logo">
-
-      <p class="tagline fun-tagline">
-        Fun • Singing • Enjoy • Travel
-      </p>
+    <div class="actions">
+      <a href="https://www.youtube.com/@funwiththetalent" target="_blank" class="btn btn-gold">▶ Subscribe on YouTube</a>
+      <a href="https://www.instagram.com/funwithbhavyagoel/" target="_blank" class="btn btn-ghost">📸 Instagram</a>
     </div>
+  </div>
 
-    <div class="floating right fun-float">
-      <span>Singing</span>
-      <span>Vlogs</span>
-      <span>Memories</span>
+  <section class="section">
+    <p class="sec-label reveal">What I share</p>
+    <div class="sec-title reveal">Content</div>
+    <div class="content-grid">
+      <div class="ctag reveal"><span class="ctag-emoji">🎵</span><div class="ctag-name">Singing</div></div>
+      <div class="ctag reveal"><span class="ctag-emoji">🎥</span><div class="ctag-name">Vlogs</div></div>
+      <div class="ctag reveal"><span class="ctag-emoji">✈️</span><div class="ctag-name">Travel</div></div>
+      <div class="ctag reveal"><span class="ctag-emoji">📸</span><div class="ctag-name">Memories</div></div>
     </div>
-
   </section>
 
-  <!-- VIDEO GALLERY -->
-  <section class="video-gallery fun-videos">
-
-    <iframe src="https://www.youtube.com/embed/puj2FtOyuvo" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/c6q3onWkzyQ" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/N8138Pf1ZJc" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/VtkgZtGhcKk" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/yTM-OABU77E" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/T9U3DQlOtwE" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/gp8-I4SJ00Y" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/BjNyFHuFhXA" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/d4DC77q0r3Y" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/fgWvIlJoQa0" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/CbHyNMvKZ64" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/hX3QoDpYrgA" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/yIDIiJOYOss" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/TmQNbnXzDIs" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/ECIezteoo9g" allowfullscreen></iframe>
-    <iframe src="https://www.youtube.com/embed/ZbmAJBVDTRM" allowfullscreen></iframe>
-
+  <section class="section" style="padding-top:0">
+    <p class="sec-label reveal">Watch</p>
+    <div class="sec-title reveal">My Videos</div>
+    <div class="vid-grid" id="vidGrid"></div>
   </section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2025 Bhavya Goel | All Rights Reserved</p>
-  </footer>
+  <footer><p>© 2025 <span>Bhavya Goel</span> | All Rights Reserved</p></footer>
 
+  <script>
+    var VIDEOS = [
+      {id:'puj2FtOyuvo', title:'Fun Video 1'},
+      {id:'c6q3onWkzyQ', title:'Fun Video 2'},
+      {id:'N8138Pf1ZJc', title:'Fun Video 3'},
+      {id:'VtkgZtGhcKk', title:'Fun Video 4'},
+      {id:'yTM-OABU77E', title:'Fun Video 5'},
+      {id:'T9U3DQlOtwE', title:'Fun Video 6'},
+      {id:'gp8-I4SJ00Y', title:'Fun Video 7'},
+      {id:'BjNyFHuFhXA', title:'Fun Video 8'},
+      {id:'d4DC77q0r3Y', title:'Fun Video 9'},
+      {id:'fgWvIlJoQa0', title:'Fun Video 10'},
+      {id:'hX3QoDpYrgA', title:'Fun Video 11'},
+      {id:'CbHyNMvKZ64', title:'Fun Video 12'},
+      {id:'yIDIiJOYOss', title:'Fun Video 13'},
+      {id:'ECIezteoo9g', title:'Fun Video 14'},
+      {id:'TmQNbnXzDIs', title:'Fun Video 15'},
+      {id:'ZbmAJBVDTRM', title:'Fun Video 16'}
+    ];
+
+    var grid = document.getElementById('vidGrid');
+
+    function stopAll() {
+      document.querySelectorAll('.vid-card.playing').forEach(function(c) {
+        c.classList.remove('playing');
+        c.querySelector('iframe').src = '';
+      });
+    }
+
+    VIDEOS.forEach(function(v) {
+      var card = document.createElement('div');
+      card.className = 'vid-card reveal';
+      card.innerHTML =
+        '<div class="v-thumb">' +
+          '<img src="https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg" alt="' + v.title + '" loading="lazy"/>' +
+          '<div class="play-overlay"><div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>' +
+        '</div>' +
+        '<div class="v-player"><iframe src="" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>' +
+        '<div class="v-info"><div class="v-title">' + v.title + '</div></div>';
+
+      card.querySelector('.v-thumb').addEventListener('click', function() {
+        stopAll();
+        card.querySelector('iframe').src = 'https://www.youtube.com/embed/' + v.id + '?autoplay=1';
+        card.classList.add('playing');
+        card.scrollIntoView({behavior:'smooth', block:'center'});
+      });
+
+      grid.appendChild(card);
+
+      // Fetch real title async — update silently if it works
+      fetch('https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=' + v.id + '&format=json')
+        .then(function(r){return r.json();})
+        .then(function(d){ if(d.title) card.querySelector('.v-title').textContent = d.title; })
+        .catch(function(){});
+    });
+
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      });
+    }, {threshold:0.08});
+    document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+  </script>
 </body>
 </html>
