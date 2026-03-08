@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -23,51 +24,56 @@
     .nav-links a:hover{color:var(--gold)}
     .nav-links .nav-cta{background:var(--gold);color:#000;font-weight:500;padding:.45rem 1.1rem;border-radius:100px}
 
-    /* HERO */
-    .hero{position:relative;z-index:1;padding:10rem 1.5rem 4rem;text-align:center;display:flex;flex-direction:column;align-items:center;max-width:700px;margin:0 auto}
-    .hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.4rem 1rem;border-radius:100px;margin-bottom:1.2rem;animation:fadeUp .7s ease both}
-    .hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%}
-    .hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;letter-spacing:-.04em;color:var(--white);animation:fadeUp .8s .1s ease both}
-    .hero-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
-    .hero-intro{margin-top:1.5rem;font-size:1rem;line-height:1.75;color:var(--muted);animation:fadeUp .8s .2s ease both}
-    .hero-intro strong{color:var(--white);font-weight:500}
+```
+/* HERO */
+.hero{position:relative;z-index:1;padding:10rem 1.5rem 4rem;text-align:center;display:flex;flex-direction:column;align-items:center;max-width:700px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.4rem 1rem;border-radius:100px;margin-bottom:1.2rem;animation:fadeUp .7s ease both}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;letter-spacing:-.04em;color:var(--white);animation:fadeUp .8s .1s ease both}
+.hero-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+.hero-intro{margin-top:1.5rem;font-size:1rem;line-height:1.75;color:var(--muted);animation:fadeUp .8s .2s ease both}
+.hero-intro strong{color:var(--white);font-weight:500}
 
-    /* SECTIONS */
-    .page{position:relative;z-index:1;max-width:950px;margin:0 auto;padding:0 1.5rem 5rem}
-    .block{margin-bottom:3.5rem}
-    .block-label{font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
-    .block-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:1.2rem}
-    .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
-    .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem}
-    .card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;gap:.6rem;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden}
-    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
-    .card:hover{transform:translateY(-4px);border-color:rgba(245,200,66,.35);box-shadow:0 16px 40px rgba(0,0,0,.5)}
-    .card:hover::before{opacity:1}
-    .card-icon{font-size:1.5rem;margin-bottom:.3rem}
-    .card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--white)}
-    .card-sub{font-size:.8rem;color:var(--muted)}
-    .link-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem;text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:transform .25s,border-color .25s}
-    .link-card:hover{transform:translateY(-3px);border-color:rgba(245,200,66,.35)}
-    .link-card-left{display:flex;align-items:center;gap:.8rem}
-    .link-card-icon{font-size:1.3rem}
-    .link-card-name{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;color:var(--white)}
-    .link-card-handle{font-size:.78rem;color:var(--muted)}
-    .link-card-arrow{color:var(--gold);font-size:.85rem}
-    .goal-box{background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 16px 16px 0;padding:1.8rem;margin-top:.5rem}
-    .goal-box p{font-size:.95rem;line-height:1.75;color:var(--muted)}
-    .goal-box p strong{color:var(--white);font-weight:500}
-    .projects-box{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.8rem;font-size:.95rem;line-height:1.75;color:var(--muted)}
-    .projects-box strong{color:var(--white);font-weight:500}
+/* SECTIONS */
+.page{position:relative;z-index:1;max-width:950px;margin:0 auto;padding:0 1.5rem 5rem}
+.block{margin-bottom:3.5rem}
+.block-label{font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+.block-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:1.2rem}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem}
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;gap:.6rem;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
+.card:hover{transform:translateY(-4px);border-color:rgba(245,200,66,.35);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.card:hover::before{opacity:1}
+.card-icon{font-size:1.5rem;margin-bottom:.3rem}
+.card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--white)}
+.card-sub{font-size:.8rem;color:var(--muted)}
+.link-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem;text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:transform .25s,border-color .25s}
+.link-card:hover{transform:translateY(-3px);border-color:rgba(245,200,66,.35)}
+.link-card-left{display:flex;align-items:center;gap:.8rem}
+.link-card-icon{font-size:1.3rem}
+.link-card-name{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;color:var(--white)}
+.link-card-handle{font-size:.78rem;color:var(--muted)}
+.link-card-arrow{color:var(--gold);font-size:.85rem}
+.goal-box{background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 16px 16px 0;padding:1.8rem;margin-top:.5rem}
+.goal-box p{font-size:.95rem;line-height:1.75;color:var(--muted)}
+.goal-box p strong{color:var(--white);font-weight:500}
+.projects-box{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.8rem;font-size:.95rem;line-height:1.75;color:var(--muted)}
+.projects-box strong{color:var(--white);font-weight:500}
 
-    .back-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.5rem;border-radius:100px;border:1px solid var(--border);color:var(--muted);font-size:.85rem;text-decoration:none;transition:all .2s;margin-bottom:3rem}
-    .back-btn:hover{border-color:var(--gold);color:var(--gold)}
+.back-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.5rem;border-radius:100px;border:1px solid var(--border);color:var(--muted);font-size:.85rem;text-decoration:none;transition:all .2s;margin-bottom:3rem}
+.back-btn:hover{border-color:var(--gold);color:var(--gold)}
 
-    footer{position:relative;z-index:1;padding:2rem 1.5rem;text-align:center;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border)}
-    footer span{color:var(--gold)}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-    @media(max-width:600px){nav{padding:1rem 1.25rem}.nav-links a:not(.nav-cta){display:none}}
+footer{position:relative;z-index:1;padding:2rem 1.5rem;text-align:center;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border)}
+footer span{color:var(--gold)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:600px){nav{padding:1rem 1.25rem}.nav-links a:not(.nav-cta){display:none}}
+@keyframes modalIn{from{opacity:0;transform:scale(0.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+#projectsModal.open{display:flex !important}
+```
+
   </style>
 </head>
 <body>
@@ -91,144 +97,183 @@
   <div class="page">
     <a href="index.html" class="back-btn">← Back to Home</a>
 
-    <!-- WHAT I DO -->
-    <div class="block reveal">
-      <div class="block-label">Skills</div>
-      <div class="block-title">🚀 What I Do</div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-icon">💻</div>
-          <div class="card-name">Website Development</div>
-          <div class="card-sub">HTML — clean, structured websites</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">🎬</div>
-          <div class="card-name">Video Editing</div>
-          <div class="card-sub">All my videos are self-edited</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">🤖</div>
-          <div class="card-name">Learning AI &amp; Tech</div>
-          <div class="card-sub">Exploring the future of technology</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <div class="card-name">Content Creation</div>
-          <div class="card-sub">YouTube &amp; Instagram creator</div>
+```
+<!-- WHAT I DO -->
+<div class="block reveal">
+  <div class="block-label">Skills</div>
+  <div class="block-title">🚀 What I Do</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-icon">💻</div>
+      <div class="card-name">Website Development</div>
+      <div class="card-sub">HTML — clean, structured websites</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎬</div>
+      <div class="card-name">Video Editing</div>
+      <div class="card-sub">All my videos are self-edited</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🤖</div>
+      <div class="card-name">Learning AI &amp; Tech</div>
+      <div class="card-sub">Exploring the future of technology</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <div class="card-name">Content Creation</div>
+      <div class="card-sub">YouTube &amp; Instagram creator</div>
+    </div>
+  </div>
+</div>
+
+<!-- MY BRAND -->
+<div class="block reveal">
+  <div class="block-label">Brand</div>
+  <div class="block-title">🌐 My Brand</div>
+  <div class="card" style="max-width:420px">
+    <div class="card-icon">🏢</div>
+    <div class="card-name">Bhavy Website Solutions</div>
+    <div class="card-sub">Founder — creating and experimenting with websites and tech ideas</div>
+  </div>
+</div>
+
+<!-- YOUTUBE -->
+<div class="block reveal">
+  <div class="block-label">YouTube</div>
+  <div class="block-title">📺 My YouTube Channels</div>
+  <div style="display:flex;flex-direction:column;gap:.8rem">
+    <a href="https://youtube.com/@aapk.ahostanddost" target="_blank" class="link-card">
+      <div class="link-card-left">
+        <span class="link-card-icon">🎓</span>
+        <div>
+          <div class="link-card-name">Knowledge with Bhavya</div>
+          <div class="link-card-handle">@aapk.ahostanddost</div>
         </div>
       </div>
-    </div>
+      <span class="link-card-arrow">↗</span>
+    </a>
+    <a href="https://youtube.com/@funwiththetalent" target="_blank" class="link-card">
+      <div class="link-card-left">
+        <span class="link-card-icon">🎉</span>
+        <div>
+          <div class="link-card-name">Fun with Bhavya Goel</div>
+          <div class="link-card-handle">@funwiththetalent</div>
+        </div>
+      </div>
+      <span class="link-card-arrow">↗</span>
+    </a>
+  </div>
+</div>
 
-    <!-- MY BRAND -->
-    <div class="block reveal">
-      <div class="block-label">Brand</div>
-      <div class="block-title">🌐 My Brand</div>
-      <div class="card" style="max-width:420px">
-        <div class="card-icon">🏢</div>
-        <div class="card-name">Bhavy Website Solutions</div>
-        <div class="card-sub">Founder — creating and experimenting with websites and tech ideas</div>
+<!-- INSTAGRAM -->
+<div class="block reveal">
+  <div class="block-label">Instagram</div>
+  <div class="block-title">📸 My Instagram Accounts</div>
+  <div style="display:flex;flex-direction:column;gap:.8rem">
+    <a href="https://instagram.com/aapk.ahostanddost" target="_blank" class="link-card">
+      <div class="link-card-left">
+        <span class="link-card-icon">📷</span>
+        <div>
+          <div class="link-card-name">aapk.ahostanddost</div>
+          <div class="link-card-handle">Knowledge channel Instagram</div>
+        </div>
+      </div>
+      <span class="link-card-arrow">↗</span>
+    </a>
+    <a href="https://instagram.com/funwithbhavyagoel_7913" target="_blank" class="link-card">
+      <div class="link-card-left">
+        <span class="link-card-icon">📷</span>
+        <div>
+          <div class="link-card-name">funwithbhavyagoel_7913</div>
+          <div class="link-card-handle">Fun channel Instagram</div>
+        </div>
+      </div>
+      <span class="link-card-arrow">↗</span>
+    </a>
+  </div>
+</div>
+
+<!-- TECH SETUP -->
+<div class="block reveal">
+  <div class="block-label">Setup</div>
+  <div class="block-title">🛠 My Tech Setup</div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <div class="card-name">OnePlus 7</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <div class="card-name">iPad (10th Gen)</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💻</div>
+      <div class="card-name">MacBook 13" M2</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="block reveal">
+  <div class="block-label">Work</div>
+  <div class="block-title">💡 My Projects</div>
+  <div class="link-card" onclick="document.getElementById('projectsModal').classList.add('open')" style="cursor:pointer;border-color:rgba(245,200,66,0.35);background:linear-gradient(135deg,rgba(245,200,66,0.07),var(--card-bg));max-width:420px">
+    <div class="link-card-left">
+      <span class="link-card-icon">📁</span>
+      <div>
+        <div class="link-card-name" style="color:var(--gold)">My Projects</div>
+        <div class="link-card-handle">Click to explore all my builds</div>
       </div>
     </div>
+    <span class="link-card-arrow">→</span>
+  </div>
+</div>
 
-    <!-- YOUTUBE -->
-    <div class="block reveal">
-      <div class="block-label">YouTube</div>
-      <div class="block-title">📺 My YouTube Channels</div>
-      <div style="display:flex;flex-direction:column;gap:.8rem">
-        <a href="https://youtube.com/@aapk.ahostanddost" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">🎓</span>
-            <div>
-              <div class="link-card-name">Knowledge with Bhavya</div>
-              <div class="link-card-handle">@aapk.ahostanddost</div>
-            </div>
+<!-- PROJECTS MODAL -->
+<div id="projectsModal" style="display:none;position:fixed;inset:0;z-index:999;align-items:center;justify-content:center;padding:1.5rem;">
+  <div onclick="document.getElementById('projectsModal').classList.remove('open')" style="position:absolute;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);"></div>
+  <div style="position:relative;z-index:1;background:#15151e;border:1px solid rgba(245,200,66,0.3);border-radius:20px;padding:2rem;width:100%;max-width:480px;box-shadow:0 32px 80px rgba(0,0,0,0.7);animation:modalIn .3s cubic-bezier(0.34,1.56,0.64,1) both;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;">Work</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--white);">📁 My Projects</div>
+      </div>
+      <button onclick="document.getElementById('projectsModal').classList.remove('open')" style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);color:var(--gold);width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.background='rgba(245,200,66,0.18)'" onmouseout="this.style.background='rgba(245,200,66,0.08)'">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.75rem;">
+      <a href="BG-FAME-TODO-HABIT.html" class="link-card" style="border-color:rgba(245,200,66,0.2);">
+        <div class="link-card-left">
+          <span class="link-card-icon">✅</span>
+          <div>
+            <div class="link-card-name">BG FAME TODO+HABIT</div>
+            <div class="link-card-handle">Golden productivity app — tasks, habits, mood, pomodoro &amp; calendar</div>
           </div>
-          <span class="link-card-arrow">↗</span>
-        </a>
-        <a href="https://youtube.com/@funwiththetalent" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">🎉</span>
-            <div>
-              <div class="link-card-name">Fun with Bhavya Goel</div>
-              <div class="link-card-handle">@funwiththetalent</div>
-            </div>
-          </div>
-          <span class="link-card-arrow">↗</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- INSTAGRAM -->
-    <div class="block reveal">
-      <div class="block-label">Instagram</div>
-      <div class="block-title">📸 My Instagram Accounts</div>
-      <div style="display:flex;flex-direction:column;gap:.8rem">
-        <a href="https://instagram.com/aapk.ahostanddost" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">📷</span>
-            <div>
-              <div class="link-card-name">aapk.ahostanddost</div>
-              <div class="link-card-handle">Knowledge channel Instagram</div>
-            </div>
-          </div>
-          <span class="link-card-arrow">↗</span>
-        </a>
-        <a href="https://instagram.com/funwithbhavyagoel_7913" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">📷</span>
-            <div>
-              <div class="link-card-name">funwithbhavyagoel_7913</div>
-              <div class="link-card-handle">Fun channel Instagram</div>
-            </div>
-          </div>
-          <span class="link-card-arrow">↗</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- TECH SETUP -->
-    <div class="block reveal">
-      <div class="block-label">Setup</div>
-      <div class="block-title">🛠 My Tech Setup</div>
-      <div class="grid-3">
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <div class="card-name">OnePlus 7</div>
         </div>
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <div class="card-name">iPad (10th Gen)</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">💻</div>
-          <div class="card-name">MacBook 13" M2</div>
-        </div>
-      </div>
+        <span class="link-card-arrow">↗</span>
+      </a>
+      <!-- ADD MORE PROJECT BUTTONS BELOW THIS LINE -->
     </div>
+    <div style="margin-top:1.2rem;text-align:center;font-size:.75rem;color:var(--muted);">More projects coming soon 🚀</div>
+  </div>
+</div>
 
-    <!-- PROJECTS -->
-    <div class="block reveal">
-      <div class="block-label">Work</div>
-      <div class="block-title">💡 My Projects</div>
-      <div class="projects-box">
-        I am working on many projects like my chatbot <strong>BG Fame</strong>, <strong>BG Fame Code</strong>, <strong>BG Fame Planner</strong>, and many more. But I have ready projects too, like <strong>bhavyagoel.com</strong> — my YouTube website.
-      </div>
-    </div>
+<!-- GOAL -->
+<div class="block reveal">
+  <div class="block-label">Vision</div>
+  <div class="block-title">🌟 My Goal</div>
+  <div class="goal-box">
+    <p>I am learning coding step by step and building projects as I grow. My mission is to become a <strong>powerful tech creator</strong> and build impactful digital solutions in the future.</p>
+  </div>
+</div>
+```
 
-    <!-- GOAL -->
-    <div class="block reveal">
-      <div class="block-label">Vision</div>
-      <div class="block-title">🌟 My Goal</div>
-      <div class="goal-box">
-        <p>I am learning coding step by step and building projects as I grow. My mission is to become a <strong>powerful tech creator</strong> and build impactful digital solutions in the future.</p>
-      </div>
-    </div>
   </div>
 
   <footer><p>© 2025 <span>Bhavya Goel</span> | All Rights Reserved</p></footer>
   <script>
     const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target)}}),{threshold:.12});
     document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('projectsModal').classList.remove('open')});
   </script>
 </body>
 </html>
