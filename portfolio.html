@@ -4,19 +4,19 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mr. Bhavya Goel | Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#0e0e08;--gold:#f5c842;--gold-dim:#c9a12e;--white:#f0ede6;--muted:#8a8878;--card-bg:#16160f;--border:rgba(245,200,66,0.15)}
+    :root{--bg:#0a0a0f;--gold:#f5c842;--gold-dim:#c9a12e;--white:#f0ede6;--muted:#7a7880;--card-bg:#15151e;--border:rgba(245,200,66,0.15)}
     body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
     body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.6}
     .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.18}
-    .blob-1{width:500px;height:500px;background:#c9a12e;top:-150px;right:-100px;animation:drift1 12s ease-in-out infinite alternate}
-    .blob-2{width:380px;height:380px;background:#8a7020;bottom:-100px;left:-80px;animation:drift2 15s ease-in-out infinite alternate}
+    .blob-1{width:500px;height:500px;background:var(--gold);top:-150px;right:-100px;animation:drift1 12s ease-in-out infinite alternate}
+    .blob-2{width:380px;height:380px;background:#f54264;bottom:-100px;left:-80px;animation:drift2 15s ease-in-out infinite alternate}
     @keyframes drift1{from{transform:translate(0,0)}to{transform:translate(-40px,60px) scale(1.12)}}
     @keyframes drift2{from{transform:translate(0,0)}to{transform:translate(50px,-40px) scale(1.1)}}
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2.5rem;background:rgba(10,10,15,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-    .nav-logo{font-family:'DM Sans';font-weight:800;font-size:1.2rem;letter-spacing:-.02em;color:var(--gold);text-decoration:none}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;letter-spacing:-.02em;color:var(--gold);text-decoration:none}
     .nav-logo span{color:var(--white)}
     .nav-links{display:flex;gap:2rem;align-items:center}
     .nav-links a{text-decoration:none;color:var(--muted);font-size:.88rem;font-weight:400;letter-spacing:.04em;transition:color .2s}
@@ -27,7 +27,7 @@
     .hero{position:relative;z-index:1;padding:10rem 1.5rem 4rem;text-align:center;display:flex;flex-direction:column;align-items:center;max-width:700px;margin:0 auto}
     .hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.4rem 1rem;border-radius:100px;margin-bottom:1.2rem;animation:fadeUp .7s ease both}
     .hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%}
-    .hero-title{font-family:'DM Sans',sans-serif;font-weight:800;font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;letter-spacing:-.04em;color:var(--white);animation:fadeUp .8s .1s ease both}
+    .hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;letter-spacing:-.04em;color:var(--white);animation:fadeUp .8s .1s ease both}
     .hero-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
     .hero-intro{margin-top:1.5rem;font-size:1rem;line-height:1.75;color:var(--muted);animation:fadeUp .8s .2s ease both;text-align:center}
     .hero-intro strong{color:var(--white);font-weight:500}
@@ -36,7 +36,7 @@
     .page{position:relative;z-index:1;max-width:950px;margin:0 auto;padding:0 1.5rem 5rem}
     .block{margin-bottom:3.5rem}
     .block-label{font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
-    .block-title{font-family:'DM Sans',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:1.2rem}
+    .block-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:-.03em;color:var(--white);margin-bottom:1.2rem}
     .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
     .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem}
     .card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;gap:.6rem;transition:transform .25s,border-color .25s,box-shadow .25s;position:relative;overflow:hidden}
@@ -44,13 +44,13 @@
     .card:hover{transform:translateY(-4px);border-color:rgba(245,200,66,.35);box-shadow:0 16px 40px rgba(0,0,0,.5)}
     .card:hover::before{opacity:1}
     .card-icon{font-size:1.5rem;margin-bottom:.3rem}
-    .card-name{font-family:'DM Sans',sans-serif;font-weight:700;font-size:.95rem;color:var(--white)}
+    .card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--white)}
     .card-sub{font-size:.8rem;color:var(--muted)}
     .link-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem;text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:transform .25s,border-color .25s}
     .link-card:hover{transform:translateY(-3px);border-color:rgba(245,200,66,.35)}
     .link-card-left{display:flex;align-items:center;gap:.8rem}
     .link-card-icon{font-size:1.3rem}
-    .link-card-name{font-family:'DM Sans',sans-serif;font-weight:600;font-size:.95rem;color:var(--white)}
+    .link-card-name{font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;color:var(--white)}
     .link-card-handle{font-size:.78rem;color:var(--muted)}
     .link-card-arrow{color:var(--gold);font-size:.85rem}
     .goal-box{background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 16px 16px 0;padding:1.8rem;margin-top:.5rem}
@@ -231,7 +231,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
           <div>
             <div style="font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;">Work</div>
-            <div style="font-family:'DM Sans',sans-serif;font-size:1.4rem;font-weight:700;color:var(--white);">📁 My Projects</div>
+            <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--white);">📁 My Projects</div>
           </div>
           <button onclick="document.getElementById('projectsModal').classList.remove('open')" style="background:rgba(245,200,66,0.08);border:1px solid rgba(245,200,66,0.2);color:var(--gold);width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.background='rgba(245,200,66,0.18)'" onmouseout="this.style.background='rgba(245,200,66,0.08)'">✕</button>
         </div>
