@@ -23,6 +23,11 @@
     --purple: #9060d0;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  input, select, textarea {
+    background: #1e1e1e !important;
+    color: #e8e8e8 !important;
+    color-scheme: dark;
+  }
   body {
     font-family: 'Raleway', sans-serif;
     background: var(--bg);
@@ -162,6 +167,8 @@
     font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .input-row input:focus, .input-row select:focus { border-color: var(--gold); }
   .input-row select option { background: #1e1e1e; }
@@ -772,6 +779,8 @@
     font-size: 13px;
     outline: none;
     transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .cal-add-row input:focus, .cal-add-row select:focus { border-color: var(--gold); }
   .cal-add-row select option { background: #1e1e1e; }
