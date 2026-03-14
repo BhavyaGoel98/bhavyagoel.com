@@ -672,7 +672,7 @@
           <div class="contact-icon">📧</div>
           <div>
             <h4>Email</h4>
-            <a id="email-link" href="#" style="color:var(--white);font-size:0.95rem;font-weight:500;text-decoration:none;"></a>
+            <a id="email-link" href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#98;&#104;&#97;&#118;&#121;&#119;&#101;&#98;&#115;&#105;&#116;&#101;&#115;&#111;&#108;&#117;&#116;&#105;&#111;&#110;&#115;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;" style="color:var(--white);font-size:0.95rem;font-weight:500;text-decoration:none;">bhavywebsitesolutions&#64;gmail&#46;com</a>
           </div>
         </div>
         <div class="contact-item">
@@ -698,7 +698,7 @@
         </div>
       </div>
       <div>
-        <form class="contact-form" action="https://formspree.io/f/xqeylywe" method="POST" onsubmit="handleSubmit(event)">
+        <form class="contact-form" id="contact-form" action="https://formspree.io/f/xqeylywe" method="POST">
           <div class="form-row">
             <div class="form-group">
               <label>Your Name *</label>
@@ -752,12 +752,6 @@
 </footer>
 
 <script>
-  // Email (built via JS so Cloudflare cannot scramble it)
-  const u = 'bhavywebsitesolutions';
-  const d = 'gmail.com';
-  const el = document.getElementById('email-link');
-  if (el) { el.href = 'mailto:' + u + '@' + d; el.textContent = u + '@' + d; }
-
   // Stars
   const s = document.getElementById('stars');
   for (let i = 0; i < 120; i++) {
@@ -782,14 +776,6 @@
       btn.textContent = 'Copied!';
       setTimeout(() => btn.textContent = 'Copy ID', 2000);
     });
-  }
-
-  // Form submit
-  function handleSubmit(e) {
-    // Formspree handles the actual POST
-    setTimeout(() => {
-      document.getElementById('successMsg').style.display = 'block';
-    }, 600);
   }
 
   // Smooth scroll nav
