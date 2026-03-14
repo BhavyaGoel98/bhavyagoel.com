@@ -702,6 +702,10 @@
       </div>
       <div>
         <form class="contact-form" id="contact-form" action="https://formspree.io/f/xqeylywe" method="POST">
+          <!-- Formspree hidden fields -->
+          <input type="hidden" name="_subject" value="New enquiry from Bhavy Website Solutions!"/>
+          <input type="hidden" name="_next" value="https://bhavyagoel.com/thankyou.html"/>
+          <input type="text" name="_gotcha" style="display:none"/>
           <div class="form-row">
             <div class="form-group">
               <label>Your Name *</label>
@@ -731,7 +735,7 @@
             <label>Your Message *</label>
             <textarea name="message" placeholder="Tell me about your project, idea, or query..." required></textarea>
           </div>
-          <button type="submit" class="form-submit">Send Message 🚀</button>
+          <button type="submit" class="form-submit" id="submitBtn">Send Message 🚀</button>
           <div class="form-success" id="successMsg">✅ Message sent! I'll reply to you very soon.</div>
         </form>
       </div>
