@@ -701,11 +701,11 @@
         </div>
       </div>
       <div>
-        <form class="contact-form" id="contact-form" action="https://formspree.io/f/xqeylywe" method="POST">
-          <!-- Formspree hidden fields -->
-          <input type="hidden" name="_subject" value="New enquiry from Bhavy Website Solutions!"/>
-          <input type="hidden" name="_next" value="https://bhavyagoel.com/thankyou.html"/>
-          <input type="text" name="_gotcha" style="display:none"/>
+        <form class="contact-form" id="contact-form">
+          <!-- Web3Forms -->
+          <input type="hidden" name="access_key" value="d72ce9c4-0a21-4a57-a631-ae180d3adac6"/>
+          <input type="hidden" name="subject" value="New Enquiry — Bhavy Website Solutions"/>
+          <input type="checkbox" name="botcheck" style="display:none"/>
           <div class="form-row">
             <div class="form-group">
               <label>Your Name *</label>
@@ -736,7 +736,7 @@
             <textarea name="message" placeholder="Tell me about your project, idea, or query..." required></textarea>
           </div>
           <button type="submit" class="form-submit" id="submitBtn">Send Message 🚀</button>
-          <div class="form-success" id="successMsg">✅ Message sent! I'll reply to you very soon.</div>
+          <div class="form-success" id="successMsg">🎉 Thank You! Message received. I'll reply soon! 🙏</div>
         </form>
       </div>
     </div>
@@ -784,6 +784,35 @@
       setTimeout(() => btn.textContent = 'Copy ID', 2000);
     });
   }
+
+  // Web3Forms AJAX — no redirect, shows Thank You on same page
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('submitBtn');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    var data = new FormData(this);
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: data
+    }).then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.success) {
+        document.getElementById('contact-form').reset();
+        document.getElementById('successMsg').style.display = 'block';
+        btn.textContent = 'Send Message 🚀';
+        btn.disabled = false;
+      } else {
+        btn.textContent = 'Send Message 🚀';
+        btn.disabled = false;
+        alert('Something went wrong. Please try again!');
+      }
+    }).catch(function() {
+      btn.textContent = 'Send Message 🚀';
+      btn.disabled = false;
+      alert('No internet connection. Please try again!');
+    });
+  });
 
   // Smooth scroll nav
   document.querySelectorAll('a[href^="#"]').forEach(a => {
