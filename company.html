@@ -672,7 +672,7 @@
           <div class="contact-icon">📧</div>
           <div>
             <h4>Email</h4>
-            <a href="/cdn-cgi/l/email-protection#096b61687f707e6c6b7a607d6c7a66657c7d6066677a496e64686065276a6664"><span class="__cf_email__" data-cfemail="ee8c868f9897998b8c9d879a8b9d81829b9a8781809dae89838f8782c08d8183">[bhavywebsitesolutions@gmail.com]</span></a>
+            <a id="email-link" href="#" style="color:var(--white);font-size:0.95rem;font-weight:500;text-decoration:none;"></a>
           </div>
         </div>
         <div class="contact-item">
@@ -751,7 +751,13 @@
   <p>© 2026 Bhavy Website Solutions. Founded &amp; built by Bhavya Goel · New Delhi, India</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+  // Email (built via JS so Cloudflare cannot scramble it)
+  const u = 'bhavywebsitesolutions';
+  const d = 'gmail.com';
+  const el = document.getElementById('email-link');
+  if (el) { el.href = 'mailto:' + u + '@' + d; el.textContent = u + '@' + d; }
+
   // Stars
   const s = document.getElementById('stars');
   for (let i = 0; i < 120; i++) {
