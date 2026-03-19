@@ -22,8 +22,6 @@
     .nav-links a{text-decoration:none;color:var(--muted);font-size:.88rem;font-weight:400;letter-spacing:.04em;transition:color .2s}
     .nav-links a:hover{color:var(--gold)}
     .nav-links .nav-cta{background:var(--gold);color:#000;font-weight:500;padding:.45rem 1.1rem;border-radius:100px}
-
-    /* HERO */
     .hero{position:relative;z-index:1;padding:10rem 1.5rem 4rem;text-align:center;display:flex;flex-direction:column;align-items:center;max-width:700px;margin:0 auto}
     .hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.4rem 1rem;border-radius:100px;margin-bottom:1.2rem;animation:fadeUp .7s ease both}
     .hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%}
@@ -31,8 +29,6 @@
     .hero-title .outline{color:transparent;-webkit-text-stroke:1.5px var(--gold)}
     .hero-intro{margin-top:1.5rem;font-size:1rem;line-height:1.75;color:var(--muted);animation:fadeUp .8s .2s ease both;text-align:center}
     .hero-intro strong{color:var(--white);font-weight:500}
-
-    /* SECTIONS */
     .page{position:relative;z-index:1;max-width:950px;margin:0 auto;padding:0 1.5rem 5rem}
     .block{margin-bottom:3.5rem}
     .block-label{font-size:.75rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
@@ -56,12 +52,8 @@
     .goal-box{background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 16px 16px 0;padding:1.8rem;margin-top:.5rem}
     .goal-box p{font-size:.95rem;line-height:1.75;color:var(--muted)}
     .goal-box p strong{color:var(--white);font-weight:500}
-    .projects-box{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.8rem;font-size:.95rem;line-height:1.75;color:var(--muted)}
-    .projects-box strong{color:var(--white);font-weight:500}
-
     .back-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.5rem;border-radius:100px;border:1px solid var(--border);color:var(--muted);font-size:.85rem;text-decoration:none;transition:all .2s;margin-bottom:3rem}
     .back-btn:hover{border-color:var(--gold);color:var(--gold)}
-
     footer{position:relative;z-index:1;padding:2rem 1.5rem;text-align:center;font-size:.8rem;color:var(--muted);border-top:1px solid var(--border)}
     footer span{color:var(--gold)}
     @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
@@ -93,35 +85,17 @@
   <div class="page">
     <a href="index.html" class="back-btn">← Back to Home</a>
 
-    <!-- WHAT I DO -->
     <div class="block reveal">
       <div class="block-label">Skills</div>
       <div class="block-title">🚀 What I Do</div>
       <div class="grid-2">
-        <div class="card">
-          <div class="card-icon">💻</div>
-          <div class="card-name">Website Development</div>
-          <div class="card-sub">HTML — clean, structured websites</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">🎬</div>
-          <div class="card-name">Video Editing</div>
-          <div class="card-sub">All my videos are self-edited</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">🤖</div>
-          <div class="card-name">Learning AI &amp; Tech</div>
-          <div class="card-sub">Exploring the future of technology</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <div class="card-name">Content Creation</div>
-          <div class="card-sub">YouTube &amp; Instagram creator</div>
-        </div>
+        <div class="card"><div class="card-icon">💻</div><div class="card-name">Website Development</div><div class="card-sub">HTML — clean, structured websites</div></div>
+        <div class="card"><div class="card-icon">🎬</div><div class="card-name">Video Editing</div><div class="card-sub">All my videos are self-edited</div></div>
+        <div class="card"><div class="card-icon">🤖</div><div class="card-name">Learning AI &amp; Tech</div><div class="card-sub">Exploring the future of technology</div></div>
+        <div class="card"><div class="card-icon">📱</div><div class="card-name">Content Creation</div><div class="card-sub">YouTube &amp; Instagram creator</div></div>
       </div>
     </div>
 
-    <!-- MY BRAND -->
     <div class="block reveal">
       <div class="block-label">Brand</div>
       <div class="block-title">🌐 My Brand</div>
@@ -132,93 +106,53 @@
       </div>
     </div>
 
-    <!-- YOUTUBE -->
     <div class="block reveal">
       <div class="block-label">YouTube</div>
       <div class="block-title">📺 My YouTube Channels</div>
       <div style="display:flex;flex-direction:column;gap:.8rem">
         <a href="https://youtube.com/@aapk.ahostanddost" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">🎓</span>
-            <div>
-              <div class="link-card-name">Knowledge with Bhavya</div>
-              <div class="link-card-handle">@aapk.ahostanddost</div>
-            </div>
-          </div>
+          <div class="link-card-left"><span class="link-card-icon">🎓</span><div><div class="link-card-name">Knowledge with Bhavya</div><div class="link-card-handle">@aapk.ahostanddost</div></div></div>
           <span class="link-card-arrow">↗</span>
         </a>
         <a href="https://youtube.com/@funwiththetalent" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">🎉</span>
-            <div>
-              <div class="link-card-name">Fun with Bhavya Goel</div>
-              <div class="link-card-handle">@funwiththetalent</div>
-            </div>
-          </div>
+          <div class="link-card-left"><span class="link-card-icon">🎉</span><div><div class="link-card-name">Fun with Bhavya Goel</div><div class="link-card-handle">@funwiththetalent</div></div></div>
           <span class="link-card-arrow">↗</span>
         </a>
       </div>
     </div>
 
-    <!-- INSTAGRAM -->
     <div class="block reveal">
       <div class="block-label">Instagram</div>
       <div class="block-title">📸 My Instagram Accounts</div>
       <div style="display:flex;flex-direction:column;gap:.8rem">
         <a href="https://instagram.com/aapk.ahostanddost" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">📷</span>
-            <div>
-              <div class="link-card-name">aapk.ahostanddost</div>
-              <div class="link-card-handle">Knowledge channel Instagram</div>
-            </div>
-          </div>
+          <div class="link-card-left"><span class="link-card-icon">📷</span><div><div class="link-card-name">aapk.ahostanddost</div><div class="link-card-handle">Knowledge channel Instagram</div></div></div>
           <span class="link-card-arrow">↗</span>
         </a>
         <a href="https://instagram.com/funwithbhavyagoel_7913" target="_blank" class="link-card">
-          <div class="link-card-left">
-            <span class="link-card-icon">📷</span>
-            <div>
-              <div class="link-card-name">funwithbhavyagoel_7913</div>
-              <div class="link-card-handle">Fun channel Instagram</div>
-            </div>
-          </div>
+          <div class="link-card-left"><span class="link-card-icon">📷</span><div><div class="link-card-name">funwithbhavyagoel_7913</div><div class="link-card-handle">Fun channel Instagram</div></div></div>
           <span class="link-card-arrow">↗</span>
         </a>
       </div>
     </div>
 
-    <!-- TECH SETUP -->
     <div class="block reveal">
       <div class="block-label">Setup</div>
       <div class="block-title">🛠 My Tech Setup</div>
       <div class="grid-3">
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <div class="card-name">OnePlus 7</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <div class="card-name">iPad (10th Gen)</div>
-        </div>
-        <div class="card">
-          <div class="card-icon">💻</div>
-          <div class="card-name">MacBook 13" M2</div>
-        </div>
+        <div class="card"><div class="card-icon">📱</div><div class="card-name">OnePlus 7</div></div>
+        <div class="card"><div class="card-icon">📱</div><div class="card-name">iPad (10th Gen)</div></div>
+        <div class="card"><div class="card-icon">💻</div><div class="card-name">MacBook 13" M2</div></div>
       </div>
     </div>
 
-    <!-- PROJECTS -->
     <div class="block reveal">
       <div class="block-label">Work</div>
       <div class="block-title">💡 My Projects</div>
       <div class="link-card" onclick="document.getElementById('projectsModal').classList.add('open')" style="cursor:pointer;border-color:rgba(245,200,66,0.35);background:linear-gradient(135deg,rgba(245,200,66,0.07),var(--card-bg));max-width:420px">
         <div class="link-card-left">
           <span class="link-card-icon">📁</span>
-          <div>
-            <div class="link-card-name" style="color:var(--gold)">My Projects</div>
-            <div class="link-card-handle">Click to explore all my builds</div>
-          </div>
+          <div><div class="link-card-name" style="color:var(--gold)">My Projects</div><div class="link-card-handle">Click to explore all my builds</div></div>
         </div>
         <span class="link-card-arrow">→</span>
       </div>
@@ -237,13 +171,11 @@
         </div>
         <div style="display:flex;flex-direction:column;gap:.75rem;">
           <a href="BG-FAME-TODO-HABIT.html" class="link-card" style="border-color:rgba(245,200,66,0.2);">
-            <div class="link-card-left">
-              <span class="link-card-icon">✅</span>
-              <div>
-                <div class="link-card-name">BG FAME TODO+HABIT</div>
-                <div class="link-card-handle">Golden productivity app — tasks, habits, mood, pomodoro &amp; calendar</div>
-              </div>
-            </div>
+            <div class="link-card-left"><span class="link-card-icon">✅</span><div><div class="link-card-name">BG FAME TODO+HABIT</div><div class="link-card-handle">Golden productivity app — tasks, habits, mood, pomodoro &amp; calendar</div></div></div>
+            <span class="link-card-arrow">↗</span>
+          </a>
+          <a href="bgfame-advertisers.html" class="link-card" style="border-color:rgba(245,200,66,0.2);">
+            <div class="link-card-left"><span class="link-card-icon">🎨</span><div><div class="link-card-name">BG Fame Advertisers</div><div class="link-card-handle">AI-powered ad maker — create stunning ads instantly</div></div></div>
             <span class="link-card-arrow">↗</span>
           </a>
           <!-- ADD MORE PROJECT BUTTONS BELOW THIS LINE -->
@@ -252,7 +184,6 @@
       </div>
     </div>
 
-    <!-- GOAL -->
     <div class="block reveal">
       <div class="block-label">Vision</div>
       <div class="block-title">🌟 My Goal</div>
