@@ -8,15 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 <style>
   :root {
-    --bg: #050505;
-    --surface: rgba(10, 15, 25, 0.6);
-    --card: rgba(15, 20, 35, 0.5);
-    --card2: rgba(20, 25, 45, 0.6);
-    --border: rgba(0, 242, 255, 0.12);
-    --border2: rgba(0, 242, 255, 0.3);
+    /* PREMIUM NAVY BACKGROUND - NOT BLACK */
+    --bg: #0B1120; 
+    --surface: rgba(17, 24, 39, 0.75);
+    --card: rgba(30, 41, 59, 0.6);
+    --card2: rgba(30, 41, 59, 0.85);
+    --border: rgba(0, 242, 255, 0.15);
+    --border2: rgba(0, 242, 255, 0.35);
     --text: #e8f4ff;
-    --muted: #8aa2b8;
-    --subtle: #1e3048;
+    --muted: #94a3b8;
+    --subtle: #334155;
     --accent: #00b4d8;
     --accent-glow: #00f2ff;
     --teal: #00ffcc;
@@ -37,20 +38,31 @@
 
   h1, h2, h3, h4, .logo-text, .nav-label, .page-title, .card-title, .stat-value, .btn { font-family: 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: -0.5px; }
 
+  /* BACKGROUND MESH */
   .mesh-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 15% 30%, rgba(0, 242, 255, 0.08) 0%, transparent 40%), radial-gradient(circle at 85% 70%, rgba(112, 0, 255, 0.06) 0%, transparent 40%); z-index: -1; }
 
-  /* CURSOR */
+  /* CUSTOM CURSOR & EXPANDING GRID PATTERN */
   #c-dot { position: fixed; width: 8px; height: 8px; background: var(--accent-glow); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); box-shadow: var(--glow-strong); transition: width 0.15s, height 0.15s; }
   #c-ring { position: fixed; width: 38px; height: 38px; border: 1.5px solid rgba(0, 242, 255, 0.45); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s; }
   body.clicking #c-dot { width: 4px; height: 4px; }
   body.clicking #c-ring { background: rgba(0, 242, 255, 0.08); border-color: var(--accent-glow); }
+
+  .hover-pattern { position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: 0; transition: opacity 0.4s ease; }
+  .hover-pattern.visible { opacity: 1; }
+  .pattern-lines {
+    position: absolute; inset: -20%;
+    background-image: linear-gradient(rgba(0,242,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    -webkit-mask-image: radial-gradient(circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 100%);
+    mask-image: radial-gradient(circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 0%, transparent 100%);
+  }
 
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(0, 242, 255, 0.2); border-radius: 99px; }
 
   /* SIDEBAR */
-  .sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 0 20px; height: 100vh; z-index: 10; }
+  .sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--surface); backdrop-filter: blur(20px); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 0 20px; height: 100vh; z-index: 10; }
   .logo { padding: 0 20px 24px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
   .logo-mark { width: 38px; height: 38px; background: linear-gradient(135deg, var(--accent), var(--teal)); border-radius: 12px; display: grid; place-items: center; font-weight: 800; font-size: 14px; color: #000; flex-shrink: 0; box-shadow: var(--glow); }
   .logo-text { font-weight: 700; font-size: 18px; color: var(--accent-glow); text-shadow: var(--glow); }
@@ -65,14 +77,14 @@
   .nav-icon { font-family: 'Material Symbols Rounded'; font-size: 20px; flex-shrink: 0; }
   .nav-badge { margin-left: auto; background: var(--accent); color: #000; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
 
-  .sidebar-bottom { padding: 16px 16px 0; border-top: 1px solid var(--border); }
+  .sidebar-bottom { padding: 16px 16px 0; border-top: 1px solid var(--border); display:flex; flex-direction:column; gap:10px; }
   .user-card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid transparent; transition: all 0.3s var(--ease); cursor: none; }
   .user-card:hover { background: var(--card); border-color: var(--border); transform: translateY(-2px); }
   .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--rose)); display: grid; place-items: center; font-weight: 700; font-size: 14px; color: #fff; box-shadow: var(--glow); flex-shrink:0; }
 
   /* MAIN */
   .main { flex: 1; overflow-y: auto; height: 100vh; display: flex; flex-direction: column; position: relative; }
-  .topbar { position: sticky; top: 0; background: rgba(5, 5, 5, 0.7); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+  .topbar { position: sticky; top: 0; background: rgba(11, 17, 32, 0.75); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
   .page-title { font-size: 24px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
   .page-date { font-size: 12px; color: var(--accent-glow); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
   
@@ -103,11 +115,15 @@
   .stat-tile.teal::before { background: var(--teal); }
   .stat-tile.rose::before { background: var(--rose); }
   .stat-tile.amber::before { background: var(--amber); }
-  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: 'Space Grotesk', sans-serif; }
   .stat-value { font-size: 32px; margin: 8px 0 4px; text-shadow: 0 0 15px currentColor; font-family:'Space Grotesk',sans-serif;font-weight:700;}
   .stat-sub { font-size: 12px; color: var(--muted); }
+  .stat-tile.cyan .stat-value { color: var(--accent-glow); }
+  .stat-tile.teal .stat-value { color: var(--teal); }
+  .stat-tile.rose .stat-value { color: var(--rose); }
+  .stat-tile.amber .stat-value { color: var(--amber); }
 
-  /* ITEMS */
+  /* ITEMS (TASKS & HABITS) */
   .todo-item, .habit-row, .leaderboard-row { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: var(--radius-sm); background: rgba(0,0,0,0.3); border: 1px solid var(--border); margin-bottom: 12px; transition: all 0.3s var(--ease); cursor:none;}
   .todo-item:hover, .habit-row:hover, .leaderboard-row:hover { border-color: var(--border2); background: rgba(0, 242, 255, 0.05); transform: translateX(4px); }
   .todo-item.done { opacity: 0.5; }
@@ -127,7 +143,6 @@
   .tag-personal{ background: #2dd4bf22; color: var(--teal); }
   .tag-health { background: #34d39922; color: var(--emerald); }
   .tag-study { background: #fbbf2422; color: var(--amber); }
-  .tag-other { background: #fb718522; color: var(--rose); }
 
   .due-chip.overdue { border-color: #fb718555; color: var(--rose);  background: #fb718510; }
   .due-chip.due-soon { border-color: #fbbf2455; color: var(--amber); background: #fbbf2410; }
@@ -168,7 +183,7 @@
 
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; place-items: center; z-index: 100; }
   .modal-overlay.open { display: grid; }
-  .modal { background: #080d18; border: 1px solid var(--border2); border-radius: 20px; padding: 32px; width: 480px; box-shadow: 0 20px 60px rgba(0,242,255,0.15); animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+  .modal { background: #0B1120; border: 1px solid var(--border2); border-radius: 20px; padding: 32px; width: 480px; box-shadow: 0 20px 60px rgba(0,242,255,0.15); animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
   @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   input, textarea, select { background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 12px 16px; font-family: 'Inter', sans-serif; font-size: 14px; width: 100%; transition: all 0.3s; margin-bottom: 16px; cursor:none; outline:none;}
   input:focus, textarea:focus, select:focus { border-color: var(--accent-glow); box-shadow: 0 0 15px rgba(0,242,255,0.2); }
@@ -177,7 +192,6 @@
 
   /* UTILS */
   .task-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; align-items: center; }
-  .notes-snip { font-size: 13px; color: var(--muted); margin-top: 4px; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; }
   .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
   .empty .mat { font-family: 'Material Symbols Rounded'; font-size: 36px; opacity: 0.4; display: block; margin-bottom: 8px; }
   .filter-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -210,6 +224,7 @@
 <div class="mesh-gradient"></div>
 <div id="c-dot"></div>
 <div id="c-ring"></div>
+<div class="hover-pattern"><div class="pattern-lines"></div></div>
 
 <aside class="sidebar">
   <div class="logo c-hover">
@@ -236,6 +251,14 @@
   </nav>
 
   <div class="sidebar-bottom">
+    <a href="index.html" class="user-card c-hover" style="text-decoration: none;">
+      <div class="avatar" style="background:var(--surface);border:1px solid var(--border);color:var(--accent-glow);box-shadow:none;"><span class="nav-icon" style="font-size:18px">home</span></div>
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: #fff;">Back to Home</div>
+        <div style="font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono';">Exit App</div>
+      </div>
+    </a>
+
     <div class="user-card c-hover" onclick="navigate('profile')">
       <div class="avatar" id="sidebar-avatar">BG</div>
       <div>
@@ -373,7 +396,7 @@
         <div class="avatar" id="profile-avatar" style="width:80px;height:80px;font-size:28px">BG</div>
         <div style="flex:1">
           <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px" id="profile-name">Bhavya Goel</div>
-          <div style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:4px" id="profile-email">guest@rateexample.com</div>
+          <div style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:4px" id="profile-email">bhavy@bgfame.com</div>
           <div style="margin-top:16px">
             <div style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono';margin-bottom:6px" id="profile-xp-label">0 / 100 XP</div>
             <div class="progress-bar-wrap" style="margin-top:0"><div class="progress-bar-fill" id="profile-xp-bar" style="background:linear-gradient(90deg,var(--accent),var(--teal));width:0%"></div></div>
@@ -396,7 +419,7 @@
 
 <div class="modal-overlay" id="add-modal" onclick="if(event.target===this) closeModal()">
   <div class="modal">
-    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;margin-bottom:24px;color:var(--accent-glow)" id="modal-title">Add Task</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;margin-bottom:24px;color:var(--accent-glow)" id="modal-title">Add Item</div>
     <div id="modal-body"></div>
     <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
       <button class="btn btn-ghost c-hover" onclick="closeModal()">Cancel</button>
@@ -515,12 +538,11 @@ function taskHTML(t, mini=false) {
   const today = todayKey();
   const dueClass = !t.dueDate ? '' : t.dueDate < today ? 'overdue' : t.dueDate === today ? 'due-soon' : 'upcoming';
   const dueLabel = !t.dueDate ? '' : t.dueDate < today ? `⚠ Overdue · ${t.dueDate}` : t.dueDate === today ? `📅 Due today` : `📅 ${t.dueDate}`;
-  const meta = [ t.tag ? `<span class="tag tag-${t.tag}">${t.tag}</span>` : '', t.dueDate ? `<span class="due-chip ${dueClass}">${dueLabel}</span>` : '', t.reminder ? `<span class="reminder-chip"><span style="font-family:'Material Symbols Rounded';font-size:12px">alarm</span>${t.reminder}</span>` : '' ].filter(Boolean).join('');
+  const meta = [ t.tag ? `<span class="tag tag-${t.tag}">${t.tag}</span>` : '', t.dueDate ? `<span class="due-chip ${dueClass}">${dueLabel}</span>` : ''].filter(Boolean).join('');
   return `<div class="todo-item ${t.done?'done':''} c-hover">
     <div class="check-box ${t.done?'checked':''} c-hover" onclick="toggleTask('${t.id}')">${t.done?'check':''}</div>
     <div style="flex:1;min-width:0">
       <div class="todo-text">${t.text}</div>
-      ${t.notes ? `<div class="notes-snip">${t.notes}</div>` : ''}
       ${meta ? `<div class="task-meta">${meta}</div>` : ''}
     </div>
     <span class="priority-tag p-${t.priority||'medium'}">${t.priority||'medium'}</span>
@@ -563,7 +585,7 @@ function renderHabits() {
   document.getElementById('habits-list').innerHTML = habits.map(h=>{
     const done = (h.log||[]).includes(today);
     const dots = last7Days().map(d=>`<div class="streak-dot ${((h.log||[]).includes(d))?'done':''}"></div>`).join('');
-    const meta = [h.tag ? `<span class="tag tag-${h.tag}">${h.tag}</span>` : '', h.frequency ? `<span class="habit-freq">${h.frequency}</span>` : ''].filter(Boolean).join('');
+    const meta = [h.tag ? `<span class="tag tag-${h.tag}">${h.tag}</span>` : ''].filter(Boolean).join('');
     return `<div class="habit-row c-hover" style="flex-wrap:wrap">
       <div class="habit-icon">${h.emoji||'⚡'}</div>
       <div style="flex:1;min-width:0"><div class="habit-name">${h.name}</div><div class="habit-streak">${currentStreak(h)} day streak</div>${meta?`<div class="task-meta">${meta}</div>`:''}</div>
@@ -588,7 +610,7 @@ function updatePomoDisplay() { document.getElementById('pomo-time').textContent 
 function updatePomoDots() { const n = (state.pomodoro.sessions % 4) || 4; document.getElementById('pomo-sessions').innerHTML = Array.from({length:4},(_,i)=>`<div class="streak-dot ${i<n?'done':''}" style="width:14px;height:14px"></div>`).join(''); }
 
 /* ── MOOD ── */
-const MOODS = [ {emoji:'😄', label:'Awesome', color:'#06d6a0', val:5}, {emoji:'🙂', label:'Good', color:'#00f2ff', val:4}, {emoji:'😐', label:'Okay', color:'#ffbe0b', val:3}, {emoji:'😔', label:'Low', color:'#ff4d6d', val:2}, {emoji:'😞', label:'Bad', color:'#8aa2b8', val:1} ];
+const MOODS = [ {emoji:'😄', label:'Awesome', color:'#06d6a0', val:5}, {emoji:'🙂', label:'Good', color:'#00f2ff', val:4}, {emoji:'😐', label:'Okay', color:'#ffbe0b', val:3}, {emoji:'😔', label:'Low', color:'#ff4d6d', val:2}, {emoji:'😞', label:'Bad', color:'#94a3b8', val:1} ];
 let selectedMood = null;
 function renderMood() { document.getElementById('mood-picker').innerHTML = MOODS.map((m,i)=>`<div class="mood-btn c-hover ${selectedMood===i?'selected':''}" onclick="selectedMood=${i};renderMood()"><span class="mood-emoji">${m.emoji}</span><div class="mood-label">${m.label}</div></div>`).join(''); renderMoodChart(); }
 function logMood() { if(selectedMood===null) return alert('Pick a mood first!'); state.moods.unshift({ id:uid(), date:todayKey(), mood:selectedMood, note:document.getElementById('mood-note').value, ts:Date.now() }); save(); gainXP(5); selectedMood=null; document.getElementById('mood-note').value=''; renderMood(); }
@@ -674,8 +696,8 @@ function modalSave() {
 
 /* ── CUSTOM CURSOR BINDING ── */
 function bindCursor() {
-  var grow = () => { document.getElementById('c-ring').style.width = '60px'; document.getElementById('c-ring').style.height = '60px'; document.getElementById('c-ring').style.borderColor = 'rgba(0,242,255,0.8)'; };
-  var shrink = () => { document.getElementById('c-ring').style.width = '38px'; document.getElementById('c-ring').style.height = '38px'; document.getElementById('c-ring').style.borderColor = 'rgba(0,242,255,0.45)'; };
+  var grow = () => { document.getElementById('c-ring').style.width = '60px'; document.getElementById('c-ring').style.height = '60px'; document.getElementById('c-ring').style.borderColor = 'rgba(0,242,255,0.8)'; document.querySelector('.hover-pattern').classList.add('visible'); };
+  var shrink = () => { document.getElementById('c-ring').style.width = '38px'; document.getElementById('c-ring').style.height = '38px'; document.getElementById('c-ring').style.borderColor = 'rgba(0,242,255,0.45)'; document.querySelector('.hover-pattern').classList.remove('visible'); };
   document.querySelectorAll('.c-hover, .btn, input, select, textarea').forEach(el => {
     if(!el.dataset.cb) { el.addEventListener('mouseenter', grow); el.addEventListener('mouseleave', shrink); el.dataset.cb = "1"; }
   });
@@ -683,8 +705,16 @@ function bindCursor() {
 
 (function initCursor(){
   var dot = document.getElementById('c-dot'), ring = document.getElementById('c-ring');
+  const hoverPattern = document.querySelector('.hover-pattern');
+  const patternLines = document.querySelector('.pattern-lines');
+  
   var mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+  document.addEventListener('mousemove', e => { 
+    mx = e.clientX; my = e.clientY; 
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px'; 
+    if(patternLines){ patternLines.style.setProperty('--mouse-x', `${mx}px`); patternLines.style.setProperty('--mouse-y', `${my}px`); }
+  });
+  
   (function lerp(){ rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(lerp); })();
   document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
   document.addEventListener('mouseup', () => document.body.classList.remove('clicking'));
@@ -695,391 +725,6 @@ function bindCursor() {
 updateDate();
 updatePomoDots();
 navigate(state.currentPage);
-</script>
-</body>
-</html>
-  /* ── CUSTOM CURSOR ── */
-  #c-dot { position: fixed; width: 8px; height: 8px; background: var(--accent-glow); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); box-shadow: var(--glow-strong); transition: width 0.15s, height 0.15s; }
-  #c-ring { position: fixed; width: 38px; height: 38px; border: 1.5px solid rgba(0, 242, 255, 0.45); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s; }
-  body.clicking #c-dot { width: 4px; height: 4px; }
-  body.clicking #c-ring { background: rgba(0, 242, 255, 0.08); border-color: var(--accent-glow); }
-
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0, 242, 255, 0.2); border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 242, 255, 0.4); }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: var(--sidebar-w);
-    min-width: var(--sidebar-w);
-    background: var(--surface);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 24px 0 20px;
-    height: 100vh;
-    z-index: 10;
-  }
-
-  .logo { padding: 0 20px 24px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-  .logo-mark { width: 38px; height: 38px; background: linear-gradient(135deg, var(--accent), var(--teal)); border-radius: 12px; display: grid; place-items: center; font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 14px; color: #000; flex-shrink: 0; box-shadow: var(--glow); }
-  .logo-text { font-weight: 700; font-size: 18px; color: var(--accent-glow); text-shadow: var(--glow); }
-  .logo-sub { font-size: 9px; color: var(--muted); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
-
-  .nav-section { padding: 0 16px; flex: 1; overflow-y: auto; }
-  .nav-label { font-size: 11px; color: var(--muted); padding: 0 8px; margin: 20px 0 8px; }
-  .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--muted); font-size: 14px; font-weight: 500; transition: all 0.3s var(--ease); position: relative; }
-  .nav-item:hover { background: var(--card); color: var(--text); transform: translateX(4px); }
-  .nav-item.active { background: linear-gradient(90deg, rgba(0, 242, 255, 0.1), transparent); color: var(--accent-glow); border-left: 3px solid var(--accent-glow); }
-  .nav-item.active .nav-icon { color: var(--accent-glow); text-shadow: var(--glow); }
-  .nav-icon { font-family: 'Material Symbols Rounded'; font-size: 20px; flex-shrink: 0; }
-  .nav-badge { margin-left: auto; background: var(--accent); color: #000; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
-
-  .sidebar-bottom { padding: 16px 16px 0; border-top: 1px solid var(--border); }
-  .user-card { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); border: 1px solid transparent; transition: all 0.3s var(--ease); }
-  .user-card:hover { background: var(--card); border-color: var(--border); transform: translateY(-2px); }
-  .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--rose)); display: grid; place-items: center; font-weight: 700; font-size: 14px; color: #fff; box-shadow: var(--glow); }
-
-  /* ── MAIN ── */
-  .main { flex: 1; overflow-y: auto; height: 100vh; display: flex; flex-direction: column; position: relative; }
-  .topbar { position: sticky; top: 0; background: rgba(5, 5, 5, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
-  .page-title { font-size: 24px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-  .page-date { font-size: 12px; color: var(--accent-glow); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
-  
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; border: none; transition: all 0.3s var(--ease); }
-  .btn-primary { background: var(--accent-glow); color: #000; box-shadow: var(--glow); }
-  .btn-primary:hover { transform: translateY(-3px); box-shadow: var(--glow-strong); background: #fff; }
-  .btn-ghost { background: var(--card); color: var(--text); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent-glow); color: var(--accent-glow); transform: translateY(-2px); }
-
-  .content { padding: 32px 40px; flex: 1; }
-  .page { display: none; opacity: 0; transform: translateY(20px); transition: all 0.4s var(--ease); }
-  .page.active { display: block; opacity: 1; transform: translateY(0); }
-
-  /* ── CARDS (GLASSMORPHISM) ── */
-  .card { background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: all 0.4s var(--ease); }
-  .card:hover { border-color: var(--border2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-2px); }
-  .card-title { font-size: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text); }
-  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 10px currentColor; }
-
-  /* ── GRID ── */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
-
-  /* ── STAT TILES ── */
-  .stat-tile { background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden; transition: all 0.3s var(--ease); }
-  .stat-tile:hover { border-color: var(--accent-glow); transform: translateY(-5px); box-shadow: var(--glow); }
-  .stat-tile::before { content: ''; position: absolute; top: -40px; right: -40px; width: 100px; height: 100px; border-radius: 50%; opacity: 0.15; filter: blur(20px); }
-  .stat-tile.cyan::before { background: var(--accent-glow); }
-  .stat-tile.teal::before { background: var(--teal); }
-  .stat-tile.rose::before { background: var(--rose); }
-  .stat-tile.amber::before { background: var(--amber); }
-  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-family: 'Space Grotesk', sans-serif; }
-  .stat-value { font-size: 32px; margin: 8px 0 4px; text-shadow: 0 0 15px currentColor; }
-  .stat-sub { font-size: 12px; color: var(--muted); }
-  .stat-tile.cyan .stat-value { color: var(--accent-glow); }
-  .stat-tile.teal .stat-value { color: var(--teal); }
-  .stat-tile.rose .stat-value { color: var(--rose); }
-  .stat-tile.amber .stat-value { color: var(--amber); }
-
-  /* ── TODO & HABITS ── */
-  .todo-item, .habit-row { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: var(--radius-sm); background: rgba(0,0,0,0.3); border: 1px solid var(--border); margin-bottom: 12px; transition: all 0.3s var(--ease); }
-  .todo-item:hover, .habit-row:hover { border-color: var(--border2); background: rgba(0, 242, 255, 0.05); transform: translateX(4px); }
-  .todo-item.done { opacity: 0.5; }
-  .todo-item.done .todo-text { text-decoration: line-through; color: var(--muted); }
-
-  .check-box { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--muted); display: grid; place-items: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); font-family: 'Material Symbols Rounded'; font-size: 14px; color: transparent; flex-shrink: 0; }
-  .todo-item:hover .check-box { border-color: var(--accent-glow); }
-  .check-box.checked { background: var(--accent-glow); border-color: var(--accent-glow); color: #000; box-shadow: var(--glow); transform: scale(1.1); }
-
-  .todo-text { flex: 1; font-size: 15px; font-weight: 500; }
-  .priority-tag { font-size: 10px; padding: 4px 10px; border-radius: 99px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; font-weight: 700; }
-  .p-high { background: rgba(255, 77, 109, 0.15); color: var(--rose); border: 1px solid rgba(255, 77, 109, 0.3); }
-  .p-medium { background: rgba(255, 190, 11, 0.15); color: var(--amber); border: 1px solid rgba(255, 190, 11, 0.3); }
-  .p-low { background: rgba(6, 214, 160, 0.15); color: var(--emerald); border: 1px solid rgba(6, 214, 160, 0.3); }
-
-  .todo-del { background: none; border: none; color: var(--muted); font-family: 'Material Symbols Rounded'; font-size: 20px; padding: 4px; border-radius: 6px; transition: all 0.2s; opacity: 0; }
-  .todo-item:hover .todo-del, .habit-row:hover .todo-del { opacity: 1; }
-  .todo-del:hover { color: var(--rose); background: rgba(255, 77, 109, 0.2); transform: scale(1.1); }
-
-  /* ── HABIT SPECIFIC ── */
-  .habit-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--border); box-shadow: inset 0 0 10px rgba(255,255,255,0.05); }
-  .habit-name { font-weight: 600; font-size: 15px; }
-  .habit-streak { font-size: 12px; color: var(--accent-glow); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
-  .streak-dots { display: flex; gap: 6px; margin-left: auto; }
-  .streak-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--subtle); transition: all 0.3s; }
-  .streak-dot.done { background: var(--accent-glow); box-shadow: var(--glow); }
-  .habit-check { width: 32px; height: 32px; border-radius: 10px; border: 2px solid var(--muted); display: grid; place-items: center; font-family: 'Material Symbols Rounded'; color: transparent; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
-  .habit-check.done { background: var(--teal); border-color: var(--teal); color: #000; box-shadow: 0 0 15px rgba(0, 255, 204, 0.5); transform: scale(1.1); }
-
-  /* ── POMODORO ── */
-  .pomo-ring-wrap { display: flex; flex-direction: column; align-items: center; padding: 40px 0; }
-  .pomo-svg { transform: rotate(-90deg); filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.3)); }
-  .pomo-ring-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 8; }
-  .pomo-ring-fill { fill: none; stroke: var(--accent-glow); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
-  
-  .pomo-time { font-size: 56px; color: #fff; text-shadow: var(--glow); letter-spacing: -2px; }
-  .pomo-controls { display: flex; gap: 16px; margin-top: 40px; }
-  .pomo-btn { width: 56px; height: 56px; border-radius: 50%; background: var(--card2); border: 1px solid var(--border); color: var(--text); font-family: 'Material Symbols Rounded'; font-size: 24px; display: grid; place-items: center; transition: all 0.3s var(--ease); }
-  .pomo-btn:hover { background: rgba(0, 242, 255, 0.1); border-color: var(--accent-glow); color: var(--accent-glow); transform: translateY(-3px); }
-  .pomo-btn.main { width: 64px; height: 64px; background: var(--accent-glow); color: #000; box-shadow: var(--glow-strong); }
-  .pomo-btn.main:hover { background: #fff; transform: scale(1.1); }
-
-  /* ── FLOATING ACTION BUTTON (FAB) ── */
-  .fab { position: fixed; bottom: 40px; right: 40px; width: 60px; height: 60px; border-radius: 50%; background: var(--accent-glow); color: #000; font-family: 'Material Symbols Rounded'; font-size: 30px; border: none; display: grid; place-items: center; box-shadow: var(--glow-strong); z-index: 50; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); animation: pulseGlow 2s infinite; }
-  .fab:hover { transform: scale(1.15) rotate(90deg); background: #fff; }
-  @keyframes pulseGlow { 0% { box-shadow: 0 0 20px rgba(0,242,255,0.4); } 50% { box-shadow: 0 0 40px rgba(0,242,255,0.8); } 100% { box-shadow: 0 0 20px rgba(0,242,255,0.4); } }
-
-  /* ── MODALS & INPUTS ── */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; place-items: center; z-index: 100; }
-  .modal-overlay.open { display: grid; }
-  .modal { background: var(--bg); border: 1px solid var(--border2); border-radius: 20px; padding: 32px; width: 480px; box-shadow: 0 20px 60px rgba(0,242,255,0.15); animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-  @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  
-  input, textarea, select { background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 12px 16px; font-family: 'Inter', sans-serif; font-size: 14px; width: 100%; transition: all 0.3s; margin-bottom: 16px; }
-  input:focus, textarea:focus, select:focus { border-color: var(--accent-glow); box-shadow: 0 0 15px rgba(0,242,255,0.2); outline: none; }
-
-</style>
-</head>
-<body>
-
-<div class="mesh-gradient"></div>
-<div id="c-dot"></div>
-<div id="c-ring"></div>
-
-<aside class="sidebar">
-  <div class="logo hhover">
-    <div class="logo-mark">BG</div>
-    <div>
-      <div class="logo-text">BG FAME</div>
-      <div class="logo-sub">Productivity OS</div>
-    </div>
-  </div>
-
-  <nav class="nav-section">
-    <div class="nav-label">Workspace</div>
-    <div class="nav-item active hhover" onclick="navigate('dashboard')"><span class="nav-icon">dashboard</span> Dashboard</div>
-    <div class="nav-item hhover" onclick="navigate('tasks')"><span class="nav-icon">check_circle</span> Tasks <span class="nav-badge" id="task-badge">0</span></div>
-    <div class="nav-item hhover" onclick="navigate('habits')"><span class="nav-icon">local_fire_department</span> Habits</div>
-    <div class="nav-item hhover" onclick="navigate('pomodoro')"><span class="nav-icon">timer</span> Pomodoro</div>
-
-    <div class="nav-label">Insights & Settings</div>
-    <div class="nav-item hhover" onclick="navigate('mood')"><span class="nav-icon">sentiment_satisfied</span> Mood Log</div>
-    <div class="nav-item hhover" onclick="navigate('stats')"><span class="nav-icon">bar_chart</span> Statistics</div>
-  </nav>
-
-  <div class="sidebar-bottom">
-    <div class="user-card hhover" onclick="navigate('profile')">
-      <div class="avatar" id="sidebar-avatar">BG</div>
-      <div>
-        <div style="font-size: 14px; font-weight: 700; color: #fff;" id="sidebar-name">Bhavya Goel</div>
-        <div style="font-size: 11px; color: var(--accent-glow); font-family: 'JetBrains Mono';" id="sidebar-level">Lv.5 · 450 XP</div>
-      </div>
-    </div>
-  </div>
-</aside>
-
-<main class="main">
-  <header class="topbar">
-    <div>
-      <div class="page-title" id="topbar-title">Dashboard</div>
-      <div class="page-date" id="topbar-date"></div>
-    </div>
-  </header>
-
-  <div class="content">
-
-    <div class="page active" id="page-dashboard">
-      <div class="grid-4" id="dash-stats" style="margin-bottom: 32px;"></div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title"><span class="dot" style="color:var(--accent-glow)"></span> High Priority Tasks</div>
-          <div id="dash-tasks-list"></div>
-        </div>
-        <div class="card">
-          <div class="card-title"><span class="dot" style="color:var(--teal)"></span> Today's Habits</div>
-          <div id="dash-habits-list"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page" id="page-tasks">
-      <div style="margin-bottom: 24px;"><h2 class="card-title">Pending Tasks</h2></div>
-      <div id="tasks-pending"></div>
-      <div style="margin-top: 40px; opacity: 0.7;"><h2 class="card-title">Completed</h2></div>
-      <div id="tasks-done"></div>
-    </div>
-
-    <div class="page" id="page-habits">
-      <div style="margin-bottom: 24px;"><h2 class="card-title">Daily Tracker</h2></div>
-      <div id="habits-list"></div>
-    </div>
-
-    <div class="page" id="page-pomodoro">
-      <div style="max-width:400px; margin: 0 auto; text-align: center;">
-        <h2 class="card-title" style="justify-content: center;" id="pomo-mode-label">FOCUS TIME</h2>
-        
-        <div class="pomo-ring-wrap">
-          <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-            <svg class="pomo-svg" width="260" height="260" viewBox="0 0 200 200">
-              <circle class="pomo-ring-bg" cx="100" cy="100" r="88"/>
-              <circle class="pomo-ring-fill" id="pomo-ring" cx="100" cy="100" r="88" stroke-dasharray="553" stroke-dashoffset="0"/>
-            </svg>
-            <div style="position: absolute;">
-              <div class="pomo-time" id="pomo-time">25:00</div>
-            </div>
-          </div>
-
-          <div class="pomo-controls">
-            <button class="pomo-btn hhover" onclick="resetPomo()">restart_alt</button>
-            <button class="pomo-btn main hhover" id="pomo-play-btn" onclick="togglePomo()">play_arrow</button>
-            <button class="pomo-btn hhover" onclick="skipPomo()">skip_next</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page" id="page-mood"><h2 class="page-title">Mood Tracker Active</h2></div>
-    <div class="page" id="page-stats"><h2 class="page-title">Analytics Engine</h2></div>
-    <div class="page" id="page-profile"><h2 class="page-title">Creator Profile</h2></div>
-
-  </div>
-</main>
-
-<button class="fab hhover" onclick="openAddModal()">add</button>
-
-<div class="modal-overlay" id="add-modal" onclick="if(event.target===this) closeModal()">
-  <div class="modal">
-    <h2 class="card-title" style="margin-bottom: 20px; font-size: 20px;">Add New Item</h2>
-    <input type="text" id="m-task" placeholder="What needs to be done?" />
-    <select id="m-priority">
-      <option value="high">High Priority</option>
-      <option value="medium" selected>Medium Priority</option>
-      <option value="low">Low Priority</option>
-    </select>
-    <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-      <button class="btn btn-ghost hhover" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary hhover" onclick="modalSave()">Save Item</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ── STATE & NAVIGATION ── */
-let state = {
-  tasks: [
-    { id: '1', text: 'Build AI Advertisers App', priority: 'high', done: false },
-    { id: '2', text: 'Record YouTube Video', priority: 'medium', done: false },
-    { id: '3', text: 'Update bhavyagoel.com', priority: 'low', done: true }
-  ],
-  habits: [
-    { id: 'h1', name: 'Code for 1 Hour', emoji: '💻', log: ['2026-03-24'] },
-    { id: 'h2', name: 'Read AI Newsletter', emoji: '🤖', log: [] }
-  ],
-  currentPage: 'dashboard'
-};
-
-function navigate(page) {
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.querySelector(`[onclick="navigate('${page}')"]`).classList.add('active');
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('topbar-title').textContent = page;
-  renderApp();
-}
-
-/* ── RENDERING ── */
-function renderApp() {
-  const pending = state.tasks.filter(t => !t.done);
-  document.getElementById('task-badge').textContent = pending.length;
-
-  // Render Stats
-  document.getElementById('dash-stats').innerHTML = `
-    <div class="stat-tile cyan hhover"><div class="stat-label">Pending Tasks</div><div class="stat-value">${pending.length}</div></div>
-    <div class="stat-tile teal hhover"><div class="stat-label">Active Habits</div><div class="stat-value">${state.habits.length}</div></div>
-    <div class="stat-tile amber hhover"><div class="stat-label">Focus Sessions</div><div class="stat-value">12</div></div>
-    <div class="stat-tile rose hhover"><div class="stat-label">Current Level</div><div class="stat-value">5</div></div>
-  `;
-
-  // Render Tasks
-  const taskHTML = (t) => `
-    <div class="todo-item ${t.done ? 'done' : ''} hhover">
-      <div class="check-box ${t.done ? 'checked' : ''}" onclick="toggleTask('${t.id}')">${t.done ? 'check' : ''}</div>
-      <div class="todo-text">${t.text}</div>
-      <span class="priority-tag p-${t.priority}">${t.priority}</span>
-      <button class="todo-del" onclick="deleteTask('${t.id}')">delete</button>
-    </div>
-  `;
-  document.getElementById('dash-tasks-list').innerHTML = pending.map(taskHTML).join('');
-  document.getElementById('tasks-pending').innerHTML = pending.map(taskHTML).join('');
-  document.getElementById('tasks-done').innerHTML = state.tasks.filter(t => t.done).map(taskHTML).join('');
-
-  // Render Habits
-  const habitHTML = (h) => `
-    <div class="habit-row hhover">
-      <div class="habit-icon">${h.emoji}</div>
-      <div style="flex:1;"><div class="habit-name">${h.name}</div><div class="habit-streak">${h.log.length} day streak</div></div>
-      <div class="habit-check ${h.log.length > 0 ? 'done' : ''}" onclick="toggleHabit('${h.id}')">check</div>
-    </div>
-  `;
-  document.getElementById('dash-habits-list').innerHTML = state.habits.map(habitHTML).join('');
-  document.getElementById('habits-list').innerHTML = state.habits.map(habitHTML).join('');
-}
-
-/* ── ACTIONS ── */
-function toggleTask(id) { const t = state.tasks.find(t => t.id === id); t.done = !t.done; renderApp(); }
-function deleteTask(id) { state.tasks = state.tasks.filter(t => t.id !== id); renderApp(); }
-function toggleHabit(id) { const h = state.habits.find(h => h.id === id); if(h.log.length > 0) h.log = []; else h.log = ['today']; renderApp(); }
-
-function openAddModal() { document.getElementById('add-modal').classList.add('open'); document.getElementById('m-task').focus(); }
-function closeModal() { document.getElementById('add-modal').classList.remove('open'); document.getElementById('m-task').value = ''; }
-function modalSave() {
-  const text = document.getElementById('m-task').value;
-  const prio = document.getElementById('m-priority').value;
-  if(text) state.tasks.unshift({ id: Math.random().toString(), text: text, priority: prio, done: false });
-  closeModal(); renderApp();
-}
-
-/* ── POMODORO ── */
-let pomoTime = 25 * 60, pomoRunning = false, pomoInterval;
-function togglePomo() {
-  pomoRunning = !pomoRunning;
-  document.getElementById('pomo-play-btn').innerHTML = pomoRunning ? 'pause' : 'play_arrow';
-  if(pomoRunning) pomoInterval = setInterval(() => { pomoTime--; document.getElementById('pomo-time').textContent = `${Math.floor(pomoTime/60)}:${String(pomoTime%60).padStart(2,'0')}`; }, 1000);
-  else clearInterval(pomoInterval);
-}
-function resetPomo() { clearInterval(pomoInterval); pomoRunning = false; pomoTime = 25 * 60; document.getElementById('pomo-play-btn').innerHTML = 'play_arrow'; document.getElementById('pomo-time').textContent = "25:00"; }
-function skipPomo() { resetPomo(); }
-
-/* ── CUSTOM CURSOR ── */
-(function(){
-  var dot = document.getElementById('c-dot'), ring = document.getElementById('c-ring');
-  var mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
-  (function lerp(){ rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(lerp); })();
-  function grow(){ ring.style.width = '60px'; ring.style.height = '60px'; ring.style.borderColor = 'rgba(0,242,255,0.8)'; }
-  function shrink(){ ring.style.width = '38px'; ring.style.height = '38px'; ring.style.borderColor = 'rgba(0,242,255,0.45)'; }
-  document.addEventListener('mousedown', () => document.body.classList.add('clicking'));
-  document.addEventListener('mouseup', () => document.body.classList.remove('clicking'));
-  
-  // Attach hover to interactive elements (re-evaluate on mutations)
-  setInterval(() => {
-    document.querySelectorAll('.hhover, .btn, .todo-item, .habit-row, select, input').forEach(el => {
-      if(!el.dataset.cursorBound) {
-        el.addEventListener('mouseenter', grow); el.addEventListener('mouseleave', shrink);
-        el.dataset.cursorBound = "true";
-      }
-    });
-  }, 1000);
-})();
-
-// INIT
-renderApp();
 </script>
 </body>
 </html>
