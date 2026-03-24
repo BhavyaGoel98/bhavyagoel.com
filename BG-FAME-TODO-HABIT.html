@@ -207,6 +207,7 @@
   .mood-emoji { font-size: 28px; display: block; margin-bottom: 4px; }
   .mood-label { font-size: 12px; color: var(--muted); }
   .mini-bar { flex: 1; border-radius: 4px 4px 0 0; min-height: 4px; transition: height 0.5s; opacity: 0.9; }
+  
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
   .cal-header-day { text-align: center; font-size: 11px; color: var(--muted); padding: 4px 0; font-family: 'JetBrains Mono', monospace; }
   .cal-day { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1px solid transparent; transition: all 0.2s; position: relative; cursor:none;}
@@ -214,6 +215,7 @@
   .cal-day.today { background: var(--accent-glow); color: #000; font-weight: 700; box-shadow: var(--glow); }
   .cal-day.has-event::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); position: absolute; bottom: 6px; box-shadow: 0 0 5px var(--teal);}
   .cal-day.other-month { color: var(--subtle); }
+  
   .rank-1 { border-color: rgba(255, 190, 11, 0.4)!important; background: rgba(255, 190, 11, 0.05)!important; }
   .progress-bar-wrap { background: var(--card2); border-radius: 99px; height: 6px; overflow: hidden; margin-top: 8px; border: 1px solid rgba(0,242,255,0.1); }
   .progress-bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s; }
@@ -228,7 +230,7 @@
 
 <aside class="sidebar">
   <div class="logo c-hover">
-    <div class="logo-mark">BG</div>
+    <div class="logo-mark">G</div>
     <div>
       <div class="logo-text">BG FAME</div>
       <div class="logo-sub">Productivity OS</div>
@@ -260,9 +262,9 @@
     </a>
 
     <div class="user-card c-hover" onclick="navigate('profile')">
-      <div class="avatar" id="sidebar-avatar">BG</div>
+      <div class="avatar" id="sidebar-avatar">G</div>
       <div>
-        <div style="font-size: 14px; font-weight: 700; color: #fff;" id="sidebar-name">Bhavya Goel</div>
+        <div style="font-size: 14px; font-weight: 700; color: #fff;" id="sidebar-name">Guest</div>
         <div style="font-size: 11px; color: var(--accent-glow); font-family: 'JetBrains Mono';" id="sidebar-level">Lv.1 · 0 XP</div>
       </div>
     </div>
@@ -393,10 +395,10 @@
 
     <div class="page" id="page-profile">
       <div class="card c-hover" style="display:flex;align-items:center;gap:24px;margin-bottom:24px">
-        <div class="avatar" id="profile-avatar" style="width:80px;height:80px;font-size:28px">BG</div>
+        <div class="avatar" id="profile-avatar" style="width:80px;height:80px;font-size:28px">G</div>
         <div style="flex:1">
-          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px" id="profile-name">Bhavya Goel</div>
-          <div style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:4px" id="profile-email">bhavy@bgfame.com</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px" id="profile-name">Guest</div>
+          <div style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:4px" id="profile-email">guest@example.com</div>
           <div style="margin-top:16px">
             <div style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono';margin-bottom:6px" id="profile-xp-label">0 / 100 XP</div>
             <div class="progress-bar-wrap" style="margin-top:0"><div class="progress-bar-fill" id="profile-xp-bar" style="background:linear-gradient(90deg,var(--accent),var(--teal));width:0%"></div></div>
@@ -431,10 +433,17 @@
 <script>
 /* ── STATE & INIT ── */
 let state = JSON.parse(localStorage.getItem('bgfame_os')) || {
-  profile: { name: 'Bhavya Goel', email: 'bhavy@bgfame.com', xp: 0, level: 1 },
+  profile: { name: 'Guest', email: 'guest@example.com', xp: 0, level: 1 },
   tasks: [], habits: [], moods: [], pomodoro: { sessions: 0, total: 0 },
   currentPage: 'dashboard'
 };
+
+// Force old 'Bhavya Goel' profiles back to generic Guest if they were saved previously
+if(state.profile.name === 'Bhavya Goel') {
+  state.profile.name = 'Guest';
+  state.profile.email = 'guest@example.com';
+  save();
+}
 
 function save() { localStorage.setItem('bgfame_os', JSON.stringify(state)); }
 function gainXP(n) { state.profile.xp += n; while(state.profile.xp >= state.profile.level * 100) { state.profile.xp -= state.profile.level * 100; state.profile.level++; } save(); updateSidebar(); }
@@ -641,8 +650,16 @@ function calShift(dir) { calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;} i
 
 /* ── FAME & PROFILE ── */
 function renderFame() {
-  const lb = [ {n:state.profile.name, s:state.profile.xp+(state.profile.level*100), b:'👑'}, {n:'Rahul T.', s:840, b:'🥈'}, {n:'Anita S.', s:720, b:'🥉'}, {n:'David W.', s:610, b:'🏅'} ].sort((a,b)=>b.s-a.s);
+  // Generic Dummy Data to ensure NO previous demo names
+  const lb = [ 
+    {n:state.profile.name, s:state.profile.xp+(state.profile.level*100), b:'👑'}, 
+    {n:'User A', s:840, b:'🥈'}, 
+    {n:'User B', s:720, b:'🥉'}, 
+    {n:'User C', s:610, b:'🏅'} 
+  ].sort((a,b)=>b.s-a.s);
+  
   document.getElementById('lb-list').innerHTML = lb.map((u,i)=>`<div class="leaderboard-row rank-${i+1} c-hover"><div style="font-family:'Space Grotesk';font-size:18px;font-weight:700;width:30px;color:var(--muted)">${i+1}</div><div class="avatar" style="width:32px;height:32px;font-size:12px">${u.n[0]}</div><div style="flex:1;font-weight:600">${u.n}</div><div style="color:var(--accent-glow);font-family:'JetBrains Mono'">${u.s} XP</div><div style="font-size:20px">${u.b}</div></div>`).join('');
+  
   document.getElementById('badges-list').innerHTML = [{i:'🔥',n:'On Fire'}, {i:'⚡',n:'Power User'}, {i:'🍅',n:'Focused'}].map(b=>`<div class="c-hover" style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;flex:1"><div style="font-size:32px;margin-bottom:8px">${b.i}</div><div style="font-size:13px;font-weight:700">${b.n}</div></div>`).join('');
 }
 
@@ -656,7 +673,7 @@ function renderProfile() {
   document.getElementById('profile-xp-label').textContent = `${p.xp} / ${p.level*100} XP — Level ${p.level}`;
   document.getElementById('profile-xp-bar').style.width = Math.min(100,(p.xp/(p.level*100))*100) + '%';
 }
-function saveProfile() { state.profile.name = document.getElementById('edit-name').value; state.profile.email = document.getElementById('edit-email').value; save(); renderProfile(); updateSidebar(); }
+function saveProfile() { state.profile.name = document.getElementById('edit-name').value || "Guest"; state.profile.email = document.getElementById('edit-email').value || "guest@example.com"; save(); renderProfile(); updateSidebar(); }
 function clearAll() { if(confirm("Are you sure? This deletes ALL data forever.")){ localStorage.removeItem('bgfame_os'); window.location.reload(); } }
 
 /* ── MODAL ── */
