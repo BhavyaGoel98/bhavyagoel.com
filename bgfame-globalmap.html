@@ -29,12 +29,650 @@
   ::-webkit-scrollbar-track { background: var(--bg-main); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
+  /* FULL SCREEN LOADER */
+  #loading-screen { position: fixed; inset: 0; background: var(--bg-main); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px; }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
   /* AUTH SCREEN */
-  .auth-overlay { position: fixed; inset: 0; background: var(--bg-main); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  .auth-overlay { position: fixed; inset: 0; background: var(--bg-main); display: none; align-items: center; justify-content: center; z-index: 1000; }
   .auth-card { background: var(--bg-card); padding: 40px; border-radius: 16px; width: 100%; max-width: 420px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
   .auth-card h1 { font-size: 28px; font-weight: 900; margin-bottom: 8px; color: var(--text-main); text-align: center;}
   .auth-card p { color: var(--text-muted); margin-bottom: 24px; font-size: 14px; text-align: center;}
   
+  .input-group { margin-bottom: 16px; }
+  .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .auth-input { width: 100%; padding: 12px 16px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-family: var(--font-ui); outline: none; transition: border 0.2s; font-size: 15px;}
+  .auth-input:focus { border-color: var(--primary); }
+  
+  .btn-primary { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; transition: background 0.2s; margin-bottom: 16px; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  
+  .btn-google { width: 100%; padding: 12px; background: white; color: #333; border: none; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; margin-bottom: 16px; }
+  .btn-google:hover { background: #f1f5f9; }
+  .btn-google img { width: 20px; height: 20px; }
+  
+  .divider { display: flex; align-items: center; text-align: center; margin-bottom: 16px; color: var(--text-muted); font-size: 12px; font-weight: 600;}
+  .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+  .divider:not(:empty)::before { margin-right: .25em; }
+  .divider:not(:empty)::after { margin-left: .25em; }
+
+  .auth-switch { text-align: center; font-size: 14px; color: var(--text-muted); cursor: pointer; font-weight: 500;}
+  .auth-switch span { color: var(--primary); font-weight: 700; }
+
+  /* APP LAYOUT */
+  .app-container { display: grid; grid-template-columns: 260px 1fr; height: 100vh; display: none; }
+
+  /* SIDEBAR */
+  .sidebar { background: var(--bg-card); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+  .logo-area { padding: 24px; border-bottom: 1px solid var(--border); }
+  .logo-area h2 { font-weight: 900; font-size: 22px; letter-spacing: -1px; }
+  .logo-area span { color: var(--primary); }
+  
+  .nav-menu { padding: 24px 16px; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 8px; cursor: pointer; color: var(--text-muted); font-weight: 600; transition: 0.2s; margin-bottom: 8px; font-size: 15px; }
+  .nav-item:hover { background: var(--bg-hover); color: var(--text-main); }
+  .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-left: 3px solid var(--primary); border-radius: 0 8px 8px 0; }
+  
+  .user-mini-profile { padding: 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .avatar-circle { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; text-transform: uppercase;}
+  .user-details h4 { font-size: 14px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;}
+  .user-details p { font-size: 12px; color: var(--success); font-family: var(--font-code); }
+
+  /* MAIN CONTENT AREA */
+  .main-content { overflow-y: auto; padding: 40px 60px; position: relative; }
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .page-header { margin-bottom: 40px; }
+  .page-header h1 { font-size: 36px; font-weight: 900; margin-bottom: 8px; letter-spacing: -1px; }
+  .page-header p { color: var(--text-muted); font-size: 16px; }
+
+  /* TABS SPECIFIC STYLES */
+  
+  /* Catalog Tab */
+  .category-filters { display: flex; gap: 12px; margin-bottom: 40px; overflow-x: auto; padding-bottom: 12px; }
+  .cat-pill { padding: 10px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 30px; font-weight: 600; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: 0.2s; white-space: nowrap; }
+  .cat-pill:hover { border-color: var(--primary); color: var(--text-main); }
+  .cat-pill.active { background: var(--primary); border-color: var(--primary); color: white; }
+  .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+  .course-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;}
+  .course-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  
+  /* Course Syllabus Tab */
+  .btn-back { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 24px; display: inline-flex; }
+  .btn-back:hover { color: var(--text-main); background: var(--bg-hover); }
+  .chapter-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
+  .chapter-header { padding: 20px 24px; background: var(--bg-hover); border-bottom: 1px solid var(--border); }
+  .chapter-header h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px;}
+  .level-list { padding: 16px 24px; }
+  .level-item { display: flex; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; align-items: center;}
+  .level-item:hover { border-color: var(--primary); transform: translateX(4px); }
+  .level-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--bg-main); color: var(--text-muted); border: 1px solid var(--border); }
+  .level-status.done { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+
+  /* Dashboard Tab */
+  .dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  .dash-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; justify-content: center; }
+  .dash-value { font-size: 42px; font-weight: 900; color: var(--primary); font-family: var(--font-code); margin-bottom: 8px;}
+  .dash-label { color: var(--text-muted); font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
+  
+  /* Settings Tab */
+  .settings-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 24px; max-width: 600px;}
+  .settings-section h3 { font-size: 20px; margin-bottom: 24px; font-weight: 800;}
+  .setting-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .setting-row:last-child { border: none; margin: 0; padding: 0; }
+  .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s;}
+  .btn-danger:hover { background: var(--error); color: white; }
+
+  /* AI Tutor Tab */
+  .chat-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; height: 600px; display: flex; flex-direction: column; overflow: hidden; max-width: 800px;}
+  .chat-history { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+  .chat-msg { max-width: 80%; padding: 16px; border-radius: 12px; font-size: 15px; line-height: 1.5; font-weight: 500;}
+  .msg-ai { background: var(--bg-hover); border-top-left-radius: 2px; align-self: flex-start; color: var(--text-main);}
+  .msg-user { background: var(--primary); color: white; border-top-right-radius: 2px; align-self: flex-end;}
+  .chat-input-area { padding: 20px; background: var(--bg-main); border-top: 1px solid var(--border); display: flex; gap: 12px; }
+  .chat-input { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; color: white; outline: none; font-family: var(--font-ui); font-size: 15px;}
+  .chat-input:focus { border-color: var(--primary); }
+
+  /* WORKSPACE OVERLAY */
+  .workspace-overlay { position: fixed; inset: 0; background: var(--bg-main); z-index: 2000; display: none; flex-direction: column; }
+  .workspace-header { padding: 16px 24px; background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .workspace-body { display: grid; grid-template-columns: 1fr 1fr; flex: 1; overflow: hidden; }
+  .panel-left { padding: 32px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; }
+  .instruction-box { margin-bottom: 32px; font-size: 15px; line-height: 1.6; color: var(--text-muted);}
+  .code-editor { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; color: var(--text-main); font-family: var(--font-code); font-size: 15px; resize: none; outline: none; transition: 0.2s; line-height: 1.5; }
+  .code-editor:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
+  .panel-right { background: #050810; display: flex; flex-direction: column; }
+  .output-area { padding: 24px; font-family: var(--font-code); font-size: 14px; flex: 1; overflow-y: auto; }
+  .workspace-footer { padding: 16px 32px; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; }
+
+</style>
+</head>
+<body>
+
+<!-- FULL SCREEN LOADER (Prevents Auth Flash) -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div style="font-weight: 700; font-size: 18px; letter-spacing: 1px;">Connecting to BG Code Tutor...</div>
+</div>
+
+<!-- AUTH SCREEN -->
+<div class="auth-overlay" id="auth-screen">
+  <div class="auth-card">
+    <h1 id="auth-title">Create Profile</h1>
+    <p id="auth-sub">Start your professional coding journey.</p>
+    
+    <button class="btn-google" onclick="handleGoogleAuth()">
+      <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+      Continue with Google
+    </button>
+
+    <div class="divider">OR</div>
+
+    <div class="input-group" id="name-group">
+      <label>Full Name</label>
+      <input type="text" id="auth-name" class="auth-input" placeholder="e.g. Bhavya Goel">
+    </div>
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" id="auth-email" class="auth-input" placeholder="developer@bgsolutions.com">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="auth-pass" class="auth-input" placeholder="••••••••">
+    </div>
+    <div id="auth-error" style="color: var(--error); font-size: 13px; margin-bottom: 12px; font-weight: 600; display: none;"></div>
+    
+    <button class="btn-primary" id="auth-action-btn" onclick="handleEmailAuth()">Sign Up</button>
+    <div class="auth-switch" onclick="toggleAuthMode()">
+      <span id="auth-toggle-text">Already have an account? Log in</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP PORTAL -->
+<div class="app-container" id="main-app">
+  
+  <aside class="sidebar">
+    <div class="logo-area">
+      <h2>BG <span>Code</span></h2>
+      <div style="font-family: var(--font-code); font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">Developer Portal</div>
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item active" onclick="switchTab('catalog')">📚 Course Catalog</div>
+      <div class="nav-item" onclick="switchTab('dashboard')">📈 My Dashboard</div>
+      <div class="nav-item" onclick="switchTab('ai')">🤖 AI Tutor</div>
+      <div class="nav-item" onclick="switchTab('settings')">⚙️ Settings</div>
+    </div>
+    <div class="user-mini-profile">
+      <div class="avatar-circle" id="sidebar-initial"></div>
+      <div class="user-details">
+        <h4 id="sidebar-name">Loading...</h4>
+        <p><span id="sidebar-xp">0</span> XP</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <!-- CATALOG TAB -->
+    <div class="screen active" id="tab-catalog">
+      <div class="page-header">
+        <h1>Developer Library</h1>
+        <p>Choose a technology to start learning.</p>
+      </div>
+      <div class="category-filters">
+        <div class="cat-pill active" onclick="filterCatalog('All', this)">All Courses</div>
+        <div class="cat-pill" onclick="filterCatalog('Web', this)">🌐 Web</div>
+        <div class="cat-pill" onclick="filterCatalog('Programming', this)">🖥️ Programming</div>
+        <div class="cat-pill" onclick="filterCatalog('App', this)">📱 App Dev</div>
+        <div class="cat-pill" onclick="filterCatalog('Backend', this)">⚙️ Backend</div>
+        <div class="cat-pill" onclick="filterCatalog('Database', this)">🗄️ Database</div>
+      </div>
+      <div id="catalog-area"></div>
+    </div>
+
+    <!-- COURSE SYLLABUS TAB -->
+    <div class="screen" id="tab-course">
+      <button class="btn-back" onclick="switchTab('catalog')">← Back to Catalog</button>
+      <div class="page-header">
+        <h1 id="course-title-header">Course Name</h1>
+        <p id="course-desc-header">Course description here.</p>
+      </div>
+      <div id="curriculum-area"></div>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div class="screen" id="tab-dashboard">
+      <div class="page-header">
+        <h1>My Dashboard</h1>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-card"><div class="dash-value" id="dash-xp">0</div><div class="dash-label">Total XP</div></div>
+        <div class="dash-card"><div class="dash-value" id="dash-courses">0</div><div class="dash-label">Lessons Done</div></div>
+        <div class="dash-card"><div class="dash-value" style="color:#F59E0B">1 🔥</div><div class="dash-label">Day Streak</div></div>
+      </div>
+    </div>
+
+    <!-- AI TUTOR TAB -->
+    <div class="screen" id="tab-ai">
+      <div class="page-header">
+        <h1>🤖 BG AI Copilot</h1>
+        <p>Powered by Google Gemini. Add your API key in Settings to chat!</p>
+      </div>
+      <div class="chat-container">
+        <div class="chat-history" id="chat-history">
+          <div class="chat-msg msg-ai">Hi Bhavya! I am your AI coding assistant. What are we building today?</div>
+        </div>
+        <div class="chat-input-area" style="padding: 20px; border-top: 1px solid var(--border); display: flex; gap: 12px; background: var(--bg-main);">
+          <input type="text" class="auth-input" id="chat-input" placeholder="Ask a coding question..." style="flex: 1;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
+          <button class="btn-primary" style="width: auto; margin: 0;" onclick="sendChatMessage()">Send ↑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="screen" id="tab-settings">
+      <div class="page-header">
+        <h1>Account Settings</h1>
+      </div>
+      <div class="settings-section">
+        <h3>Profile</h3>
+        <div class="setting-row">
+          <div><div style="font-weight: 700;">Name</div><div style="color: var(--text-muted); font-size: 14px;" id="set-name">...</div></div>
+        </div>
+        <div class="setting-row">
+          <div><div style="font-weight: 700;">Email</div><div style="color: var(--text-muted); font-size: 14px;" id="set-email">...</div></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>AI Integration</h3>
+        <div class="setting-row" style="flex-direction: column; align-items: flex-start;">
+          <label style="font-weight: 700; margin-bottom: 8px;">Google Gemini API Key</label>
+          <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Get a free API key from <a href="https://aistudio.google.com/" target="_blank" style="color: var(--primary);">Google AI Studio</a> to power your AI Copilot.</div>
+          <input type="password" class="auth-input" id="api-key-input" placeholder="AIzaSy..." onchange="saveApiKey()">
+          <p style="font-size: 12px; color: var(--success); margin-top: 8px; display: none;" id="key-saved-msg">Key saved locally!</p>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="setting-row">
+          <div><div style="font-weight: 700;">Log Out</div><div style="color: var(--text-muted); font-size: 14px;">Sign out securely.</div></div>
+          <button class="btn-primary" style="background: rgba(239, 68, 68, 0.1); color: var(--error); width: auto; margin:0;" onclick="logoutUser()">Log Out</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- WORKSPACE OVERLAY -->
+<div class="workspace-overlay" id="workspace">
+  <div class="workspace-header">
+    <h3 id="work-title">Lesson</h3>
+    <button class="btn-primary" style="width: auto; margin: 0; background: transparent; border: 1px solid var(--border); color: var(--text-muted);" onclick="closeLesson()">Exit</button>
+  </div>
+  <div class="workspace-body">
+    <div class="panel-left">
+      <div class="instruction-box" id="work-instructions"></div>
+      <div style="font-family: var(--font-code); font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">index.code</div>
+      <textarea class="code-editor" id="work-editor" spellcheck="false"></textarea>
+    </div>
+    <div class="panel-right">
+      <div style="padding: 12px 24px; background: var(--bg-card); border-bottom: 1px solid var(--border); font-family: var(--font-code); font-size: 12px; color: var(--text-muted);">CONSOLE OUTPUT</div>
+      <div class="output-area" id="work-output">> Ready.</div>
+    </div>
+  </div>
+  <div class="workspace-footer">
+    <button class="btn-primary" style="width: auto; margin: 0; background: var(--bg-hover); color: var(--text-main); border: 1px solid var(--border);" onclick="runCode()">Run Code</button>
+    <button class="btn-primary" style="width: auto; margin: 0; background: var(--success);" onclick="submitCode()">Submit Answer</button>
+  </div>
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script type="module">
+  // Using a highly stable v12.11.0 Firebase import exactly as requested
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg",
+    authDomain: "bg-code-tutor.firebaseapp.com",
+    projectId: "bg-code-tutor",
+    storageBucket: "bg-code-tutor.firebasestorage.app",
+    messagingSenderId: "129372610030",
+    appId: "1:129372610030:web:3b72e4ad2dba22951282ff"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUserData = { name: "Developer", xp: 0, completed: [] };
+  let currentUid = null;
+
+  // --- AUTH LOGIC ---
+  let isSignupMode = true;
+  window.toggleAuthMode = () => {
+    isSignupMode = !isSignupMode;
+    document.getElementById('auth-title').innerText = isSignupMode ? "Create Profile" : "Welcome Back";
+    document.getElementById('auth-action-btn').innerText = isSignupMode ? "Sign Up" : "Log In";
+    document.getElementById('name-group').style.display = isSignupMode ? "block" : "none";
+    document.getElementById('auth-toggle-text').innerText = isSignupMode ? "Already have an account? Log in" : "Need a profile? Sign up";
+    document.getElementById('auth-error').style.display = "none";
+  };
+
+  window.handleEmailAuth = async () => {
+    const email = document.getElementById('auth-email').value;
+    const pass = document.getElementById('auth-pass').value;
+    const name = document.getElementById('auth-name').value || email.split('@')[0];
+    
+    try {
+      if (isSignupMode) {
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await setDoc(doc(db, "users", cred.user.uid), { name, email, xp: 0, completed: [] });
+      } else {
+        await signInWithEmailAndPassword(auth, email, pass);
+      }
+    } catch(err) {
+      const errEl = document.getElementById('auth-error');
+      errEl.innerText = err.message.replace("Firebase: ", "");
+      errEl.style.display = 'block';
+    }
+  };
+
+  window.handleGoogleAuth = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        let finalName = user.displayName;
+        if (!finalName) finalName = user.email.split('@')[0];
+        await setDoc(docRef, { name: finalName, email: user.email, xp: 0, completed: [] });
+      }
+    } catch(err) {
+      const errEl = document.getElementById('auth-error');
+      errEl.innerText = err.message.replace("Firebase: ", "");
+      errEl.style.display = 'block';
+    }
+  };
+
+  window.logoutUser = () => signOut(auth);
+
+  // --- STATE LISTENER (Fixes the Refresh Logout Issue) ---
+  onAuthStateChanged(auth, async (user) => {
+    // Hide the loader once Firebase confirms the session state
+    document.getElementById('loading-screen').style.display = 'none';
+
+    if (user) {
+      currentUid = user.uid;
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('main-app').style.display = 'grid';
+      
+      try {
+        const docSnap = await getDoc(doc(db, "users", user.uid));
+        if (docSnap.exists()) {
+          currentUserData = docSnap.data();
+          if(!currentUserData.completed) currentUserData.completed = [];
+        } else {
+          currentUserData.name = user.displayName || user.email.split('@')[0];
+          currentUserData.completed = [];
+        }
+      } catch (err) {
+        // Fallback if Firestore read fails
+        currentUserData.name = user.displayName || "Developer";
+        currentUserData.completed = [];
+      }
+      
+      updateUI();
+    } else {
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('main-app').style.display = 'none';
+    }
+  });
+
+  function updateUI() {
+    document.getElementById('sidebar-name').innerText = currentUserData.name;
+    document.getElementById('sidebar-initial').innerText = currentUserData.name.charAt(0).toUpperCase();
+    document.getElementById('sidebar-xp').innerText = currentUserData.xp || 0;
+    
+    document.getElementById('dash-xp').innerText = currentUserData.xp || 0;
+    document.getElementById('dash-courses').innerText = currentUserData.completed ? currentUserData.completed.length : 0;
+    
+    document.getElementById('set-name').innerText = currentUserData.name;
+    document.getElementById('set-email').innerText = currentUserData.email || "No email";
+    
+    const savedKey = localStorage.getItem('geminiKey');
+    if(savedKey) document.getElementById('api-key-input').value = savedKey;
+  }
+
+  // --- TAB LOGIC ---
+  window.switchTab = (tabId) => {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById(`tab-${tabId}`).classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    if(event && event.currentTarget.classList.contains('nav-item')) {
+      event.currentTarget.classList.add('active');
+    }
+  };
+
+  // --- CATALOG & CURRICULUM DATA ---
+  const masterCatalog = [
+    { id: "html", name: "HTML", category: "Web", icon: "📄", desc: "The structural skeleton of all websites." },
+    { id: "css", name: "CSS", category: "Web", icon: "🎨", desc: "Styling, layouts, and beautiful design." },
+    { id: "js", name: "JavaScript", category: "Web", icon: "⚡", desc: "Interactivity and logic for the web." },
+    { id: "python", name: "Python", category: "Programming", icon: "🐍", desc: "Versatile, easy to read, great for automation." },
+    { id: "java", name: "Java", category: "Programming", icon: "☕", desc: "Enterprise-grade software and Android apps." },
+    { id: "c", name: "C", category: "Programming", icon: "⚙️", desc: "The mother of all modern languages. Fast and low-level." },
+    { id: "cpp", name: "C++", category: "Programming", icon: "🚀", desc: "High-performance apps, systems, and games." },
+    { id: "csharp", name: "C#", category: "Programming", icon: "🎯", desc: "Microsoft language for enterprise and games." },
+    { id: "go", name: "Go", category: "Programming", icon: "🐹", desc: "Google fast server-side language." },
+    { id: "rust", name: "Rust", category: "Programming", icon: "🦀", desc: "Memory-safe, blazingly fast systems programming." },
+    { id: "swift", name: "Swift", category: "Programming", icon: "🍎", desc: "Build sleek, native apps for iOS and Mac." },
+    { id: "kotlin", name: "Kotlin", category: "Programming", icon: "📱", desc: "The modern standard for native Android apps." },
+    { id: "node", name: "Node.js", category: "Backend", icon: "🟢", desc: "Run JavaScript on the server for scalable backends." },
+    { id: "php", name: "PHP", category: "Backend", icon: "🐘", desc: "The classic server language powering WordPress." },
+    { id: "ruby", name: "Ruby", category: "Backend", icon: "💎", desc: "Elegant syntax, famous for the Rails framework." },
+    { id: "flutter", name: "Flutter", category: "App", icon: "🦋", desc: "Google UI toolkit for cross-platform apps." },
+    { id: "reactnative", name: "React Native", category: "App", icon: "⚛️", desc: "Build mobile apps using React and JavaScript." },
+    { id: "sql", name: "SQL", category: "Database", icon: "🗄️", desc: "Query, manage, and analyze relational data." },
+    { id: "mongodb", name: "MongoDB", category: "Database", icon: "🍃", desc: "A powerful NoSQL document database." }
+  ];
+
+  window.filterCatalog = (filter, el) => {
+    if(el) {
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+    }
+    const area = document.getElementById('catalog-area');
+    area.innerHTML = '<div class="catalog-grid" id="cat-grid"></div>';
+    
+    masterCatalog.forEach(c => {
+      if(filter === 'All' || c.category === filter) {
+        // Escaping single quotes safely for the onclick handler
+        const safeName = c.name.replace(/'/g, "\\'");
+        const safeDesc = c.desc.replace(/'/g, "\\'");
+        
+        document.getElementById('cat-grid').innerHTML += `
+          <div class="course-card" onclick="openCourse('${c.id}', '${safeName}', '${safeDesc}')">
+            <div style="font-size: 36px; margin-bottom: 16px;">${c.icon}</div>
+            <div style="font-size: 20px; font-weight: 800;">${c.name}</div>
+            <div style="color: var(--text-muted); font-size: 14px; margin-top: 12px;">${c.desc}</div>
+          </div>
+        `;
+      }
+    });
+  };
+  filterCatalog('All');
+
+  // --- CURRICULUM GENERATOR ---
+  function getCurriculum(id) {
+    const data = {
+      "html": [{ chapter: "1. The Basics", lessons: [{ id: "html_1", title: "Your First Tag", theory: "HTML uses tags. Write an <h1> tag.", starter: "", target: "<h1>" }] }],
+      "js": [{ chapter: "1. Logic", lessons: [{ id: "js_1", title: "Variables", theory: "Use const. Declare 'age = 10'.", starter: "// code", target: "constage=10" }] }],
+      "python": [{ chapter: "1. Introduction", lessons: [{ id: "py_1", title: "Print Statement", theory: "Use print() to show output.", starter: "# code", target: "print" }] }],
+      "go": [{ chapter: "1. Basics", lessons: [{ id: "go_1", title: "Main Package", theory: "Declare package main.", starter: "// code", target: "packagemain" }] }]
+    };
+    return data[id] || [{ chapter: "1. Coming Soon", lessons: [{ id: id+"_1", title: "Intro Lesson", theory: "This module is under construction.", starter: "// Wait for updates", target: "" }] }];
+  }
+
+  window.openCourse = (id, name, desc) => {
+    document.getElementById('course-title-header').innerText = name + " Curriculum";
+    document.getElementById('course-desc-header').innerText = desc;
+    
+    const area = document.getElementById('curriculum-area');
+    area.innerHTML = '';
+    
+    const curriculum = getCurriculum(id);
+    curriculum.forEach(chap => {
+      let html = `<div class="chapter-card"><div class="chapter-header"><h3>${chap.chapter}</h3></div><div class="level-list">`;
+      chap.lessons.forEach(less => {
+        let isDone = currentUserData.completed.includes(less.id);
+        let safeData = encodeURIComponent(JSON.stringify(less));
+        html += `
+          <div class="level-item" onclick="openLesson('${safeData}')">
+            <div style="font-weight: 600;">${less.title}</div>
+            <div class="level-status ${isDone ? 'done' : ''}">${isDone ? 'COMPLETED' : 'START'}</div>
+          </div>`;
+      });
+      html += `</div></div>`;
+      area.innerHTML += html;
+    });
+    
+    switchTab('course');
+  };
+
+  // --- WORKSPACE LOGIC ---
+  let activeLesson = null;
+  window.openLesson = (encoded) => {
+    activeLesson = JSON.parse(decodeURIComponent(encoded));
+    document.getElementById('work-title').innerText = activeLesson.title;
+    document.getElementById('work-instructions').innerHTML = `<h2>${activeLesson.title}</h2><p>${activeLesson.theory}</p>`;
+    document.getElementById('work-editor').value = activeLesson.starter;
+    document.getElementById('work-output').innerHTML = "> Ready.";
+    document.getElementById('workspace').style.display = 'flex';
+  };
+  
+  window.closeLesson = () => document.getElementById('workspace').style.display = 'none';
+  
+  window.runCode = () => {
+    const code = document.getElementById('work-editor').value;
+    document.getElementById('work-output').innerHTML = `> Executing...<br><div style="color:var(--text-main); margin-top:8px;">${code.replace(/</g, '&lt;')}</div>`;
+  };
+
+  window.submitCode = async () => {
+    const code = document.getElementById('work-editor').value.toLowerCase().replace(/\s/g, '');
+    const out = document.getElementById('work-output');
+    
+    if(activeLesson.target === "" || code.includes(activeLesson.target)) {
+      out.innerHTML = `<div style="color: var(--success); font-weight:700;">> Success! Test Passed.</div>`;
+      
+      if(!currentUserData.completed.includes(activeLesson.id)) {
+        currentUserData.completed.push(activeLesson.id);
+        currentUserData.xp += 50;
+        try {
+          await updateDoc(doc(db, "users", currentUid), { xp: currentUserData.xp, completed: currentUserData.completed });
+        } catch(e) {
+          console.warn("Could not save to DB. Progress updated locally.");
+        }
+        updateUI();
+        setTimeout(closeLesson, 1500);
+      }
+    } else {
+      out.innerHTML = `<div style="color: var(--error);">> Error: Code does not meet requirements.</div>`;
+    }
+  };
+
+  // --- GOOGLE GEMINI AI LOGIC ---
+  window.saveApiKey = () => {
+    const key = document.getElementById('api-key-input').value;
+    localStorage.setItem('geminiKey', key);
+    const msg = document.getElementById('key-saved-msg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  };
+
+  let chatHistory = [];
+  
+  window.sendChatMessage = async () => {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if(!msg) return;
+    
+    const history = document.getElementById('chat-history');
+    history.innerHTML += `<div class="chat-msg msg-user">${msg}</div>`;
+    input.value = '';
+    history.scrollTop = history.scrollHeight;
+    
+    const apiKey = localStorage.getItem('geminiKey');
+    if(!apiKey) {
+      setTimeout(() => {
+        history.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--error)">Error: Please add your free Google Gemini API Key in the Settings tab first!</div>`;
+        history.scrollTop = history.scrollHeight;
+      }, 500);
+      return;
+    }
+
+    chatHistory.push({ role: 'user', content: msg });
+    const typingId = 'typing-' + Date.now();
+    history.innerHTML += `<div class="chat-msg msg-ai" id="${typingId}">Thinking...</div>`;
+    history.scrollTop = history.scrollHeight;
+
+    const geminiMessages = chatHistory.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: "You are the BG Code Tutor AI. Explain concepts clearly with code examples." }] },
+          contents: geminiMessages
+        })
+      });
+
+      const data = await response.json();
+      if(document.getElementById(typingId)) document.getElementById(typingId).remove();
+      if(data.error) throw new Error(data.error.message);
+
+      const reply = data.candidates[0].content.parts[0].text;
+      chatHistory.push({ role: 'assistant', content: reply });
+      
+      // FIX: Replaced the backtick regex with an alternative splitting logic to completely bypass "Unterminated literal" errors
+      const chunks = reply.split('```');
+      let formattedReply = '';
+      for (let i = 0; i < chunks.length; i++) {
+        if (i % 2 === 0) {
+          // Regular text: make bold text work
+          formattedReply += chunks[i].replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        } else {
+          // Code block
+          formattedReply += '<pre style="background:var(--bg-main); padding:12px; border-radius:8px; overflow-x:auto; margin:8px 0;">' + chunks[i] + '</pre>';
+        }
+      }
+      
+      history.innerHTML += `<div class="chat-msg msg-ai">${formattedReply}</div>`;
+      history.scrollTop = history.scrollHeight;
+
+    } catch(err) {
+      if (document.getElementById(typingId)) document.getElementById(typingId).remove();
+      history.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--error)">API Error: ${err.message}. Check API key in Settings.</div>`;
+    }
+  };
+</script>
+</body>
+</html>  
   .input-group { margin-bottom: 16px; }
   .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
   .auth-input { width: 100%; padding: 12px 16px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-family: var(--font-ui); outline: none; transition: border 0.2s; font-size: 15px;}
