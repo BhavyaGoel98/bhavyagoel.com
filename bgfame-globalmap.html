@@ -120,10 +120,35 @@
   .chat-input { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; color: white; outline: none; font-family: var(--font-ui); font-size: 15px;}
   .chat-input:focus { border-color: var(--primary); }
 
+  /* COURSE SYLLABUS SCREEN */
+  .btn-back { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 24px; display: inline-flex; }
+  .btn-back:hover { color: var(--text-main); background: var(--bg-hover); }
+  .chapter-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
+  .chapter-header { padding: 20px 24px; background: var(--bg-hover); border-bottom: 1px solid var(--border); }
+  .chapter-header h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px;}
+  .level-list { padding: 16px 24px; }
+  .level-item { display: flex; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; align-items: center;}
+  .level-item:hover { border-color: var(--primary); transform: translateX(4px); }
+  .level-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--bg-main); color: var(--text-muted); border: 1px solid var(--border); }
+  .level-status.done { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+
+  /* WORKSPACE OVERLAY */
+  .workspace-overlay { position: fixed; inset: 0; background: var(--bg-main); z-index: 2000; display: none; flex-direction: column; }
+  .workspace-header { padding: 16px 24px; background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .workspace-body { display: grid; grid-template-columns: 1fr 1fr; flex: 1; overflow: hidden; }
+  .panel-left { padding: 32px; border-right: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; }
+  .instruction-box { margin-bottom: 32px; font-size: 15px; line-height: 1.6; color: var(--text-muted);}
+  .code-editor { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; color: var(--text-main); font-family: var(--font-code); font-size: 15px; resize: none; outline: none; transition: 0.2s; line-height: 1.5; }
+  .code-editor:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
+  .panel-right { background: #050810; display: flex; flex-direction: column; }
+  .output-area { padding: 24px; font-family: var(--font-code); font-size: 14px; flex: 1; overflow-y: auto; }
+  .workspace-footer { padding: 16px 32px; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; }
+
 </style>
 </head>
 <body>
 
+<!-- AUTH SCREEN -->
 <div class="auth-overlay" id="auth-screen">
   <div class="auth-card">
     <h1 id="auth-title">Create Profile</h1>
@@ -142,7 +167,7 @@
     </div>
     <div class="input-group">
       <label>Email Address</label>
-      <input type="email" id="auth-email" class="auth-input" placeholder="developer@company.com">
+      <input type="email" id="auth-email" class="auth-input" placeholder="developer@bgsolutions.com">
     </div>
     <div class="input-group">
       <label>Password</label>
@@ -157,6 +182,7 @@
   </div>
 </div>
 
+<!-- MAIN APP PORTAL -->
 <div class="app-container" id="main-app">
   
   <aside class="sidebar">
@@ -165,10 +191,10 @@
       <div style="font-family: var(--font-code); font-size: 10px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">Developer Portal</div>
     </div>
     <div class="nav-menu">
-      <div class="nav-item active" onclick="switchTab('catalog')"><span class="nav-icon">📚</span> Course Catalog</div>
-      <div class="nav-item" onclick="switchTab('dashboard')"><span class="nav-icon">📈</span> My Dashboard</div>
-      <div class="nav-item" onclick="switchTab('ai')"><span class="nav-icon">🤖</span> AI Tutor</div>
-      <div class="nav-item" onclick="switchTab('settings')"><span class="nav-icon">⚙️</span> Settings</div>
+      <div class="nav-item active" onclick="switchTab('catalog')">📚 Course Catalog</div>
+      <div class="nav-item" onclick="switchTab('dashboard')">📈 My Dashboard</div>
+      <div class="nav-item" onclick="switchTab('ai')">🤖 AI Tutor</div>
+      <div class="nav-item" onclick="switchTab('settings')">⚙️ Settings</div>
     </div>
     <div class="user-mini-profile">
       <div class="avatar-circle" id="sidebar-initial"></div>
@@ -181,100 +207,88 @@
 
   <main class="main-content">
     
+    <!-- CATALOG TAB -->
     <div class="screen active" id="tab-catalog">
       <div class="page-header">
         <h1>Developer Library</h1>
-        <p>Choose a technology to start learning. From basic web structures to advanced AI models.</p>
+        <p>Choose a technology to start learning.</p>
       </div>
-      <div class="category-filters" id="filter-container">
-        <div class="cat-pill active" onclick="filterCatalog('All')">All Courses</div>
-        <div class="cat-pill" onclick="filterCatalog('Web')">🌐 Web</div>
-        <div class="cat-pill" onclick="filterCatalog('Programming')">🖥️ Programming</div>
-        <div class="cat-pill" onclick="filterCatalog('Backend')">⚙️ Backend</div>
-        <div class="cat-pill" onclick="filterCatalog('App')">📱 App Dev</div>
-        <div class="cat-pill" onclick="filterCatalog('AI')">🧠 AI / Data</div>
-        <div class="cat-pill" onclick="filterCatalog('Database')">🗄️ Database</div>
+      <div class="category-filters">
+        <div class="cat-pill active" onclick="filterCatalog('All', this)">All Courses</div>
+        <div class="cat-pill" onclick="filterCatalog('Web', this)">🌐 Web</div>
+        <div class="cat-pill" onclick="filterCatalog('Programming', this)">🖥️ Programming</div>
       </div>
       <div id="catalog-area"></div>
     </div>
 
+    <!-- COURSE SYLLABUS TAB -->
+    <div class="screen" id="tab-course">
+      <button class="btn-back" onclick="switchTab('catalog')">← Back to Catalog</button>
+      <div class="page-header">
+        <h1 id="course-title-header">Course Name</h1>
+        <p id="course-desc-header">Course description here.</p>
+      </div>
+      <div id="curriculum-area"></div>
+    </div>
+
+    <!-- DASHBOARD TAB -->
     <div class="screen" id="tab-dashboard">
       <div class="page-header">
         <h1>My Dashboard</h1>
-        <p>Track your progress and pick up where you left off.</p>
       </div>
-      
       <div class="dash-grid">
-        <div class="dash-card">
-          <div class="dash-value" id="dash-xp">0</div>
-          <div class="dash-label">Total XP Earned</div>
-        </div>
-        <div class="dash-card">
-          <div class="dash-value" id="dash-courses">0</div>
-          <div class="dash-label">Courses Started</div>
-        </div>
-        <div class="dash-card">
-          <div class="dash-value" style="color: #F59E0B;">1 🔥</div>
-          <div class="dash-label">Day Streak</div>
-        </div>
-      </div>
-
-      <div class="resume-card">
-        <div>
-          <h2 style="margin-bottom: 8px;">Resume: HTML Basics</h2>
-          <p style="color: var(--text-muted); font-size: 15px;">You are 40% through Chapter 1.</p>
-        </div>
-        <button class="btn-primary" style="width: auto; margin: 0; padding: 12px 32px;" onclick="switchTab('catalog')">Continue Learning →</button>
+        <div class="dash-card"><div class="dash-value" id="dash-xp">0</div><div class="dash-label">Total XP</div></div>
+        <div class="dash-card"><div class="dash-value" id="dash-courses">0</div><div class="dash-label">Lessons Done</div></div>
+        <div class="dash-card"><div class="dash-value" style="color:#F59E0B">1 🔥</div><div class="dash-label">Day Streak</div></div>
       </div>
     </div>
 
+    <!-- AI TUTOR TAB -->
     <div class="screen" id="tab-ai">
       <div class="page-header">
         <h1>🤖 BG AI Copilot</h1>
-        <p>Stuck on a bug? Ask your personal AI coding assistant.</p>
+        <p>Powered by Google Gemini. Add your API key in Settings to chat!</p>
       </div>
-      
       <div class="chat-container">
         <div class="chat-history" id="chat-history">
-          <div class="chat-msg msg-ai">Hello! I am the BG AI Tutor. What are we building today?</div>
+          <div class="chat-msg msg-ai">Hi Bhavya! I am your AI coding assistant. What are we building today?</div>
         </div>
-        <div class="chat-input-area">
-          <input type="text" class="chat-input" id="chat-input" placeholder="Type your coding question here..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
-          <button class="btn-primary" style="width: auto; margin: 0;" onclick="sendChatMessage()">Send</button>
+        <div class="chat-input-area" style="padding: 20px; border-top: 1px solid var(--border); display: flex; gap: 12px; background: var(--bg-main);">
+          <input type="text" class="auth-input" id="chat-input" placeholder="Ask a coding question..." style="flex: 1;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
+          <button class="btn-primary" style="width: auto; margin: 0;" onclick="sendChatMessage()">Send ↑</button>
         </div>
       </div>
     </div>
 
+    <!-- SETTINGS TAB -->
     <div class="screen" id="tab-settings">
       <div class="page-header">
         <h1>Account Settings</h1>
-        <p>Manage your profile and preferences.</p>
       </div>
-      
       <div class="settings-section">
-        <h3>Profile Details</h3>
+        <h3>Profile</h3>
         <div class="setting-row">
-          <div>
-            <div style="font-weight: 700; margin-bottom: 4px;">Display Name</div>
-            <div style="color: var(--text-muted); font-size: 14px;" id="set-name">Loading...</div>
-          </div>
+          <div><div style="font-weight: 700;">Name</div><div style="color: var(--text-muted); font-size: 14px;" id="set-name">...</div></div>
         </div>
         <div class="setting-row">
-          <div>
-            <div style="font-weight: 700; margin-bottom: 4px;">Email Address</div>
-            <div style="color: var(--text-muted); font-size: 14px;" id="set-email">Loading...</div>
-          </div>
+          <div><div style="font-weight: 700;">Email</div><div style="color: var(--text-muted); font-size: 14px;" id="set-email">...</div></div>
         </div>
       </div>
 
       <div class="settings-section">
-        <h3>Session</h3>
+        <h3>AI Integration</h3>
+        <div class="setting-row" style="flex-direction: column; align-items: flex-start;">
+          <label style="font-weight: 700; margin-bottom: 8px;">Google Gemini API Key</label>
+          <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Get a free API key from <a href="https://aistudio.google.com/" target="_blank" style="color: var(--primary);">Google AI Studio</a> to power your AI Copilot.</div>
+          <input type="password" class="auth-input" id="api-key-input" placeholder="AIzaSy..." onchange="saveApiKey()">
+          <p style="font-size: 12px; color: var(--success); margin-top: 8px; display: none;" id="key-saved-msg">Key saved locally!</p>
+        </div>
+      </div>
+
+      <div class="settings-section">
         <div class="setting-row">
-          <div>
-            <div style="font-weight: 700; margin-bottom: 4px;">Log Out</div>
-            <div style="color: var(--text-muted); font-size: 14px;">Sign out of this device securely.</div>
-          </div>
-          <button class="btn-danger" style="color: var(--text-main); background: var(--bg-hover); border-color: var(--border);" onclick="logoutUser()">Log Out</button>
+          <div><div style="font-weight: 700;">Log Out</div><div style="color: var(--text-muted); font-size: 14px;">Sign out securely.</div></div>
+          <button class="btn-primary" style="background: rgba(239, 68, 68, 0.1); color: var(--error); width: auto; margin:0;" onclick="logoutUser()">Log Out</button>
         </div>
       </div>
     </div>
@@ -282,13 +296,35 @@
   </main>
 </div>
 
+<!-- WORKSPACE OVERLAY -->
+<div class="workspace-overlay" id="workspace">
+  <div class="workspace-header">
+    <h3 id="work-title">Lesson</h3>
+    <button class="btn-primary" style="width: auto; margin: 0; background: transparent; border: 1px solid var(--border); color: var(--text-muted);" onclick="closeLesson()">Exit</button>
+  </div>
+  <div class="workspace-body">
+    <div class="panel-left">
+      <div class="instruction-box" id="work-instructions"></div>
+      <div style="font-family: var(--font-code); font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">index.code</div>
+      <textarea class="code-editor" id="work-editor" spellcheck="false"></textarea>
+    </div>
+    <div class="panel-right">
+      <div style="padding: 12px 24px; background: var(--bg-card); border-bottom: 1px solid var(--border); font-family: var(--font-code); font-size: 12px; color: var(--text-muted);">CONSOLE OUTPUT</div>
+      <div class="output-area" id="work-output">> Ready.</div>
+    </div>
+  </div>
+  <div class="workspace-footer">
+    <button class="btn-primary" style="width: auto; margin: 0; background: var(--bg-hover); color: var(--text-main); border: 1px solid var(--border);" onclick="runCode()">Run Code</button>
+    <button class="btn-primary" style="width: auto; margin: 0; background: var(--success);" onclick="submitCode()">Submit Answer</button>
+  </div>
+</div>
+
+<!-- ================= SCRIPTS ================= -->
 <script type="module">
-  // 1. Firebase Imports (v12.11.0)
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-  // 2. Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg",
     authDomain: "bg-code-tutor.firebaseapp.com",
@@ -298,209 +334,281 @@
     appId: "1:129372610030:web:3b72e4ad2dba22951282ff"
   };
 
-  // 3. Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Global User Data State
   let currentUserData = { name: "Developer", xp: 0, courses: 0 };
+  let currentUid = null;
 
-  // ================= AUTH UI LOGIC =================
+  // --- AUTH LOGIC ---
   let isSignupMode = true;
-
   window.toggleAuthMode = () => {
     isSignupMode = !isSignupMode;
     document.getElementById('auth-title').innerText = isSignupMode ? "Create Profile" : "Welcome Back";
-    document.getElementById('auth-sub').innerText = isSignupMode ? "Start your professional coding journey." : "Log in to continue your progress.";
     document.getElementById('auth-action-btn').innerText = isSignupMode ? "Sign Up" : "Log In";
-    document.getElementById('auth-toggle-text').innerText = isSignupMode ? "Already have an account? Log in" : "Need a profile? Sign up";
-    
-    // Hide name field if logging in
     document.getElementById('name-group').style.display = isSignupMode ? "block" : "none";
-    document.getElementById('auth-error').style.display = "none";
   };
 
-  function showError(msg) {
-    const errEl = document.getElementById('auth-error');
-    errEl.innerText = msg;
-    errEl.style.display = 'block';
-  }
-
-  // Email / Password Auth
   window.handleEmailAuth = async () => {
-    const email = document.getElementById('auth-email').value.trim();
-    const pass = document.getElementById('auth-pass').value.trim();
-    const name = document.getElementById('auth-name').value.trim();
-
-    if (!email || !pass) return showError("Email and Password are required.");
-    if (isSignupMode && !name) return showError("Please enter your name to sign up.");
-
+    const email = document.getElementById('auth-email').value;
+    const pass = document.getElementById('auth-pass').value;
+    const name = document.getElementById('auth-name').value || email.split('@')[0];
+    
     try {
       if (isSignupMode) {
-        // Sign Up
-        const userCred = await createUserWithEmailAndPassword(auth, email, pass);
-        // Save name and default stats to Firestore
-        await setDoc(doc(db, "users", userCred.user.uid), {
-          name: name,
-          xp: 0,
-          courses: 0,
-          email: email
-        });
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await setDoc(doc(db, "users", cred.user.uid), { name, email, xp: 0, courses: 0, completed: [] });
       } else {
-        // Log In
         await signInWithEmailAndPassword(auth, email, pass);
       }
-    } catch (error) {
-      showError(error.message.replace("Firebase: ", ""));
-    }
+    } catch(err) { alert(err.message); }
   };
 
-  // Google Auth
   window.handleGoogleAuth = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
-      // Check if user exists in Firestore, if not, create them
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
       
       if (!docSnap.exists()) {
-        await setDoc(docRef, {
-          name: user.displayName || "Google User",
-          xp: 0,
-          courses: 0,
-          email: user.email
-        });
+        let finalName = user.displayName;
+        if (!finalName) finalName = user.email.split('@')[0];
+        await setDoc(docRef, { name: finalName, email: user.email, xp: 0, courses: 0, completed: [] });
       }
-    } catch (error) {
-      showError(error.message.replace("Firebase: ", ""));
-    }
+    } catch(err) { alert(err.message); }
   };
 
-  window.logoutUser = () => {
-    signOut(auth);
-  };
+  window.logoutUser = () => signOut(auth);
 
-  // ================= AUTH STATE LISTENER =================
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // User is signed in
+      currentUid = user.uid;
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('main-app').style.display = 'grid';
       
-      // Fetch User Data from Firestore
       const docSnap = await getDoc(doc(db, "users", user.uid));
       if (docSnap.exists()) {
         currentUserData = docSnap.data();
+        if(!currentUserData.completed) currentUserData.completed = [];
       } else {
-        // Fallback
-        currentUserData.name = user.displayName || "Developer";
-        currentUserData.email = user.email;
+        currentUserData.name = user.displayName || user.email.split('@')[0];
+        currentUserData.completed = [];
       }
-
-      updateUIWithUserData();
+      updateUI();
     } else {
-      // User is signed out
       document.getElementById('auth-screen').style.display = 'flex';
       document.getElementById('main-app').style.display = 'none';
-      // Clear inputs
-      document.getElementById('auth-email').value = '';
-      document.getElementById('auth-pass').value = '';
-      document.getElementById('auth-name').value = '';
     }
   });
 
-  function updateUIWithUserData() {
-    // Sidebar
+  function updateUI() {
     document.getElementById('sidebar-name').innerText = currentUserData.name;
     document.getElementById('sidebar-initial').innerText = currentUserData.name.charAt(0).toUpperCase();
-    document.getElementById('sidebar-xp').innerText = currentUserData.xp || 0;
+    document.getElementById('sidebar-xp').innerText = currentUserData.xp;
     
-    // Dashboard
-    document.getElementById('dash-xp').innerText = currentUserData.xp || 0;
-    document.getElementById('dash-courses').innerText = currentUserData.courses || 0;
-
-    // Settings
+    document.getElementById('dash-xp').innerText = currentUserData.xp;
+    document.getElementById('dash-courses').innerText = currentUserData.completed.length;
+    
     document.getElementById('set-name').innerText = currentUserData.name;
-    document.getElementById('set-email').innerText = currentUserData.email || auth.currentUser.email;
+    document.getElementById('set-email').innerText = currentUserData.email;
+    
+    // Load Gemini API key if exists
+    const savedKey = localStorage.getItem('geminiKey');
+    if(savedKey) document.getElementById('api-key-input').value = savedKey;
   }
 
-  // ================= TAB NAVIGATION LOGIC =================
+  // --- TAB LOGIC ---
   window.switchTab = (tabId) => {
-    // Hide all screens
     document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-    // Show target screen
     document.getElementById(`tab-${tabId}`).classList.add('active');
     
-    // Update nav highlighting
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    if(event && event.currentTarget.classList.contains('nav-item')) {
+      event.currentTarget.classList.add('active');
+    }
   };
 
-  // ================= AI CHAT LOGIC =================
-  window.sendChatMessage = () => {
-    const inputEl = document.getElementById('chat-input');
-    const msg = inputEl.value.trim();
-    if (!msg) return;
-
-    const history = document.getElementById('chat-history');
-    
-    // Append User Message
-    history.innerHTML += `<div class="chat-msg msg-user">${msg}</div>`;
-    inputEl.value = '';
-    history.scrollTop = history.scrollHeight;
-
-    // Simulate AI Response (In reality, connect Gemini/Claude here)
-    setTimeout(() => {
-      history.innerHTML += `<div class="chat-msg msg-ai">I am currently in UI Demo mode, but once you connect my API key in the backend, I can help you debug that!</div>`;
-      history.scrollTop = history.scrollHeight;
-    }, 1000);
-  };
-
-  // ================= CATALOG RENDERER LOGIC =================
+  // --- CATALOG & CURRICULUM DATA ---
   const masterCatalog = [
-    { name: "HTML", category: "Web", icon: "📄", desc: "The structural skeleton of all websites." },
-    { name: "CSS", category: "Web", icon: "🎨", desc: "Styling, layouts, and beautiful design." },
-    { name: "JavaScript", category: "Web", icon: "⚡", desc: "Interactivity and logic for the web." },
-    { name: "Python", category: "Programming", icon: "🐍", desc: "Versatile, easy to read, great for automation." },
-    { name: "Java", category: "Programming", icon: "☕", desc: "Enterprise-grade software and Android apps." },
-    { name: "Go", category: "Programming", icon: "🐹", desc: "Google's blazing fast server-side language." },
-    { name: "Node.js", category: "Backend", icon: "🟢", desc: "Run JavaScript on the server." },
-    { name: "React Native", category: "App", icon: "⚛️", desc: "Build mobile apps using React." },
-    { name: "SQL", category: "Database", icon: "🗄️", desc: "Query, manage, and analyze relational data." }
+    { id: "html", name: "HTML", category: "Web", icon: "📄", desc: "The structural skeleton of all websites." },
+    { id: "js", name: "JavaScript", category: "Web", icon: "⚡", desc: "Interactivity and logic for the web." },
+    { id: "go", name: "Go", category: "Programming", icon: "🐹", desc: "Google's fast server language." }
   ];
 
-  window.filterCatalog = (filter) => {
-    // Update active pill
-    document.querySelectorAll('.cat-pill').forEach(pill => pill.classList.remove('active'));
-    if(event) event.currentTarget.classList.add('active');
-    
-    const area = document.getElementById('catalog-area');
-    area.innerHTML = ''; 
+  const curriculumData = {
+    "html": [
+      { chapter: "1. The Basics", lessons: [
+        { id: "html_1", title: "Your First Tag", theory: "HTML uses tags. Write an <h1> tag.", starter: "", target: "<h1>" }
+      ]}
+    ],
+    "js": [
+      { chapter: "1. Logic", lessons: [
+        { id: "js_1", title: "Variables", theory: "Use const. Declare 'age = 10'.", starter: "// code", target: "constage=10" }
+      ]}
+    ]
+  };
 
-    let html = `<div class="catalog-grid">`;
-    masterCatalog.forEach(course => {
-      if (filter === 'All' || course.category === filter) {
-        html += `
-          <div class="course-card" onclick="alert('Module loading...')">
-            <div style="font-size: 36px; margin-bottom: 16px;">${course.icon}</div>
-            <div style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">${course.name}</div>
-            <div style="font-family: var(--font-code); font-size: 11px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">${course.category} Track</div>
-            <div style="color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-bottom: 24px;">${course.desc}</div>
+  window.filterCatalog = (filter, el) => {
+    if(el) {
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+    }
+    const area = document.getElementById('catalog-area');
+    area.innerHTML = '<div class="catalog-grid" id="cat-grid"></div>';
+    
+    masterCatalog.forEach(c => {
+      if(filter === 'All' || c.category === filter) {
+        document.getElementById('cat-grid').innerHTML += `
+          <div class="course-card" onclick="openCourse('${c.id}', '${c.name}', '${c.desc}')">
+            <div style="font-size: 36px; margin-bottom: 16px;">${c.icon}</div>
+            <div style="font-size: 20px; font-weight: 800;">${c.name}</div>
+            <div style="color: var(--text-muted); font-size: 14px; margin-top: 12px;">${c.desc}</div>
           </div>
         `;
       }
     });
-    html += `</div>`;
-    area.innerHTML = html;
   };
-
-  // Initial Render
   filterCatalog('All');
 
-</script>
-</body>
-</html>
+  window.openCourse = (id, name, desc) => {
+    document.getElementById('course-title-header').innerText = name + " Curriculum";
+    document.getElementById('course-desc-header').innerText = desc;
+    
+    const area = document.getElementById('curriculum-area');
+    area.innerHTML = '';
+    
+    if(!curriculumData[id]) {
+      area.innerHTML = '<p style="color:var(--text-muted)">Curriculum under construction.</p>';
+    } else {
+      curriculumData[id].forEach(chap => {
+        let html = `<div class="chapter-card"><div class="chapter-header"><h3>${chap.chapter}</h3></div><div class="level-list">`;
+        chap.lessons.forEach(less => {
+          let isDone = currentUserData.completed.includes(less.id);
+          let safeData = encodeURIComponent(JSON.stringify(less));
+          html += `
+            <div class="level-item" onclick="openLesson('${safeData}')">
+              <div style="font-weight: 600;">${less.title}</div>
+              <div class="level-status ${isDone ? 'done' : ''}">${isDone ? 'COMPLETED' : 'START'}</div>
+            </div>`;
+        });
+        html += `</div></div>`;
+        area.innerHTML += html;
+      });
+    }
+    switchTab('course');
+  };
+
+  // --- WORKSPACE LOGIC ---
+  let activeLesson = null;
+  window.openLesson = (encoded) => {
+    activeLesson = JSON.parse(decodeURIComponent(encoded));
+    document.getElementById('work-title').innerText = activeLesson.title;
+    document.getElementById('work-instructions').innerHTML = `<h2>${activeLesson.title}</h2><p>${activeLesson.theory}</p>`;
+    document.getElementById('work-editor').value = activeLesson.starter;
+    document.getElementById('work-output').innerHTML = "> Ready.";
+    document.getElementById('workspace').style.display = 'flex';
+  };
+  
+  window.closeLesson = () => document.getElementById('workspace').style.display = 'none';
+  
+  window.runCode = () => {
+    const code = document.getElementById('work-editor').value;
+    document.getElementById('work-output').innerHTML = `> Executing...<br><div style="color:var(--text-main); margin-top:8px;">${code.replace(/</g, '&lt;')}</div>`;
+  };
+
+  window.submitCode = async () => {
+    const code = document.getElementById('work-editor').value.toLowerCase().replace(/\s/g, '');
+    const out = document.getElementById('work-output');
+    
+    if(code.includes(activeLesson.target)) {
+      out.innerHTML = `<div style="color: var(--success); font-weight:700;">> Success! Test Passed.</div>`;
+      
+      if(!currentUserData.completed.includes(activeLesson.id)) {
+        currentUserData.completed.push(activeLesson.id);
+        currentUserData.xp += 50;
+        await updateDoc(doc(db, "users", currentUid), {
+          xp: currentUserData.xp,
+          completed: currentUserData.completed
+        });
+        updateUI();
+        setTimeout(closeLesson, 1500);
+      }
+    } else {
+      out.innerHTML = `<div style="color: var(--error);">> Error: Code does not meet requirements.</div>`;
+    }
+  };
+
+  // --- GOOGLE GEMINI AI LOGIC ---
+  window.saveApiKey = () => {
+    const key = document.getElementById('api-key-input').value;
+    localStorage.setItem('geminiKey', key);
+    const msg = document.getElementById('key-saved-msg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  };
+
+  let chatHistory = [];
+  
+  window.sendChatMessage = async () => {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if(!msg) return;
+    
+    const history = document.getElementById('chat-history');
+    history.innerHTML += `<div class="chat-msg msg-user">${msg}</div>`;
+    input.value = '';
+    history.scrollTop = history.scrollHeight;
+    
+    const apiKey = localStorage.getItem('geminiKey');
+    
+    if(!apiKey) {
+      setTimeout(() => {
+        history.innerHTML += `<div class="chat-msg msg-ai" style="color:var(--error)">Error: Please add your free Google Gemini API Key in the Settings tab first!</div>`;
+        history.scrollTop = history.scrollHeight;
+      }, 500);
+      return;
+    }
+
+    // Add message to internal history
+    chatHistory.push({ role: 'user', content: msg });
+    
+    // Add "Thinking..." UI
+    const typingId = 'typing-' + Date.now();
+    history.innerHTML += `<div class="chat-msg msg-ai" id="${typingId}">Thinking...</div>`;
+    history.scrollTop = history.scrollHeight;
+
+    // Convert internal chat history to Gemini API format
+    const geminiMessages = chatHistory.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+
+    try {
+      // Calling Gemini 1.5 Flash
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: "You are the BG Code Tutor AI. You are a highly skilled, encouraging programming tutor. Provide brief explanations followed by clear code examples." }] },
+          contents: geminiMessages
+        })
+      });
+
+      const data = await response.json();
+      
+      if(document.getElementById(typingId)) {
+          document.getElementById(typingId).remove();
+      }
+      
+      if(data.error) throw new Error(data.error.message);
+
+      const reply = data.candidates[0].content.parts[0].text;
+      
+      // Save AI reply to internal history
+      chatHistory.push({ role: 'assistant', content: reply });
+      
+      // Basic formatting for code blocks and bold text
+      let formattedReply = reply.replace(/
