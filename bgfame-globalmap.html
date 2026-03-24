@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BG FAME GLOBAL MAP</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #map { height: 100vh; width: 100%; }
+        
+        .header { 
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%); 
+            z-index: 1000; background: white; padding: 15px 20px; border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3); display: flex; gap: 15px;
+            align-items: center; 
+        }
+
+        /* UPGRADE: The logo is now much bigger! */
+        .app-logo { 
+            height: 65px; 
+            width: 65px; 
+            border-radius: 14px; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2); 
+        }
+
+        .header input { padding: 12px; font-size: 16px; border: 2px solid #ccc; border-radius: 8px; width: 300px; }
+        .header button { padding: 12px 25px; font-size: 16px; background-color: #0056b3; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .header button:hover { background-color: #004494; transform: scale(1.05); }
+        
+        .custom-popup .leaflet-popup-content-wrapper { border-radius: 12px; width: 320px; }
+        .custom-popup h3 { margin: 0 0 8px 0; color: #0056b3; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 5px;}
+        .custom-popup img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        .location-text { font-size: 11px; color: #777; margin-bottom: 10px; }
+        
+        .specialty-box { background-color: #f0f8ff; border-left: 4px solid #0056b3; padding: 10px; border-radius: 8px; margin-top: 10px; max-height: 120px; overflow-y: auto; }
+        .specialty-box h4 { margin: 0 0 5px 0; color: #0056b3; font-size: 13px; }
+        .specialty-box p { margin: 0; font-size: 12px; line-height: 1.4; color: #333; }
+
+        .ai-suggestions { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; border-radius: 8px; margin-top: 10px; }
+        .ai-suggestions h4 { margin: 0 0 5px 0; color: #856404; font-size: 13px; }
+        .ai-suggestions ul { margin: 0; padding-left: 20px; font-size: 12px; color: #856404; font-weight: bold;}
+        .ai-suggestions li { margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="https://i.ibb.co/3ymdw2p5/Gemini-Generated-Image-ra0v5wra0v5wra0v.png" alt="BG FAME Logo" class="app-logo">
+    <input type="text" id="searchBox" placeholder="Search any area, city, or monument...">
+    <button id="searchBtn" onclick="searchPlace()">Search</button>
+</div>
+
+<div id="map"></div>
+
+<script>
+    var map = L.map('map').setView([20.0, 0.0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        maxZoom: 18
+    }).addTo(map);
+
+    var currentPin = null;
+    var currentAreaBorder = null;
+
+    async function searchPlace() {
+        let query = document.getElementById('searchBox').value;
+        let btn = document.getElementById('searchBtn');
+
+        if (query === "") {
+            alert("Please type an area first!");
+            return;
+        }
+
+        btn.innerText = "Searching...";
+        btn.style.backgroundColor = "#555"; 
+
+        try {
+            // 1. Get Location and Borders from OpenStreetMap
+            let geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&polygon_geojson=1`);
+            let geoData = await geoResponse.json();
+
+            if (geoData.length > 0) {
+                let lat = geoData[0].lat;
+                let lon = geoData[0].lon;
+                let fullName = geoData[0].display_name;
+                
+                // 2. SMARTER WIKIPEDIA SEARCH
+                let definition = "No exact article found. Try a broader search!";
+                let imageHTML = "";
+                let displayTitle = query.toUpperCase(); 
+
+                try {
+                    let searchRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&utf8=&format=json&origin=*`);
+                    let searchData = await searchRes.json();
+
+                    if (searchData.query && searchData.query.search.length > 0) {
+                        let bestMatchTitle = searchData.query.search[0].title;
+                        displayTitle = bestMatchTitle.toUpperCase();
+
+                        let wikiResponse = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bestMatchTitle)}`);
+                        let wikiData = await wikiResponse.json();
+                        
+                        if (wikiData.extract) { definition = wikiData.extract; }
+                        if (wikiData.thumbnail && wikiData.thumbnail.source) { 
+                            imageHTML = `<img src="${wikiData.thumbnail.source}" alt="${bestMatchTitle}">`; 
+                        }
+                    }
+                } catch (error) { console.log("Wikipedia search failed."); }
+
+                // 3. AI Suggestions (Nearby Places)
+                let nearbyHTML = "";
+                try {
+                    let nearbyResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${lat}|${lon}&gsradius=10000&gslimit=5&format=json&origin=*`);
+                    let nearbyData = await nearbyResponse.json();
+                    
+                    if (nearbyData.query && nearbyData.query.geosearch.length > 0) {
+                        nearbyHTML = `<div class="ai-suggestions"><h4>🤖 Top Nearby Spots:</h4><ul>`;
+                        let count = 0;
+                        for (let item of nearbyData.query.geosearch) {
+                            if (item.title.toLowerCase() !== query.toLowerCase() && count < 3) {
+                                nearbyHTML += `<li>${item.title}</li>`;
+                                count++;
+                            }
+                        }
+                        if(count === 0) nearbyHTML += `<li>Explore the local area!</li>`;
+                        nearbyHTML += `</ul></div>`;
+                    }
+                } catch (error) { console.log("Nearby search failed."); }
+
+                // 4. Update the Map Display
+                if (currentPin) { map.removeLayer(currentPin); }
+                if (currentAreaBorder) { map.removeLayer(currentAreaBorder); }
+
+                if (geoData[0].geojson) {
+                    currentAreaBorder = L.geoJSON(geoData[0].geojson, {
+                        style: { color: '#0056b3', weight: 3, opacity: 0.6, fillColor: '#0056b3', fillOpacity: 0.1 }
+                    }).addTo(map);
+                    map.fitBounds(currentAreaBorder.getBounds());
+                } else {
+                    map.flyTo([lat, lon], 14);
+                }
+
+                // Compile the popup card
+                var popupContent = `
+                    <div class="custom-popup">
+                        <h3>🌍 ${displayTitle}</h3>
+                        ${imageHTML}
+                        <div class="location-text">📍 ${fullName}</div>
+                        <div class="specialty-box">
+                            <h4>📖 Definition & Specialty</h4>
+                            <p>${definition}</p>
+                        </div>
+                        ${nearbyHTML}
+                    </div>
+                `;
+                currentPin = L.marker([lat, lon]).addTo(map);
+                currentPin.bindPopup(popupContent).openPopup();
+            } else {
+                alert("Location not found! Check your spelling.");
+            }
+        } catch (error) {
+            alert("Connection error! Please check your internet.");
+        }
+
+        btn.innerText = "Search";
+        btn.style.backgroundColor = "#0056b3";
+    }
+</script>
+
+</body>
+</html>
