@@ -12,19 +12,13 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body { margin: 0; padding: 0; background: #0B1121; color: #E2F0FF; overflow-x: hidden; }
+        body { margin: 0; padding: 0; background: #0B1121; color: #E2F0FF; overflow-x: hidden; font-family: 'JetBrains Mono', monospace; }
         #root { min-height: 100vh; }
         
-        /* Custom Animations */
-        @keyframes blink { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
-        @keyframes livePulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-        @keyframes shakeAnim { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-44px); } }
-        @keyframes logoSpin { 0% { transform: scale(1); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 10px #00E5FF); } 100% { transform: scale(1); } }
+        @keyframes logoPulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 15px #00E5FF); } }
         
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0B1121; }
-        ::-webkit-scrollbar-thumb { background: #1C2D45; border-radius: 10px; }
+        input::placeholder { color: #5C7EA8; }
+        button:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
@@ -35,6 +29,162 @@
 
         const LOGO_URL = "https://i.ibb.co/23sCRprR/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg";
 
+        /* ─────────────────────────────────────────────────────────
+           FIREBASE CONFIG
+        ───────────────────────────────────────────────────────── */
+        const FB_CONFIG = {
+            apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg",
+            authDomain: "bg-code-tutor.firebaseapp.com",
+            projectId: "bg-code-tutor",
+            storageBucket: "bg-code-tutor.firebasestorage.app",
+            messagingSenderId: "129372610030",
+            appId: "1:129372610030:web:3b72e4ad2dba22951282ff",
+            measurementId: "G-PYYXTLRN4X",
+        };
+
+        let _auth = null, _db = null, _gProvider = null;
+        async function getFirebase() {
+            if (_auth) return { auth:_auth, db:_db, gProvider:_gProvider };
+            const { initializeApp, getApps } = await import("https://esm.sh/firebase@10.7.1/app");
+            const { getAuth, GoogleAuthProvider } = await import("https://esm.sh/firebase@10.7.1/auth");
+            const { getFirestore } = await import("https://esm.sh/firebase@10.7.1/firestore");
+            const app = getApps().length ? getApps()[0] : initializeApp(FB_CONFIG);
+            _auth = getAuth(app);
+            _db = getFirestore(app);
+            _gProvider = new GoogleAuthProvider();
+            return { auth:_auth, db:_db, gProvider:_gProvider };
+        }
+
+        const C = {
+            bg:'#0B1121', surface:'#0D1628', card:'#111827',
+            border:'#1C2D45', cyan:'#00E5FF', muted:'#5C7EA8', 
+            danger:'#FF4560', text:'#E2F0FF'
+        };
+
+        /* ─────────────────────────────────────────────────────────
+           AUTH SCREEN (FIXED)
+        ───────────────────────────────────────────────────────── */
+        function AuthScreen({ onLogin }) {
+            const [mode, setMode] = useState('login');
+            const [email, setEmail] = useState('');
+            const [pass, setPass] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [err, setErr] = useState('');
+
+            const handleGoogle = async () => {
+                setLoading(true); setErr('');
+                try {
+                    const { auth, gProvider } = await getFirebase();
+                    const { signInWithPopup } = await import("https://esm.sh/firebase@10.7.1/auth");
+                    const cred = await signInWithPopup(auth, gProvider);
+                    onLogin(cred.user);
+                } catch(e) { 
+                    setErr("Google login failed. Try again.");
+                }
+                setLoading(false);
+            };
+
+            const handleEmail = async () => {
+                if(!email || !pass) return setErr("Please fill all fields.");
+                setLoading(true); setErr('');
+                try {
+                    const { auth } = await getFirebase();
+                    const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = await import("https://esm.sh/firebase@10.7.1/auth");
+                    const cred = mode === 'login' 
+                        ? await signInWithEmailAndPassword(auth, email, pass)
+                        : await createUserWithEmailAndPassword(auth, email, pass);
+                    onLogin(cred.user);
+                } catch(e) {
+                    setErr(e.message.replace("Firebase: ", ""));
+                }
+                setLoading(false);
+            };
+
+            return (
+                <div style={{ minHeight:'100vh', background:C.bg, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
+                    <div style={{ width:400, background:C.card, border:`1px solid ${C.border}`, borderRadius:24, padding:40, textAlign:'center' }}>
+                        <img src={LOGO_URL} style={{ width:80, height:80, borderRadius:16, marginBottom:16, border:`2px solid ${C.border}` }} />
+                        <h2 style={{ color:C.cyan, margin:0, fontSize:22 }}>BG Code Tutor</h2>
+                        <p style={{ color:C.muted, fontSize:12, marginBottom:32 }}>Master code with Bhavya Goel</p>
+
+                        <button onClick={handleGoogle} disabled={loading} style={{ width:'100%', padding:'12px 0', borderRadius:12, border:`1px solid ${C.border}`, background:C.surface, color:C.text, fontSize:14, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:20 }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                            Continue with Google
+                        </button>
+
+                        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:20, color:C.muted, fontSize:12 }}>
+                            <div style={{ flex:1, height:1, background:C.border }} /> or <div style={{ flex:1, height:1, background:C.border }} />
+                        </div>
+
+                        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" style={{ width:'100%', padding:12, marginBottom:10, borderRadius:10, border:`1px solid ${C.border}`, background:C.surface, color:'#fff', boxSizing:'border-box' }} />
+                        <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="Password" style={{ width:'100%', padding:12, marginBottom:20, borderRadius:10, border:`1px solid ${C.border}`, background:C.surface, color:'#fff', boxSizing:'border-box' }} />
+                        
+                        {err && <p style={{ color:C.danger, fontSize:11, marginBottom:15 }}>{err}</p>}
+
+                        <button onClick={handleEmail} disabled={loading} style={{ width:'100%', padding:14, background:C.cyan, color:C.bg, border:'none', borderRadius:10, fontWeight:700, cursor:'pointer' }}>
+                            {loading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
+                        </button>
+
+                        <p onClick={() => setMode(mode==='login'?'signup':'login')} style={{ color:C.cyan, fontSize:12, marginTop:20, cursor:'pointer' }}>
+                            {mode === 'login' ? "New here? Create an account" : "Already have an account? Sign in"}
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        /* ─────────────────────────────────────────────────────────
+           HOME & ROOT
+        ───────────────────────────────────────────────────────── */
+        function App() {
+            const [screen, setScreen] = useState('loading');
+            const [user, setUser] = useState(null);
+
+            useEffect(() => {
+                (async () => {
+                    try {
+                        const { auth } = await getFirebase();
+                        const { onAuthStateChanged } = await import("https://esm.sh/firebase@10.7.1/auth");
+                        onAuthStateChanged(auth, u => {
+                            if (u) {
+                                setUser({ name: u.displayName || u.email.split('@')[0], avatar: (u.displayName||u.email)[0].toUpperCase() });
+                                setScreen('home');
+                            } else {
+                                setScreen('auth');
+                            }
+                        });
+                    } catch (e) { setScreen('auth'); }
+                })();
+            }, []);
+
+            if (screen === 'loading') return (
+                <div style={{ height:'100vh', background:C.bg, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column' }}>
+                    <img src={LOGO_URL} style={{ width:100, height:100, borderRadius:20, animation:'logoPulse 2s infinite ease-in-out', border:`2px solid ${C.cyan}` }} />
+                    <p style={{ color:C.cyan, marginTop:20, letterSpacing:2, fontSize:12 }}>SYNCING WITH FIREBASE...</p>
+                </div>
+            );
+
+            if (screen === 'auth') return <AuthScreen onLogin={(u) => { setUser(u); setScreen('home'); }} />;
+
+            return (
+                <div style={{ minHeight:'100vh', background:C.bg, padding:40 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:15, marginBottom:40 }}>
+                        <img src={LOGO_URL} style={{ width:40, height:40, borderRadius:8 }} />
+                        <h1 style={{ color:C.cyan, margin:0 }}>Welcome, {user.name}</h1>
+                    </div>
+                    <div style={{ background:C.card, padding:30, borderRadius:20, border:`1px solid ${C.border}` }}>
+                        <p>You are now logged into the <strong>BG Code Tutor Ultimate Edition</strong>.</p>
+                        <button onClick={async () => { const {auth} = await getFirebase(); auth.signOut(); }} style={{ padding:'10px 20px', background:C.danger, color:'#fff', border:'none', borderRadius:8, cursor:'pointer', marginTop:20 }}>Sign Out</button>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
         /* ─────────────────────────────────────────────────────────
            FIREBASE CONFIG
         ───────────────────────────────────────────────────────── */
