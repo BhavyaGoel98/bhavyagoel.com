@@ -1,40 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BG Fame — AI Chatbot</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#080b12;
-  --bg2:#0d1120;
-  --sidebar:#0a0e1a;
-  --gold:#f5c842;
-  --gold-dim:#c9a12e;
-  --gold-glow:rgba(245,200,66,0.15);
-  --cyan:#00d4ff;
-  --cyan-dim:#0099bb;
-  --cyan-glow:rgba(0,212,255,0.12);
-  --blue:#1a3a6e;
-  --blue-bright:#2d6fff;
-  --white:#f0ede6;
-  --muted:#6b7280;
-  --muted2:#9ca3af;
-  --border:rgba(245,200,66,0.1);
-  --border-cyan:rgba(0,212,255,0.12);
-  --card:#111827;
-  --user-bubble:linear-gradient(135deg,#1a3a6e,#0d2550);
-  --ai-bubble:#111827;
-  --danger:#ef4444;
-  --success:#22c55e;
-}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;display:flex;flex-direction:column}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>BG FAME GLOBAL MAP | Professional Edition</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
+        #map { height: 100vh; width: 100vw; background-color: #f4f4f4; }
+        
+        /* --- PROFESSIONAL SPLASH SCREEN --- */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, #001f3f, #000000);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #d1d1d1;
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+        }
+        .splash-logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%; /* Modern, circular logo */
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+        .splash-title {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+        .splash-subtitle {
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: #aaaaaa;
+        }
+        .splash-loading {
+            font-size: 12px;
+            opacity: 0.8;
+            animation: blink 1.5s infinite;
+        }
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:4px}
+        @keyframes pulse {
+            0% { transform: scale(0.98); box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0); }
+            100% { transform: scale(0.98); box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.4); }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* --- MODERN & PROFESSIONAL SEARCH BAR --- */
+        .header { 
+            position: absolute; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 1000; 
+            background: rgba(255,255,255,0.95); /* Slight transparency */
+            backdrop-filter: blur(5px);
+            padding: 8px 12px; 
+            border-radius: 30px; /* Fully rounded search bar */
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2); 
+            display: flex; 
+            gap: 10px;
+            align-items: center; 
+            width: 90%; 
+            max-width: 550px; 
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+        
+        .header:focus-within {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,1);
+        }
+
+        .app-logo { 
+            height: 36px; 
+            width: 36px; 
+            border-radius: 50%; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            flex-shrink: 0;
+        }
+
+        .header input { 
+            flex: 1; 
+            min-width: 0; 
+            padding: 10px; 
+            font-size: 16px; 
+            border: none; 
+            background: transparent;
+            outline: none;
+            color: #333;
+        }
+        
+        .header .btn-container {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .header button { 
+            padding: 10px 20px; 
+            font-size: 15px; 
+            background: linear-gradient(135deg, #001f3f, #0056b3); 
+            color: white; 
+            border: none; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            transition: 0.2s; 
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .header button:hover { background: linear-gradient(135deg, #001f3f, #007bff); }
+        .header button:disabled { background: #cccccc; cursor: not-allowed;}
+        
+        /* --- PROFESSIONAL POPUP CARDS --- */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .leaflet-popup-content {
+            width: 300px !important;
+            max-width: 100%;
+            margin: 0 !important;
+        }
+        
+        .custom-popup {
+            padding: 20px;
+        }
+        
+        .custom-popup h3 { 
+            margin: 0 0 10px 0; 
+            color: #001f3f; 
+            font-size: 18px; 
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #eaeaea; 
+            padding-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .custom-popup img { width: 100%; border-radius: 8px; margin-bottom: 12px; max-height: 180px; object-fit: cover; }
+        .location-text { font-size: 12px; color: #666; margin-bottom: 15px; font-style: italic; line-height: 1.4;}
+        
+        .specialty-box { background-color: #f9f9f9; border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; padding: 12px 15px; margin: 15px -20px; }
+        .specialty-box h4 { margin: 0 0 6px 0; color: #001f3f; font-size: 14px; text-transform: uppercase;}
+        .specialty-box p { margin: 0; font-size: 13px; line-height: 1.5; color: #444; }
+
+        .ai-suggestions { background-color: #fff9e6; border: 1px solid #ffeeba; padding: 12px 15px; border-radius: 8px; margin-top: 15px; }
+        .ai-suggestions h4 { margin: 0 0 6px 0; color: #856404; font-size: 14px; text-transform: uppercase; }
+        .ai-suggestions ul { margin: 0; padding-left: 22px; font-size: 13px; color: #856404; font-weight: bold;}
+        .ai-suggestions li { margin-bottom: 4px; }
+
+        /* Modernize Layer and Zoom Controls */
+        .leaflet-control-layers-toggle,
+        .leaflet-control-zoom-in,
+        .leaflet-control-zoom-out {
+            border-radius: 8px !important;
+            border: 2px solid #dcdcdc !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+        }
+        .leaflet-control-zoom { border: none !important;}
+
+        .leaflet-top { top: 90px !important; }
+    </style>
+</head>
+<body>
+
+<div id="splash-screen">
+    <img src="https://i.ibb.co/3ymdw2p5/Gemini-Generated-Image-ra0v5wra0v5wra0v.png" alt="BG FAME Logo" class="splash-logo">
+    <div class="splash-title">BG FAME</div>
+    <div class="splash-subtitle">Global Mapping | Expert Solutions</div>
+    <div class="splash-loading">Loading geospatial data...</div>
+</div>
+
+<div class="header">
+    <img src="https://i.ibb.co/3ymdw2p5/Gemini-Generated-Image-ra0v5wra0v5wra0v.png" alt="BG FAME Logo" class="app-logo">
+    <input type="search" id="searchBox" placeholder="Search any global location...">
+    <div class="btn-container">
+        <button id="searchBtn" onclick="searchPlace()">Map It</button>
+    </div>
+</div>
+
+<div id="map"></div>
+
+<script>
+    // --- SPLASH SCREEN LOGIC ---
+    window.addEventListener('load', function() {
+        // Wait 1.8 seconds, then fade out the splash screen
+        setTimeout(function() {
+            var splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            splash.style.visibility = 'hidden';
+        }, 1800);
+    });
+
+    // --- MAP INITIALIZATION ---
+    // Move zoom control to bottom right for a cleaner look
+    var map = L.map('map', { zoomControl: false }).setView([20.0, 0.0], 2);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // --- PROFESSIONAL MAP LAYERS ---
+    
+    // 1. Professional Detailed Map (CartoDB Positron) - clean and light
+    var profMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap, © CartoDB',
+        subdomains: 'abcd',
+        maxZoom: 20
+    });
+
+    // 2. High-Quality Satellite Imagery (Esri World Imagery)
+    var satMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '© Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        maxZoom: 19
+    });
+
+    // Add professional map by default
+    profMap.addTo(map);
+
+    // Define Layer Controls
+    var baseMaps = {
+        "📊 Detailed Map": profMap,
+        "🌍 Satellite View": satMap
+    };
+
+    // Add Layer Control to the top right
+    L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
+
+    var currentPin = null;
+    var currentAreaBorder = null;
+
+    // Listen for "Enter" key on the search box (important for mobile keyboards)
+    document.getElementById("searchBox").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            searchPlace();
+            // Hide mobile keyboard after searching
+            this.blur();
+        }
+    });
+
+    async function searchPlace() {
+        let query = document.getElementById('searchBox').value;
+        let btn = document.getElementById('searchBtn');
+
+        if (query.trim() === "") {
+            alert("Please provide a location.");
+            return;
+        }
+
+        // Change button to indicate processing
+        btn.innerText = "Searching";
+        btn.disabled = true;
+
+        try {
+            // 1. Get Location and Borders from OpenStreetMap
+            let geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&polygon_geojson=1`);
+            let geoData = await geoResponse.json();
+
+            if (geoData.length > 0) {
+                let lat = geoData[0].lat;
+                let lon = geoData[0].lon;
+                let fullName = geoData[0].display_name;
+                
+                // 2. SMARTER WIKIPEDIA SEARCH
+                let definition = "No detailed encyclopedia article found for this location.";
+                let imageHTML = "";
+                let displayTitle = query.toUpperCase(); 
+
+                try {
+                    let searchRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&utf8=&format=json&origin=*`);
+                    let searchData = await searchRes.json();
+
+                    if (searchData.query && searchData.query.search.length > 0) {
+                        let bestMatchTitle = searchData.query.search[0].title;
+                        displayTitle = bestMatchTitle.toUpperCase();
+
+                        let wikiResponse = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bestMatchTitle)}`);
+                        let wikiData = await wikiResponse.json();
+                        
+                        if (wikiData.extract) { definition = wikiData.extract; }
+                        if (wikiData.thumbnail && wikiData.thumbnail.source) { 
+                            imageHTML = `<img src="${wikiData.thumbnail.source}" alt="${bestMatchTitle}">`; 
+                        }
+                    }
+                } catch (error) { console.log("Wikipedia search failed."); }
+
+                // 3. AI Suggestions (Nearby Places)
+                let nearbyHTML = "";
+                try {
+                    let nearbyResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${lat}|${lon}&gsradius=15000&gslimit=5&format=json&origin=*`);
+                    let nearbyData = await nearbyResponse.json();
+                    
+                    if (nearbyData.query && nearbyData.query.geosearch.length > 0) {
+                        nearbyHTML = `<div class="ai-suggestions"><h4>🤖 Notable Nearby Points:</h4><ul>`;
+                        let count = 0;
+                        for (let item of nearbyData.query.geosearch) {
+                            if (item.title.toLowerCase() !== query.toLowerCase() && count < 3) {
+                                nearbyHTML += `<li>${item.title}</li>`;
+                                count++;
+                            }
+                        }
+                        if(count === 0) nearbyHTML += `<li>No major nearby points found.</li>`;
+                        nearbyHTML += `</ul></div>`;
+                    }
+                } catch (error) { console.log("Nearby search failed."); }
+
+                // 4. Update the Map Display
+                if (currentPin) { map.removeLayer(currentPin); }
+                if (currentAreaBorder) { map.removeLayer(currentAreaBorder); }
+
+                if (geoData[0].geojson) {
+                    currentAreaBorder = L.geoJSON(geoData[0].geojson, {
+                        style: { color: '#0056b3', weight: 4, opacity: 0.7, fillColor: '#0056b3', fillOpacity: 0.05 }
+                    }).addTo(map);
+                    map.fitBounds(currentAreaBorder.getBounds(), { padding: [30, 30] });
+                } else {
+                    map.flyTo([lat, lon], 14);
+                }
+
+                // Compile the popup card
+                var popupContent = `
+                    <div class="custom-popup">
+                        <h3>🌍 ${displayTitle}</h3>
+                        ${imageHTML}
+                        <div class="location-text">📍 ${fullName}</div>
+                        <div class="specialty-box">
+                            <h4>📖 Overview</h4>
+                            <p>${definition}</p>
+                        </div>
+                        ${nearbyHTML}
+                    </div>
+                `;
+                currentPin = L.marker([lat, lon]).addTo(map);
+                currentPin.bindPopup(popupContent).openPopup();
+            } else {
+                alert("Location not recognized. Please verify the query.");
+            }
+        } catch (error) {
+            alert("A network error occurred. Please verify connection.");
+        }
+
+        // Reset button
+        btn.innerText = "Map It";
+        btn.disabled = false;
+    }
+</script>
+
+</body>
+</html>::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(245,200,66,0.2);border-radius:4px}
 
