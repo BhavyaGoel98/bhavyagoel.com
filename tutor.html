@@ -1,0 +1,733 @@
+import { useState, useEffect, useRef, useCallback } from "react";
+
+/* ─────────────────────────────────────────────────────────
+   FIREBASE CONFIG
+───────────────────────────────────────────────────────── */
+const FB_CONFIG = {
+  apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg",
+  authDomain: "bg-code-tutor.firebaseapp.com",
+  projectId: "bg-code-tutor",
+  storageBucket: "bg-code-tutor.firebasestorage.app",
+  messagingSenderId: "129372610030",
+  appId: "1:129372610030:web:3b72e4ad2dba22951282ff",
+  measurementId: "G-PYYXTLRN4X",
+};
+
+/* Firebase loaded lazily so the app renders immediately */
+let _auth = null, _db = null, _gProvider = null;
+async function getFirebase() {
+  if (_auth) return { auth:_auth, db:_db, gProvider:_gProvider };
+  const { initializeApp, getApps } = await import("https://esm.sh/firebase@10/app");
+  const { getAuth, GoogleAuthProvider } = await import("https://esm.sh/firebase@10/auth");
+  const { getFirestore } = await import("https://esm.sh/firebase@10/firestore");
+  const app = getApps().length ? getApps()[0] : initializeApp(FB_CONFIG);
+  _auth = getAuth(app);
+  _db   = getFirestore(app);
+  _gProvider = new GoogleAuthProvider();
+  return { auth:_auth, db:_db, gProvider:_gProvider };
+}
+
+/* ─────────────────────────────────────────────────────────
+   THEME
+───────────────────────────────────────────────────────── */
+const C = {
+  bg:'#0B1121', surface:'#0D1628', card:'#111827',
+  cardHover:'#141E32', border:'#1C2D45', borderBright:'#243D5C',
+  cyan:'#00E5FF', green:'#00FF88', orange:'#FF7A3D',
+  purple:'#A855F7', pink:'#FF3D7F', amber:'#FFB830',
+  text:'#E2F0FF', muted:'#5C7EA8', dim:'#1C2D45', dimText:'#3A5474',
+  danger:'#FF4560',
+};
+
+/* ─────────────────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────────────────── */
+const STEPS = [
+  { id:0, type:'bot', text:"Hey there! 👋 I'm BG — your personal code tutor. Today we're building your very first webpage. Excited? You should be!" },
+  { id:1, type:'bot', text:"HTML stands for HyperText Markup Language. Every website you've visited — Google, YouTube, Instagram — all start with HTML. It's the skeleton of the web." },
+  { id:2, type:'code', text:"This is an <h1> tag — it creates a big bold heading. The browser renders it large. Check the live preview →", code:'<h1>Hello, World!</h1>', bodyHtml:'<h1 style="color:#00E5FF;font-family:sans-serif;margin:0">Hello, World!</h1>', xp:10 },
+  { id:3, type:'mcq', text:"Quick checkpoint! What does HTML stand for?", question:"What does HTML stand for?", opts:["HyperText Markup Language","High Transfer Machine Language","Hyperlink Text Manipulation Logic","Home Tool Markup Language"], correct:0, xp:20 },
+  { id:4, type:'chips', text:"Your turn! Tap blocks IN ORDER to write a heading 'I am a coder':", chips:["<h1>","I am a coder","</h1>"], correct:[0,1,2], bodyHtml:'<h1 style="color:#00FF88;font-family:sans-serif;margin:0">I am a coder</h1>', xp:30 },
+  { id:5, type:'bot', text:"🔥 NAILED IT! You just wrote real HTML — the same syntax powering billions of websites. Remember this moment." },
+  { id:6, type:'chips', text:"Now add a paragraph. A <p> tag creates body text. Assemble it:", chips:["<p>","I love coding!","</p>"], correct:[0,1,2], bodyHtml:'<h1 style="color:#00FF88;font-family:sans-serif;margin:0 0 12px">I am a coder</h1><p style="color:#E2F0FF;font-family:sans-serif;margin:0">I love coding!</p>', xp:30 },
+  { id:7, type:'mcq', text:"HTML has 6 heading levels (h1–h6). Which creates the largest heading?", question:"Which tag creates the largest heading?", opts:["<h6>","<heading>","<title>","<h1>"], correct:3, xp:20 },
+  { id:8, type:'chips', text:"Grand finale! Build a button that says 'Click Me!':", chips:["<button>","Click Me!","</button>"], correct:[0,1,2], bodyHtml:'<h1 style="color:#00FF88;font-family:sans-serif;margin:0 0 12px">I am a coder</h1><p style="color:#E2F0FF;font-family:sans-serif;margin:0 0 16px">I love coding!</p><button style="background:#00E5FF;border:none;padding:11px 26px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;color:#0B1121">Click Me!</button>', xp:40 },
+  { id:9, type:'complete', text:"🎉 LESSON COMPLETE! You built a real webpage — heading, paragraph, button. That's HTML. That's YOU. Welcome to the developer world.", xp:50 },
+];
+
+const CATALOG = [
+  { id:'web', label:'Web Dev', color:C.cyan, emoji:'🌐', courses:[
+    { id:'html', title:'HTML Fundamentals', emoji:'📄', unlocked:true,  lessons:12, desc:'Structure the web from scratch' },
+    { id:'css',  title:'CSS Styling',        emoji:'🎨', unlocked:false, lessons:15, desc:'Make pages beautiful & responsive' },
+    { id:'js',   title:'JavaScript',         emoji:'⚡', unlocked:false, lessons:24, desc:'Bring pages to life' },
+    { id:'react',title:'React.js',           emoji:'⚛️', unlocked:false, lessons:20, desc:'Build modern UIs at scale' },
+  ]},
+  { id:'backend', label:'Backend', color:C.green, emoji:'⚙️', courses:[
+    { id:'python',title:'Python Basics', emoji:'🐍', unlocked:true,  lessons:18, desc:'The language of AI & automation' },
+    { id:'node',  title:'Node.js',       emoji:'🟢', unlocked:false, lessons:16, desc:'JavaScript on the server' },
+    { id:'sql',   title:'SQL & DBs',     emoji:'🗄️', unlocked:false, lessons:14, desc:'Store & query your data' },
+  ]},
+  { id:'mobile', label:'Mobile', color:C.orange, emoji:'📱', courses:[
+    { id:'rn',     title:'React Native', emoji:'📱', unlocked:false, lessons:22, desc:'One codebase, iOS & Android' },
+    { id:'flutter',title:'Flutter',      emoji:'🦋', unlocked:false, lessons:20, desc:"Google's mobile UI toolkit" },
+  ]},
+  { id:'ai', label:'AI & Data', color:C.purple, emoji:'🤖', courses:[
+    { id:'ml',title:'ML Fundamentals', emoji:'🧠', unlocked:false, lessons:20, desc:'Teach machines to learn' },
+    { id:'ds',title:'Data Science',    emoji:'📊', unlocked:false, lessons:18, desc:'Turn data into decisions' },
+  ]},
+  { id:'game', label:'Game Dev', color:C.pink, emoji:'🎮', courses:[
+    { id:'unity', title:'Unity Engine',  emoji:'🎮', unlocked:false, lessons:25, desc:'Build 3D games & simulations' },
+    { id:'unreal',title:'Unreal Engine', emoji:'🏔️', unlocked:false, lessons:22, desc:'AAA-grade game creation' },
+  ]},
+];
+
+/* BG Code Tutor is now the first and featured project */
+const FOUNDER_PROJECTS = [
+  { name:'BG Code Tutor', tag:'EdTech · AI · Gamified', emoji:'🎓', color:C.cyan,   desc:"Gamified EdTech platform — the very app you're learning on right now. Mimo-style interactive lessons, AI Copilot, XP rewards & a full multi-track course catalog.", live:true },
+  { name:'BG Fame TodoHabit',   tag:'Productivity · App',   emoji:'📋', color:C.amber,  desc:'Golden productivity suite — tasks, habits, mood tracker, Pomodoro timer & calendar all in one polished build.' },
+  { name:'BG Fame Advertisers', tag:'AI · Design Tool',     emoji:'📣', color:C.purple, desc:'AI-powered ad maker — create stunning advertisements instantly. Built to explore how AI accelerates creative work.' },
+  { name:'BG Fame Card Maker',  tag:'Design · Tool',        emoji:'💳', color:C.green,  desc:'Professional business card designer with a luxury gold theme. Customize and export your own branded cards.' },
+  { name:'BG Fame Global Map',  tag:'Navigation · AI Tool', emoji:'🌍', color:C.orange, desc:'Interactive world map with area boundary search and Wikipedia integration. Built with Leaflet.js.' },
+];
+
+/* ─────────────────────────────────────────────────────────
+   HELPERS
+───────────────────────────────────────────────────────── */
+const wrapHtml = b =>
+  `<!DOCTYPE html><html><head><meta charset="utf-8"><style>*{box-sizing:border-box;margin:0;padding:0}body{margin:0;padding:24px;background:#0B1121;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}</style></head><body>${b}</body></html>`;
+
+function XPBar({ xp, max=200 }) {
+  const pct = Math.min((xp/max)*100,100);
+  return (
+    <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+      <span style={{ color:C.amber, fontSize:11, fontWeight:700, whiteSpace:'nowrap' }}>⚡{xp} XP</span>
+      <div style={{ width:72, height:5, background:C.dim, borderRadius:3, overflow:'hidden' }}>
+        <div style={{ width:`${pct}%`, height:'100%', background:`linear-gradient(90deg,${C.cyan},${C.green})`, borderRadius:3, transition:'width .5s ease' }} />
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   AUTH SCREEN
+───────────────────────────────────────────────────────── */
+function AuthScreen({ onLogin }) {
+  const [mode,setMode]       = useState('login');
+  const [email,setEmail]     = useState('');
+  const [pass,setPass]       = useState('');
+  const [name,setName]       = useState('');
+  const [loading,setLoading] = useState(false);
+  const [err,setErr]         = useState('');
+
+  const handleEmail = async () => {
+    if (!email||!pass) { setErr('Please fill in all fields'); return; }
+    setErr(''); setLoading(true);
+    try {
+      const { auth } = await getFirebase();
+      const { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } = await import("https://esm.sh/firebase@10/auth");
+      let cred;
+      if (mode==='login') {
+        cred = await signInWithEmailAndPassword(auth, email, pass);
+      } else {
+        cred = await createUserWithEmailAndPassword(auth, email, pass);
+        if (name) await updateProfile(cred.user, { displayName:name });
+      }
+      const u = cred.user;
+      onLogin({ name:u.displayName||u.email.split('@')[0], email:u.email, avatar:(u.displayName||u.email)[0].toUpperCase(), uid:u.uid });
+    } catch(e) {
+      const map = { 'auth/invalid-credential':'Wrong email or password.', 'auth/email-already-in-use':'Email already registered.', 'auth/weak-password':'Password must be 6+ characters.' };
+      setErr(map[e.code]||'Something went wrong — try again.');
+    }
+    setLoading(false);
+  };
+
+  const handleGoogle = async () => {
+    setLoading(true); setErr('');
+    try {
+      const { auth, gProvider } = await getFirebase();
+      const { signInWithPopup } = await import("https://esm.sh/firebase@10/auth");
+      const cred = await signInWithPopup(auth, gProvider);
+      const u = cred.user;
+      onLogin({ name:u.displayName||u.email, email:u.email, avatar:(u.displayName||u.email)[0].toUpperCase(), uid:u.uid, photo:u.photoURL });
+    } catch(e) {
+      if (e.code!=='auth/popup-closed-by-user') setErr('Google sign-in failed — try again.');
+    }
+    setLoading(false);
+  };
+
+  const fieldStyle = (extra={}) => ({
+    width:'100%', padding:'12px 15px', borderRadius:11, border:`1px solid ${C.border}`,
+    background:C.surface, color:C.text, fontSize:14, fontFamily:'inherit',
+    outline:'none', marginBottom:10, boxSizing:'border-box', ...extra
+  });
+
+  return (
+    <div style={{ minHeight:'100vh', background:C.bg, display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'JetBrains Mono',monospace", position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', inset:0, backgroundImage:`linear-gradient(${C.border} 1px,transparent 1px),linear-gradient(90deg,${C.border} 1px,transparent 1px)`, backgroundSize:'48px 48px', opacity:.22 }} />
+      <div style={{ position:'absolute', top:'18%', left:'12%', width:320, height:320, background:C.cyan, borderRadius:'50%', opacity:.025, filter:'blur(70px)' }} />
+      <div style={{ position:'absolute', bottom:'10%', right:'8%', width:420, height:420, background:C.purple, borderRadius:'50%', opacity:.035, filter:'blur(90px)' }} />
+      <div style={{ width:420, background:C.card, border:`1px solid ${C.border}`, borderRadius:22, padding:'44px 40px', position:'relative', zIndex:1 }}>
+        {/* Logo */}
+        <div style={{ textAlign:'center', marginBottom:32 }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:10, marginBottom:10 }}>
+            <span style={{ fontSize:26, color:C.cyan }}>{'</>'}</span>
+            <div>
+              <div style={{ color:C.cyan, fontWeight:700, fontSize:19, letterSpacing:-.5 }}>BG Code Tutor</div>
+              <div style={{ color:C.muted, fontSize:10, letterSpacing:2.5 }}>ULTIMATE EDITION</div>
+            </div>
+          </div>
+          <p style={{ color:C.muted, fontSize:12, margin:0 }}>Zero → Developer. The journey starts here.</p>
+        </div>
+        {/* Toggle */}
+        <div style={{ display:'flex', background:C.surface, borderRadius:11, padding:4, marginBottom:24, border:`1px solid ${C.border}` }}>
+          {['login','signup'].map(m=>(
+            <button key={m} onClick={()=>{ setMode(m); setErr(''); }} style={{ flex:1, padding:'9px 0', borderRadius:8, border:'none', cursor:'pointer', fontSize:13, fontWeight:700, fontFamily:'inherit', background:mode===m?C.cyan:'transparent', color:mode===m?C.bg:C.muted, transition:'all .2s' }}>
+              {m==='login'?'Sign In':'Sign Up'}
+            </button>
+          ))}
+        </div>
+        {/* Google */}
+        <button onClick={handleGoogle} disabled={loading} style={{ width:'100%', padding:'12px 0', borderRadius:11, border:`1px solid ${C.border}`, background:C.surface, color:C.text, fontSize:14, fontWeight:600, fontFamily:'inherit', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:18, opacity:loading?.6:1 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:18 }}>
+          <div style={{ flex:1, height:1, background:C.border }} />
+          <span style={{ color:C.dimText, fontSize:12 }}>or</span>
+          <div style={{ flex:1, height:1, background:C.border }} />
+        </div>
+        {mode==='signup' && <input value={name} onChange={e=>setName(e.target.value)} placeholder="Your name (optional)" style={fieldStyle()} />}
+        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" type="email" style={fieldStyle()} />
+        <input value={pass}  onChange={e=>setPass(e.target.value)}  placeholder="Password" type="password" style={fieldStyle({ marginBottom:err?10:18 })} onKeyDown={e=>e.key==='Enter'&&handleEmail()} />
+        {err && <p style={{ color:C.danger, fontSize:12, marginBottom:12 }}>{err}</p>}
+        <button onClick={handleEmail} disabled={loading} style={{ width:'100%', padding:'13px 0', borderRadius:11, border:'none', background:loading?C.dim:C.cyan, color:loading?C.muted:C.bg, fontSize:15, fontWeight:700, fontFamily:'inherit', cursor:loading?'not-allowed':'pointer', transition:'all .2s' }}>
+          {loading?'Connecting…':(mode==='login'?'Sign In →':'Create Free Account →')}
+        </button>
+        <p style={{ textAlign:'center', color:C.dimText, fontSize:11, marginTop:16, marginBottom:0 }}>No credit card needed · Progress saves to the cloud ☁️</p>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   HOME SCREEN
+───────────────────────────────────────────────────────── */
+function HomeScreen({ user, xp, streak, onStartLesson, onLogout }) {
+  const [tab,setTab]     = useState('catalog');
+  const [track,setTrack] = useState('web');
+  const activeTrack = CATALOG.find(t=>t.id===track);
+
+  const Avatar = () => user.photo
+    ? <img src={user.photo} alt="" style={{ width:34, height:34, borderRadius:'50%', objectFit:'cover', border:`2px solid ${C.cyan}`, cursor:'pointer' }} onClick={onLogout} />
+    : <div style={{ width:34, height:34, borderRadius:'50%', background:C.cyan, display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:C.bg, fontSize:14, cursor:'pointer' }} onClick={onLogout}>{user.avatar}</div>;
+
+  return (
+    <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'JetBrains Mono',monospace", color:C.text }}>
+      {/* NAV */}
+      <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:'0 30px', display:'flex', alignItems:'center', gap:16, height:58 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:7, marginRight:'auto' }}>
+          <span style={{ fontSize:18, color:C.cyan }}>{'</>'}</span>
+          <span style={{ color:C.cyan, fontWeight:700, fontSize:15 }}>BG Code Tutor</span>
+          <span style={{ color:C.dimText, fontSize:11, marginLeft:2 }}>by Bhavya Goel</span>
+        </div>
+        {['catalog','founder'].map(t=>(
+          <button key={t} onClick={()=>setTab(t)} style={{ padding:'6px 14px', borderRadius:8, border:`1px solid ${tab===t?C.cyan:C.border}`, background:tab===t?`${C.cyan}18`:'transparent', color:tab===t?C.cyan:C.muted, fontSize:12, fontWeight:700, fontFamily:'inherit', cursor:'pointer', transition:'all .2s' }}>
+            {t==='catalog'?'📚 Catalog':'🚀 Founder'}
+          </button>
+        ))}
+        <span style={{ color:C.orange, fontSize:12, fontWeight:700 }}>🔥{streak}d</span>
+        <XPBar xp={xp} />
+        <Avatar />
+      </div>
+
+      {tab==='catalog' ? (
+        <div style={{ padding:'34px 46px' }}>
+          <div style={{ marginBottom:26 }}>
+            <h1 style={{ margin:'0 0 4px', fontSize:23, fontWeight:700 }}>Master Catalog</h1>
+            <p style={{ margin:0, color:C.muted, fontSize:12 }}>// Every expert was once a beginner.</p>
+          </div>
+          <div style={{ display:'flex', gap:8, marginBottom:26, flexWrap:'wrap' }}>
+            {CATALOG.map(t=>(
+              <button key={t.id} onClick={()=>setTrack(t.id)} style={{ padding:'6px 14px', borderRadius:10, border:`1px solid ${track===t.id?t.color:C.border}`, background:track===t.id?`${t.color}18`:'transparent', color:track===t.id?t.color:C.muted, fontSize:12, fontWeight:700, fontFamily:'inherit', cursor:'pointer', transition:'all .2s', display:'flex', alignItems:'center', gap:5 }}>
+                <span style={{ fontSize:13 }}>{t.emoji}</span>{t.label}
+              </button>
+            ))}
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))', gap:13 }}>
+            {activeTrack.courses.map((c,i)=>(
+              <div key={c.id}
+                style={{ background:C.card, border:`1px solid ${c.unlocked?C.borderBright:C.border}`, borderRadius:15, padding:'20px 18px', cursor:c.unlocked?'pointer':'default', opacity:c.unlocked?1:.5, transition:'all .2s', position:'relative', overflow:'hidden' }}
+                onClick={()=>c.unlocked&&onStartLesson(c.id)}
+                onMouseEnter={e=>{ if(c.unlocked){ e.currentTarget.style.borderColor=activeTrack.color; e.currentTarget.style.background=C.cardHover; }}}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor=c.unlocked?C.borderBright:C.border; e.currentTarget.style.background=C.card; }}>
+                {!c.unlocked && <div style={{ position:'absolute', top:12, right:12, fontSize:12 }}>🔒</div>}
+                {c.unlocked&&i===0 && <div style={{ position:'absolute', top:10, right:10, background:`${activeTrack.color}20`, border:`1px solid ${activeTrack.color}50`, color:activeTrack.color, fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:5 }}>START HERE</div>}
+                <div style={{ fontSize:28, marginBottom:11 }}>{c.emoji}</div>
+                <h3 style={{ margin:'0 0 4px', fontSize:13, fontWeight:700 }}>{c.title}</h3>
+                <p style={{ margin:'0 0 12px', color:C.muted, fontSize:11 }}>{c.desc}</p>
+                <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+                  <div style={{ flex:1, height:3, background:C.dim, borderRadius:2, overflow:'hidden' }}>
+                    <div style={{ width:c.unlocked&&i===0?'8%':'0%', height:'100%', background:activeTrack.color, borderRadius:2 }} />
+                  </div>
+                  <span style={{ color:C.dimText, fontSize:10 }}>{c.lessons} lessons</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* ── FOUNDER TAB ── */
+        <div style={{ padding:'40px 46px', maxWidth:820, margin:'0 auto' }}>
+          {/* Bio */}
+          <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:18, padding:'32px 34px', marginBottom:18 }}>
+            <div style={{ display:'flex', gap:20, alignItems:'flex-start', marginBottom:24 }}>
+              <div style={{ width:72, height:72, borderRadius:14, background:`linear-gradient(135deg,${C.cyan},${C.purple})`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:32, flexShrink:0 }}>👨‍💻</div>
+              <div style={{ flex:1 }}>
+                <h2 style={{ margin:'0 0 4px', fontSize:20, fontWeight:700 }}>Bhavya Goel</h2>
+                <p style={{ margin:'0 0 4px', color:C.cyan, fontSize:12 }}>10-Year-Old Founder, Coder & Creator · India 🇮🇳</p>
+                <p style={{ margin:'0 0 10px', color:C.muted, fontSize:12, lineHeight:1.72, maxWidth:480 }}>Building the web one line at a time. Learning through Mimo, specializing in HTML, shipping real tools through <span style={{ color:C.cyan }}>Bhavy Website Solutions</span>. When not coding, creating content across YouTube channels.</p>
+                <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                  {[['🌐','HTML Dev'],['🎬','Video Editor'],['🤖','AI Explorer'],['🚀','Founder']].map(([icon,l])=>(
+                    <span key={l} style={{ background:`${C.cyan}12`, border:`1px solid ${C.cyan}28`, color:C.cyan, fontSize:10, fontWeight:700, padding:'3px 9px', borderRadius:20 }}>{icon} {l}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:0, borderTop:`1px solid ${C.border}`, paddingTop:18 }}>
+              {[['4+','Live Projects'],['2','YouTube Channels'],['∞','Curiosity']].map(([n,l])=>(
+                <div key={l} style={{ textAlign:'center', borderRight:`1px solid ${C.border}` }}>
+                  <div style={{ color:C.cyan, fontSize:22, fontWeight:700 }}>{n}</div>
+                  <div style={{ color:C.muted, fontSize:10, marginTop:2 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Projects — BG Code Tutor featured first */}
+          <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:18, padding:'22px 26px', marginBottom:18 }}>
+            <p style={{ color:C.muted, fontSize:10, marginBottom:16, letterSpacing:1.2 }}>// PROJECTS SHIPPED</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:11 }}>
+              {FOUNDER_PROJECTS.map(p=>(
+                <div key={p.name} style={{ background:C.surface, border:`1px solid ${p.live?p.color+'45':C.border}`, borderRadius:13, padding:'15px 17px', position:'relative' }}>
+                  {p.live && (
+                    <div style={{ position:'absolute', top:11, right:12, display:'flex', alignItems:'center', gap:5, background:`${p.color}18`, border:`1px solid ${p.color}40`, borderRadius:20, padding:'3px 10px', fontSize:10, fontWeight:700, color:p.color }}>
+                      <div style={{ width:6, height:6, borderRadius:'50%', background:p.color, animation:'livePulse 2s infinite' }} />
+                      LIVE APP
+                    </div>
+                  )}
+                  <div style={{ display:'flex', gap:11, alignItems:'flex-start', paddingRight:p.live?90:0 }}>
+                    <span style={{ fontSize:22, flexShrink:0 }}>{p.emoji}</span>
+                    <div>
+                      <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:3, flexWrap:'wrap' }}>
+                        <span style={{ color:p.color, fontSize:13, fontWeight:700 }}>{p.name}</span>
+                        <span style={{ background:`${p.color}14`, color:p.color, fontSize:9, fontWeight:700, padding:'2px 6px', borderRadius:5, letterSpacing:.4 }}>{p.tag}</span>
+                      </div>
+                      <p style={{ margin:0, color:C.muted, fontSize:11, lineHeight:1.65 }}>{p.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tech setup */}
+          <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:18, padding:'22px 26px', marginBottom:18 }}>
+            <p style={{ color:C.muted, fontSize:10, marginBottom:14, letterSpacing:1.2 }}>// TECH SETUP</p>
+            <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
+              {[['📱','OnePlus 7','Primary phone'],['⬛','iPad 10th Gen','Creative & learning'],['💻','MacBook 13" M2','Main coding machine']].map(([e,n,d])=>(
+                <div key={n} style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:11, padding:'11px 15px', display:'flex', alignItems:'center', gap:9, flex:1, minWidth:150 }}>
+                  <span style={{ fontSize:20 }}>{e}</span>
+                  <div><div style={{ color:C.text, fontSize:12, fontWeight:600 }}>{n}</div><div style={{ color:C.muted, fontSize:10 }}>{d}</div></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Social */}
+          <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:18, padding:'22px 26px' }}>
+            <p style={{ color:C.muted, fontSize:10, marginBottom:14, letterSpacing:1.2 }}>// FIND ME ONLINE</p>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:9 }}>
+              {[['▶','Knowledge with Bhavya','@aapk.ahostanddost · YouTube','rgba(255,0,0,.12)','rgba(255,0,0,.22)'],['▶','Fun with Bhavya Goel','@funwiththetalent · YouTube','rgba(255,0,0,.12)','rgba(255,0,0,.22)'],['📸','aapk.ahostanddost','Instagram','rgba(214,66,156,.12)','rgba(214,66,156,.22)'],['📸','funwithbhavyagoel_7913','Instagram','rgba(214,66,156,.12)','rgba(214,66,156,.22)']].map(([icon,handle,sub,bg,bdr])=>(
+                <div key={handle} style={{ display:'flex', alignItems:'center', gap:9, background:bg, border:`1px solid ${bdr}`, borderRadius:11, padding:'11px 13px' }}>
+                  <div style={{ width:32, height:32, borderRadius:9, background:bg, border:`1px solid ${bdr}`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, flexShrink:0 }}>{icon}</div>
+                  <div><div style={{ color:C.text, fontSize:12, fontWeight:600 }}>{handle}</div><div style={{ color:C.muted, fontSize:10 }}>{sub}</div></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p style={{ textAlign:'center', color:C.dimText, fontSize:11, marginTop:20 }}>Built with 💙 by Bhavya Goel · © 2026 Bhavy Website Solutions</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   AI COPILOT DRAWER
+───────────────────────────────────────────────────────── */
+function CopilotDrawer({ open, onClose }) {
+  const [msgs,setMsgs]       = useState([{ role:'assistant', content:"Hey! I'm your AI Copilot 🤖 Ask me anything about the lesson — concepts, errors, or any code you don't understand!" }]);
+  const [input,setInput]     = useState('');
+  const [loading,setLoading] = useState(false);
+  const bottomRef = useRef();
+
+  useEffect(()=>{ bottomRef.current?.scrollIntoView({ behavior:'smooth' }); }, [msgs]);
+
+  const send = async () => {
+    if (!input.trim()||loading) return;
+    const userMsg = { role:'user', content:input };
+    const next = [...msgs,userMsg];
+    setMsgs(next); setInput(''); setLoading(true);
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST', headers:{ 'Content-Type':'application/json' },
+        body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000,
+          system:"You are BG Copilot, a friendly expert coding tutor inside BG Code Tutor by Bhavya Goel. Help beginners understand HTML, CSS, JS and programming concepts simply. Use backticks for inline code, triple backticks for code blocks. Be encouraging, concise, practical.",
+          messages:next.map(m=>({ role:m.role, content:m.content })) })
+      });
+      const data = await res.json();
+      const reply = data.content?.map(b=>b.text||'').join('')||"I'm having trouble right now — try again!";
+      setMsgs(p=>[...p,{ role:'assistant', content:reply }]);
+    } catch { setMsgs(p=>[...p,{ role:'assistant', content:"Network error — check your connection and try again." }]); }
+    setLoading(false);
+  };
+
+  const render = (text) => text.split(/(```[\s\S]*?```|`[^`]+`)/g).map((part,i)=>{
+    if (part.startsWith('```')) {
+      const code = part.replace(/^```\w*\n?/,'').replace(/```$/,'');
+      return <pre key={i} style={{ background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'10px 13px', fontSize:12, overflowX:'auto', margin:'8px 0', color:C.cyan, fontFamily:'inherit' }}>{code}</pre>;
+    }
+    if (part.startsWith('`')&&part.endsWith('`'))
+      return <code key={i} style={{ background:C.dim, color:C.green, padding:'2px 5px', borderRadius:4, fontSize:12 }}>{part.slice(1,-1)}</code>;
+    return <span key={i}>{part}</span>;
+  });
+
+  return (
+    <div style={{ position:'fixed', top:0, right:0, bottom:0, width:370, background:C.card, borderLeft:`1px solid ${C.border}`, display:'flex', flexDirection:'column', zIndex:50, transform:open?'translateX(0)':'translateX(100%)', transition:'transform .3s ease', fontFamily:"'JetBrains Mono',monospace" }}>
+      <div style={{ padding:'15px 17px', borderBottom:`1px solid ${C.border}`, display:'flex', alignItems:'center', gap:10 }}>
+        <div style={{ width:32, height:32, borderRadius:9, background:`${C.purple}25`, border:`1px solid ${C.purple}50`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16 }}>🤖</div>
+        <div style={{ flex:1 }}><div style={{ color:C.text, fontWeight:700, fontSize:13 }}>AI Copilot</div><div style={{ color:C.purple, fontSize:10 }}>Powered by Claude</div></div>
+        <button onClick={onClose} style={{ width:26, height:26, borderRadius:7, border:`1px solid ${C.border}`, background:'transparent', color:C.muted, cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+      </div>
+      <div style={{ flex:1, overflowY:'auto', padding:'13px 15px', display:'flex', flexDirection:'column', gap:10 }}>
+        {msgs.map((m,i)=>(
+          <div key={i} style={{ display:'flex', gap:8, flexDirection:m.role==='user'?'row-reverse':'row', alignItems:'flex-start' }}>
+            <div style={{ width:26, height:26, borderRadius:'50%', background:m.role==='user'?C.cyan:`${C.purple}30`, border:m.role!=='user'?`1px solid ${C.purple}50`:'none', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, flexShrink:0, color:m.role==='user'?C.bg:C.purple }}>
+              {m.role==='user'?'U':'🤖'}
+            </div>
+            <div style={{ maxWidth:'83%', background:m.role==='user'?`${C.cyan}18`:C.surface, border:`1px solid ${m.role==='user'?`${C.cyan}40`:C.border}`, borderRadius:m.role==='user'?'13px 3px 13px 13px':'3px 13px 13px 13px', padding:'9px 12px', fontSize:13, color:C.text, lineHeight:1.65 }}>
+              {render(m.content)}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div style={{ display:'flex', gap:8, alignItems:'center' }}>
+            <div style={{ width:26, height:26, borderRadius:'50%', background:`${C.purple}30`, border:`1px solid ${C.purple}50`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12 }}>🤖</div>
+            <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:'3px 13px 13px 13px', padding:'10px 15px', display:'flex', gap:5 }}>
+              {[0,1,2].map(n=><div key={n} style={{ width:5, height:5, borderRadius:'50%', background:C.purple, animation:`blink 1.2s ${n*.2}s infinite` }} />)}
+            </div>
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+      <div style={{ padding:'11px 14px', borderTop:`1px solid ${C.border}`, display:'flex', gap:7 }}>
+        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()} placeholder="Ask anything about coding..." style={{ flex:1, padding:'9px 12px', borderRadius:9, border:`1px solid ${C.border}`, background:C.surface, color:C.text, fontSize:13, fontFamily:'inherit', outline:'none' }} />
+        <button onClick={send} style={{ padding:'9px 14px', borderRadius:9, border:'none', background:C.purple, color:'white', fontSize:13, fontWeight:700, fontFamily:'inherit', cursor:'pointer' }}>↑</button>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   LESSON SCREEN
+───────────────────────────────────────────────────────── */
+function LessonScreen({ user, xp, setXp, streak, onBack }) {
+  const [step,setStep]         = useState(0);
+  const [msgs,setMsgs]         = useState([]);
+  const [taskDone,setTaskDone] = useState(false);
+  const [preview,setPreview]   = useState('');
+  const [copilot,setCopilot]   = useState(false);
+  const [selOpt,setSelOpt]     = useState(null);
+  const [chips,setChips]       = useState({ available:[], placed:[] });
+  const [shake,setShake]       = useState(false);
+  const [xpPop,setXpPop]       = useState(null);
+  const [reqs,setReqs]         = useState([false,false,false]);
+  const chatRef = useRef();
+
+  const cur = STEPS[step];
+
+  const awardXP = (n) => {
+    setXp(p=>p+n);
+    setXpPop(`+${n} XP`);
+    setTimeout(()=>setXpPop(null), 1500);
+  };
+
+  const addMsg = useCallback(s=>{
+    setMsgs(p=>[...p,s]);
+    setTimeout(()=>chatRef.current?.scrollTo({ top:99999, behavior:'smooth' }), 100);
+  }, []);
+
+  useEffect(()=>{
+    const s = STEPS[step]; if(!s) return;
+    setTaskDone(false); setSelOpt(null); setShake(false);
+    if(['bot','code','complete'].includes(s.type)){
+      addMsg(s);
+      if(s.type==='bot'||s.type==='complete') setTaskDone(true);
+      if(s.bodyHtml) setPreview(s.bodyHtml);
+    } else if(s.type==='mcq'){ addMsg(s); }
+    else if(s.type==='chips'){
+      addMsg(s);
+      setChips({ available:[...s.chips.map((c,i)=>({ label:c, idx:i }))].sort(()=>Math.random()-.5), placed:[] });
+    }
+  }, [step]);
+
+  const nextStep = () => {
+    if(cur.xp) awardXP(cur.xp);
+    if(step+1<STEPS.length) setStep(p=>p+1);
+  };
+
+  const handleMCQ = (i) => {
+    if(taskDone) return; setSelOpt(i);
+    if(i===cur.correct){ setTaskDone(true); setReqs(p=>{ const n=[...p]; n[Math.min(step,2)]=true; return n; }); }
+    else { setShake(true); setTimeout(()=>setShake(false),500); }
+  };
+
+  const placeChip = (chip) => {
+    if(taskDone) return;
+    const placed = [...chips.placed, chip];
+    const available = chips.available.filter(c=>c!==chip);
+    setChips({ available, placed });
+    if(available.length===0){
+      const ok = placed.every((c,i)=>c.idx===cur.correct[i]);
+      if(ok){ setTaskDone(true); if(cur.bodyHtml) setPreview(cur.bodyHtml); setReqs(p=>{ const n=[...p]; n[Math.min(step,2)]=true; return n; }); }
+      else { setShake(true); setTimeout(()=>{ setShake(false); setChips({ available:[...cur.chips.map((c,i)=>({ label:c, idx:i }))].sort(()=>Math.random()-.5), placed:[] }); },600); }
+    }
+  };
+
+  const removeChip = (_, i) => {
+    if(taskDone) return;
+    setChips(p=>{ const r=p.placed[i]; return { available:[...p.available,r], placed:p.placed.filter((_,j)=>j!==i) }; });
+  };
+
+  const progress = ((step+1)/STEPS.length)*100;
+  const reqLabels = ['Write an <h1> heading','Add a <p> paragraph','Build a <button>'];
+
+  return (
+    <div style={{ minHeight:'100vh', background:C.bg, fontFamily:"'JetBrains Mono',monospace", color:C.text, display:'flex', flexDirection:'column' }}>
+      <style>{`
+        @keyframes blink{0%,100%{opacity:.25}50%{opacity:1}}
+        @keyframes livePulse{0%,100%{opacity:.5}50%{opacity:1}}
+        @keyframes shakeAnim{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+        @keyframes floatUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-44px)}}
+      `}</style>
+
+      {/* Header */}
+      <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:'0 24px', display:'flex', alignItems:'center', gap:13, height:52, flexShrink:0 }}>
+        <button onClick={onBack} style={{ padding:'5px 11px', borderRadius:8, border:`1px solid ${C.border}`, background:'transparent', color:C.muted, fontSize:12, fontFamily:'inherit', cursor:'pointer' }}>← Back</button>
+        <div style={{ flex:1, height:5, background:C.dim, borderRadius:3, overflow:'hidden' }}>
+          <div style={{ width:`${progress}%`, height:'100%', background:`linear-gradient(90deg,${C.cyan},${C.green})`, borderRadius:3, transition:'width .4s ease' }} />
+        </div>
+        <span style={{ color:C.muted, fontSize:11, whiteSpace:'nowrap' }}>{step+1}/{STEPS.length}</span>
+        <span style={{ color:C.orange, fontSize:11, fontWeight:700 }}>🔥{streak}d</span>
+        <XPBar xp={xp} />
+        <button onClick={()=>setCopilot(true)} style={{ padding:'5px 12px', borderRadius:9, border:`1px solid ${C.purple}60`, background:`${C.purple}18`, color:C.purple, fontSize:11, fontWeight:700, fontFamily:'inherit', cursor:'pointer' }}>🤖 Copilot</button>
+      </div>
+
+      <div style={{ display:'flex', flex:1, overflow:'hidden' }}>
+        {/* LEFT */}
+        <div style={{ width:184, background:C.surface, borderRight:`1px solid ${C.border}`, padding:'16px 13px', flexShrink:0, overflowY:'auto' }}>
+          <div style={{ color:C.muted, fontSize:10, marginBottom:11, letterSpacing:1.2 }}>🎯 REQUIREMENTS</div>
+          <div style={{ display:'flex', flexDirection:'column', gap:9 }}>
+            {reqLabels.map((r,i)=>(
+              <div key={i} style={{ display:'flex', gap:7, alignItems:'flex-start' }}>
+                <div style={{ width:16, height:16, borderRadius:'50%', border:`2px solid ${reqs[i]?C.green:C.border}`, background:reqs[i]?`${C.green}20`:'transparent', display:'flex', alignItems:'center', justifyContent:'center', fontSize:9, color:C.green, flexShrink:0, marginTop:1 }}>
+                  {reqs[i]?'✓':''}
+                </div>
+                <span style={{ color:reqs[i]?C.text:C.muted, fontSize:11, lineHeight:1.5 }}>{r}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop:22, borderTop:`1px solid ${C.border}`, paddingTop:16 }}>
+            <div style={{ color:C.muted, fontSize:10, marginBottom:7, letterSpacing:1.2 }}>📖 LESSON</div>
+            <div style={{ color:C.cyan, fontSize:12, fontWeight:700, lineHeight:1.4 }}>HTML Fundamentals</div>
+            <div style={{ color:C.dimText, fontSize:11, marginTop:3 }}>Lesson 1 of 12</div>
+          </div>
+          <div style={{ marginTop:18, borderTop:`1px solid ${C.border}`, paddingTop:14 }}>
+            <div style={{ color:C.muted, fontSize:10, marginBottom:6, letterSpacing:1.2 }}>🏆 XP</div>
+            <div style={{ color:C.amber, fontSize:20, fontWeight:700 }}>{xp}</div>
+            <div style={{ color:C.dimText, fontSize:10 }}>points earned</div>
+          </div>
+        </div>
+
+        {/* CENTER: Chat */}
+        <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden', position:'relative' }}>
+          {xpPop && <div style={{ position:'absolute', top:14, right:14, color:C.amber, fontWeight:700, fontSize:20, zIndex:10, animation:'floatUp 1.5s ease forwards', pointerEvents:'none' }}>{xpPop}</div>}
+          <div ref={chatRef} style={{ flex:1, overflowY:'auto', padding:'20px 24px', display:'flex', flexDirection:'column', gap:13 }}>
+            {msgs.map((m,i)=>(
+              <div key={i}>
+                {['bot','mcq','chips','complete'].includes(m.type) && (
+                  <div style={{ display:'flex', gap:9, alignItems:'flex-start' }}>
+                    <div style={{ width:32, height:32, borderRadius:9, background:`${C.cyan}20`, border:`1px solid ${C.cyan}40`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, flexShrink:0, color:C.cyan, fontWeight:700 }}>BG</div>
+                    <div style={{ background:C.card, border:`1px solid ${m.type==='complete'?C.green:C.border}`, borderRadius:'3px 14px 14px 14px', padding:'11px 15px', maxWidth:'78%', fontSize:14, lineHeight:1.72, color:m.type==='complete'?C.green:C.text }}>{m.text}</div>
+                  </div>
+                )}
+                {m.type==='code' && (
+                  <div style={{ display:'flex', gap:9, alignItems:'flex-start' }}>
+                    <div style={{ width:32, height:32, borderRadius:9, background:`${C.cyan}20`, border:`1px solid ${C.cyan}40`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, flexShrink:0, color:C.cyan, fontWeight:700 }}>BG</div>
+                    <div style={{ maxWidth:'82%' }}>
+                      <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:'3px 14px 14px 14px', padding:'11px 15px', fontSize:14, lineHeight:1.72, marginBottom:8 }}>{m.text}</div>
+                      <div style={{ background:'#020813', border:`1px solid ${C.border}`, borderRadius:11, padding:'11px 15px', display:'flex', alignItems:'center', gap:9 }}>
+                        <div style={{ display:'flex', gap:4 }}>{['#FF5F57','#FFBD2E','#27C93F'].map(c=><div key={c} style={{ width:10, height:10, borderRadius:'50%', background:c }} />)}</div>
+                        <code style={{ color:C.cyan, fontSize:15, fontFamily:'inherit' }}>{m.code}</code>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Task area */}
+          <div style={{ background:C.surface, borderTop:`1px solid ${C.border}`, padding:'16px 24px', animation:shake?'shakeAnim .5s ease':'none' }}>
+            {cur?.type==='mcq'&&!taskDone && (
+              <div>
+                <p style={{ margin:'0 0 11px', color:C.muted, fontSize:11 }}>// Select the correct answer:</p>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
+                  {cur.opts.map((o,i)=>{
+                    let bg=C.card, border=C.border, color=C.text;
+                    if(selOpt===i){ if(i===cur.correct){bg=`${C.green}20`;border=C.green;color=C.green;}else{bg=`${C.danger}15`;border=C.danger;color=C.danger;} }
+                    return <button key={i} onClick={()=>handleMCQ(i)} style={{ padding:'11px 13px', borderRadius:10, border:`1px solid ${border}`, background:bg, color, fontSize:13, fontFamily:'inherit', cursor:'pointer', textAlign:'left', transition:'all .2s' }}>{o}</button>;
+                  })}
+                </div>
+              </div>
+            )}
+            {cur?.type==='chips'&&!taskDone && (
+              <div>
+                <p style={{ margin:'0 0 9px', color:C.muted, fontSize:11 }}>// Tap chips in order to build the code:</p>
+                <div style={{ background:'#020813', border:`1px solid ${C.border}`, borderRadius:10, padding:'10px 13px', minHeight:42, display:'flex', gap:6, alignItems:'center', marginBottom:9, flexWrap:'wrap' }}>
+                  {chips.placed.length===0
+                    ? <span style={{ color:C.dimText, fontSize:12 }}>← Your answer appears here</span>
+                    : chips.placed.map((c,i)=><span key={i} onClick={()=>removeChip(c,i)} style={{ background:`${C.cyan}20`, border:`1px solid ${C.cyan}50`, color:C.cyan, padding:'4px 10px', borderRadius:7, fontSize:14, fontFamily:'inherit', cursor:'pointer' }}>{c.label}</span>)}
+                </div>
+                <div style={{ display:'flex', gap:7, flexWrap:'wrap' }}>
+                  {chips.available.map((c,i)=>(
+                    <button key={i} onClick={()=>placeChip(c)} style={{ padding:'7px 14px', borderRadius:9, border:`1px solid ${C.border}`, background:C.card, color:C.text, fontSize:14, fontFamily:'inherit', cursor:'pointer' }}>{c.label}</button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {taskDone&&cur?.type!=='complete' && (
+              <div style={{ display:'flex', alignItems:'center', gap:13 }}>
+                <div style={{ flex:1, color:C.green, fontSize:14, fontWeight:700 }}>✓ {['mcq','chips'].includes(cur.type)?'Correct! Well done.':'Got it!'}</div>
+                <button onClick={nextStep} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:C.cyan, color:C.bg, fontSize:14, fontWeight:700, fontFamily:'inherit', cursor:'pointer' }}>Continue →</button>
+              </div>
+            )}
+            {cur?.type==='bot'&&taskDone && (
+              <div style={{ display:'flex', justifyContent:'flex-end' }}>
+                <button onClick={nextStep} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:C.cyan, color:C.bg, fontSize:14, fontWeight:700, fontFamily:'inherit', cursor:'pointer' }}>Got it! →</button>
+              </div>
+            )}
+            {cur?.type==='complete' && (
+              <div style={{ display:'flex', gap:9, justifyContent:'center' }}>
+                <button onClick={onBack} style={{ padding:'10px 24px', borderRadius:10, border:`1px solid ${C.green}`, background:`${C.green}18`, color:C.green, fontSize:14, fontWeight:700, fontFamily:'inherit', cursor:'pointer' }}>🏠 Back to Catalog</button>
+                <button onClick={()=>awardXP(50)} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:C.green, color:C.bg, fontSize:14, fontWeight:700, fontFamily:'inherit', cursor:'pointer' }}>⭐ Claim Reward</button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT: Preview */}
+        <div style={{ width:320, background:'#020813', borderLeft:`1px solid ${C.border}`, display:'flex', flexDirection:'column', flexShrink:0 }}>
+          <div style={{ padding:'10px 13px', borderBottom:`1px solid ${C.border}`, display:'flex', gap:5, alignItems:'center' }}>
+            {['#FF5F57','#FFBD2E','#27C93F'].map(c=><div key={c} style={{ width:10, height:10, borderRadius:'50%', background:c }} />)}
+            <span style={{ color:C.muted, fontSize:11, marginLeft:6 }}>Live Preview</span>
+            <div style={{ width:6, height:6, borderRadius:'50%', background:C.green, marginLeft:'auto', animation:'blink 2s infinite' }} />
+          </div>
+          {preview
+            ? <iframe srcDoc={wrapHtml(preview)} style={{ flex:1, border:'none' }} title="preview" sandbox="allow-scripts" />
+            : <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:10 }}>
+                <div style={{ fontSize:34, opacity:.15, color:C.cyan }}>{'</>'}</div>
+                <p style={{ color:C.dimText, fontSize:12, textAlign:'center', margin:0, lineHeight:1.6 }}>Complete a task to see<br/>your code come alive here</p>
+              </div>}
+        </div>
+      </div>
+
+      <CopilotDrawer open={copilot} onClose={()=>setCopilot(false)} />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   ROOT  — Firebase session listener + Firestore XP sync
+───────────────────────────────────────────────────────── */
+export default function App() {
+  const [screen,setScreen] = useState('loading');
+  const [user,setUser]     = useState(null);
+  const [xp,setXp]         = useState(0);
+  const [streak]           = useState(1);
+
+  useEffect(()=>{
+    const l=document.createElement('link');
+    l.rel='stylesheet'; l.href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap';
+    document.head.appendChild(l);
+  },[]);
+
+  /* Firebase auth state — handles persistent sessions */
+  useEffect(()=>{
+    let unsub;
+    (async()=>{
+      try {
+        const { auth } = await getFirebase();
+        const { onAuthStateChanged } = await import("https://esm.sh/firebase@10/auth");
+        unsub = onAuthStateChanged(auth, async fbUser=>{
+          if (fbUser) {
+            const u = { name:fbUser.displayName||fbUser.email.split('@')[0], email:fbUser.email, avatar:(fbUser.displayName||fbUser.email)[0].toUpperCase(), uid:fbUser.uid, photo:fbUser.photoURL||null };
+            setUser(u);
+            /* Pull XP from Firestore */
+            try {
+              const { db } = await getFirebase();
+              const { doc, getDoc } = await import("https://esm.sh/firebase@10/firestore");
+              const snap = await getDoc(doc(db,'users',fbUser.uid));
+              if (snap.exists()) setXp(snap.data().xp||0);
+            } catch {}
+            setScreen('home');
+          } else {
+            setUser(null); setScreen('auth');
+          }
+        });
+      } catch { setScreen('auth'); }
+    })();
+    return ()=>{ if(unsub) unsub(); };
+  },[]);
+
+  /* Sync XP → Firestore */
+  const updateXp = async val => {
+    setXp(val);
+    if (!user?.uid) return;
+    try {
+      const { db } = await getFirebase();
+      const { doc, setDoc, serverTimestamp } = await import("https://esm.sh/firebase@10/firestore");
+      await setDoc(doc(db,'users',user.uid), { xp:val, updatedAt:serverTimestamp() }, { merge:true });
+    } catch {}
+  };
+
+  const handleLogin  = u => { setUser(u); setScreen('home'); };
+  const handleLogout = async () => {
+    try { const { auth } = await getFirebase(); const { signOut } = await import("https://esm.sh/firebase@10/auth"); await signOut(auth); } catch {}
+    setUser(null); setScreen('auth');
+  };
+
+  if (screen==='loading') return (
+    <div style={{ minHeight:'100vh', background:C.bg, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:14, fontFamily:"'JetBrains Mono',monospace" }}>
+      <style>{`@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}`}</style>
+      <div style={{ fontSize:30, color:C.cyan }}>{'</>'}</div>
+      <div style={{ color:C.cyan, fontWeight:700, fontSize:16 }}>BG Code Tutor</div>
+      <div style={{ display:'flex', gap:6 }}>{[0,1,2].map(n=><div key={n} style={{ width:7, height:7, borderRadius:'50%', background:C.cyan, animation:`blink 1.2s ${n*.2}s infinite` }} />)}</div>
+    </div>
+  );
+
+  if (screen==='auth')   return <AuthScreen onLogin={handleLogin} />;
+  if (screen==='lesson') return <LessonScreen user={user} xp={xp} setXp={updateXp} streak={streak} onBack={()=>setScreen('home')} />;
+  return <HomeScreen user={user} xp={xp} streak={streak} onStartLesson={()=>setScreen('lesson')} onLogout={handleLogout} />;
+}
