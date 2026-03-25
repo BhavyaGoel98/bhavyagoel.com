@@ -24,6 +24,7 @@
             margin-bottom: 20px; transition: all 0.2s;
         }
         .btn-google:hover { background: #141E32; border-color: #00E5FF; }
+        .btn-main { width:100%; padding:14px; background:#00E5FF; color:#0B1121; border:none; border-radius:10px; fontWeight:700; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -44,10 +45,12 @@
             measurementId: "G-PYYXTLRN4X",
         };
 
+        /* ─────────────────────────────────────────────────────────
+           FIREBASE INITIALIZER
+        ───────────────────────────────────────────────────────── */
         let _auth = null, _db = null, _gProvider = null;
         async function getFirebase() {
             if (_auth) return { auth:_auth, db:_db, gProvider:_gProvider };
-            // Using standard GStatic for better stability on live domains
             const { initializeApp, getApps } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
             const { getAuth, GoogleAuthProvider } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
             const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
@@ -65,7 +68,10 @@
             danger:'#FF4560', text:'#E2F0FF'
         };
 
-        function AuthScreen({ onLogin }) {
+        /* ─────────────────────────────────────────────────────────
+           AUTH SCREEN
+        ───────────────────────────────────────────────────────── */
+        function AuthScreen() {
             const [mode, setMode] = useState('login');
             const [email, setEmail] = useState('');
             const [pass, setPass] = useState('');
@@ -76,13 +82,13 @@
                 setLoading(true); setErr('');
                 try {
                     const { auth, gProvider } = await getFirebase();
-                    const { signInWithPopup } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
-                    const cred = await signInWithPopup(auth, gProvider);
-                    onLogin(cred.user);
+                    const { signInWithRedirect } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+                    // Using Redirect instead of Popup for live domain stability
+                    await signInWithRedirect(auth, gProvider);
                 } catch(e) { 
-                    setErr("Google login failed. Make sure bhavyagoel.com is added to Authorized Domains in Firebase.");
+                    setErr("Login connection failed.");
+                    setLoading(false);
                 }
-                setLoading(false);
             };
 
             const handleEmail = async () => {
@@ -91,14 +97,12 @@
                 try {
                     const { auth } = await getFirebase();
                     const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
-                    const cred = mode === 'login' 
-                        ? await signInWithEmailAndPassword(auth, email, pass)
-                        : await createUserWithEmailAndPassword(auth, email, pass);
-                    onLogin(cred.user);
+                    if (mode === 'login') await signInWithEmailAndPassword(auth, email, pass);
+                    else await createUserWithEmailAndPassword(auth, email, pass);
                 } catch(e) {
                     setErr(e.message.replace("Firebase: ", ""));
+                    setLoading(false);
                 }
-                setLoading(false);
             };
 
             return (
@@ -106,7 +110,7 @@
                     <div style={{ width:400, background:C.card, border:`1px solid ${C.border}`, borderRadius:24, padding:40, textAlign:'center' }}>
                         <img src={LOGO_URL} style={{ width:80, height:80, borderRadius:16, marginBottom:16, border:`2px solid ${C.border}` }} />
                         <h2 style={{ color:C.cyan, margin:0, fontSize:22 }}>BG Code Tutor</h2>
-                        <p style={{ color:C.muted, fontSize:12, marginBottom:32 }}>Master code with Bhavya Goel</p>
+                        <p style={{ color:C.muted, fontSize:12, marginBottom:32 }}>Professional EdTech by Bhavya Goel</p>
 
                         <button className="btn-google" onClick={handleGoogle} disabled={loading}>
                             <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
@@ -122,27 +126,40 @@
                         
                         {err && <p style={{ color:C.danger, fontSize:11, marginBottom:15 }}>{err}</p>}
 
-                        <button onClick={handleEmail} disabled={loading} style={{ width:'100%', padding:14, background:C.cyan, color:C.bg, border:'none', borderRadius:10, fontWeight:700, cursor:'pointer' }}>
-                            {loading ? 'Processing...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
+                        <button className="btn-main" onClick={handleEmail} disabled={loading}>
+                            {loading ? 'Working...' : (mode === 'login' ? 'Sign In' : 'Create Account')}
                         </button>
 
                         <p onClick={() => setMode(mode==='login'?'signup':'login')} style={{ color:C.cyan, fontSize:12, marginTop:20, cursor:'pointer' }}>
-                            {mode === 'login' ? "New here? Create an account" : "Already have an account? Sign in"}
+                            {mode === 'login' ? "Need an account? Sign up" : "Already registered? Sign in"}
                         </p>
                     </div>
                 </div>
             );
         }
 
+        /* ─────────────────────────────────────────────────────────
+           MAIN APP COMPONENT
+        ───────────────────────────────────────────────────────── */
         function App() {
             const [screen, setScreen] = useState('loading');
             const [user, setUser] = useState(null);
 
             useEffect(() => {
-                (async () => {
+                const initAuth = async () => {
                     try {
                         const { auth } = await getFirebase();
-                        const { onAuthStateChanged } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+                        const { onAuthStateChanged, getRedirectResult } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+
+                        // 1. Check if returning from Google Redirect
+                        const result = await getRedirectResult(auth);
+                        if (result?.user) {
+                            setUser({ name: result.user.displayName, avatar: result.user.email[0].toUpperCase() });
+                            setScreen('home');
+                            return;
+                        }
+
+                        // 2. Check for active session
                         onAuthStateChanged(auth, u => {
                             if (u) {
                                 setUser({ name: u.displayName || u.email.split('@')[0], avatar: (u.displayName||u.email)[0].toUpperCase() });
@@ -151,29 +168,41 @@
                                 setScreen('auth');
                             }
                         });
-                    } catch (e) { setScreen('auth'); }
-                })();
+                    } catch (e) { 
+                        console.error("Firebase Auth Error:", e);
+                        setScreen('auth'); 
+                    }
+                };
+                initAuth();
             }, []);
 
             if (screen === 'loading') return (
                 <div style={{ height:'100vh', background:C.bg, display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column' }}>
                     <img src={LOGO_URL} style={{ width:100, height:100, borderRadius:20, animation:'logoPulse 2s infinite ease-in-out', border:`2px solid ${C.cyan}` }} />
-                    <p style={{ color:C.cyan, marginTop:20, letterSpacing:2, fontSize:12 }}>SYNCING WITH FIREBASE...</p>
+                    <p style={{ color:C.cyan, marginTop:20, letterSpacing:2, fontSize:12 }}>AUTHENTICATING...</p>
                 </div>
             );
 
-            if (screen === 'auth') return <AuthScreen onLogin={(u) => { setUser(u); setScreen('home'); }} />;
+            if (screen === 'auth') return <AuthScreen />;
 
             return (
                 <div style={{ minHeight:'100vh', background:C.bg, padding:40 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:15, marginBottom:40 }}>
-                        <img src={LOGO_URL} style={{ width:40, height:40, borderRadius:8 }} />
-                        <h1 style={{ color:C.cyan, margin:0 }}>Welcome, {user.name}</h1>
+                        <img src={LOGO_URL} style={{ width:45, height:45, borderRadius:10, border:`1px solid ${C.border}` }} />
+                        <div>
+                            <h1 style={{ color:C.cyan, margin:0, fontSize:24 }}>Welcome back, {user.name}</h1>
+                            <p style={{ color:C.muted, margin:0, fontSize:12 }}>Ready to build something amazing today?</p>
+                        </div>
                     </div>
-                    <div style={{ background:C.card, padding:30, borderRadius:20, border:`1px solid ${C.border}` }}>
-                        <p>You are now logged into the <strong>BG Code Tutor Ultimate Edition</strong>.</p>
-                        <button onClick={async () => { const {auth} = await getFirebase(); auth.signOut(); }} style={{ padding:'10px 20px', background:C.danger, color:'#fff', border:'none', borderRadius:8, cursor:'pointer', marginTop:20 }}>Sign Out</button>
-                        <button onClick={() => window.location.href='index.html'} style={{ padding:'10px 20px', background:C.border, color:'#fff', border:'none', borderRadius:8, cursor:'pointer', marginTop:20, marginLeft:10 }}>Back to Portfolio</button>
+                    
+                    <div style={{ background:C.card, padding:30, borderRadius:20, border:`1px solid ${C.border}`, maxWidth:600 }}>
+                        <h3 style={{color:C.cyan}}>Success!</h3>
+                        <p style={{lineHeight:1.6}}>You are securely logged into <strong>BG Code Tutor</strong>. Your authorized domain (bhavyagoel.com) is now verified.</p>
+                        
+                        <div style={{display:'flex', gap:10, marginTop:30}}>
+                            <button onClick={async () => { const {auth} = await getFirebase(); auth.signOut(); }} style={{ padding:'12px 24px', background:C.danger, color:'#fff', border:'none', borderRadius:10, cursor:'pointer', fontWeight:600 }}>Sign Out</button>
+                            <button onClick={() => window.location.href='index.html'} style={{ padding:'12px 24px', background:C.surface, border:`1px solid ${C.border}`, color:'#fff', borderRadius:10, cursor:'pointer' }}>Back to Portfolio</button>
+                        </div>
                     </div>
                 </div>
             );
