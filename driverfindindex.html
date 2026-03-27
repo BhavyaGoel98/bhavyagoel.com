@@ -1,1 +1,76 @@
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.3">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;title&gt;DriverFind&lt;/title&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script type="module"&gt;</p>
+<p class="p1">import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";</p>
+<p class="p1">import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";</p>
+<p class="p2"><br></p>
+<p class="p1">const firebaseConfig = {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>apiKey: "AIzaSyCFlsOGJi0DtUQlkmTzGmO1bx7dGH9u1Bo",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>authDomain: "driverfind-68646.firebaseapp.com",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>projectId: "driverfind-68646",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>storageBucket: "driverfind-68646.firebasestorage.app",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>messagingSenderId: "90756960721",</p>
+<p class="p1"><span class="Apple-converted-space">  </span>appId: "1:90756960721:web:db78fab6cf85d9501a50f0"</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">const app = initializeApp(firebaseConfig);</p>
+<p class="p1">const db = getFirestore(app);</p>
+<p class="p2"><br></p>
+<p class="p1">window.addEventListener("DOMContentLoaded", ()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const driversDiv = document.getElementById("drivers");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const q = query(collection(db,"drivers"), where("status","==","approved"));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>onSnapshot(q,(snapshot)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>driversDiv.innerHTML="";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>snapshot.forEach(doc=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const d = doc.data();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>driversDiv.innerHTML += `</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="border:1px solid #ddd;padding:15px;margin:10px;border-radius:10px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;h3&gt;${d.name}&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p&gt;City: ${d.city}&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">});</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">body{font-family:sans-serif;background:#f5f5f5;margin:0}</p>
+<p class="p1">.header{background:#0ea5e9;color:#fff;padding:15px;font-size:20px}</p>
+<p class="p1">.container{padding:20px}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="header"&gt;DriverFind 🚗&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="container"&gt;</p>
+<p class="p1">&lt;h2&gt;Available Drivers&lt;/h2&gt;</p>
+<p class="p1">&lt;div id="drivers"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
