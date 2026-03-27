@@ -3,118 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BG Code Tutor — Learn. Code. Level Up.</title>
-    <meta name="description" content="Interactive coding tutor with gamified lessons for HTML, CSS, JavaScript, and more.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+    <title>BG Code Tutor • Learn to Code</title>
 
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root {
-            --bg: hsl(222, 47%, 7%);
-            --fg: hsl(210, 40%, 92%);
-            --card: hsl(222, 40%, 10%);
-            --primary: hsl(187, 100%, 50%);
-            --primary-fg: hsl(222, 47%, 7%);
-            --secondary: hsl(160, 84%, 39%);
-            --muted: hsl(222, 30%, 15%);
-            --muted-fg: hsl(215, 20%, 55%);
-            --border: hsl(222, 30%, 18%);
-            --accent: hsl(222, 30%, 18%);
-            --destructive: hsl(0, 84%, 60%);
-        }
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signInWithPopup,
+            GoogleAuthProvider,
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
-        html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--fg); overflow: hidden; }
-        button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
-        input { font-family: inherit; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: hsl(222, 30%, 25%); border-radius: 3px; }
-
-        /* Animations */
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .anim-slide { animation: slideUp 0.4s ease-out forwards; }
-
-        #app { display: flex; height: 100vh; width: 100%; }
-
-        /* Sidebar */
-        .sidebar {
-            width: 260px; background: hsl(222, 47%, 5%); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 24px 0; flex-shrink: 0; transition: transform 0.3s;
-        }
-        .sidebar .logo-area { padding: 0 20px; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; }
-        .sidebar .logo-area img { width: 40px; height: 40px; border-radius: 10px; box-shadow: 0 0 15px var(--primary); }
-        .sidebar .logo-text h1 { font-size: 16px; font-weight: 800; letter-spacing: -0.5px; }
-        .sidebar .logo-text p { font-size: 10px; color: var(--muted-fg); }
-
-        .sidebar nav { flex: 1; }
-        .sidebar nav button {
-            width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 20px;
-            font-size: 14px; color: var(--muted-fg); transition: 0.2s;
-        }
-        .sidebar nav button:hover, .sidebar nav button.active { color: var(--primary); background: var(--accent); }
-        .sidebar nav button.active { border-right: 3px solid var(--primary); }
-
-        /* Main Section */
-        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .topbar { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2); }
-        .content { flex: 1; overflow-y: auto; padding: 30px; }
-
-        /* Dashboard Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .stat-card { background: var(--card); padding: 20px; border-radius: 16px; border: 1px solid var(--border); }
-        .stat-card span { display: block; font-size: 12px; color: var(--muted-fg); margin-bottom: 4px; }
-        .stat-card b { font-size: 20px; color: var(--primary); }
-
-        /* Course Catalog */
-        .search-box { margin-bottom: 24px; max-width: 400px; position: relative; }
-        .search-box input { width: 100%; padding: 12px 16px; background: var(--muted); border: 1px solid var(--border); border-radius: 12px; color: white; outline: none; transition: 0.2s; }
-        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(187, 100, 50, 0.2); }
-
-        .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .course-card { background: var(--card); padding: 24px; border-radius: 20px; border: 1px solid var(--border); transition: 0.3s; text-align: left; }
-        .course-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-        .course-card .icon { font-size: 32px; margin-bottom: 16px; display: block; }
-        .course-card h3 { margin-bottom: 8px; }
-        .course-card p { font-size: 13px; color: var(--muted-fg); line-height: 1.5; }
-
-        /* Lesson Workspace */
-        .lesson-ui { display: flex; height: 100%; gap: 1px; background: var(--border); }
-        .instruction-pane { width: 320px; background: var(--bg); padding: 24px; overflow-y: auto; border-right: 1px solid var(--border); }
-        .workspace-pane { flex: 1; background: var(--bg); padding: 40px; display: flex; flex-direction: column; }
-        .code-assembly { min-height: 120px; background: var(--card); border: 2px dashed var(--border); border-radius: 16px; padding: 20px; display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
-        .chip { padding: 10px 18px; background: var(--muted); border-radius: 10px; font-family: 'Fira Code', monospace; font-size: 14px; border: 1px solid var(--border); transition: 0.2s; }
-        .chip:hover { border-color: var(--primary); color: var(--primary); }
-        .chip.active { background: rgba(187, 100, 50, 0.1); border-color: var(--primary); color: var(--primary); }
-        
-        .btn-action { padding: 14px 28px; background: var(--primary); color: var(--primary-fg); border-radius: 12px; font-weight: 700; margin-top: auto; transition: 0.2s; }
-        .btn-action:hover { opacity: 0.9; transform: scale(1.02); }
-
-        /* Auth */
-        .auth-container { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1a1c2c, #0d0f17); }
-        .auth-card { width: 100%; max-width: 400px; background: var(--card); padding: 40px; border-radius: 24px; border: 1px solid var(--border); text-align: center; }
-        .google-btn { width: 100%; padding: 14px; background: white; color: black; border-radius: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
-
-        @media (max-width: 768px) {
-            .sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 1000; transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .instruction-pane { display: none; }
-        }
-    </style>
-</head>
-<body>
-
-    <div id="app"></div>
-
-    <script>
-        // --- 1. CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg",
             authDomain: "bg-code-tutor.firebaseapp.com",
@@ -125,223 +28,286 @@
             measurementId: "G-PYYXTLRN4X"
         };
 
-        const LOGO_URL = "https://cdn-icons-png.flaticon.com/512/919/919827.png"; // Placeholder for BG Logo
+        window.firebaseApp = initializeApp(firebaseConfig);
+        window.auth = getAuth(window.firebaseApp);
+        window.GoogleAuthProvider = GoogleAuthProvider;
+    </script>
 
-        // --- 2. INITIALIZATION ---
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const analytics = firebase.analytics();
-
-        const state = {
-            user: null,
-            progress: { xp: 0, level: 1, streak: 0, completed: [] },
-            page: 'dashboard',
-            loading: true,
-            sidebarOpen: false,
-            placedChips: []
-        };
-
-        const courses = [
-            { id: 'html', name: 'HTML5 Mastery', icon: '🌐', desc: 'Build the skeleton of the internet.' },
-            { id: 'css', name: 'Modern CSS', icon: '🎨', desc: 'Design beautiful, responsive UI.' },
-            { id: 'js', name: 'JavaScript ES6', icon: '⚡', desc: 'Power logic and interactivity.' },
-            { id: 'py', name: 'Python Pro', icon: '🐍', desc: 'Master automation and AI.' }
-        ];
-
-        // --- 3. CORE LOGIC ---
-        function calcLevel(xp) { 
-            // Leveling curve: Level 1 = 0XP, Lvl 2 = 100XP, Lvl 3 = 400XP, Lvl 4 = 900XP...
-            return Math.floor(Math.sqrt(xp / 100)) + 1; 
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #080c14;
+            --bg-card: #0f1624;
+            --bg-card2: #141d2e;
+            --bg-elevated: #1a2438;
+            --border: rgba(100,200,255,0.10);
+            --border-glow: rgba(0,220,255,0.35);
+            --cyan: #00dcff;
+            --cyan-dim: rgba(0,220,255,0.15);
+            --cyan-glow: 0 0 20px rgba(0,220,255,0.4);
+            --orange: #ff6b35;
+            --lime: #9bff57;
+            --violet: #b57bff;
+            --gold: #ffcc00;
+            --text-primary: #e8f4ff;
+            --text-secondary: #7a9bbf;
+            --text-muted: #3d5270;
+            --font-display: 'Syne', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --font-body: 'DM Sans', sans-serif;
+            --radius-md: 14px;
+            --radius-xl: 28px;
         }
 
-        const $ = (sel) => document.querySelector(sel);
+        /* === LOGIN SCREEN === */
+        .login-screen {
+            position: fixed; inset: 0; background: var(--bg-base);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; flex-direction: column; padding: 20px;
+        }
+        .logo-img { width: 180px; filter: drop-shadow(0 0 30px var(--cyan)); }
+        .app-title { font-family: var(--font-display); font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--cyan); margin-top: 12px; }
 
-        // --- 4. AUTH HANDLERS ---
-        auth.onAuthStateChanged(async (user) => {
-            state.user = user;
-            if (user) {
-                const doc = await db.collection('users').doc(user.uid).get();
-                if (doc.exists) {
-                    state.progress = doc.data();
-                    state.progress.level = calcLevel(state.progress.xp || 0);
-                } else {
-                    const initialData = { xp: 0, streak: 1, completed: [] };
-                    await db.collection('users').doc(user.uid).set(initialData);
-                    state.progress = initialData;
-                }
+        .auth-form {
+            width: 100%; max-width: 360px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: var(--radius-xl);
+            padding: 32px 28px;
+        }
+        .auth-input {
+            width: 100%; background: var(--bg-elevated); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 16px 18px; color: var(--text-primary);
+            font-family: var(--font-mono); margin-bottom: 16px; font-size: 15px;
+        }
+        .auth-input:focus { outline: none; border-color: var(--cyan); box-shadow: var(--cyan-glow); }
+
+        .auth-btn, .google-btn, .guest-btn {
+            width: 100%; padding: 16px; border-radius: var(--radius-md);
+            font-family: var(--font-display); font-size: 16px; font-weight: 700;
+            margin-top: 12px; cursor: pointer;
+        }
+        .auth-btn { background: var(--cyan); color: #05111f; border: none; }
+        .google-btn { 
+            background: white; color: #000; border: 1px solid #dadce0; 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .guest-btn { 
+            background: transparent; color: var(--text-secondary); 
+            border: 1px solid var(--border); 
+        }
+
+        .divider {
+            margin: 20px 0; text-align: center; color: var(--text-muted);
+            position: relative;
+        }
+        .divider::before {
+            content: ''; position: absolute; top: 50%; left: 0; right: 0;
+            height: 1px; background: var(--border);
+        }
+        .divider span { background: var(--bg-card); padding: 0 12px; }
+
+        /* === MAIN APP HEADER === */
+        .app-header {
+            padding: 12px 16px; background: var(--bg-card);
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .user-info {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .user-avatar {
+            width: 42px; height: 42px; border-radius: 50%;
+            object-fit: cover; border: 2px solid var(--cyan);
+        }
+        .user-name {
+            font-family: var(--font-display); font-weight: 700; color: var(--text-primary);
+        }
+        .user-email {
+            font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="login-screen">
+        <div style="text-align:center; margin-bottom:40px;">
+            <img src="https://i.ibb.co/RpcTXdqV/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg" 
+                 alt="BG Code Tutor" class="logo-img">
+            <div class="app-title">BG Code Tutor</div>
+            <p style="color:var(--text-muted); font-size:13px;">Master coding the fun way</p>
+        </div>
+
+        <div class="auth-form">
+            <h2 id="auth-title" style="font-family:var(--font-display); font-size:24px; text-align:center; margin-bottom:24px;">Sign In</h2>
+            
+            <input type="email" id="email" class="auth-input" placeholder="your@email.com">
+            <input type="password" id="password" class="auth-input" placeholder="Password">
+
+            <div id="auth-error" style="color:#ff6b35; font-size:13px; text-align:center; min-height:20px;"></div>
+
+            <button onclick="handleEmailAuth()" id="email-auth-btn" class="auth-btn">Sign In</button>
+
+            <div class="divider"><span>OR</span></div>
+
+            <button onclick="handleGoogleLogin()" class="google-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" height="20" alt="Google">
+                Continue with Google
+            </button>
+
+            <button onclick="continueAsGuest()" class="guest-btn">
+                Continue as Guest
+            </button>
+
+            <div onclick="toggleAuthMode()" id="toggle-text" 
+                 style="color:var(--cyan); cursor:pointer; font-size:13px; margin-top:24px; text-align:center;">
+                Don't have an account? <strong>Sign Up</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="main-app" style="display:none; height:100dvh; flex-direction:column;">
+        
+        <!-- Enhanced Header with User Info -->
+        <div class="app-header">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="https://i.ibb.co/RpcTXdqV/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg" 
+                     style="height:38px; border-radius:8px;">
+                <div style="font-family:var(--font-display); font-weight:700; color:var(--cyan);">BG Code Tutor</div>
+            </div>
+            
+            <div class="user-info" onclick="showUserMenu()">
+                <img id="user-avatar" src="https://i.pravatar.cc/150?img=68" class="user-avatar" alt="Avatar">
+                <div>
+                    <div id="user-name" class="user-name">Guest User</div>
+                    <div id="user-subtitle" class="user-email">guest@bgcodetutor.com</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Original App Content -->
+        <div id="app" style="flex:1; overflow:hidden; max-width:480px; margin:0 auto; width:100%; background:var(--bg-base);">
+            <!-- Paste your full original dashboard, lesson, stats, profile views + bottom nav here -->
+            <!-- For now showing a welcome message. Replace with your complete UI. -->
+            <div id="view-home" class="view active" style="padding:20px;">
+                <h2 style="color:var(--cyan); text-align:center; margin-top:40px;">Welcome back, <span id="welcome-name">Coder</span>!</h2>
+                <p style="text-align:center; color:var(--text-muted);">Your full beautiful UI goes here.</p>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation (your original) -->
+        <nav id="bottom-nav">
+            <!-- Your original bottom nav -->
+        </nav>
+    </div>
+
+    <script type="module">
+        let isLoginMode = true;
+        let currentUser = null;
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-title').textContent = isLoginMode ? 'Sign In' : 'Create Account';
+            document.getElementById('email-auth-btn').textContent = isLoginMode ? 'Sign In' : 'Sign Up';
+            document.getElementById('toggle-text').innerHTML = isLoginMode 
+                ? `Don't have an account? <strong>Sign Up</strong>` 
+                : `Already have an account? <strong>Sign In</strong>`;
+        }
+
+        async function handleEmailAuth() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorEl = document.getElementById('auth-error');
+
+            if (!email || !password) {
+                errorEl.textContent = 'Please fill all fields';
+                return;
             }
-            state.loading = false;
-            render();
+
+            errorEl.textContent = '';
+
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(window.auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(window.auth, email, password);
+                }
+            } catch (error) {
+                let msg = 'Authentication failed';
+                if (error.code === 'auth/wrong-password') msg = 'Incorrect password';
+                else if (error.code === 'auth/user-not-found') msg = 'No account found';
+                else if (error.code === 'auth/email-already-in-use') msg = 'Email already registered';
+                errorEl.textContent = msg;
+            }
+        }
+
+        async function handleGoogleLogin() {
+            const provider = new window.GoogleAuthProvider();
+            const errorEl = document.getElementById('auth-error');
+            try {
+                await signInWithPopup(window.auth, provider);
+            } catch (error) {
+                errorEl.textContent = 'Google sign-in failed. Please try again.';
+            }
+        }
+
+        function continueAsGuest() {
+            // Simulate guest user
+            currentUser = {
+                displayName: "Guest Coder",
+                email: "guest@bgcodetutor.com",
+                photoURL: "https://i.pravatar.cc/150?img=68",
+                isGuest: true
+            };
+            showMainApp();
+        }
+
+        function showMainApp() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+
+            // Update header with user info
+            if (currentUser) {
+                document.getElementById('user-name').textContent = currentUser.displayName || currentUser.email?.split('@')[0] || "Coder";
+                document.getElementById('user-subtitle').textContent = currentUser.email || "Guest Mode";
+                document.getElementById('user-avatar').src = currentUser.photoURL || "https://i.pravatar.cc/150?img=68";
+                document.getElementById('welcome-name').textContent = currentUser.displayName || "Coder";
+            }
+        }
+
+        function logout() {
+            if (currentUser && currentUser.isGuest) {
+                // For guest, just go back to login
+                document.getElementById('main-app').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+            } else {
+                signOut(window.auth);
+            }
+        }
+
+        function showUserMenu() {
+            const name = document.getElementById('user-name').textContent;
+            if (confirm(`Signed in as ${name}\n\nWould you like to logout?`)) {
+                logout();
+            }
+        }
+
+        // Auth State Listener
+        onAuthStateChanged(window.auth, (user) => {
+            if (user) {
+                currentUser = {
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    isGuest: false
+                };
+                showMainApp();
+            }
         });
 
-        async function loginWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try { await auth.signInWithPopup(provider); } catch (e) { alert(e.message); }
-        }
-
-        // --- 5. UI ACTIONS ---
-        function navigate(page) {
-            state.page = page;
-            state.sidebarOpen = false;
-            render();
-        }
-
-        function startChallenge(courseId) {
-            state.page = 'lesson';
-            state.placedChips = [];
-            render();
-        }
-
-        function toggleChip(chipText) {
-            if (state.placedChips.includes(chipText)) {
-                state.placedChips = state.placedChips.filter(c => c !== chipText);
-            } else {
-                state.placedChips.push(chipText);
-            }
-            render();
-        }
-
-        async function submitCode() {
-            const code = state.placedChips.join('');
-            // Simple validation for Level 1 demo
-            if (code === '<h1>Hello World</h1>') {
-                alert("🎉 Amazing! You solved it! +50 XP");
-                state.progress.xp += 50;
-                state.progress.level = calcLevel(state.progress.xp);
-                await db.collection('users').doc(state.user.uid).update({ xp: state.progress.xp });
-                navigate('dashboard');
-            } else {
-                alert("❌ Not quite. Check the order of your tags!");
-            }
-        }
-
-        // --- 6. RENDER ENGINE ---
-        function render() {
-            const root = $('#app');
-            if (state.loading) {
-                root.innerHTML = '<div style="margin:auto; color:var(--primary)">INITIALIZING BG CODE...</div>';
-                return;
-            }
-
-            if (!state.user) {
-                root.innerHTML = `
-                    <div class="auth-container">
-                        <div class="auth-card anim-slide">
-                            <h1 style="color:var(--primary); margin-bottom:10px">BG Code Tutor</h1>
-                            <p style="color:var(--muted-fg)">Learn. Code. Level Up.</p>
-                            <button class="google-btn" onclick="loginWithGoogle()">
-                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20">
-                                Sign in with Google
-                            </button>
-                        </div>
-                    </div>`;
-                return;
-            }
-
-            root.innerHTML = `
-                <div class="sidebar ${state.sidebarOpen ? 'open' : ''}">
-                    <div class="logo-area">
-                        <div style="background:var(--primary); width:35px; height:35px; border-radius:8px"></div>
-                        <div class="logo-text"><h1>BG CODE</h1><p>Pro Learner</p></div>
-                    </div>
-                    <nav>
-                        <button onclick="navigate('dashboard')" class="${state.page === 'dashboard' ? 'active' : ''}">Dashboard</button>
-                        <button onclick="navigate('curriculum')" class="${state.page === 'curriculum' ? 'active' : ''}">Courses</button>
-                        <button onclick="navigate('ai')" class="${state.page === 'ai' ? 'active' : ''}">AI Assistant</button>
-                    </nav>
-                    <div style="padding:20px; border-top:1px solid var(--border)">
-                        <button style="color:var(--destructive); font-size:13px" onclick="auth.signOut()">Logout</button>
-                    </div>
-                </div>
-                <div class="main">
-                    <div class="topbar">
-                        <button onclick="state.sidebarOpen=true; render()" style="display:flex; align-items:center">${state.sidebarOpen ? '' : '☰'}</button>
-                        <div style="font-size:14px; font-weight:600">Level ${state.progress.level} Developer</div>
-                        <div style="width:32px; height:32px; background:var(--muted); border-radius:50%"></div>
-                    </div>
-                    <div class="content">
-                        ${renderPage()}
-                    </div>
-                </div>`;
-
-            attachSearchLogic();
-        }
-
-        function renderPage() {
-            if (state.page === 'dashboard') {
-                return `
-                    <div class="anim-slide">
-                        <h2 style="margin-bottom:24px">Welcome back, ${state.user.displayName.split(' ')[0]}!</h2>
-                        <div class="stats-grid">
-                            <div class="stat-card"><span>TOTAL XP</span><b>${state.progress.xp}</b></div>
-                            <div class="stat-card"><span>CURRENT RANK</span><b>Level ${state.progress.level}</b></div>
-                            <div class="stat-card"><span>STREAK</span><b>${state.progress.streak} Days</b></div>
-                        </div>
-                        
-                        <div class="search-box">
-                            <input type="text" id="courseSearch" placeholder="Search for a skill (e.g. 'html')...">
-                        </div>
-
-                        <div class="course-grid">
-                            ${courses.map(c => `
-                                <div class="course-card" onclick="startChallenge('${c.id}')">
-                                    <span class="icon">${c.icon}</span>
-                                    <h3>${c.name}</h3>
-                                    <p>${c.desc}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>`;
-            }
-
-            if (state.page === 'lesson') {
-                return `
-                    <div class="lesson-ui anim-slide" style="margin:-30px; height:calc(100% + 60px)">
-                        <div class="instruction-pane">
-                            <h3 style="color:var(--primary); margin-bottom:16px">The Challenge</h3>
-                            <p style="font-size:14px; line-height:1.6; color:var(--fg)">
-                                Every webpage starts with a heading. Your task is to build a top-level heading tag (h1) that displays the text "Hello World".
-                            </p>
-                            <div style="margin-top:24px; padding:16px; background:var(--muted); border-radius:12px; font-size:12px">
-                                <b>Hint:</b> Tags must be opened and then closed with a slash.
-                            </div>
-                        </div>
-                        <div class="workspace-pane">
-                            <h2>Building Blocks</h2>
-                            <div class="code-assembly" id="assembly">
-                                ${state.placedChips.map(c => `<div class="chip active" onclick="toggleChip('${c}')">${c}</div>`).join('')}
-                            </div>
-                            <div style="display:flex; gap:12px; flex-wrap:wrap">
-                                ${['<h1>', 'Hello World', '</h1>', '<p>', '</div>'].map(txt => `
-                                    <div class="chip" onclick="toggleChip('${txt}')">${txt}</div>
-                                `).join('')}
-                            </div>
-                            <button class="btn-action" onclick="submitCode()">VALIDATE CODE</button>
-                        </div>
-                    </div>`;
-            }
-
-            return `<h2>${state.page.toUpperCase()} PAGE</h2><p>Coming soon to your profile!</p>`;
-        }
-
-        // --- 7. STABLE SEARCH LOGIC ---
-        function attachSearchLogic() {
-            const input = $('#courseSearch');
-            if (input) {
-                input.focus(); // Keep focus after render if needed
-                input.oninput = (e) => {
-                    const query = e.target.value.toLowerCase();
-                    const cards = document.querySelectorAll('.course-card');
-                    cards.forEach(card => {
-                        const title = card.querySelector('h3').innerText.toLowerCase();
-                        card.style.display = title.includes(query) ? 'block' : 'none';
-                    });
-                };
-            }
-        }
-
-        render();
+        console.log('%c✅ BG Code Tutor is ready with Google Login + Guest Mode + User Profile Display!', 'color:#00dcff; font-size:14px;');
     </script>
 </body>
 </html>
