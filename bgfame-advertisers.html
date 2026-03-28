@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BG Fame | Advertisers</title>
+    <title>BG Fame | Advertisers Generator</title>
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --card-bg: #1a1a1a;
+            --bg-color: #050505;
+            --card-bg: #121212;
+            --input-bg: #1e1e1e;
             --neon-green: #39FF14;
             --text-main: #ffffff;
-            --text-dim: #b0b0b0;
+            --text-dim: #888888;
+            --border-color: #333333;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-main);
         }
 
         body {
@@ -25,22 +28,21 @@
             color: var(--text-main);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* Container mimicking mobile preview */
         .app-container {
             width: 100%;
-            max-width: 430px;
-            height: 932px;
+            max-width: 480px;
+            min-height: 100vh;
             background-color: var(--bg-color);
             position: relative;
             display: flex;
             flex-direction: column;
             padding: 20px;
-            border: 1px solid #333; /* Subtle border for the "frame" */
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
         }
 
         /* Header */
@@ -48,7 +50,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0 40px 0;
+            padding: 10px 0 30px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
         }
 
         .logo {
@@ -57,143 +61,218 @@
             gap: 8px;
             font-weight: bold;
             font-size: 1.2rem;
-            color: var(--text-main);
         }
 
         .logo-icon {
             color: var(--neon-green);
-            filter: drop-shadow(0 0 5px var(--neon-green));
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
         }
 
-        .menu-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
+        /* Forms */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .menu-btn span {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background-color: var(--neon-green);
-            margin: 6px 0;
-            box-shadow: 0 0 8px var(--neon-green);
-        }
-
-        /* Main Content */
-        main {
-            text-align: center;
-            flex-grow: 1;
-        }
-
-        .center-icon {
-            font-size: 2.5rem;
-            color: var(--neon-green);
-            margin-bottom: 20px;
-            display: inline-block;
-            padding: 15px;
-            background: rgba(57, 255, 20, 0.05);
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            line-height: 1.1;
-            margin-bottom: 20px;
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
             font-weight: 800;
         }
 
-        .description {
-            color: var(--text-dim);
-            line-height: 1.5;
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-            padding: 0 10px;
-        }
-
-        /* Suggestion Buttons */
-        .suggestions {
+        .input-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 40px;
+            gap: 5px;
         }
 
-        .suggestion-item {
-            background-color: var(--card-bg);
-            border: 1px solid #333;
-            padding: 18px;
-            border-radius: 12px;
-            text-align: left;
-            color: var(--neon-green);
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .suggestion-item:hover {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.15);
-        }
-
-        /* Input Area */
-        .input-wrapper {
-            position: relative;
-            width: 100%;
-            margin-top: auto;
-            padding-bottom: 40px;
-        }
-
-        .search-input {
-            width: 100%;
-            background-color: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 30px;
-            padding: 18px 60px 18px 25px;
-            color: white;
+        input, textarea, select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 15px;
+            border-radius: 8px;
             font-size: 1rem;
             outline: none;
+            transition: all 0.3s;
         }
 
-        .search-input:focus {
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Custom File Upload */
+        .file-upload-wrapper {
+            position: relative;
+            background-color: var(--input-bg);
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .file-upload-wrapper:hover {
             border-color: var(--neon-green);
         }
 
-        .send-btn {
+        .file-upload-wrapper input[type="file"] {
             position: absolute;
-            right: 8px;
-            top: 7px;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn-primary {
             background-color: var(--neon-green);
+            color: #000;
             border: none;
-            width: 42px;
-            height: 42px;
+            padding: 16px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .company-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: var(--neon-green);
             border-radius: 50%;
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
-        footer {
-            text-align: center;
-            padding-bottom: 20px;
-            font-size: 0.75rem;
-            color: #555;
+        .post-image-container {
+            width: 100%;
+            background-color: #000;
+            display: none; /* Hidden until image is uploaded */
         }
 
-        .emergent-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: #111;
-            padding: 5px 12px;
+        .post-image-container img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .post-content {
+            padding: 15px;
+        }
+
+        .post-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .post-body {
+            font-size: 0.95rem;
+            color: #ccc;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .post-contact {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+        }
+
+        .post-contact div {
+            margin-bottom: 3px;
+        }
+
+        .post-cta {
+            display: inline-block;
+            background-color: var(--theme-color, var(--neon-green));
+            color: #000;
+            padding: 10px 20px;
             border-radius: 20px;
-            border: 1px solid #222;
-            color: white;
-            margin-top: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            padding: 10px 15px 15px;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--text-dim);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        /* Font Themes */
+        .font-modern { font-family: 'Inter', sans-serif; }
+        .font-classic { font-family: 'Georgia', serif; }
+        .font-playful { font-family: 'Comic Sans MS', cursive, sans-serif; }
+
     </style>
 </head>
 <body>
@@ -203,43 +282,243 @@
             <div class="logo">
                 <span class="logo-icon">✦</span> BG Fame
             </div>
-            <button class="menu-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div style="font-size: 0.8rem; color: var(--neon-green);">Advertisers Portal</div>
         </header>
 
-        <main>
-            <div class="center-icon">✦</div>
-            <h1>What can I create for you?</h1>
-            <p class="description">
-                Describe your product, brand, or idea. I'll generate the copy, hashtags, and visuals for Instagram, LinkedIn, and more.
-            </p>
-
-            <div class="suggestions">
-                <div class="suggestion-item">Viral Instagram ad for sneakers</div>
-                <div class="suggestion-item">Professional LinkedIn post for SaaS</div>
-                <div class="suggestion-item">Funny tweet about coffee</div>
-                <div class="suggestion-item">YouTube script for tech review</div>
+        <div id="generatorForm" class="form-section">
+            <h1 class="form-title">Create Ad Campaign</h1>
+            
+            <div class="input-group">
+                <label>Product Image (Optional)</label>
+                <div class="file-upload-wrapper">
+                    <span id="fileNameDisplay" style="color: var(--text-dim);">Tap to upload image...</span>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
             </div>
 
-            <div class="input-wrapper">
-                <input type="text" class="search-input" placeholder="Describe your ad... (e.g. 'Luxury watch')">
-                <button class="send-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                </button>
+            <div class="input-group">
+                <label>Company Name *</label>
+                <input type="text" id="companyName" placeholder="e.g. BG Fame Industry" required>
             </div>
-        </main>
 
-        <footer>
-            <div class="emergent-badge">
-                <span style="background: white; color: black; border-radius: 50%; width: 14px; height: 14px; display: inline-block; font-size: 10px; line-height: 14px; font-weight: bold;">e</span> 
-                Made with Emergent
+            <div class="input-group">
+                <label>Product Name *</label>
+                <input type="text" id="productName" placeholder="e.g. AI Marketing Tool" required>
             </div>
-            <p style="margin-top: 10px;">Application software from BG Fame Industry</p>
-        </footer>
+
+            <div class="input-group">
+                <label>Catchy Headline *</label>
+                <input type="text" id="headline" placeholder="Revolutionize your workflow today!" required>
+            </div>
+
+            <div class="input-group">
+                <label>Call to Action (CTA) *</label>
+                <input type="text" id="cta" placeholder="Get Started Now" required>
+            </div>
+
+            <div class="input-group">
+                <label>Theme Font</label>
+                <select id="themeFont">
+                    <option value="font-modern">Modern (Sans-serif)</option>
+                    <option value="font-classic">Classic (Serif)</option>
+                    <option value="font-playful">Playful (Casual)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Theme Color</label>
+                <select id="themeColor">
+                    <option value="#39FF14">Neon Green</option>
+                    <option value="#FF00FF">Cyber Pink</option>
+                    <option value="#00FFFF">Electric Blue</option>
+                    <option value="#FF9900">Sunset Orange</option>
+                </select>
+            </div>
+
+            <h2 class="form-title" style="font-size: 1.2rem; margin-top: 10px;">Contact Details</h2>
+
+            <div class="input-group">
+                <label>Website</label>
+                <input type="url" id="website" placeholder="https://bhavyagoel.com">
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="+1 234 567 8900">
+            </div>
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="contact@company.com">
+            </div>
+
+            <div class="input-group">
+                <label>Office Address</label>
+                <textarea id="address" placeholder="123 Tech Street, Silicon Valley"></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="generateAds()">Generate Advertisements ✦</button>
+        </div>
+
+        <div id="resultsArea" class="results-section">
+            <button class="back-btn" onclick="goBack()">← Create Another Ad</button>
+            <h2 class="form-title">Your Generated Posts</h2>
+
+            <div id="post1" class="post-card">
+                <div class="post-header">
+                    <div class="company-avatar" id="avatar1">B</div>
+                    <div>
+                        <div style="font-weight: bold;" id="outCompany1">Company Name</div>
+                        <div style="font-size: 0.75rem; color: var(--text-dim);">Sponsored</div>
+                    </div>
+                </div>
+                
+                <div class="post-image-container" id="imgContainer1">
+                    <img id="outImage1" src="" alt="Product Image">
+                </div>
+
+                <div class="post-content">
+                    <div class="post-headline" id="outHeadline1">Headline goes here</div>
+                    <div class="post-body">
+                        Introducing the <strong id="outProduct1">Product Name</strong>! 🚀<br><br>
+                        Elevate your game with our latest release. Designed specifically for our amazing community.
+                    </div>
+                    
+                    <div class="post-contact" id="outContact1">
+                        </div>
+
+                    <div class="post-cta" id="outCta1">Call to Action</div>
+                </div>
+                <div class="social-icons">
+                    <span>♡ Like</span> <span>💬 Comment</span> <span>↗ Share</span>
+                </div>
+            </div>
+
+            <div id="post2" class="post-card">
+                <div class="post-header">
+                    <div class="company-avatar" id="avatar2">B</div>
+                    <div>
+                        <div style="font-weight: bold;" id="outCompany2">Company Name</div>
+                        <div style="font-size: 0.75rem; color: var(--text-dim);">@brand_official</div>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    <div class="post-headline" id="outHeadline2" style="font-size: 1.1rem;">Headline goes here</div>
+                    <div class="post-body" style="font-size: 1.05rem; color: #fff;">
+                        BIG NEWS! 🎉 We are officially launching <span style="color: var(--theme-color, var(--neon-green));" id="outProduct2">Product Name</span>. <br><br>
+                        We know you've been waiting for this. Don't miss out on the drop!
+                    </div>
+
+                    <div class="post-image-container" id="imgContainer2" style="border-radius: 8px; overflow: hidden; margin-bottom: 15px;">
+                        <img id="outImage2" src="" alt="Product Image">
+                    </div>
+                    
+                    <div class="post-contact" id="outContact2">
+                        </div>
+
+                    <div class="post-cta" id="outCta2" style="width: 100%; text-align: center;">Call to Action</div>
+                </div>
+                <div class="social-icons">
+                    <span>💬 120</span> <span>🔁 45</span> <span>♡ 890</span>
+                </div>
+            </div>
+
+        </div>
     </div>
 
+    <script>
+        // Handle File Upload Preview Name
+        let uploadedImageSrc = null;
+        
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileNameDisplay').innerText = "Image Loaded: " + file.name;
+                document.getElementById('fileNameDisplay').style.color = "var(--neon-green)";
+                
+                // Convert image to base64 for preview
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    uploadedImageSrc = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generateAds() {
+            // Get Values
+            const company = document.getElementById('companyName').value || 'BG Fame';
+            const product = document.getElementById('productName').value || 'Premium Product';
+            const headline = document.getElementById('headline').value || 'Upgrade Your Life Today!';
+            const cta = document.getElementById('cta').value || 'Learn More';
+            const website = document.getElementById('website').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            
+            const themeFont = document.getElementById('themeFont').value;
+            const themeColor = document.getElementById('themeColor').value;
+
+            // Apply Themes to output area
+            const resultsArea = document.getElementById('resultsArea');
+            resultsArea.className = `results-section ${themeFont}`; // Apply font class
+            resultsArea.style.setProperty('--theme-color', themeColor); // Apply color variable
+            
+            // Set Avatars (First letter of company)
+            document.getElementById('avatar1').innerText = company.charAt(0).toUpperCase();
+            document.getElementById('avatar2').innerText = company.charAt(0).toUpperCase();
+            document.getElementById('avatar1').style.backgroundColor = themeColor;
+            document.getElementById('avatar2').style.backgroundColor = themeColor;
+
+            // Populate Post 1
+            document.getElementById('outCompany1').innerText = company;
+            document.getElementById('outHeadline1').innerText = headline;
+            document.getElementById('outProduct1').innerText = product;
+            document.getElementById('outCta1').innerText = cta;
+            
+            // Populate Post 2
+            document.getElementById('outCompany2').innerText = company;
+            document.getElementById('outHeadline2').innerText = headline;
+            document.getElementById('outProduct2').innerText = product;
+            document.getElementById('outCta2').innerText = cta;
+
+            // Handle Contact Details Block
+            let contactHTML = '';
+            if(website) contactHTML += `<div>🌐 ${website}</div>`;
+            if(phone) contactHTML += `<div>📞 ${phone}</div>`;
+            if(email) contactHTML += `<div>✉️ ${email}</div>`;
+            if(address) contactHTML += `<div>📍 ${address}</div>`;
+            
+            document.getElementById('outContact1').innerHTML = contactHTML;
+            document.getElementById('outContact2').innerHTML = contactHTML;
+            
+            // Hide contact block if empty
+            document.getElementById('outContact1').style.display = contactHTML ? 'block' : 'none';
+            document.getElementById('outContact2').style.display = contactHTML ? 'block' : 'none';
+
+            // Handle Images
+            if (uploadedImageSrc) {
+                document.getElementById('outImage1').src = uploadedImageSrc;
+                document.getElementById('outImage2').src = uploadedImageSrc;
+                document.getElementById('imgContainer1').style.display = 'block';
+                document.getElementById('imgContainer2').style.display = 'block';
+            } else {
+                document.getElementById('imgContainer1').style.display = 'none';
+                document.getElementById('imgContainer2').style.display = 'none';
+            }
+
+            // Switch Views
+            document.getElementById('generatorForm').style.display = 'none';
+            document.getElementById('resultsArea').style.display = 'flex';
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            document.getElementById('generatorForm').style.display = 'flex';
+            document.getElementById('resultsArea').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+    </script>
 </body>
 </html>
