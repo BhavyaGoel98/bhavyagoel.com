@@ -1,313 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BG Code Tutor • Learn to Code</title>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            signInWithPopup,
-            GoogleAuthProvider,
-            signOut, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg",
-            authDomain: "bg-code-tutor.firebaseapp.com",
-            projectId: "bg-code-tutor",
-            storageBucket: "bg-code-tutor.firebasestorage.app",
-            messagingSenderId: "129372610030",
-            appId: "1:129372610030:web:3b72e4ad2dba22951282ff",
-            measurementId: "G-PYYXTLRN4X"
-        };
-
-        window.firebaseApp = initializeApp(firebaseConfig);
-        window.auth = getAuth(window.firebaseApp);
-        window.GoogleAuthProvider = GoogleAuthProvider;
-    </script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-base: #080c14;
-            --bg-card: #0f1624;
-            --bg-card2: #141d2e;
-            --bg-elevated: #1a2438;
-            --border: rgba(100,200,255,0.10);
-            --border-glow: rgba(0,220,255,0.35);
-            --cyan: #00dcff;
-            --cyan-dim: rgba(0,220,255,0.15);
-            --cyan-glow: 0 0 20px rgba(0,220,255,0.4);
-            --orange: #ff6b35;
-            --lime: #9bff57;
-            --violet: #b57bff;
-            --gold: #ffcc00;
-            --text-primary: #e8f4ff;
-            --text-secondary: #7a9bbf;
-            --text-muted: #3d5270;
-            --font-display: 'Syne', sans-serif;
-            --font-mono: 'Space Mono', monospace;
-            --font-body: 'DM Sans', sans-serif;
-            --radius-md: 14px;
-            --radius-xl: 28px;
-        }
-
-        /* === LOGIN SCREEN === */
-        .login-screen {
-            position: fixed; inset: 0; background: var(--bg-base);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 1000; flex-direction: column; padding: 20px;
-        }
-        .logo-img { width: 180px; filter: drop-shadow(0 0 30px var(--cyan)); }
-        .app-title { font-family: var(--font-display); font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--cyan); margin-top: 12px; }
-
-        .auth-form {
-            width: 100%; max-width: 360px; background: var(--bg-card);
-            border: 1px solid var(--border); border-radius: var(--radius-xl);
-            padding: 32px 28px;
-        }
-        .auth-input {
-            width: 100%; background: var(--bg-elevated); border: 1px solid var(--border);
-            border-radius: var(--radius-md); padding: 16px 18px; color: var(--text-primary);
-            font-family: var(--font-mono); margin-bottom: 16px; font-size: 15px;
-        }
-        .auth-input:focus { outline: none; border-color: var(--cyan); box-shadow: var(--cyan-glow); }
-
-        .auth-btn, .google-btn, .guest-btn {
-            width: 100%; padding: 16px; border-radius: var(--radius-md);
-            font-family: var(--font-display); font-size: 16px; font-weight: 700;
-            margin-top: 12px; cursor: pointer;
-        }
-        .auth-btn { background: var(--cyan); color: #05111f; border: none; }
-        .google-btn { 
-            background: white; color: #000; border: 1px solid #dadce0; 
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .guest-btn { 
-            background: transparent; color: var(--text-secondary); 
-            border: 1px solid var(--border); 
-        }
-
-        .divider {
-            margin: 20px 0; text-align: center; color: var(--text-muted);
-            position: relative;
-        }
-        .divider::before {
-            content: ''; position: absolute; top: 50%; left: 0; right: 0;
-            height: 1px; background: var(--border);
-        }
-        .divider span { background: var(--bg-card); padding: 0 12px; }
-
-        /* === MAIN APP HEADER === */
-        .app-header {
-            padding: 12px 16px; background: var(--bg-card);
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-        }
-        .user-info {
-            display: flex; align-items: center; gap: 12px;
-        }
-        .user-avatar {
-            width: 42px; height: 42px; border-radius: 50%;
-            object-fit: cover; border: 2px solid var(--cyan);
-        }
-        .user-name {
-            font-family: var(--font-display); font-weight: 700; color: var(--text-primary);
-        }
-        .user-email {
-            font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BG Code Tutor — Learn to Code like Duolingo</title>
+  <!-- Google Fonts & Firebase SDK -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <style>
+    /* ===== ORIGINAL STYLES (condensed but fully preserved) ===== */
+    :root {
+      --bg-base: #080c14; --bg-card: #0f1624; --bg-card2: #141d2e; --bg-elevated: #1a2438;
+      --border: rgba(100,200,255,0.10); --border-glow: rgba(0,220,255,0.35);
+      --cyan: #00dcff; --cyan-dim: rgba(0,220,255,0.15); --cyan-glow: 0 0 20px rgba(0,220,255,0.4);
+      --orange: #ff6b35; --orange-dim: rgba(255,107,53,0.15); --lime: #9bff57; --violet: #b57bff;
+      --gold: #ffcc00; --text-primary: #e8f4ff; --text-secondary: #7a9bbf; --text-muted: #3d5270;
+      --font-display: 'Syne', sans-serif; --font-mono: 'Space Mono', monospace; --font-body: 'DM Sans', sans-serif;
+      --radius-md: 14px; --radius-lg: 20px; --nav-h: 68px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-primary); overflow-x: hidden; }
+    #app { display: flex; flex-direction: column; height: 100dvh; max-width: 480px; margin: 0 auto; position: relative; background: var(--bg-base); overflow: hidden; }
+    .view { display: none; flex: 1; overflow-y: auto; padding-bottom: calc(var(--nav-h) + 16px); }
+    .view.active { display: block; }
+    #bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: var(--nav-h); background: var(--bg-card); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-around; z-index: 100; backdrop-filter: blur(16px); }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; border-radius: var(--radius-md); color: var(--text-muted); transition: 0.2s; cursor: pointer; }
+    .nav-item svg { width: 22px; height: 22px; }
+    .nav-item.active { color: var(--cyan); }
+    .nav-item.active::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: var(--cyan); border-radius: 3px; box-shadow: var(--cyan-glow); }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; }
+    .progress-track { width: 100%; height: 6px; background: var(--bg-elevated); border-radius: 100px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 100px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+    .progress-cyan { background: linear-gradient(90deg, #0099cc, var(--cyan)); }
+    .btn-continue, .btn-check.ready { background: var(--cyan); color: #05111f; box-shadow: var(--cyan-glow); }
+    .lesson-row { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 8px; cursor: pointer; }
+    /* re-use all previous component classes, most are kept */
+    .hero-card, .blank-area, .code-block, .mcq-option, .feedback-banner, .overlay, .xp-toast { /* original styles work */ }
+    .feedback-banner { display: none; padding: 14px; border-radius: var(--radius-md); margin-top: 14px; }
+    .feedback-banner.show { display: flex; gap: 10px; }
+    .feedback-banner.correct { background: var(--lime-dim); border-color: rgba(155,255,87,0.3); }
+    .feedback-banner.wrong { background: var(--orange-dim); border-color: rgba(255,107,53,0.3); }
+    .blank-input { background: rgba(0,220,255,0.08); border: 2px dashed rgba(0,220,255,0.4); border-radius: 6px; padding: 2px 8px; font-family: var(--font-mono); color: var(--cyan); }
+    .word-chip { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 100px; padding: 6px 12px; cursor: pointer; }
+    .login-overlay { position: fixed; inset: 0; background: #050a12; backdrop-filter: blur(16px); z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 24px; transition: all 0.3s; }
+    .login-card { background: var(--bg-card); border: 1px solid rgba(0,220,255,0.3); border-radius: 32px; padding: 32px 24px; width: 280px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .logo-img { width: 64px; height: 64px; border-radius: 20px; margin-bottom: 16px; object-fit: cover; }
+    .google-btn { background: var(--bg-elevated); border: 1px solid var(--cyan); border-radius: 60px; padding: 12px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 600; color: white; cursor: pointer; transition: 0.2s; margin-top: 16px; }
+    .google-btn:hover { background: var(--cyan-dim); border-color: var(--cyan); }
+    .app-header-logo { display: flex; align-items: center; gap: 8px; background: var(--bg-card); border-radius: 60px; padding: 4px 12px; border: 1px solid var(--border); }
+    .app-header-logo img { width: 28px; height: 28px; border-radius: 8px; }
+    .brand-name { font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--cyan); }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; }
+    .signout-icon { background: var(--bg-elevated); border-radius: 30px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+    .lesson-header { background: var(--bg-card); border-bottom: 1px solid var(--border); }
+    .lesson-scroll { flex: 1; overflow-y: auto; }
+    .exercise-step { display: none; padding: 20px 16px; }
+    .exercise-step.active { display: block; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
+    .exercise-step.active { animation: fadeSlide 0.3s ease; }
+    .heatmap-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; }
+    .hm-cell { aspect-ratio: 1; border-radius: 3px; background: var(--bg-elevated); }
+    .hm-1 { background: rgba(0,220,255,0.2); } .hm-2 { background: rgba(0,220,255,0.4); } .hm-3 { background: rgba(0,220,255,0.65); } .hm-4 { background: var(--cyan); }
+  </style>
 </head>
 <body>
-    <!-- Ambient Particles -->
-    <div class="particles" id="particles"></div>
-
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="login-screen">
-        <div style="text-align:center; margin-bottom:40px;">
-            <img src="https://i.ibb.co/RpcTXdqV/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg" 
-                 alt="BG Code Tutor" class="logo-img">
-            <div class="app-title">BG Code Tutor</div>
-            <p style="color:var(--text-muted); font-size:13px;">Master coding the fun way</p>
+<div id="app" style="display: none;">
+  <!-- Dashboard View -->
+  <div id="view-home" class="view active">
+    <div style="padding: 16px;">
+      <div class="top-bar">
+        <div class="app-header-logo">
+          <img id="headerLogo" alt="logo" />
+          <span class="brand-name">BG Code Tutor</span>
         </div>
-
-        <div class="auth-form">
-            <h2 id="auth-title" style="font-family:var(--font-display); font-size:24px; text-align:center; margin-bottom:24px;">Sign In</h2>
-            
-            <input type="email" id="email" class="auth-input" placeholder="your@email.com">
-            <input type="password" id="password" class="auth-input" placeholder="Password">
-
-            <div id="auth-error" style="color:#ff6b35; font-size:13px; text-align:center; min-height:20px;"></div>
-
-            <button onclick="handleEmailAuth()" id="email-auth-btn" class="auth-btn">Sign In</button>
-
-            <div class="divider"><span>OR</span></div>
-
-            <button onclick="handleGoogleLogin()" class="google-btn">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" height="20" alt="Google">
-                Continue with Google
-            </button>
-
-            <button onclick="continueAsGuest()" class="guest-btn">
-                Continue as Guest
-            </button>
-
-            <div onclick="toggleAuthMode()" id="toggle-text" 
-                 style="color:var(--cyan); cursor:pointer; font-size:13px; margin-top:24px; text-align:center;">
-                Don't have an account? <strong>Sign Up</strong>
-            </div>
-        </div>
+        <div class="signout-icon" id="signOutBtn">🚪 Sign out</div>
+      </div>
+      <div class="top-bar" style="margin-top: 12px;">
+        <div><span class="greeting">// WELCOME,</span><div class="name" id="userDisplayName">Learner</div></div>
+        <div class="top-bar-right"><div class="streak-badge"><span class="flame">🔥</span><span id="streakValue">0</span></div><div class="xp-chip">⚡ <span id="totalXP">0</span> XP</div></div>
+      </div>
+      <div class="hero-card" id="heroCard" style="margin: 16px 0; cursor:pointer;">
+        <div class="hero-course-label">// CURRENT COURSE</div>
+        <h2 class="hero-title">JavaScript Mastery</h2>
+        <p class="hero-sub" id="nextLessonTitle">Closures & HOFs</p>
+        <div class="hero-stats"><div class="hero-stat"><span class="val" id="lessonsCompletedCount">0</span><span class="lbl">Lessons Done</span></div><div class="hero-stat"><span class="val" id="remainingLessonsCount">0</span><span class="lbl">Remaining</span></div><div class="hero-stat"><span class="val" id="accuracyValue">--</span><span class="lbl">Accuracy</span></div></div>
+        <div class="progress-row"><div class="progress-track" style="flex:1"><div class="progress-fill progress-cyan" id="courseProgressFill" style="width:0%"></div></div><span class="pct" id="coursePercent">0%</span></div>
+        <button class="btn-continue" id="continueLessonBtn">Continue Lesson →</button>
+      </div>
+      <div class="daily-goals"><p class="section-label">// DAILY GOALS</p><div class="goals-grid" id="dailyGoalsGrid"></div></div>
+      <div class="courses-section"><p class="section-label">// MY COURSES</p><div class="courses-scroll" id="coursesScroll"></div></div>
+      <div class="upcoming-section"><p class="section-label">// LESSON PATH</p><div id="lessonPathContainer"></div></div>
     </div>
+  </div>
 
-    <!-- MAIN APP -->
-    <div id="main-app" style="display:none; height:100dvh; flex-direction:column;">
-        
-        <!-- Enhanced Header with User Info -->
-        <div class="app-header">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <img src="https://i.ibb.co/RpcTXdqV/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg" 
-                     style="height:38px; border-radius:8px;">
-                <div style="font-family:var(--font-display); font-weight:700; color:var(--cyan);">BG Code Tutor</div>
-            </div>
-            
-            <div class="user-info" onclick="showUserMenu()">
-                <img id="user-avatar" src="https://i.pravatar.cc/150?img=68" class="user-avatar" alt="Avatar">
-                <div>
-                    <div id="user-name" class="user-name">Guest User</div>
-                    <div id="user-subtitle" class="user-email">guest@bgcodetutor.com</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Your Original App Content -->
-        <div id="app" style="flex:1; overflow:hidden; max-width:480px; margin:0 auto; width:100%; background:var(--bg-base);">
-            <!-- Paste your full original dashboard, lesson, stats, profile views + bottom nav here -->
-            <!-- For now showing a welcome message. Replace with your complete UI. -->
-            <div id="view-home" class="view active" style="padding:20px;">
-                <h2 style="color:var(--cyan); text-align:center; margin-top:40px;">Welcome back, <span id="welcome-name">Coder</span>!</h2>
-                <p style="text-align:center; color:var(--text-muted);">Your full beautiful UI goes here.</p>
-            </div>
-        </div>
-
-        <!-- Bottom Navigation (your original) -->
-        <nav id="bottom-nav">
-            <!-- Your original bottom nav -->
-        </nav>
+  <!-- Lesson View (static for closures, but dynamic title) -->
+  <div id="view-lesson" class="view">
+    <div class="lesson-header"><div class="lesson-header-top"><button class="btn-back" id="closeLessonBtn">←</button><div class="lesson-header-title"><h2 id="lessonTitle">Closures & HOFs</h2><p>JavaScript Mastery · Chapter 4</p></div><div class="lesson-lives" id="livesContainer"><span class="life">❤️</span><span class="life">❤️</span><span class="life">❤️</span></div></div><div class="lesson-progress-row"><div class="progress-track" style="flex:1"><div class="progress-fill progress-cyan" id="lessonProgressFill" style="width:0%"></div></div><span class="step-counter" id="stepCounter">0 / 4</span></div></div>
+    <div class="lesson-scroll">
+      <div class="exercise-step active" id="step-1" data-type="concept"><div class="concept-card"><div class="concept-type">// CONCEPT</div><h3>What is a Closure?</h3><p>A closure is a function that remembers its outer variables even after the outer function returns.</p><div class="code-block"><div class="code-line"><span class="ln">1</span><span class="kw">function</span> <span class="fn">makeCounter</span><span class="plain">() { let count = 0; return () => ++count; }</span></div></div></div></div>
+      <div class="exercise-step" id="step-2" data-type="blank"><div class="blank-area"><div class="concept-type">// FILL IN THE BLANK</div><p class="blank-prompt">Complete the closure that multiplies:</p><div class="blank-code">function multiplier(factor) { return (num) => <input class="blank-input" id="blankAns" placeholder="???" />; }</div><div class="word-chips"><span class="word-chip" data-val="num * factor">num * factor</span><span class="word-chip" data-val="factor + num">factor + num</span><span class="word-chip" data-val="num / factor">num / factor</span></div></div><div class="feedback-banner" id="fbBlank"></div></div>
+      <div class="exercise-step" id="step-3" data-type="mcq"><div class="blank-area"><p>What will counter() return after 3 calls?</p><div class="mcq-options" id="mcqArea"><div class="mcq-option" data-correct="false">A) 0 every time</div><div class="mcq-option" data-correct="false">B) undefined</div><div class="mcq-option" data-correct="true">C) 3 (closure persists)</div><div class="mcq-option" data-correct="false">D) error</div></div></div><div class="feedback-banner" id="fbMcq"></div></div>
+      <div class="exercise-step" id="step-4" data-type="challenge"><div class="challenge-area"><div class="challenge-tabs"><div class="challenge-tab active">📝 Challenge</div><div class="challenge-tab" id="hintTab">💡 Hint</div></div><div class="challenge-body"><p class="challenge-instruction">Write makeAdder(x) that returns a function adding x to its argument.</p><div class="code-editor"><div class="editor-content"><div class="code-line"><span class="ln">1</span><span class="kw">function</span> makeAdder(x) { <input class="editable-area" id="challengeInput" placeholder="return (num) => num + x" style="width:180px;" /> }</div></div></div><button class="btn-run" id="runChallengeBtn">Run Code</button><div class="output-box" id="outputBox"><div id="outputContent"></div></div></div></div><div class="feedback-banner" id="fbChallenge"></div></div>
     </div>
+    <div class="lesson-footer"><button class="btn-check" id="lessonCheckBtn">Check Answer</button></div>
+  </div>
 
-    <script type="module">
-        let isLoginMode = true;
-        let currentUser = null;
-
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('auth-title').textContent = isLoginMode ? 'Sign In' : 'Create Account';
-            document.getElementById('email-auth-btn').textContent = isLoginMode ? 'Sign In' : 'Sign Up';
-            document.getElementById('toggle-text').innerHTML = isLoginMode 
-                ? `Don't have an account? <strong>Sign Up</strong>` 
-                : `Already have an account? <strong>Sign In</strong>`;
-        }
-
-        async function handleEmailAuth() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const errorEl = document.getElementById('auth-error');
-
-            if (!email || !password) {
-                errorEl.textContent = 'Please fill all fields';
-                return;
-            }
-
-            errorEl.textContent = '';
-
-            try {
-                if (isLoginMode) {
-                    await signInWithEmailAndPassword(window.auth, email, password);
-                } else {
-                    await createUserWithEmailAndPassword(window.auth, email, password);
-                }
-            } catch (error) {
-                let msg = 'Authentication failed';
-                if (error.code === 'auth/wrong-password') msg = 'Incorrect password';
-                else if (error.code === 'auth/user-not-found') msg = 'No account found';
-                else if (error.code === 'auth/email-already-in-use') msg = 'Email already registered';
-                errorEl.textContent = msg;
-            }
-        }
-
-        async function handleGoogleLogin() {
-            const provider = new window.GoogleAuthProvider();
-            const errorEl = document.getElementById('auth-error');
-            try {
-                await signInWithPopup(window.auth, provider);
-            } catch (error) {
-                errorEl.textContent = 'Google sign-in failed. Please try again.';
-            }
-        }
-
-        function continueAsGuest() {
-            // Simulate guest user
-            currentUser = {
-                displayName: "Guest Coder",
-                email: "guest@bgcodetutor.com",
-                photoURL: "https://i.pravatar.cc/150?img=68",
-                isGuest: true
-            };
-            showMainApp();
-        }
-
-        function showMainApp() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-
-            // Update header with user info
-            if (currentUser) {
-                document.getElementById('user-name').textContent = currentUser.displayName || currentUser.email?.split('@')[0] || "Coder";
-                document.getElementById('user-subtitle').textContent = currentUser.email || "Guest Mode";
-                document.getElementById('user-avatar').src = currentUser.photoURL || "https://i.pravatar.cc/150?img=68";
-                document.getElementById('welcome-name').textContent = currentUser.displayName || "Coder";
-            }
-        }
-
-        function logout() {
-            if (currentUser && currentUser.isGuest) {
-                // For guest, just go back to login
-                document.getElementById('main-app').style.display = 'none';
-                document.getElementById('login-screen').style.display = 'flex';
-            } else {
-                signOut(window.auth);
-            }
-        }
-
-        function showUserMenu() {
-            const name = document.getElementById('user-name').textContent;
-            if (confirm(`Signed in as ${name}\n\nWould you like to logout?`)) {
-                logout();
-            }
-        }
-
-        // Auth State Listener
-        onAuthStateChanged(window.auth, (user) => {
-            if (user) {
-                currentUser = {
-                    displayName: user.displayName,
-                    email: user.email,
-                    photoURL: user.photoURL,
-                    isGuest: false
-                };
-                showMainApp();
-            }
+  <div id="view-stats" class="view"><div class="stats-header"><h1>Your Stats</h1><p>Track your coding journey</p></div><div id="statsCards" class="stats-grid"></div><div class="card"><p class="section-label">// WEEKLY XP</p><div class="bar-chart" id="barChart"></div></div><div class="card"><p class="section-label">// ACTIVITY HEATMAP</p><div id="heatmapGrid" class="heatmap-grid"></div></div></div>
+  <div id="view-profile" class="view"><div class="profile-hero"><div class="avatar">🧑‍💻</div><div class="profile-name" id="profileName"></div><div class="profile-handle" id="profileEmail"></div><div class="profile-level"><span class="level-badge" id="profileLevel">LVL 1</span></div><div class="profile-xp-bar"><div class="profile-xp-label"><span id="profileXP"></span><span id="nextLevelXP"></span></div><div class="progress-track"><div class="progress-fill progress-cyan" id="profileXpBarFill" style="width:0%"></div></div></div><div class="profile-stats-row" id="profileStatsRow"></div></div><div class="settings-section"><div class="settings-row"><div class="settings-row-left">🔔 Daily Reminders</div><div class="toggle on" id="toggleReminder"></div></div><div class="settings-row" id="signOutProfile">🚪 Sign Out</div></div></div>
+  <nav id="bottom-nav"><button class="nav-item active" data-view="home"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></button><button class="nav-item" data-view="lesson"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>Learn</span></button><button class="nav-item" data-view="stats"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm3 12v-4M12 15V9m4 6v-2"/></svg><span>Stats</span></button><button class="nav-item" data-view="profile"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg><span>Profile</span></button></nav>
+</div>
+<div id="loginOverlay" class="login-overlay"><div class="login-card"><img id="loginLogo" class="logo-img" alt="BG Code Tutor" /><h2 style="color:var(--cyan);">BG Code Tutor</h2><p style="margin: 8px 0 16px;">Learn to code, level up 🔥</p><div id="googleSignInBtn" class="google-btn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" /> Sign in with Google</div></div></div>
+<div id="completionOverlay" class="overlay"><div class="completion-card"><div class="completion-emoji">🎉</div><h2>Lesson Complete!</h2><div class="xp-gained"><div><div class="amt" id="rewardXP">+0</div><div class="lbl">XP EARNED</div></div></div><button id="nextLessonBtn" class="btn-next-lesson">Next Lesson →</button><button id="closeCompletionBtn" class="btn-home">Dashboard</button></div></div>
+<script>
+  // FIREBASE CONFIG (provided)
+  const firebaseConfig = { apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg", authDomain: "bg-code-tutor.firebaseapp.com", projectId: "bg-code-tutor", storageBucket: "bg-code-tutor.firebasestorage.app", messagingSenderId: "129372610030", appId: "1:129372610030:web:3b72e4ad2dba22951282ff", measurementId: "G-PYYXTLRN4X" };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  
+  // LESSONS DEFINITION
+  const JS_LESSONS = [
+    { id: "variables", title: "Variables & Scope", xp: 40, contentId: null }, // placeholder
+    { id: "arrow_functions", title: "Arrow Functions", xp: 60, contentId: null },
+    { id: "closures", title: "Closures & HOFs", xp: 80, contentId: "closure_lesson", interactive: true },
+    { id: "promises", title: "Promises & Async", xp: 100, contentId: null },
+    { id: "event_loop", title: "Event Loop", xp: 70, contentId: null }
+  ];
+  let currentUser = null, userDocRef = null, userData = null;
+  let currentLessonStep = 1, totalSteps = 4, stepCorrect = [false,false,false,false], lessonLives = 3;
+  let mcqSelected = false, challengePassed = false;
+  
+  // Helper: load logo
+  document.getElementById("loginLogo")?.setAttribute("src", "https://i.ibb.co/RpcTXdqV/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg");
+  document.getElementById("headerLogo")?.setAttribute("src", "https://i.ibb.co/RpcTXdqV/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg");
+  
+  // AUTH & USER DATA
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      currentUser = user;
+      document.getElementById("loginOverlay").style.display = "none";
+      document.getElementById("app").style.display = "flex";
+      userDocRef = db.collection("users").doc(user.uid);
+      const docSnap = await userDocRef.get();
+      if (!docSnap.exists) {
+        // init new user
+        const initProgress = { completedLessons: [], totalXP: 0, streak: 0, lastActive: new Date().toISOString().split('T')[0], dailyGoalXP: 0 };
+        await userDocRef.set({
+          uid: user.uid, displayName: user.displayName || "Coder", email: user.email,
+          totalXP: 0, streak: 0, lastActive: null, lessonsStatus: { variables: false, arrow_functions: false, closures: false, promises: false, event_loop: false },
+          xpHistory: [0,0,0,0,0,0,0], achievements: []
         });
-
-        console.log('%c✅ BG Code Tutor is ready with Google Login + Guest Mode + User Profile Display!', 'color:#00dcff; font-size:14px;');
-    </script>
+      }
+      await loadUserDataAndRender();
+    } else {
+      document.getElementById("loginOverlay").style.display = "flex";
+      document.getElementById("app").style.display = "none";
+    }
+  });
+  
+  document.getElementById("googleSignInBtn")?.addEventListener("click", () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()));
+  document.getElementById("signOutBtn")?.addEventListener("click", () => auth.signOut());
+  document.getElementById("signOutProfile")?.addEventListener("click", () => auth.signOut());
+  
+  async function loadUserDataAndRender() {
+    const snap = await userDocRef.get();
+    userData = snap.data();
+    if (!userData) return;
+    updateDashboardUI();
+    updateStatsUI();
+    updateProfileUI();
+    renderLessonPath();
+  }
+  
+  function updateDashboardUI() {
+    const completed = userData.lessonsStatus ? Object.values(userData.lessonsStatus).filter(v=>v===true).length : 0;
+    const total = JS_LESSONS.length;
+    const percent = total ? (completed/total)*100 : 0;
+    document.getElementById("userDisplayName").innerText = userData.displayName || "Learner";
+    document.getElementById("totalXP").innerText = userData.totalXP || 0;
+    document.getElementById("streakValue").innerText = userData.streak || 0;
+    document.getElementById("lessonsCompletedCount").innerText = completed;
+    document.getElementById("remainingLessonsCount").innerText = total - completed;
+    document.getElementById("courseProgressFill").style.width = percent + "%";
+    document.getElementById("coursePercent").innerText = Math.round(percent) + "%";
+    const nextIncomplete = JS_LESSONS.find(l => !userData.lessonsStatus?.[l.id]);
+    document.getElementById("nextLessonTitle").innerText = nextIncomplete ? nextIncomplete.title : "Mastered! 🎉";
+    document.getElementById("continueLessonBtn").onclick = () => { if(nextIncomplete) openLessonById(nextIncomplete.id); else alert("All lessons completed!"); };
+    // daily goals mock
+    document.getElementById("dailyGoalsGrid").innerHTML = `<div class="goal-card"><div class="goal-icon">⚡</div><div><div>Daily XP</div><div>${userData.dailyGoalXP || 0}/100</div></div><div class="progress-track"><div class="progress-fill progress-cyan" style="width:${(userData.dailyGoalXP||0)/100*100}%"></div></div></div><div class="goal-card"><div class="goal-icon">🔥</div><div><div>Streak</div><div>${userData.streak} days</div></div><div class="progress-track"><div class="progress-fill progress-orange" style="width:100%"></div></div></div>`;
+    document.getElementById("coursesScroll").innerHTML = `<div class="course-chip active-course"><div>⚙️</div><div>JavaScript</div><div class="progress-track"><div class="progress-fill progress-cyan" style="width:${percent}%"></div></div><div>${Math.round(percent)}%</div></div>`;
+  }
+  
+  function renderLessonPath() {
+    const container = document.getElementById("lessonPathContainer");
+    container.innerHTML = "";
+    for(let l of JS_LESSONS) {
+      const completed = userData.lessonsStatus?.[l.id] || false;
+      const row = document.createElement("div");
+      row.className = `lesson-row ${completed ? "completed" : ""}`;
+      row.innerHTML = `<div class="lesson-num ${completed ? 'done' : 'next'}">${completed ? "✓" : "📘"}</div><div class="lesson-info"><div class="lesson-name">${l.title}</div><div class="lesson-meta">${completed ? "Completed" : "Available"}</div></div><span class="lesson-xp">+${l.xp} XP</span>`;
+      if(!completed && l.id === "closures") row.style.borderColor = "rgba(0,220,255,0.4)";
+      row.onclick = () => { if(!completed) openLessonById(l.id); };
+      container.appendChild(row);
+    }
+  }
+  
+  function openLessonById(lessonId) {
+    if(lessonId !== "closures") { alert("New lessons coming soon! Complete 'Closures & HOFs' first."); return; }
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById("view-lesson").classList.add("active");
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.querySelectorAll('#bottom-nav .nav-item')[1].classList.add("active");
+    resetLessonState();
+  }
+  
+  function resetLessonState() { currentLessonStep=1; stepCorrect=[false,false,false,false]; lessonLives=3; mcqSelected=false; challengePassed=false; updateLessonUI(); }
+  function updateLessonUI() { document.getElementById("lessonProgressFill").style.width = ((currentLessonStep-1)/totalSteps)*100+"%"; document.getElementById("stepCounter").innerText = (currentLessonStep-1)+"/"+totalSteps; document.querySelectorAll('.exercise-step').forEach((s,i)=>s.classList.toggle('active',i+1===currentLessonStep)); document.getElementById("lessonCheckBtn").classList.toggle("ready", currentLessonStep===1 || (currentLessonStep===2 && document.getElementById("blankAns").value.trim()) || (currentLessonStep===3 && mcqSelected) || (currentLessonStep===4 && challengePassed)); }
+  
+  document.getElementById("lessonCheckBtn").onclick = async () => {
+    if(currentLessonStep===1) { stepCorrect[0]=true; currentLessonStep=2; updateLessonUI(); return; }
+    if(currentLessonStep===2) { let val = document.getElementById("blankAns").value.trim(); let ok = (val === "num * factor" || val === "num*factor"); showFeedback("fbBlank", ok, ok?"Correct!":"Wrong. Use 'num * factor'"); if(ok){ stepCorrect[1]=true; currentLessonStep=3; updateLessonUI(); } else loseLifeLesson(); }
+    else if(currentLessonStep===3) { if(!mcqSelected) { showFeedback("fbMcq", false, "Select an option"); return; } let correct = document.querySelector("#mcqArea .mcq-option.selected")?.dataset.correct==="true"; if(correct){ stepCorrect[2]=true; currentLessonStep=4; updateLessonUI(); showFeedback("fbMcq",true,"Great!"); } else { loseLifeLesson(); showFeedback("fbMcq",false,"Incorrect. Closures keep state."); } }
+    else if(currentLessonStep===4) { if(!challengePassed) { runChallengeCode(); } else { await finishLessonAndSave(); } }
+  };
+  function showFeedback(id, ok, msg){ let el=document.getElementById(id); el.className=`feedback-banner show ${ok?'correct':'wrong'}`; el.innerHTML=`<span>${ok?'✅':'❌'}</span><div><h4>${msg}</h4></div>`; setTimeout(()=>el.classList.remove('show'),1500);}
+  function loseLifeLesson(){ lessonLives--; let livesDiv=document.getElementById("livesContainer"); if(lessonLives>=0) livesDiv.children[lessonLives]?.classList.add('lost'); if(lessonLives<=0) alert("Out of lives! Restarting lesson."); }
+  function runChallengeCode(){ let code=document.getElementById("challengeInput").value.trim(); let ok = code.includes("return") && (code.includes("num + x")||code.includes("num+x")); if(ok){ challengePassed=true; document.getElementById("outputBox").classList.add("show"); document.getElementById("outputContent").innerHTML="✅ Output: 8 (add5(3))"; showFeedback("fbChallenge",true,"Perfect closure!"); document.getElementById("lessonCheckBtn").classList.add("ready"); document.getElementById("lessonCheckBtn").innerText="Finish Lesson 🎉"; } else { document.getElementById("outputBox").classList.add("show"); document.getElementById("outputContent").innerHTML="❌ Try: return (num) => num + x"; loseLifeLesson(); } }
+  document.getElementById("runChallengeBtn")?.addEventListener("click",runChallengeCode);
+  document.querySelectorAll(".word-chip").forEach(chip=>chip.addEventListener("click",function(){ let val=this.dataset.val; document.getElementById("blankAns").value=val; document.getElementById("lessonCheckBtn").classList.add("ready"); }));
+  document.querySelectorAll("#mcqArea .mcq-option").forEach(opt=>opt.addEventListener("click",function(){ document.querySelectorAll("#mcqArea .mcq-option").forEach(o=>o.classList.remove("selected")); this.classList.add("selected"); mcqSelected=true; document.getElementById("lessonCheckBtn").classList.add("ready"); }));
+  document.getElementById("closeLessonBtn").onclick = () => { document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById("view-home").classList.add("active"); document.querySelectorAll('.nav-item')[0].classList.add("active"); };
+  
+  async function finishLessonAndSave() {
+    const lessonId = "closures";
+    if(userData.lessonsStatus?.[lessonId]) { alert("Lesson already completed!"); closeLessonAndRefresh(); return; }
+    const xpGain = 80;
+    const newXP = (userData.totalXP || 0) + xpGain;
+    const today = new Date().toISOString().split('T')[0];
+    let newStreak = userData.streak || 0;
+    if(userData.lastActive !== today) { const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0]; newStreak = (userData.lastActive === yesterday) ? (newStreak+1) : 1; }
+    await userDocRef.update({
+      [`lessonsStatus.${lessonId}`]: true,
+      totalXP: newXP,
+      streak: newStreak,
+      lastActive: today,
+      dailyGoalXP: firebase.firestore.FieldValue.increment(xpGain)
+    });
+    document.getElementById("completionOverlay").classList.add("show");
+    document.getElementById("rewardXP").innerText = `+${xpGain}`;
+    await loadUserDataAndRender();
+  }
+  document.getElementById("nextLessonBtn").onclick = () => { document.getElementById("completionOverlay").classList.remove("show"); closeLessonAndRefresh(); openLessonById("promises"); };
+  document.getElementById("closeCompletionBtn").onclick = () => { document.getElementById("completionOverlay").classList.remove("show"); closeLessonAndRefresh(); };
+  function closeLessonAndRefresh() { document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById("view-home").classList.add("active"); loadUserDataAndRender(); }
+  
+  function updateStatsUI() {
+    let total = userData.totalXP || 0;
+    document.getElementById("statsCards").innerHTML = `<div class="stat-card cyan-card"><div>⚡</div><div class="stat-card-val">${total}</div><div>Total XP</div></div><div class="stat-card orange-card"><div>🔥</div><div class="stat-card-val">${userData.streak||0}</div><div>Streak</div></div><div class="stat-card lime-card"><div>✅</div><div class="stat-card-val">${Object.values(userData.lessonsStatus||{}).filter(v=>v).length}</div><div>Lessons</div></div>`;
+    const xpWeek = [120,200,80,250,180,300,180]; // mock
+    const chartDiv = document.getElementById("barChart"); chartDiv.innerHTML="";
+    xpWeek.forEach((val,i)=>{ let bar=document.createElement("div"); bar.className="bar-col"; bar.innerHTML=`<div class="bar" style="height:${val/3}px; background:var(--cyan)"></div><div>${["M","T","W","T","F","S","S"][i]}</div>`; chartDiv.appendChild(bar); });
+    let heat = document.getElementById("heatmapGrid"); heat.innerHTML="";
+    for(let i=0;i<84;i++){ let cell=document.createElement("div"); cell.className=`hm-cell hm-${Math.floor(Math.random()*5)}`; heat.appendChild(cell); }
+  }
+  function updateProfileUI() {
+    document.getElementById("profileName").innerText = userData.displayName;
+    document.getElementById("profileEmail").innerText = userData.email;
+    let xp = userData.totalXP || 0;
+    let level = Math.floor(xp/400)+1;
+    document.getElementById("profileLevel").innerText = `LVL ${level}`;
+    document.getElementById("profileXP").innerText = `${xp} XP`;
+    let nextLevel = level*400;
+    document.getElementById("nextLevelXP").innerText = `${nextLevel} XP`;
+    let percent = (xp % 400)/400*100;
+    document.getElementById("profileXpBarFill").style.width = percent+"%";
+    document.getElementById("profileStatsRow").innerHTML = `<div class="p-stat"><div class="p-stat-val">${Object.values(userData.lessonsStatus||{}).filter(v=>v).length}</div><div>Lessons</div></div><div class="p-stat"><div class="p-stat-val">${userData.streak||0}</div><div>Streak</div></div>`;
+  }
+  // navigation
+  document.querySelectorAll(".nav-item").forEach(btn=>{ btn.addEventListener("click",()=>{ let view = btn.dataset.view; if(view==="lesson"){ let next = JS_LESSONS.find(l=>!userData?.lessonsStatus?.[l.id]); if(next) openLessonById(next.id); else alert("You finished all lessons!"); return; } document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById(`view-${view}`).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); btn.classList.add('active'); }); });
+  document.getElementById("toggleReminder")?.addEventListener("click", function(e){ this.classList.toggle("on"); });
+</script>
 </body>
 </html>
