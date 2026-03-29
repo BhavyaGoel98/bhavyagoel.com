@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BG CODE | Learn to Code</title>
+    <title>BG CODE | Full Interactive Tutor</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* --- NEUBRUTALISM DESIGN SYSTEM --- */
+        /* --- NEUBRUTALISM CSS --- */
         :root {
             --bg: #FDFCF0;
             --black: #000000;
@@ -14,130 +14,115 @@
             --mint: #B8E2D6;
             --yellow: #FEF3C7;
             --white: #FFFFFF;
-            --accent: #00FF9D; 
             --border: 3px solid #000000;
-            --shadow: 5px 5px 0px 0px rgba(0,0,0,1);
+            --shadow: 6px 6px 0px 0px rgba(0,0,0,1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); color: var(--black); min-height: 100vh; display: flex; overflow-x: hidden; }
-
-        /* --- LOGO STYLING --- */
-        .app-logo {
-            width: 140px; height: 140px;
-            background: #000;
-            border: var(--border);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin: 0 auto 20px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .app-logo img { width: 100%; height: 100%; object-fit: cover; }
-
-        .nav-logo-circle {
-            width: 60px; height: 60px;
-            background: #000;
-            border: var(--border);
-            border-radius: 12px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        .nav-logo-circle img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* --- SCREENS --- */
-        #auth-screen, #setup-screen {
-            position: fixed; inset: 0; background: var(--bg); z-index: 1000;
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-        }
-        .hidden { display: none !important; }
 
         /* --- UI COMPONENTS --- */
         .box {
             background: var(--white); border: var(--border); box-shadow: var(--shadow);
             border-radius: 16px; padding: 24px; margin-bottom: 24px;
         }
-        .card-center { width: 100%; max-width: 420px; text-align: center; }
+        .btn {
+            background: var(--lavender); border: var(--border); box-shadow: var(--shadow);
+            border-radius: 12px; padding: 14px 28px; font-weight: 900; cursor: pointer;
+            display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+            text-transform: uppercase; font-size: 13px; transition: 0.1s;
+        }
+        .btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px; }
         
         input, select {
             width: 100%; padding: 14px; margin: 10px 0; border: var(--border);
             border-radius: 10px; font-weight: 700; outline: none; background: white;
         }
 
-        .btn {
-            background: var(--lavender); border: var(--border); box-shadow: var(--shadow);
-            border-radius: 12px; padding: 14px 28px; font-weight: 900; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; gap: 12px;
-            text-transform: uppercase; font-size: 14px; width: 100%; margin-top: 10px; transition: 0.1s;
+        /* --- SCREENS --- */
+        #auth-screen, #setup-screen, #loading-screen {
+            position: fixed; inset: 0; background: var(--bg); z-index: 1000;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
         }
-        .btn:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px; }
-        .btn-google { background: white; margin-top: 20px; color: #000; text-transform: none; font-size: 15px; }
+        .hidden { display: none !important; }
+        .card-center { width: 100%; max-width: 400px; text-align: center; }
 
-        /* --- APP INTERFACE --- */
+        /* --- LOGO --- */
+        .logo-main {
+            width: 130px; height: 130px; background: #000; border: var(--border);
+            border-radius: 20px; box-shadow: var(--shadow); margin: 0 auto 20px;
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .logo-main img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- SIDEBAR --- */
         nav {
             width: 110px; background: var(--white); border-right: var(--border);
             display: flex; flex-direction: column; align-items: center; padding-top: 30px;
             position: sticky; top: 0; height: 100vh;
         }
+        .nav-logo { width: 60px; height: 60px; border: var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 30px; background: #000; }
+        .nav-logo img { width: 100%; height: 100%; object-fit: cover; }
+
         .nav-item {
             background: none; border: none; cursor: pointer; display: flex; flex-direction: column;
-            align-items: center; font-size: 10px; font-weight: 800; color: #777; gap: 8px; width: 100%; padding: 15px 0;
+            align-items: center; font-size: 10px; font-weight: 800; color: #777; gap: 8px; width: 100%; padding: 18px 0;
         }
-        .nav-item i { width: 24px; height: 24px; }
         .nav-item.active { color: var(--black); border-right: 6px solid var(--black); background: rgba(0,0,0,0.03); }
 
-        main { flex: 1; padding: 40px; max-width: 1100px; margin: 0 auto; width: 100%; }
-        .page { display: none; animation: slideUp 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- PAGES --- */
+        main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .page { display: none; }
+        .page.active { display: block; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- DASHBOARD ELEMENTS --- */
+        /* --- DASHBOARD STATS --- */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .stat-card { text-align: center; padding: 15px; }
-        .stat-card b { display: block; font-size: 24px; font-weight: 900; }
+        .stat-card { text-align: center; }
+        .stat-card b { display: block; font-size: 26px; font-weight: 900; }
         .stat-card span { font-size: 10px; font-weight: 800; text-transform: uppercase; opacity: 0.6; }
 
-        .progress-track { height: 25px; background: white; border: var(--border); border-radius: 50px; overflow: hidden; margin: 10px 0; }
-        .progress-fill { height: 100%; background: white; border-right: var(--border); width: 10%; transition: 0.5s; }
+        .progress-track { height: 28px; background: white; border: var(--border); border-radius: 50px; overflow: hidden; margin: 15px 0; }
+        .progress-fill { height: 100%; background: white; border-right: var(--border); width: 0%; transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        /* --- PRACTICE EDITOR --- */
-        .editor-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 500px; margin-top: 15px; }
+        /* --- EDITOR --- */
+        .editor-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 550px; margin-top: 15px; }
         #code-input { 
-            width: 100%; height: 100%; background: #1a1a1a; color: var(--accent); padding: 20px;
+            width: 100%; height: 100%; background: #1a1a1a; color: #00ff9d; padding: 25px;
             font-family: 'Fira Code', monospace; border: var(--border); border-radius: 16px; 
             resize: none; outline: none; box-shadow: var(--shadow); font-size: 14px; line-height: 1.6;
         }
         #preview { width: 100%; height: 100%; border: var(--border); border-radius: 16px; background: white; box-shadow: var(--shadow); }
 
-        @media (max-width: 800px) { .editor-container { grid-template-columns: 1fr; height: auto; } .stats-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 900px) { .editor-container { grid-template-columns: 1fr; height: auto; } .stats-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
 
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen" class="hidden">
+        <div class="card-center">
+            <h2 style="font-weight: 900;">SYNCING DATA...</h2>
+        </div>
+    </div>
+
     <!-- 1. AUTH SCREEN -->
     <div id="auth-screen">
         <div class="box card-center">
-            <div class="app-logo">
-                <img src="https://i.ibb.co/xSCtQ0kL/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg" alt="BG CODE LOGO">
+            <div class="logo-main">
+                <img src="https://i.ibb.co/xSCtQ0kL/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg">
             </div>
-            <h2 style="font-weight: 900; letter-spacing: -1px; margin-bottom: 5px;">BG CODE</h2>
-            <p style="font-size: 12px; font-weight: 800; opacity: 0.5; text-transform: uppercase; margin-bottom: 25px;">Level Up Your Coding Game</p>
+            <h2 style="font-weight: 900; margin-bottom: 5px;">BG CODE</h2>
+            <p style="font-size: 11px; font-weight: 800; opacity: 0.5; text-transform: uppercase; margin-bottom: 25px;">The Interactive Coding Tutor</p>
             
             <input type="email" id="auth-email" placeholder="Email Address">
             <input type="password" id="auth-pass" placeholder="Password">
             
-            <button class="btn" onclick="handleEmailAuth('login')">Login</button>
-            <button class="btn" style="background: var(--mint);" onclick="handleEmailAuth('signup')">Sign Up</button>
+            <button class="btn" style="width: 100%;" onclick="handleAuth('login')">Login</button>
+            <button class="btn" style="width: 100%; background: var(--mint);" onclick="handleAuth('signup')">Sign Up</button>
             
-            <button class="btn btn-google" onclick="handleGoogleAuth()">
-                <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 12px;">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.28 1.07-3.71 1.07-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.67-.35-1.39-.35-2.09s.13-1.42.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                </svg>
+            <button class="btn" style="width: 100%; background: white; margin-top: 15px;" onclick="handleGoogle()">
+                <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 10px;"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.28 1.07-3.71 1.07-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.67-.35-1.39-.35-2.09s.13-1.42.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Sign in with Google
             </button>
         </div>
@@ -148,27 +133,26 @@
         <div class="box card-center">
             <h2 style="font-weight: 900;">WELCOME!</h2>
             <p style="margin-bottom: 20px; font-weight: 700; opacity: 0.6;">Tell us about yourself to continue.</p>
-            <input type="text" id="setup-name" placeholder="Your Full Name">
+            <input type="text" id="setup-name" placeholder="Full Name">
             <select id="setup-goal">
-                <option value="">Choose your goal</option>
-                <option value="Career">Get a High-Paying Job</option>
-                <option value="Startup">Build my own Startup</option>
-                <option value="School">School/College Support</option>
-                <option value="Fun">Learning for Fun</option>
+                <option value="">What is your goal?</option>
+                <option value="Job">Get a Tech Job</option>
+                <option value="App">Build an App</option>
+                <option value="Skill">Learn a New Skill</option>
             </select>
-            <button class="btn" onclick="saveProfile()">Finish Setup</button>
+            <button class="btn" style="width: 100%;" onclick="saveProfile()">Start Learning</button>
         </div>
     </div>
 
-    <!-- 3. MAIN APP INTERFACE -->
+    <!-- 3. MAIN APP -->
     <div id="app-container" class="hidden" style="display: flex; width: 100%;">
         <nav>
-            <div class="nav-logo-circle">
-                <img src="https://i.ibb.co/xSCtQ0kL/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg" alt="Logo">
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/xSCtQ0kL/a-typography-focused-logo-design-where-t-tm-Ao4-Mz-ZRh-WLFpd-XKmn-VUg-IEETGPFQTTSk4x9-CJAWTz-Q-sd.jpg">
             </div>
-            <button class="nav-item active" id="nav-home" onclick="showPage('home')"><i data-lucide="layout-dashboard"></i>HOME</button>
-            <button class="nav-item" id="nav-practice" onclick="showPage('practice')"><i data-lucide="code-2"></i>PRACTICE</button>
-            <button class="nav-item" id="nav-profile" onclick="showPage('profile')"><i data-lucide="user-circle"></i>PROFILE</button>
+            <button class="nav-item active" id="btn-home" onclick="showPage('home')"><i data-lucide="layout-dashboard"></i>HOME</button>
+            <button class="nav-item" id="btn-practice" onclick="showPage('practice')"><i data-lucide="code-2"></i>PRACTICE</button>
+            <button class="nav-item" id="btn-profile" onclick="showPage('profile')"><i data-lucide="user-circle"></i>PROFILE</button>
             <button class="nav-item" style="margin-top: auto; padding-bottom: 25px; opacity: 0.5;" onclick="logout()"><i data-lucide="log-out"></i>EXIT</button>
         </nav>
 
@@ -176,31 +160,31 @@
             <!-- HOME PAGE -->
             <div id="home" class="page active">
                 <div class="box" style="background: var(--lavender)">
-                    <h1 id="welcome-text" style="font-weight: 900; font-size: 38px; letter-spacing: -1.5px;">Welcome!</h1>
-                    <p style="font-weight: 700; opacity: 0.8;">Continue your HTML journey today.</p>
+                    <h1 id="user-welcome" style="font-weight: 900; font-size: 38px; letter-spacing: -1.5px;">Welcome Back!</h1>
+                    <p style="font-weight: 700; opacity: 0.8;">Continue your HTML & CSS journey.</p>
                 </div>
 
                 <div class="stats-grid">
-                    <div class="box stat-card"><b>0</b><span>Total XP</span></div>
-                    <div class="box stat-card"><b>0</b><span>Streak</span></div>
-                    <div class="box stat-card"><b>0</b><span>Lessons</span></div>
-                    <div class="box stat-card"><b>0%</b><span>Goal</span></div>
+                    <div class="box stat-card"><b id="stat-xp">0</b><span>Total XP</span></div>
+                    <div class="box stat-card"><b>1</b><span>Day Streak</span></div>
+                    <div class="box stat-card"><b id="stat-lessons">0</b><span>Lessons</span></div>
+                    <div class="box stat-card"><b id="stat-progress">0%</b><span>Goal</span></div>
                 </div>
 
-                <div class="box" style="margin-top:20px;">
+                <div class="box" style="margin-top: 20px;">
                     <div style="display:flex; justify-content:space-between; font-weight:900;">
-                        <span>Level 1 Progress</span>
-                        <span>0 / 100 XP</span>
+                        <span>Level Progress</span>
+                        <span id="xp-text">0 / 100 XP</span>
                     </div>
-                    <div class="progress-track"><div class="progress-fill"></div></div>
+                    <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
                 </div>
 
                 <div class="box" style="background: var(--mint); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="showPage('practice')">
                     <div>
-                        <h3 style="font-weight: 900;">Open Code Editor</h3>
-                        <p style="font-weight: 600; opacity: 0.7;">Resume your last project.</p>
+                        <h3 style="font-weight: 900; font-size: 20px;">Byte Coding Editor</h3>
+                        <p style="font-weight: 600; opacity: 0.7;">Start a 5-minute practice session.</p>
                     </div>
-                    <i data-lucide="chevron-right"></i>
+                    <i data-lucide="play-circle" size="32"></i>
                 </div>
             </div>
 
@@ -208,7 +192,7 @@
             <div id="practice" class="page">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h2 style="font-weight: 900; font-size: 24px;">Practice Mode</h2>
-                    <span style="font-size: 11px; font-weight: 900; background: #000; color: #fff; padding: 4px 12px; border-radius: 20px;">LIVE EDITOR</span>
+                    <button class="btn" style="background: white; border-radius: 50px;" onclick="completeLesson()">Finish & Earn 20 XP</button>
                 </div>
                 <div class="editor-container">
                     <textarea id="code-input" spellcheck="false" oninput="updatePreview()"><!DOCTYPE html>
@@ -217,12 +201,12 @@
   <style>
     body { font-family: sans-serif; text-align: center; background: #fdfcf0; padding-top: 100px; }
     h1 { font-size: 60px; color: #d1d1f7; text-shadow: 4px 4px 0px black; -webkit-text-stroke: 1.5px black; }
-    p { font-weight: bold; font-size: 20px; }
+    p { font-weight: bold; font-size: 1.2rem; }
   </style>
 </head>
 <body>
   <h1>BG CODE</h1>
-  <p>Start editing this code to see changes!</p>
+  <p>Modify this code to see live changes!</p>
 </body>
 </html></textarea>
                     <iframe id="preview"></iframe>
@@ -232,31 +216,32 @@
             <!-- PROFILE PAGE -->
             <div id="profile" class="page">
                 <div class="box" style="background: var(--lavender); display: flex; gap: 30px; align-items: center;">
-                    <div style="width: 100px; height: 100px; background: white; border: var(--border); border-radius: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0px black;">
-                        <i data-lucide="user" size="50"></i>
+                    <div style="width: 110px; height: 110px; background: white; border: var(--border); border-radius: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 6px 6px 0px black;">
+                        <i data-lucide="user" size="60"></i>
                     </div>
                     <div>
-                        <h2 id="profile-name" style="font-weight: 900; font-size: 32px;">User</h2>
-                        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; opacity: 0.6; text-transform: uppercase; font-size: 12px;">
-                            <i data-lucide="target" size="16"></i> <span id="profile-goal">Goal</span>
+                        <h2 id="prof-name" style="font-weight: 900; font-size: 34px;">User</h2>
+                        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; opacity: 0.6; text-transform: uppercase;">
+                            <i data-lucide="award" size="18"></i> <span id="prof-goal">Learning Goal</span>
                         </div>
                     </div>
                 </div>
-                <h3 style="font-weight: 900; margin-bottom: 15px;">Achievements</h3>
+                <h3 style="font-weight: 900; margin-bottom: 15px;">Achievement Gallery</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="box" style="margin:0; opacity: 0.5; text-align: center;">🔒 First Steps</div>
-                    <div class="box" style="margin:0; opacity: 0.5; text-align: center;">🔒 HTML Master</div>
+                    <div class="box" style="margin:0; opacity: 0.4; text-align: center;">🔒 First Code Tag</div>
+                    <div class="box" style="margin:0; opacity: 0.4; text-align: center;">🔒 Streak Starter</div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- FIREBASE & APP LOGIC -->
+    <!-- FIREBASE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // APP CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDwVt9oEUVKgYLgqThbYldIbq8HTm_eTmg",
             authDomain: "bg-code-tutor.firebaseapp.com",
@@ -271,25 +256,31 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        window.handleGoogleAuth = async () => { try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); } };
-        window.handleEmailAuth = async (type) => {
+        // AUTH HANDLERS
+        window.handleGoogle = async () => { try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); } };
+        window.handleAuth = async (type) => {
             const email = document.getElementById('auth-email').value;
             const pass = document.getElementById('auth-pass').value;
-            if(!email || !pass) return alert("Fill in your details!");
+            if(!email || !pass) return alert("Missing credentials!");
             try {
                 if(type === 'signup') await createUserWithEmailAndPassword(auth, email, pass);
                 else await signInWithEmailAndPassword(auth, email, pass);
-            } catch (e) { alert(e.message); }
+            } catch(e) { alert(e.message); }
         };
         window.logout = () => signOut(auth);
 
+        // SYNC & STATE
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                document.getElementById('loading-screen').classList.remove('hidden');
                 const docSnap = await getDoc(doc(db, "users", user.uid));
-                if (docSnap.exists()) loadAppData(docSnap.data());
-                else {
+                
+                if (docSnap.exists()) {
+                    loadData(docSnap.data());
+                } else {
                     document.getElementById('auth-screen').classList.add('hidden');
                     document.getElementById('setup-screen').classList.remove('hidden');
+                    document.getElementById('loading-screen').classList.add('hidden');
                 }
             } else {
                 document.getElementById('app-container').classList.add('hidden');
@@ -301,27 +292,58 @@
         window.saveProfile = async () => {
             const name = document.getElementById('setup-name').value;
             const goal = document.getElementById('setup-goal').value;
-            if(!name || !goal) return alert("Please finish your profile!");
-            const data = { name, goal, email: auth.currentUser.email };
+            if(!name || !goal) return alert("Fill out your profile!");
+            const data = { name, goal, xp: 0, lessons: 0, email: auth.currentUser.email };
             await setDoc(doc(db, "users", auth.currentUser.uid), data);
-            loadAppData(data);
+            loadData(data);
         };
 
-        function loadAppData(data) {
+        function loadData(data) {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('loading-screen').classList.add('hidden');
             document.getElementById('app-container').classList.remove('hidden');
-            document.getElementById('welcome-text').innerText = `Hey, ${data.name.split(' ')[0]}!`;
-            document.getElementById('profile-name').innerText = data.name;
-            document.getElementById('profile-goal').innerText = data.goal;
+
+            document.getElementById('user-welcome').innerText = `Welcome, ${data.name.split(' ')[0]}!`;
+            document.getElementById('prof-name').innerText = data.name;
+            document.getElementById('prof-goal').innerText = data.goal;
+            
+            // Sync Stats
+            document.getElementById('stat-xp').innerText = data.xp || 0;
+            document.getElementById('stat-lessons').innerText = data.lessons || 0;
+            
+            const xpMod = (data.xp || 0) % 100;
+            document.getElementById('xp-text').innerText = `${xpMod} / 100 XP`;
+            document.getElementById('progress-fill').style.width = xpMod + '%';
+            document.getElementById('stat-progress').innerText = Math.min(Math.floor(data.xp / 10), 100) + '%';
+            
             updatePreview();
         }
 
+        // LESSON COMPLETION LOGIC
+        window.completeLesson = async () => {
+            const user = auth.currentUser;
+            const userRef = doc(db, "users", user.uid);
+            
+            await updateDoc(userRef, {
+                xp: increment(20),
+                lessons: increment(1)
+            });
+            
+            // Refresh local data
+            const freshSnap = await getDoc(userRef);
+            loadData(freshSnap.data());
+            
+            alert("Congrats! +20 XP earned.");
+            showPage('home');
+        };
+
+        // UI HELPERS
         window.showPage = (id) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.getElementById('nav-' + id).classList.add('active');
+            document.getElementById('btn-' + id).classList.add('active');
         };
 
         window.updatePreview = () => {
