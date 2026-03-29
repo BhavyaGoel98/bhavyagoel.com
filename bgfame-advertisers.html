@@ -3,521 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BG Fame | Advertisers Generator</title>
+    <title>BG FAME ADS | Professional Suite</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Anton&family=Bebas+Neue&family=Inter:wght@400;900&family=Montserrat:wght@900&family=Orbitron:wght@400;900&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Syncopate:wght@700&family=Unbounded:wght@900&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         :root {
-            --bg-color: #050505;
-            --card-bg: #121212;
-            --input-bg: #1e1e1e;
-            --neon-green: #39FF14;
-            --text-main: #ffffff;
-            --text-dim: #888888;
-            --border-color: #333333;
-            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --bg: #050505;
+            --card: #111111;
+            --input: #1a1a1a;
+            --neon: #39FF14;
+            --text: #ffffff;
+            --text-dim: #999999;
+            --border: #222222;
+            --font-app: 'Space Grotesk', sans-serif;
+            --font-ad: 'Space Grotesk', sans-serif;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font-main);
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: var(--font-app);
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            background-color: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            min-height: 100vh;
-            background-color: var(--bg-color);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            border-left: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-        }
+        /* --- Transitions --- */
+        .page { display: none; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0 30px 0;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 20px;
+        /* --- Splash --- */
+        #splash {
+            position: fixed; inset: 0; background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 10000; transition: opacity 0.5s;
         }
+        .splash-img { width: 140px; filter: drop-shadow(0 0 15px var(--neon)); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: bold;
-            font-size: 1.2rem;
+        /* --- Navigation --- */
+        nav {
+            padding: 20px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(5,5,5,0.8); backdrop-filter: blur(10px); z-index: 100;
         }
+        .nav-logo { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; }
+        .nav-logo img { width: 40px; border-radius: 8px; }
+        .nav-links button {
+            background: transparent; border: none; color: var(--text-dim);
+            margin-left: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s;
+        }
+        .nav-links button:hover, .nav-links button.active { color: var(--neon); }
 
-        .logo-icon {
-            color: var(--neon-green);
-            text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+        /* --- Homepage --- */
+        .hero {
+            padding: 100px 20px; text-align: center;
+            background: radial-gradient(circle at center, #111 0%, #050505 70%);
         }
-
-        /* Forms */
-        .form-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            font-weight: 800;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        label {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        input, textarea, select {
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        /* Custom File Upload */
-        .file-upload-wrapper {
-            position: relative;
-            background-color: var(--input-bg);
-            border: 1px dashed var(--border-color);
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        
-        .file-upload-wrapper:hover {
-            border-color: var(--neon-green);
-        }
-
-        .file-upload-wrapper input[type="file"] {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        /* Buttons */
+        .hero h1 { font-size: 4rem; font-weight: 700; margin-bottom: 20px; line-height: 1; }
+        .hero p { color: var(--text-dim); margin-bottom: 40px; font-size: 1.1rem; }
         .btn-primary {
-            background-color: var(--neon-green);
-            color: #000;
-            border: none;
-            padding: 16px;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: var(--neon); color: #000; padding: 18px 40px;
+            border-radius: 50px; font-weight: 700; border: none; cursor: pointer;
+            text-transform: uppercase; font-size: 1rem; box-shadow: 0 10px 30px rgba(57, 255, 20, 0.3);
         }
 
-        .btn-primary:active {
-            transform: scale(0.98);
+        /* --- Saved Ads Gallery --- */
+        .section-padding { padding: 60px 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .saved-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+            overflow: hidden; transition: 0.3s;
         }
+        .saved-card:hover { transform: translateY(-5px); border-color: var(--neon); }
+        .saved-thumb { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+        .saved-info { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Results Section */
-        .results-section {
-            display: none;
-            flex-direction: column;
-            gap: 20px;
+        /* --- Creator Studio --- */
+        .studio-layout {
+            display: grid; grid-template-columns: 400px 1fr; gap: 40px; padding: 40px;
         }
-
-        .post-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        .controls { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid var(--border); }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; font-weight: 700; }
+        input, select, textarea {
+            width: 100%; background: var(--input); border: 1px solid var(--border);
+            padding: 14px; color: #fff; border-radius: 12px; font-size: 0.9rem; outline: none;
         }
+        input:focus { border-color: var(--neon); }
 
-        .post-header {
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid var(--border-color);
+        /* --- The Canvas --- */
+        .preview-pane { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        #ad-canvas {
+            width: 500px; height: 500px; background: #000; position: relative;
+            overflow: hidden; border-radius: 12px; box-shadow: 0 40px 100px rgba(0,0,0,0.8);
         }
-
-        .company-avatar {
-            width: 40px;
-            height: 40px;
-            background-color: var(--neon-green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            font-weight: bold;
-            font-size: 1.2rem;
+        .ad-img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        .ad-overlay {
+            position: absolute; inset: 0; padding: 40px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
         }
+        .ad-brand { font-size: 0.8rem; color: var(--neon); letter-spacing: 3px; font-weight: 700; margin-bottom: 10px; }
+        .ad-head { font-size: 2.5rem; font-weight: 700; line-height: 1.1; margin-bottom: 20px; }
+        .ad-cta { display: inline-block; padding: 12px 30px; background: var(--neon); color: #000; font-weight: 700; border-radius: 4px; }
 
-        .post-image-container {
-            width: 100%;
-            background-color: #000;
-            display: none; /* Hidden until image is uploaded */
+        /* --- Themes --- */
+        .theme-cyber .ad-overlay { background: rgba(0,0,0,0.6); border: 5px solid var(--neon); margin: 20px; inset: 0; }
+        .theme-minimal .ad-overlay { background: #fff; color: #000; height: 40%; top: auto; }
+        .theme-minimal .ad-brand { color: #666; }
+        .theme-glass .ad-overlay { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); margin: 30px; height: fit-content; top: 50%; border-radius: 20px; }
+
+        @media (max-width: 900px) {
+            .studio-layout { grid-template-columns: 1fr; }
+            #ad-canvas { width: 100%; height: auto; aspect-ratio: 1/1; }
         }
-
-        .post-image-container img {
-            width: 100%;
-            height: auto;
-            max-height: 400px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .post-content {
-            padding: 15px;
-        }
-
-        .post-headline {
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .post-body {
-            font-size: 0.95rem;
-            color: #ccc;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .post-contact {
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            margin-bottom: 15px;
-        }
-
-        .post-contact div {
-            margin-bottom: 3px;
-        }
-
-        .post-cta {
-            display: inline-block;
-            background-color: var(--theme-color, var(--neon-green));
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            padding: 10px 15px 15px;
-            color: var(--text-dim);
-            font-size: 1.2rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .back-btn {
-            background: transparent;
-            border: 1px solid var(--text-dim);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-        
-        /* Font Themes */
-        .font-modern { font-family: 'Inter', sans-serif; }
-        .font-classic { font-family: 'Georgia', serif; }
-        .font-playful { font-family: 'Comic Sans MS', cursive, sans-serif; }
-
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <header>
-            <div class="logo">
-                <span class="logo-icon">✦</span> BG Fame
-            </div>
-            <div style="font-size: 0.8rem; color: var(--neon-green);">Advertisers Portal</div>
-        </header>
+    <!-- Splash -->
+    <div id="splash">
+        <img src="https://i.ibb.co/nq4njyCt/BG-FAME-ADVERTISERS-LOGO.jpg" class="splash-img">
+        <p style="color: var(--neon); font-size: 0.7rem; letter-spacing: 5px; margin-top: 20px;">LOADING PRO SUITE</p>
+    </div>
 
-        <div id="generatorForm" class="form-section">
-            <h1 class="form-title">Create Ad Campaign</h1>
-            
-            <div class="input-group">
-                <label>Product Image (Optional)</label>
-                <div class="file-upload-wrapper">
-                    <span id="fileNameDisplay" style="color: var(--text-dim);">Tap to upload image...</span>
-                    <input type="file" id="imageInput" accept="image/*">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>Company Name *</label>
-                <input type="text" id="companyName" placeholder="e.g. BG Fame Industry" required>
-            </div>
-
-            <div class="input-group">
-                <label>Product Name *</label>
-                <input type="text" id="productName" placeholder="e.g. AI Marketing Tool" required>
-            </div>
-
-            <div class="input-group">
-                <label>Catchy Headline *</label>
-                <input type="text" id="headline" placeholder="Revolutionize your workflow today!" required>
-            </div>
-
-            <div class="input-group">
-                <label>Call to Action (CTA) *</label>
-                <input type="text" id="cta" placeholder="Get Started Now" required>
-            </div>
-
-            <div class="input-group">
-                <label>Theme Font</label>
-                <select id="themeFont">
-                    <option value="font-modern">Modern (Sans-serif)</option>
-                    <option value="font-classic">Classic (Serif)</option>
-                    <option value="font-playful">Playful (Casual)</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Theme Color</label>
-                <select id="themeColor">
-                    <option value="#39FF14">Neon Green</option>
-                    <option value="#FF00FF">Cyber Pink</option>
-                    <option value="#00FFFF">Electric Blue</option>
-                    <option value="#FF9900">Sunset Orange</option>
-                </select>
-            </div>
-
-            <h2 class="form-title" style="font-size: 1.2rem; margin-top: 10px;">Contact Details</h2>
-
-            <div class="input-group">
-                <label>Website</label>
-                <input type="url" id="website" placeholder="https://bhavyagoel.com">
-            </div>
-
-            <div class="input-group">
-                <label>Phone Number</label>
-                <input type="tel" id="phone" placeholder="+1 234 567 8900">
-            </div>
-
-            <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" id="email" placeholder="contact@company.com">
-            </div>
-
-            <div class="input-group">
-                <label>Office Address</label>
-                <textarea id="address" placeholder="123 Tech Street, Silicon Valley"></textarea>
-            </div>
-
-            <button class="btn-primary" onclick="generateAds()">Generate Advertisements ✦</button>
+    <nav>
+        <div class="nav-logo" onclick="showPage('home-page')">
+            <img src="https://i.ibb.co/nq4njyCt/BG-FAME-ADVERTISERS-LOGO.jpg"> BG FAME ADS
         </div>
+        <div class="nav-links">
+            <button onclick="showPage('home-page')" id="nav-home">Home</button>
+            <button onclick="showPage('saved-page')" id="nav-saved">My Library</button>
+            <button onclick="showPage('studio-page')" style="color: var(--neon); border: 1px solid var(--neon); padding: 8px 15px; border-radius: 5px;">+ Create Ad</button>
+        </div>
+    </nav>
 
-        <div id="resultsArea" class="results-section">
-            <button class="back-btn" onclick="goBack()">← Create Another Ad</button>
-            <h2 class="form-title">Your Generated Posts</h2>
+    <!-- HOME PAGE -->
+    <div id="home-page" class="page active">
+        <div class="hero">
+            <h1>Create. Save.<br><span style="color: var(--neon);">Dominate.</span></h1>
+            <p>The world's fastest professional ad generator for BG FAME Advertisers.</p>
+            <button class="btn-primary" onclick="showPage('studio-page')">Launch Creator Studio</button>
+        </div>
+        
+        <div class="section-padding">
+            <h2 style="margin-bottom: 30px;">Recent Creations</h2>
+            <div id="recent-grid" class="grid">
+                <!-- Recent ads load here -->
+            </div>
+        </div>
+    </div>
 
-            <div id="post1" class="post-card">
-                <div class="post-header">
-                    <div class="company-avatar" id="avatar1">B</div>
-                    <div>
-                        <div style="font-weight: bold;" id="outCompany1">Company Name</div>
-                        <div style="font-size: 0.75rem; color: var(--text-dim);">Sponsored</div>
-                    </div>
-                </div>
+    <!-- SAVED ADS PAGE -->
+    <div id="saved-page" class="page">
+        <div class="section-padding">
+            <h1 style="font-size: 3rem; margin-bottom: 10px;">Ad Library</h1>
+            <p style="color: var(--text-dim); margin-bottom: 50px;">Your collection of high-converting professional ads.</p>
+            <div id="full-grid" class="grid"></div>
+        </div>
+    </div>
+
+    <!-- STUDIO PAGE -->
+    <div id="studio-page" class="page">
+        <div class="studio-layout">
+            <div class="controls">
+                <h2 style="margin-bottom: 25px;">Design Settings</h2>
                 
-                <div class="post-image-container" id="imgContainer1">
-                    <img id="outImage1" src="" alt="Product Image">
+                <div class="input-group">
+                    <label>Product Image</label>
+                    <input type="file" id="inpFile" accept="image/*">
                 </div>
 
-                <div class="post-content">
-                    <div class="post-headline" id="outHeadline1">Headline goes here</div>
-                    <div class="post-body">
-                        Introducing the <strong id="outProduct1">Product Name</strong>! 🚀<br><br>
-                        Elevate your game with our latest release. Designed specifically for our amazing community.
-                    </div>
-                    
-                    <div class="post-contact" id="outContact1">
-                        </div>
-
-                    <div class="post-cta" id="outCta1">Call to Action</div>
+                <div class="input-group">
+                    <label>Company Name</label>
+                    <input type="text" id="inpComp" placeholder="BG FAME" oninput="sync()">
                 </div>
-                <div class="social-icons">
-                    <span>♡ Like</span> <span>💬 Comment</span> <span>↗ Share</span>
+
+                <div class="input-group">
+                    <label>Headline</label>
+                    <textarea id="inpHead" rows="2" oninput="sync()">Elevate Your Reality.</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Typography (Ad Font)</label>
+                    <select id="inpFont" onchange="sync()">
+                        <option value="'Space Grotesk'">Space Grotesk (Default)</option>
+                        <option value="'Syncopate'">Syncopate (Cyber)</option>
+                        <option value="'Unbounded'">Unbounded (Bold)</option>
+                        <option value="'Playfair Display'">Playfair (Luxury)</option>
+                        <option value="'Bebas Neue'">Bebas (Impact)</option>
+                        <option value="'Righteous'">Righteous (Retro)</option>
+                        <option value="'Orbitron'">Orbitron (Sci-Fi)</option>
+                        <option value="'Anton'">Anton (Heavy)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Theme Preset</label>
+                    <select id="inpTheme" onchange="sync()">
+                        <option value="theme-default">Standard Bottom Overlay</option>
+                        <option value="theme-cyber">Cyber Border Box</option>
+                        <option value="theme-minimal">Minimalist Card</option>
+                        <option value="theme-glass">Frosted Glass UI</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Brand Color</label>
+                    <input type="color" id="inpColor" value="#39FF14" oninput="sync()">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="btn-primary" style="padding: 15px; font-size: 0.8rem;" onclick="saveAd()">💾 Save to Library</button>
+                    <button class="btn-primary" style="padding: 15px; font-size: 0.8rem; background: #fff;" onclick="exportAd()">📥 Export PNG</button>
                 </div>
             </div>
 
-            <div id="post2" class="post-card">
-                <div class="post-header">
-                    <div class="company-avatar" id="avatar2">B</div>
-                    <div>
-                        <div style="font-weight: bold;" id="outCompany2">Company Name</div>
-                        <div style="font-size: 0.75rem; color: var(--text-dim);">@brand_official</div>
+            <div class="preview-pane">
+                <div id="ad-canvas">
+                    <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400" id="adImg" class="ad-img">
+                    <div class="ad-overlay" id="adOverlay">
+                        <div class="ad-brand" id="adBrand">BG FAME</div>
+                        <div class="ad-head" id="adHead">Elevate Your Reality.</div>
+                        <div class="ad-cta">Join the Fame</div>
                     </div>
-                </div>
-                
-                <div class="post-content">
-                    <div class="post-headline" id="outHeadline2" style="font-size: 1.1rem;">Headline goes here</div>
-                    <div class="post-body" style="font-size: 1.05rem; color: #fff;">
-                        BIG NEWS! 🎉 We are officially launching <span style="color: var(--theme-color, var(--neon-green));" id="outProduct2">Product Name</span>. <br><br>
-                        We know you've been waiting for this. Don't miss out on the drop!
-                    </div>
-
-                    <div class="post-image-container" id="imgContainer2" style="border-radius: 8px; overflow: hidden; margin-bottom: 15px;">
-                        <img id="outImage2" src="" alt="Product Image">
-                    </div>
-                    
-                    <div class="post-contact" id="outContact2">
-                        </div>
-
-                    <div class="post-cta" id="outCta2" style="width: 100%; text-align: center;">Call to Action</div>
-                </div>
-                <div class="social-icons">
-                    <span>💬 120</span> <span>🔁 45</span> <span>♡ 890</span>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Handle File Upload Preview Name
-        let uploadedImageSrc = null;
-        
-        document.getElementById('imageInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                document.getElementById('fileNameDisplay').innerText = "Image Loaded: " + file.name;
-                document.getElementById('fileNameDisplay').style.color = "var(--neon-green)";
-                
-                // Convert image to base64 for preview
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    uploadedImageSrc = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        // Data Storage
+        let savedAds = JSON.parse(localStorage.getItem('bg_fame_ads')) || [];
 
-        function generateAds() {
-            // Get Values
-            const company = document.getElementById('companyName').value || 'BG Fame';
-            const product = document.getElementById('productName').value || 'Premium Product';
-            const headline = document.getElementById('headline').value || 'Upgrade Your Life Today!';
-            const cta = document.getElementById('cta').value || 'Learn More';
-            const website = document.getElementById('website').value;
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value;
-            const address = document.getElementById('address').value;
-            
-            const themeFont = document.getElementById('themeFont').value;
-            const themeColor = document.getElementById('themeColor').value;
+        // App Initialization
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('splash').style.opacity = '0';
+                setTimeout(() => document.getElementById('splash').remove(), 500);
+            }, 1500);
+            renderLibrary();
+        };
 
-            // Apply Themes to output area
-            const resultsArea = document.getElementById('resultsArea');
-            resultsArea.className = `results-section ${themeFont}`; // Apply font class
-            resultsArea.style.setProperty('--theme-color', themeColor); // Apply color variable
-            
-            // Set Avatars (First letter of company)
-            document.getElementById('avatar1').innerText = company.charAt(0).toUpperCase();
-            document.getElementById('avatar2').innerText = company.charAt(0).toUpperCase();
-            document.getElementById('avatar1').style.backgroundColor = themeColor;
-            document.getElementById('avatar2').style.backgroundColor = themeColor;
-
-            // Populate Post 1
-            document.getElementById('outCompany1').innerText = company;
-            document.getElementById('outHeadline1').innerText = headline;
-            document.getElementById('outProduct1').innerText = product;
-            document.getElementById('outCta1').innerText = cta;
-            
-            // Populate Post 2
-            document.getElementById('outCompany2').innerText = company;
-            document.getElementById('outHeadline2').innerText = headline;
-            document.getElementById('outProduct2').innerText = product;
-            document.getElementById('outCta2').innerText = cta;
-
-            // Handle Contact Details Block
-            let contactHTML = '';
-            if(website) contactHTML += `<div>🌐 ${website}</div>`;
-            if(phone) contactHTML += `<div>📞 ${phone}</div>`;
-            if(email) contactHTML += `<div>✉️ ${email}</div>`;
-            if(address) contactHTML += `<div>📍 ${address}</div>`;
-            
-            document.getElementById('outContact1').innerHTML = contactHTML;
-            document.getElementById('outContact2').innerHTML = contactHTML;
-            
-            // Hide contact block if empty
-            document.getElementById('outContact1').style.display = contactHTML ? 'block' : 'none';
-            document.getElementById('outContact2').style.display = contactHTML ? 'block' : 'none';
-
-            // Handle Images
-            if (uploadedImageSrc) {
-                document.getElementById('outImage1').src = uploadedImageSrc;
-                document.getElementById('outImage2').src = uploadedImageSrc;
-                document.getElementById('imgContainer1').style.display = 'block';
-                document.getElementById('imgContainer2').style.display = 'block';
-            } else {
-                document.getElementById('imgContainer1').style.display = 'none';
-                document.getElementById('imgContainer2').style.display = 'none';
-            }
-
-            // Switch Views
-            document.getElementById('generatorForm').style.display = 'none';
-            document.getElementById('resultsArea').style.display = 'flex';
-            window.scrollTo(0, 0);
+        // Navigation Engine
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        function goBack() {
-            document.getElementById('generatorForm').style.display = 'flex';
-            document.getElementById('resultsArea').style.display = 'none';
-            window.scrollTo(0, 0);
+        // Live Preview Sync
+        function sync() {
+            const comp = document.getElementById('inpComp').value || "BG FAME";
+            const head = document.getElementById('inpHead').value || "Elevate Your Reality.";
+            const font = document.getElementById('inpFont').value;
+            const theme = document.getElementById('inpTheme').value;
+            const color = document.getElementById('inpColor').value;
+
+            document.getElementById('adBrand').innerText = comp;
+            document.getElementById('adHead').innerText = head;
+            
+            // Apply Styles
+            document.documentElement.style.setProperty('--neon', color);
+            const canvas = document.getElementById('ad-canvas');
+            canvas.style.fontFamily = font;
+            document.getElementById('adOverlay').className = `ad-overlay ${theme}`;
+        }
+
+        // File handling
+        document.getElementById('inpFile').onchange = e => {
+            const [file] = e.target.files;
+            if(file) document.getElementById('adImg').src = URL.createObjectURL(file);
+        }
+
+        // Save Logic
+        async function saveAd() {
+            const canvas = document.getElementById('ad-canvas');
+            const dataUrl = (await html2canvas(canvas, {scale: 1})).toDataURL();
+            
+            const newAd = {
+                id: Date.now(),
+                img: dataUrl,
+                title: document.getElementById('inpComp').value || "Unnamed Ad"
+            };
+
+            savedAds.unshift(newAd);
+            localStorage.setItem('bg_fame_ads', JSON.stringify(savedAds));
+            renderLibrary();
+            alert("Ad successfully saved to your library!");
+        }
+
+        // Render Gallery
+        function renderLibrary() {
+            const recent = document.getElementById('recent-grid');
+            const full = document.getElementById('full-grid');
+            
+            const html = savedAds.map(ad => `
+                <div class="saved-card">
+                    <img src="${ad.img}" class="saved-thumb">
+                    <div class="saved-info">
+                        <strong>${ad.title}</strong>
+                        <button onclick="deleteAd(${ad.id})" style="background:none; border:none; color:red; cursor:pointer;">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            recent.innerHTML = html || '<p style="color:var(--text-dim)">No ads created yet.</p>';
+            full.innerHTML = html || '<p style="color:var(--text-dim)">Your library is empty.</p>';
+        }
+
+        function deleteAd(id) {
+            savedAds = savedAds.filter(a => a.id !== id);
+            localStorage.setItem('bg_fame_ads', JSON.stringify(savedAds));
+            renderLibrary();
+        }
+
+        // High Res Export
+        function exportAd() {
+            const canvas = document.getElementById('ad-canvas');
+            html2canvas(canvas, {scale: 4, useCORS: true}).then(cvs => {
+                const link = document.createElement('a');
+                link.download = `BG-FAME-AD-${Date.now()}.png`;
+                link.href = cvs.toDataURL();
+                link.click();
+            });
         }
     </script>
 </body>
