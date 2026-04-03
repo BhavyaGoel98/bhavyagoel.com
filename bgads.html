@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BG Fame | Advertisers Generator</title>
+    
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@400;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ═══ CSS Variables & Reset ═══════════════════════════════ */
+        :root {
+            --bg-color: #050505;
+            --card-bg: #111111;
+            --input-bg: #1a1a1a;
+            --neon-green: #39FF14;
+            --theme-color: #39FF14;
+            --text-main: #ffffff;
+            --text-dim: #999999;
+            --border-color: #222222;
+            --font-main: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-pill: 30px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ═══ App Container ═══════════════════════════════════════ */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* ═══ Header ══════════════════════════════════════════════ */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: 0.04em;
+        }
+
+        .logo-icon {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+            font-size: 1.3rem;
+        }
+
+        .header-badge {
+            font-size: 0.75rem;
+            color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.08);
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ═══ Form Section ════════════════════════════════════════ */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .section-divider {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #555;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        /* ═══ File Upload ═════════════════════════════════════════ */
+        .file-upload-wrapper {
+            position: relative;
+            background-color: var(--input-bg);
+            border: 1.5px dashed var(--border-color);
+            padding: 20px;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--neon-green);
+            background-color: rgba(57, 255, 20, 0.03);
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        #fileNameDisplay {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* ═══ Color Swatches ══════════════════════════════════════ */
+        .color-swatches {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .swatch.active {
+            border-color: #fff;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+
+        .swatch::after {
+            content: '✓';
+            color: rgba(0,0,0,0.8);
+            font-size: 1rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .swatch.active::after {
+            opacity: 1;
+        }
+
+        /* ═══ Error Messages ══════════════════════════════════════ */
+        .error-msg {
+            color: #ff4444;
+            font-size: 0.8rem;
+            margin-top: -2px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        /* ═══ Buttons ═════════════════════════════════════════════ */
+        .btn-primary {
+            background-color: var(--neon-green);
+            color: #000;
+            border: none;
+            padding: 16px 24px;
+            border-radius: var(--radius-pill);
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 16px;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.35);
+            transition: all 0.18s ease;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97) translateY(0);
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            align-self: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .back-btn:hover {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        /* ═══ Results Section ═════════════════════════════════════ */
+        .results-section {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .results-section.visible {
+            display: flex;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* ═══ Post Cards ══════════════════════════════════════════ */
+        .post-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .post-header {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .company-avatar {
+            width: 42px;
+            height: 42px;
+            background-color: var(--theme-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 800;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            transition: background-color 0.3s;
+        }
+
+        .post-meta-name {
+            font-weight: 700;
+            font-size: 0.97rem;
+        }
+
+        .post-meta-sub {
+            font-size: 0.73rem;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        /* ═══ Post Images ═════════════════════════════════════════ */
+        .post-image-container {
+            width: 100%;
+            background-color: #000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .post-image-container.has-image {
+            display: block;
+        }
+
+        .post-image-container img {
+            width: 100%;
+            height: auto;
+            max-height: 380px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .post-image-inline {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .post-image-inline.has-image {
+            display: block;
+        }
+
+        .post-image-inline img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        /* ═══ Post Content ════════════════════════════════════════ */
+        .post-content {
+            padding: 16px;
+        }
+
+        .post-headline {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .post-body {
+            font-size: 0.95rem;
+            color: #cccccc;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .product-highlight {
+            color: var(--theme-color);
+            font-weight: 700;
+        }
+
+        .post-contact {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.83rem;
+            color: var(--text-dim);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        .post-contact div {
+            margin-bottom: 3px;
+            word-break: break-word;
+        }
+
+        .post-contact div:last-child {
+            margin-bottom: 0;
+        }
+
+        .post-cta {
+            display: inline-block;
+            background-color: var(--theme-color);
+            color: #000;
+            padding: 10px 22px;
+            border-radius: var(--radius-pill);
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: opacity 0.2s;
+            text-align: center;
+        }
+
+        .post-cta:hover {
+            opacity: 0.9;
+        }
+
+        .post-cta.full-width {
+            display: block;
+            width: 100%;
+        }
+
+        /* ═══ Social Bar ══════════════════════════════════════════ */
+        .social-bar {
+            display: flex;
+            gap: 18px;
+            padding: 12px 16px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .social-bar span {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .social-bar span:hover {
+            color: var(--text-main);
+        }
+
+        /* ═══ Font Themes ═════════════════════════════════════════ */
+        .font-modern { font-family: 'Inter', 'Space Grotesk', sans-serif; }
+        .font-classic { font-family: 'Playfair Display', Georgia, serif; }
+        .font-playful { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; }
+
+        /* ═══ Animations ══════════════════════════════════════════ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ═══ Responsive ══════════════════════════════════════════ */
+        @media (max-width: 520px) {
+            .app-container {
+                border-left: none;
+                border-right: none;
+                padding: 16px;
+            }
+            
+            .form-title {
+                font-size: 1.4rem;
+            }
+            
+            .color-swatches {
+                gap: 8px;
+            }
+            
+            .swatch {
+                width: 36px;
+                height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- ═══ HEADER ═══════════════════════════════════════════════ -->
+    <header>
+        <div class="logo">
+            <span class="logo-icon">✦</span> BG Fame
+        </div>
+        <div class="header-badge">Advertisers Portal</div>
+    </header>
+
+    <!-- ═══ GENERATOR FORM ═══════════════════════════════════════ -->
+    <div id="generatorForm" class="form-section">
+        <h1 class="form-title">Create Ad Campaign</h1>
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 8px;">
+            Generate professional social media advertisements instantly
+        </p>
+
+        <!-- Image Upload -->
+        <div class="input-group">
+            <label>Product Image (Optional)</label>
+            <div class="file-upload-wrapper">
+                <span class="upload-icon">📷</span>
+                <span id="fileNameDisplay">Tap to upload image…</span>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+        </div>
+
+        <!-- Brand Information -->
+        <div class="input-group">
+            <label>Company Name *</label>
+            <input type="text" id="companyName" placeholder="e.g. BG Fame Industry" required>
+            <div id="errCompany" class="error-msg">Company name is required</div>
+        </div>
+
+        <div class="input-group">
+            <label>Product/Service Name *</label>
+            <input type="text" id="productName" placeholder="e.g. AI Marketing Suite" required>
+            <div id="errProduct" class="error-msg">Product name is required</div>
+        </div>
+
+        <div class="input-group">
+            <label>Catchy Headline *</label>
+            <input type="text" id="headline" placeholder="Revolutionize your workflow today!" required>
+            <div id="errHeadline" class="error-msg">Headline is required</div>
+        </div>
+
+        <div class="input-group">
+            <label>Call to Action (CTA) *</label>
+            <input type="text" id="cta" placeholder="Get Started Now" required>
+            <div id="errCta" class="error-msg">Call to action is required</div>
+        </div>
+
+        <!-- Style Settings -->
+        <div class="section-divider">Style Settings</div>
+
+        <div class="input-group">
+            <label>Theme Font</label>
+            <select id="themeFont">
+                <option value="font-modern">Modern — Sans-serif</option>
+                <option value="font-classic">Classic — Serif</option>
+                <option value="font-playful">Playful — Casual</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Accent Color</label>
+            <div class="color-swatches" id="colorSwatches">
+                <div class="swatch active" data-color="#39FF14" style="background:#39FF14;" title="Neon Green"></div>
+                <div class="swatch" data-color="#FF00FF" style="background:#FF00FF;" title="Cyber Pink"></div>
+                <div class="swatch" data-color="#00FFFF" style="background:#00FFFF;" title="Electric Blue"></div>
+                <div class="swatch" data-color="#FF9900" style="background:#FF9900;" title="Sunset Orange"></div>
+                <div class="swatch" data-color="#FF3366" style="background:#FF3366;" title="Hot Red"></div>
+                <div class="swatch" data-color="#FFD700" style="background:#FFD700;" title="Golden Yellow"></div>
+            </div>
+        </div>
+
+        <!-- Contact Details -->
+        <div class="section-divider">Contact Details</div>
+
+        <div class="input-group">
+            <label>Website</label>
+            <input type="url" id="website" placeholder="https://example.com">
+        </div>
+
+        <div class="input-group">
+            <label>Phone Number</label>
+            <input type="tel" id="phone" placeholder="+1 234 567 8900">
+        </div>
+
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="contact@company.com">
+        </div>
+
+        <div class="input-group">
+            <label>Office Address</label>
+            <textarea id="address" placeholder="123 Tech Street, Silicon Valley"></textarea>
+        </div>
+
+        <button class="btn-primary" onclick="generateAds()">
+            <span>Generate Advertisements</span>
+            <span>✦</span>
+        </button>
+    </div>
+
+    <!-- ═══ RESULTS SECTION ═══════════════════════════════════════ -->
+    <div id="resultsArea" class="results-section">
+        <button class="back-btn" onclick="goBack()">← Create Another Ad</button>
+        <h2 class="form-title" style="font-size: 1.3rem;">Your Generated Posts</h2>
+
+        <!-- Post 1: Social Feed Style -->
+        <div class="post-card">
+            <div class="post-header">
+                <div class="company-avatar" id="avatar1">B</div>
+                <div>
+                    <div class="post-meta-name" id="outCompany1">Company Name</div>
+                    <div class="post-meta-sub">Sponsored</div>
+                </div>
+            </div>
+
+            <div class="post-image-container" id="imgContainer1">
+                <img id="outImage1" src="" alt="Product Image">
+            </div>
+
+            <div class="post-content">
+                <div class="post-headline" id="outHeadline1">Headline goes here</div>
+                <div class="post-body">
+                    Introducing the <span class="product-highlight" id="outProduct1">Product Name</span>! 🚀<br><br>
+                    Elevate your game with our latest release. Designed specifically for our amazing community — don't miss out.
+                </div>
+
+                <div class="post-contact" id="outContact1"></div>
+
+                <div class="post-cta" id="outCta1">Call to Action</div>
+            </div>
+
+            <div class="social-bar">
+                <span>♡ Like</span>
+                <span>💬 Comment</span>
+                <span>↗ Share</span>
+            </div>
+        </div>
+
+        <!-- Post 2: Twitter/X Style -->
+        <div class="post-card">
+            <div class="post-header">
+                <div class="company-avatar" id="avatar2">B</div>
+                <div>
+                    <div class="post-meta-name" id="outCompany2">Company Name</div>
+                    <div class="post-meta-sub" id="outHandle2">@brand_official</div>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <div class="post-headline" id="outHeadline2" style="font-size:1.1rem;">Headline goes here</div>
+                <div class="post-body" style="color:#eee;">
+                    BIG NEWS! 🎉 We are officially launching
+                    <span class="product-highlight" id="outProduct2">Product Name</span>.<br><br>
+                    We know you've been waiting. This changes everything — drop is LIVE!
+                </div>
+
+                <div class="post-image-inline" id="imgContainer2">
+                    <img id="outImage2" src="" alt="Product Image">
+                </div>
+
+                <div class="post-contact" id="outContact2"></div>
+
+                <div class="post-cta full-width" id="outCta2">Call to Action</div>
+            </div>
+
+            <div class="social-bar">
+                <span>💬 120</span>
+                <span>🔁 45</span>
+                <span>♡ 890</span>
+                <span>↗ Share</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ═══ STATE MANAGEMENT ═══════════════════════════════════════ */
+    let uploadedImageSrc = null;
+    let selectedColor = '#39FF14';
+
+    /* ═══ COLOR SWATCH PICKER ═══════════════════════════════════ */
+    document.querySelectorAll('.swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+            swatch.classList.add('active');
+            selectedColor = swatch.dataset.color;
+        });
+    });
+
+    /* ═══ FILE UPLOAD HANDLING ══════════════════════════════════ */
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const display = document.getElementById('fileNameDisplay');
+
+        if (file) {
+            display.textContent = '✅ ' + file.name;
+            display.style.color = 'var(--neon-green)';
+
+            const reader = new FileReader();
+            reader.onload = event => {
+                uploadedImageSrc = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            display.textContent = 'Tap to upload image…';
+            display.style.color = 'var(--text-dim)';
+            uploadedImageSrc = null;
+        }
+    });
+
+    /* ═══ HELPER FUNCTIONS ══════════════════════════════════════ */
+    function buildHandle(company) {
+        return '@' + company.toLowerCase()
+            .replace(/\s+/g, '_')
+            .replace(/[^a-z0-9_]/g, '')
+            .substring(0, 15) + '_official';
+    }
+
+    function buildContactHTML(website, phone, email, address) {
+        let html = '';
+        if (website) html += `<div>🌐 ${website}</div>`;
+        if (phone) html += `<div>📞 ${phone}</div>`;
+        if (email) html += `<div>✉️ ${email}</div>`;
+        if (address) html += `<div>📍 ${address}</div>`;
+        return html;
+    }
+
+    function applyThemeColor(color) {
+        const resultsArea = document.getElementById('resultsArea');
+        resultsArea.style.setProperty('--theme-color', color);
+        
+        // Update avatars directly
+        document.getElementById('avatar1').style.backgroundColor = color;
+        document.getElementById('avatar2').style.backgroundColor = color;
+    }
+
+    function validateForm() {
+        const fields = [
+            { id: 'companyName', error: 'errCompany' },
+            { id: 'productName', error: 'errProduct' },
+            { id: 'headline', error: 'errHeadline' },
+            { id: 'cta', error: 'errCta' }
+        ];
+
+        let isValid = true;
+        
+        // Hide all error messages first
+        document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+
+        fields.forEach(field => {
+            const value = document.getElementById(field.id).value.trim();
+            if (!value) {
+                document.getElementById(field.error).style.display = 'block';
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    /* ═══ MAIN GENERATION FUNCTION ══════════════════════════════ */
+    function generateAds() {
+        // Validate form first
+        if (!validateForm()) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        // Get form values
+        const company = document.getElementById('companyName').value.trim();
+        const product = document.getElementById('productName').value.trim();
+        const headline = document.getElementById('headline').value.trim();
+        const cta = document.getElementById('cta').value.trim();
+        const website = document.getElementById('website').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const fontClass = document.getElementById('themeFont').value;
+
+        // Apply theme settings
+        const resultsArea = document.getElementById('resultsArea');
+        resultsArea.className = 'results-section';
+        resultsArea.classList.add(fontClass);
+        applyThemeColor(selectedColor);
+
+        // Set company avatars
+        const initial = company.charAt(0).toUpperCase();
+        document.getElementById('avatar1').textContent = initial;
+        document.getElementById('avatar2').textContent = initial;
+
+        // Populate Post 1
+        document.getElementById('outCompany1').textContent = company;
+        document.getElementById('outHeadline1').textContent = headline;
+        document.getElementById('outProduct1').textContent = product;
+        document.getElementById('outCta1').textContent = cta;
+
+        // Populate Post 2
+        document.getElementById('outCompany2').textContent = company;
+        document.getElementById('outHandle2').textContent = buildHandle(company);
+        document.getElementById('outHeadline2').textContent = headline;
+        document.getElementById('outProduct2').textContent = product;
+        document.getElementById('outCta2').textContent = cta;
+
+        // Handle contact information
+        const contactHTML = buildContactHTML(website, phone, email, address);
+        ['outContact1', 'outContact2'].forEach(id => {
+            const el = document.getElementById(id);
+            el.innerHTML = contactHTML;
+            el.style.display = contactHTML ? 'block' : 'none';
+        });
+
+        // Handle images
+        if (uploadedImageSrc) {
+            document.getElementById('outImage1').src = uploadedImageSrc;
+            document.getElementById('outImage2').src = uploadedImageSrc;
+            document.getElementById('imgContainer1').classList.add('has-image');
+            document.getElementById('imgContainer2').classList.add('has-image');
+        } else {
+            document.getElementById('imgContainer1').classList.remove('has-image');
+            document.getElementById('imgContainer2').classList.remove('has-image');
+        }
+
+        // Switch to results view
+        document.getElementById('generatorForm').style.display = 'none';
+        resultsArea.classList.add('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ═══ NAVIGATION ════════════════════════════════════════════ */
+    function goBack() {
+        document.getElementById('generatorForm').style.display = 'flex';
+        document.getElementById('resultsArea').classList.remove('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
