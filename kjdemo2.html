@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Keshavi Jewellers — Elegance in Every Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --black:#0a0a0a;--deep:#111;--panel:#161616;--border:#2a2a2a;
+      --gold:#c9a84c;--gold-light:#e2c97e;--gold-dim:#7a6330;
+      --white:#f5f0e8;--off:#d4cfc7;--muted:#888070;
+      --serif:'Cormorant Garamond',Georgia,serif;
+      --sans:'Jost',sans-serif;
+      --ease:cubic-bezier(.25,.46,.45,.94);
+      --t:.45s cubic-bezier(.25,.46,.45,.94);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--black);color:var(--white);font-family:var(--sans);font-weight:300;line-height:1.7;overflow-x:hidden}
+    img{display:block;width:100%;height:100%;object-fit:cover}
+    a{color:inherit;text-decoration:none}
+    button{cursor:pointer;border:none;outline:none;background:none;font-family:var(--sans)}
+
+    .container{max-width:1280px;margin:0 auto;padding:0 2rem}
+    .section{padding:110px 0}
+    .section-label{font-size:.68rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.9rem;font-weight:400}
+    .section-title{font-family:var(--serif);font-size:clamp(2rem,5vw,3.6rem);font-weight:400;line-height:1.15;margin-bottom:1.4rem}
+    .section-body{font-size:.93rem;color:var(--off);line-height:1.9;max-width:560px}
+    .ornament{display:flex;align-items:center;gap:1rem;justify-content:center;margin-bottom:1.2rem}
+    .ornament span{display:block;height:1px;width:60px;background:linear-gradient(90deg,transparent,var(--gold))}
+    .ornament span:last-child{background:linear-gradient(90deg,var(--gold),transparent)}
+    .ornament i{font-style:normal;color:var(--gold);font-size:.9rem}
+
+    /* Scroll fade-in */
+    .fi{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+    .fi.show{opacity:1;transform:none}
+
+    /* Cursor */
+    #cdot{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:left .08s,top .08s,opacity .3s;mix-blend-mode:screen}
+
+    /* ── MODAL ── */
+    #modal-overlay{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:2000;
+      align-items:center;justify-content:center;padding:2rem;
+      opacity:0;transition:opacity .35s var(--ease);
+    }
+    #modal-overlay.open{display:flex}
+    #modal-overlay.visible{opacity:1}
+    .modal-box{
+      background:var(--panel);border:1px solid var(--border);
+      max-width:660px;width:100%;max-height:90vh;overflow-y:auto;
+      position:relative;padding:2.5rem;
+      transform:translateY(20px);transition:transform .4s var(--ease);
+    }
+    #modal-overlay.visible .modal-box{transform:none}
+    .modal-close{position:absolute;top:1rem;right:1.2rem;font-size:1.3rem;color:var(--muted);cursor:pointer;transition:color var(--t);background:none;border:none;line-height:1}
+    .modal-close:hover{color:var(--gold)}
+    .modal-img-wrap{width:100%;height:240px;overflow:hidden;margin-bottom:1.4rem;border:1px solid var(--border)}
+    .modal-img-wrap img{width:100%;height:100%;object-fit:cover}
+    .modal-tag{font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;display:block}
+    .modal-title{font-family:var(--serif);font-size:1.9rem;font-weight:400;margin-bottom:.9rem}
+    .modal-body{font-size:.88rem;color:var(--off);line-height:1.85;margin-bottom:1.4rem}
+    .modal-features{list-style:none;display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.8rem}
+    .modal-features li{font-size:.83rem;color:var(--muted);display:flex;align-items:center;gap:.55rem}
+    .modal-features li::before{content:'✦';color:var(--gold);font-size:.58rem;flex-shrink:0}
+    .modal-cta{display:inline-block;padding:.82rem 2rem;background:var(--gold);color:var(--black);font-size:.7rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;transition:background var(--t)}
+    .modal-cta:hover{background:var(--gold-light)}
+
+    /* ── TOAST ── */
+    #toast{
+      position:fixed;bottom:2rem;right:2rem;z-index:3000;
+      background:var(--panel);border:1px solid var(--gold-dim);
+      padding:.9rem 1.4rem;display:flex;align-items:center;gap:.7rem;
+      transform:translateY(16px);opacity:0;
+      transition:opacity .4s var(--ease),transform .4s var(--ease);
+      pointer-events:none;max-width:320px;
+    }
+    #toast.show{opacity:1;transform:none}
+    #toast .t-icon{color:var(--gold);font-size:1rem;flex-shrink:0}
+    #toast .t-msg{font-size:.82rem;color:var(--off);line-height:1.5}
+
+    /* ── BACK TO TOP ── */
+    #btt{
+      position:fixed;bottom:2rem;left:2rem;width:40px;height:40px;
+      background:var(--panel);border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--gold);font-size:.95rem;z-index:500;
+      opacity:0;pointer-events:none;transition:opacity var(--t),border-color var(--t);
+    }
+    #btt.show{opacity:1;pointer-events:all}
+    #btt:hover{border-color:var(--gold)}
+
+    /* ══ NAVBAR ══ */
+    #navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1.4rem 0;transition:background var(--t),padding var(--t),border-bottom var(--t)}
+    #navbar.scrolled{background:rgba(10,10,10,.96);backdrop-filter:blur(14px);padding:.9rem 0;border-bottom:1px solid var(--border)}
+    #navbar .container{display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{font-family:var(--serif);font-size:1.5rem;font-weight:500;color:var(--gold-light);letter-spacing:.04em}
+    .nav-logo span{color:var(--white)}
+    .nav-links{display:flex;gap:2.2rem;list-style:none}
+    .nav-links a{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--off);position:relative;padding-bottom:3px;transition:color var(--t)}
+    .nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width var(--t)}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold-light)}
+    .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+    .hbg{display:none;flex-direction:column;gap:5px;padding:4px;background:none;border:none}
+    .hbg span{display:block;width:24px;height:1px;background:var(--gold);transition:var(--t)}
+    .hbg.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+    .hbg.open span:nth-child(2){opacity:0}
+    .hbg.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+    .mob-nav{display:none;position:fixed;inset:0;background:rgba(10,10,10,.97);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:2.2rem}
+    .mob-nav.open{display:flex}
+    .mob-nav a{font-family:var(--serif);font-size:2rem;font-weight:300;letter-spacing:.08em;transition:color var(--t)}
+    .mob-nav a:hover{color:var(--gold)}
+
+    /* ══ HERO ══ */
+    #hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 65% 40%,rgba(201,168,76,.09) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 20% 80%,rgba(201,168,76,.05) 0%,transparent 55%),linear-gradient(160deg,#0a0a0a 0%,#0f0d09 50%,#0a0a0a 100%)}
+    .hero-bg::after{content:'';position:absolute;inset:0;opacity:.45;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
+    .hero-ring{position:absolute;right:-8%;top:50%;transform:translateY(-50%);width:min(660px,90vw);height:min(660px,90vw);border-radius:50%;border:1px solid rgba(201,168,76,.13);animation:ringPulse 6s ease-in-out infinite}
+    .hero-ring::before{content:'';position:absolute;inset:32px;border-radius:50%;border:1px solid rgba(201,168,76,.07)}
+    .hero-ring::after{content:'';position:absolute;inset:80px;border-radius:50%;border:1px solid rgba(201,168,76,.04)}
+    @keyframes ringPulse{0%,100%{opacity:.6;transform:translateY(-50%) scale(1)}50%{opacity:1;transform:translateY(-50%) scale(1.025)}}
+    .hero-jewel-svg{position:absolute;right:6%;top:50%;transform:translateY(-50%);width:min(360px,40vw);opacity:.16;pointer-events:none}
+    .hero-content{position:relative;z-index:2;max-width:700px}
+    .hero-eyebrow{font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);font-weight:400;margin-bottom:1.8rem;display:flex;align-items:center;gap:1rem;opacity:0;animation:slideUp 1s var(--ease) .3s forwards}
+    .hero-eyebrow::before{content:'';display:block;width:36px;height:1px;background:var(--gold)}
+    .hero-title{font-family:var(--serif);font-size:clamp(3.4rem,9vw,7.5rem);font-weight:300;line-height:1.02;margin-bottom:1rem;opacity:0;animation:slideUp 1s var(--ease) .55s forwards}
+    .hero-title em{font-style:italic;color:var(--gold-light)}
+    .hero-tagline{font-family:var(--serif);font-size:clamp(1rem,2.4vw,1.45rem);font-weight:300;font-style:italic;color:var(--off);letter-spacing:.08em;margin-bottom:1.6rem;opacity:0;animation:slideUp 1s var(--ease) .72s forwards}
+    .hero-desc{font-size:.9rem;color:var(--muted);max-width:410px;line-height:1.9;margin-bottom:2.5rem;opacity:0;animation:slideUp 1s var(--ease) .88s forwards}
+    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:slideUp 1s var(--ease) 1.05s forwards}
+    .btn-primary{display:inline-flex;align-items:center;gap:.7rem;padding:.95rem 2.2rem;border:1px solid var(--gold);color:var(--gold);font-size:.7rem;font-weight:400;letter-spacing:.28em;text-transform:uppercase;position:relative;overflow:hidden;transition:color .4s}
+    .btn-primary::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+    .btn-primary:hover{color:var(--black)}
+    .btn-primary:hover::before{transform:scaleX(1)}
+    .btn-primary span,.btn-primary svg{position:relative;z-index:1}
+    .btn-ghost{display:inline-flex;align-items:center;gap:.7rem;padding:.95rem 2.2rem;border:1px solid var(--border);color:var(--off);font-size:.7rem;font-weight:400;letter-spacing:.28em;text-transform:uppercase;transition:border-color var(--t),color var(--t)}
+    .btn-ghost:hover{border-color:var(--gold-dim);color:var(--white)}
+    .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeIn 1s ease 1.9s forwards}
+    .hero-scroll span{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+    .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollDrop 2s ease-in-out infinite}
+    @keyframes scrollDrop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+    @keyframes fadeIn{to{opacity:1}}
+
+    /* ══ TICKER ══ */
+    .ticker-band{background:var(--gold);padding:.7rem 0;overflow:hidden;white-space:nowrap}
+    .ticker-track{display:inline-flex;animation:ticker 28s linear infinite}
+    .ticker-track span{font-family:var(--serif);font-size:.85rem;font-style:italic;color:var(--black);padding:0 2rem;font-weight:500;letter-spacing:.06em}
+    .ticker-track span::before{content:'✦';margin-right:2rem;font-style:normal}
+    @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    /* ══ ABOUT ══ */
+    #about{background:var(--deep);position:relative;overflow:hidden}
+    #about::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent)}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:center}
+    .about-visual{position:relative}
+    .about-img-wrap{position:relative;aspect-ratio:4/5;overflow:hidden}
+    .about-img-wrap::before{content:'';position:absolute;inset:-14px;border:1px solid rgba(201,168,76,.2);pointer-events:none;z-index:2}
+    .about-img-wrap::after{content:'';position:absolute;inset:-6px;border:1px solid rgba(201,168,76,.07);pointer-events:none;z-index:2}
+    .about-img-wrap img{transition:transform 1.2s var(--ease)}
+    .about-img-wrap:hover img{transform:scale(1.05)}
+    .about-stat{position:absolute;bottom:-22px;right:-22px;background:var(--panel);border:1px solid var(--border);padding:1.5rem 1.8rem;z-index:3}
+    .about-stat strong{display:block;font-family:var(--serif);font-size:2.4rem;color:var(--gold);font-weight:400;line-height:1}
+    .about-stat small{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+    .about-pillars{margin-top:2.6rem;display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
+    .pillar{padding:1.3rem;border:1px solid var(--border);transition:border-color var(--t),transform var(--t)}
+    .pillar:hover{border-color:var(--gold-dim);transform:translateY(-3px)}
+    .pillar-icon{font-size:1.2rem;margin-bottom:.6rem;display:block}
+    .pillar h4{font-family:var(--serif);font-size:1rem;font-weight:500;color:var(--gold-light);margin-bottom:.25rem}
+    .pillar p{font-size:.78rem;color:var(--muted);line-height:1.7}
+
+    /* ══ CATEGORIES ══ */
+    #categories{background:var(--black)}
+    .cats-intro{text-align:center;margin-bottom:3.5rem}
+    .cats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+    .cat-card{position:relative;aspect-ratio:3/4;overflow:hidden;cursor:pointer}
+    .cat-img-bg{position:absolute;inset:0;transition:transform 1s var(--ease)}
+    .cat-card:hover .cat-img-bg{transform:scale(1.08)}
+    .cat-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,transparent 55%);transition:background var(--t)}
+    .cat-card:hover .cat-overlay{background:linear-gradient(to top,rgba(0,0,0,.93) 0%,rgba(0,0,0,.28) 55%)}
+    .cat-body{position:absolute;bottom:0;left:0;right:0;padding:1.8rem;transform:translateY(6px);transition:transform var(--t)}
+    .cat-card:hover .cat-body{transform:none}
+    .cat-tag{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;display:block}
+    .cat-body h3{font-family:var(--serif);font-size:1.65rem;font-weight:400;margin-bottom:.4rem}
+    .cat-body p{font-size:.8rem;color:var(--off);line-height:1.65;max-height:0;overflow:hidden;opacity:0;transition:max-height .5s var(--ease),opacity var(--t)}
+    .cat-card:hover .cat-body p{max-height:80px;opacity:1}
+    .cat-cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:.9rem;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity var(--t)}
+    .cat-card:hover .cat-cta{opacity:1}
+
+    /* Fallback SVG backgrounds for categories */
+    .cat-img-bg.gold-bg{background:linear-gradient(145deg,#1a1200,#3d2e00,#1a1200);display:flex;align-items:center;justify-content:center}
+    .cat-img-bg.silver-bg{background:linear-gradient(145deg,#0d0d0d,#1f1f1f,#0d0d0d);display:flex;align-items:center;justify-content:center}
+    .cat-img-bg.custom-bg{background:linear-gradient(145deg,#0a0a12,#12121f,#0a0a12);display:flex;align-items:center;justify-content:center}
+    .cat-img-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+    /* ══ GALLERY ══ */
+    #gallery{background:var(--panel);position:relative}
+    #gallery::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent)}
+    .gal-intro{text-align:center;margin-bottom:3.5rem}
+    .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:240px;gap:3px}
+    .gal-item{position:relative;overflow:hidden;cursor:pointer}
+    .gal-item:nth-child(1){grid-column:span 2;grid-row:span 2}
+    .gal-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+    .gal-item:hover img{transform:scale(1.07)}
+    .gal-hover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,10,10,0);transition:background var(--t)}
+    .gal-hover span{font-family:var(--serif);font-size:1rem;color:var(--gold-light);letter-spacing:.1em;opacity:0;transform:scale(.92);transition:opacity var(--t),transform var(--t);border:1px solid rgba(201,168,76,.4);padding:.6rem 1.4rem;white-space:nowrap}
+    .gal-item:hover .gal-hover{background:rgba(10,10,10,.5)}
+    .gal-item:hover .gal-hover span{opacity:1;transform:scale(1)}
+
+    /* ══ WHY ══ */
+    #why{background:var(--black);text-align:center}
+    .why-intro{margin-bottom:3.5rem}
+    .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem}
+    .why-card{padding:2.8rem 1.8rem;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color var(--t),transform var(--t)}
+    .why-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .5s var(--ease)}
+    .why-card:hover{border-color:var(--gold-dim);transform:translateY(-5px)}
+    .why-card:hover::after{transform:scaleX(1)}
+    .why-num{font-family:var(--serif);font-size:3.5rem;font-weight:300;color:rgba(201,168,76,.1);line-height:1;margin-bottom:1.2rem;transition:color var(--t)}
+    .why-card:hover .why-num{color:rgba(201,168,76,.2)}
+    .why-icon{font-size:1.6rem;margin-bottom:1rem;display:block}
+    .why-card h3{font-family:var(--serif);font-size:1.3rem;font-weight:500;color:var(--gold-light);margin-bottom:.7rem}
+    .why-card p{font-size:.83rem;color:var(--muted);line-height:1.8}
+
+    /* ══ TESTIMONIALS ══ */
+    #testimonials{background:var(--deep);text-align:center;position:relative;overflow:hidden}
+    #testimonials::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent)}
+    .testi-bg-q{position:absolute;top:2rem;left:50%;transform:translateX(-50%);font-family:var(--serif);font-size:18rem;line-height:1;color:rgba(201,168,76,.03);pointer-events:none;user-select:none}
+    .testi-intro{margin-bottom:3.5rem;position:relative;z-index:1}
+    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;position:relative;z-index:1}
+    .testi-card{padding:2.2rem;border:1px solid var(--border);text-align:left;transition:border-color var(--t)}
+    .testi-card:hover{border-color:var(--gold-dim)}
+    .testi-stars{color:var(--gold);font-size:.78rem;letter-spacing:.18em;margin-bottom:1rem}
+    .testi-quote{font-family:var(--serif);font-size:1.02rem;font-style:italic;font-weight:300;color:var(--white);line-height:1.8;margin-bottom:1.6rem}
+    .testi-author{display:flex;align-items:center;gap:.9rem}
+    .testi-avatar{width:44px;height:44px;border-radius:50%;border:1px solid var(--gold-dim);overflow:hidden;flex-shrink:0;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.1rem;color:var(--gold)}
+    .testi-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+    .testi-name{font-size:.78rem;font-weight:400;color:var(--gold-light);letter-spacing:.07em}
+    .testi-meta{font-size:.7rem;color:var(--muted)}
+
+    /* ══ CONTACT ══ */
+    #contact{background:var(--black)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:start}
+    .contact-detail{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:1.4rem}
+    .contact-detail-icon{color:var(--gold);font-size:.95rem;margin-top:.1rem;flex-shrink:0}
+    .contact-detail-text strong{display:block;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.15rem}
+    .contact-detail-text span{font-size:.86rem;color:var(--muted)}
+    .store-note{margin-top:2.2rem;padding:1.3rem;border:1px solid var(--border);border-left:2px solid var(--gold)}
+    .store-note p{font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--off)}
+    .c-form{display:flex;flex-direction:column;gap:1.1rem}
+    .fg{display:flex;flex-direction:column;gap:.4rem}
+    .fg label{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold)}
+    .fg input,.fg textarea,.fg select{background:transparent;border:1px solid var(--border);color:var(--white);padding:.85rem .95rem;font-family:var(--sans);font-size:.87rem;font-weight:300;outline:none;transition:border-color var(--t);resize:none;-webkit-appearance:none;appearance:none}
+    .fg input::placeholder,.fg textarea::placeholder{color:var(--muted)}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--gold-dim)}
+    .fg textarea{min-height:120px}
+    .fg select option{background:var(--black)}
+    .f-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+    .btn-send{padding:.95rem 2.5rem;background:var(--gold);color:var(--black);font-size:.7rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;border:none;cursor:pointer;position:relative;overflow:hidden;align-self:flex-start;transition:background var(--t);margin-top:.3rem}
+    .btn-send::before{content:'';position:absolute;inset:0;background:var(--gold-light);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+    .btn-send span{position:relative;z-index:1}
+    .btn-send:hover::before{transform:scaleX(1)}
+    .form-note{font-size:.7rem;color:var(--muted);margin-top:.3rem}
+
+    /* ══ FOOTER ══ */
+    footer{background:var(--panel);border-top:1px solid var(--border)}
+    .footer-top{padding:5rem 0 3rem;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:3rem}
+    .footer-logo{font-family:var(--serif);font-size:1.55rem;color:var(--gold-light);font-weight:400;margin-bottom:.9rem;display:block}
+    .footer-brand p{font-size:.82rem;color:var(--muted);line-height:1.8;margin-bottom:1.4rem}
+    .footer-socials{display:flex;gap:.7rem}
+    .social-link{width:36px;height:36px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--muted);transition:border-color var(--t),color var(--t);cursor:pointer}
+    .social-link:hover{border-color:var(--gold);color:var(--gold)}
+    .footer-col h4{font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.3rem;font-weight:400}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+    .footer-col ul li a{font-size:.83rem;color:var(--muted);transition:color var(--t);display:flex;align-items:center;gap:.35rem;cursor:pointer}
+    .footer-col ul li a::before{content:'›';color:var(--gold-dim);font-size:.95rem;transition:transform var(--t)}
+    .footer-col ul li a:hover{color:var(--off)}
+    .footer-col ul li a:hover::before{transform:translateX(3px)}
+    .footer-bottom{border-top:1px solid var(--border);padding:1.6rem 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .footer-bottom p{font-size:.74rem;color:var(--muted)}
+    .footer-bottom .disc{font-size:.68rem;color:rgba(136,128,112,.55);font-style:italic}
+
+    /* ══ RESPONSIVE ══ */
+    @media(max-width:1024px){
+      .about-grid{gap:3.5rem}
+      .footer-top{grid-template-columns:1fr 1fr}
+      .gal-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:200px}
+      .gal-item:nth-child(1){grid-column:span 2;grid-row:span 1}
+    }
+    @media(max-width:768px){
+      .section{padding:80px 0}
+      .nav-links{display:none}
+      .hbg{display:flex}
+      .hero-ring,.hero-jewel-svg{display:none}
+      .about-grid{grid-template-columns:1fr;gap:3rem}
+      .about-pillars{grid-template-columns:1fr}
+      .about-stat{right:0;bottom:-18px}
+      .cats-grid{grid-template-columns:1fr}
+      .cat-card{aspect-ratio:4/3}
+      .gal-grid{grid-template-columns:1fr 1fr;grid-auto-rows:170px}
+      .gal-item:nth-child(1){grid-column:span 2}
+      .why-grid{grid-template-columns:1fr}
+      .testi-grid{grid-template-columns:1fr}
+      .testi-bg-q{font-size:8rem}
+      .contact-grid{grid-template-columns:1fr;gap:3rem}
+      .f-row{grid-template-columns:1fr}
+      .footer-top{grid-template-columns:1fr}
+      .footer-bottom{flex-direction:column;text-align:center}
+    }
+    @media(max-width:480px){
+      .container{padding:0 1.1rem}
+      .hero-btns{flex-direction:column}
+      .btn-primary,.btn-ghost{justify-content:center}
+    }
+  </style>
+</head>
+<body>
+
+<div id="cdot" aria-hidden="true"></div>
+<button id="btt" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- TOAST -->
+<div id="toast" role="status" aria-live="polite">
+  <span class="t-icon">✦</span><span class="t-msg" id="toast-msg"></span>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="modal-img-wrap"><img id="modal-img" src="" alt=""/></div>
+    <span id="modal-tag" class="modal-tag"></span>
+    <h2 id="modal-title" class="modal-title"></h2>
+    <p id="modal-body" class="modal-body"></p>
+    <ul id="modal-features" class="modal-features"></ul>
+    <a class="modal-cta" href="#contact" onclick="closeModal()">Enquire Now →</a>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <a href="#hero"         onclick="closeMob()">Home</a>
+  <a href="#about"        onclick="closeMob()">About</a>
+  <a href="#categories"   onclick="closeMob()">Collections</a>
+  <a href="#gallery"      onclick="closeMob()">Gallery</a>
+  <a href="#testimonials" onclick="closeMob()">Reviews</a>
+  <a href="#contact"      onclick="closeMob()">Contact</a>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="container">
+    <a href="#hero" class="nav-logo">Keshavi <span>Jewellers</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#categories">Collections</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#why">Our Craft</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hbg" id="hbg" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ring" aria-hidden="true"></div>
+  <!-- Decorative SVG jewel diagram -->
+  <svg class="hero-jewel-svg" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="200" cy="250" rx="160" ry="200" stroke="#c9a84c" stroke-width="1"/>
+    <ellipse cx="200" cy="250" rx="120" ry="155" stroke="#c9a84c" stroke-width=".6"/>
+    <ellipse cx="200" cy="250" rx="80" ry="110" stroke="#c9a84c" stroke-width=".4"/>
+    <circle cx="200" cy="250" r="18" stroke="#c9a84c" stroke-width="1.2"/>
+    <line x1="200" y1="50" x2="200" y2="440" stroke="#c9a84c" stroke-width=".4"/>
+    <line x1="40" y1="250" x2="360" y2="250" stroke="#c9a84c" stroke-width=".4"/>
+    <circle cx="200" cy="50" r="6" fill="#c9a84c" opacity=".6"/>
+    <circle cx="200" cy="450" r="6" fill="#c9a84c" opacity=".6"/>
+    <circle cx="40" cy="250" r="6" fill="#c9a84c" opacity=".6"/>
+    <circle cx="360" cy="250" r="6" fill="#c9a84c" opacity=".6"/>
+    <polygon points="200,90 230,140 290,140 245,175 262,230 200,195 138,230 155,175 110,140 170,140" stroke="#c9a84c" stroke-width=".7" fill="none"/>
+    <polygon points="200,160 218,200 260,200 228,222 240,262 200,238 160,262 172,222 140,200 182,200" stroke="#c9a84c" stroke-width=".5" fill="rgba(201,168,76,.04)"/>
+  </svg>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Est. 2003 · Fine Jewellery</div>
+      <h1 class="hero-title">Keshavi<br/><em>Jewellers</em></h1>
+      <p class="hero-tagline">"Elegance in Every Detail"</p>
+      <p class="hero-desc">Where time-honoured craftsmanship meets contemporary artistry. Each piece is an heirloom in the making — designed to be cherished across generations.</p>
+      <div class="hero-btns">
+        <a href="#categories" class="btn-primary">
+          <span>Explore Collection</span>
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#contact" class="btn-ghost">Book a Consultation</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="scroll-line"></div><span>Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-band" aria-hidden="true">
+  <div class="ticker-track">
+    <span>Gold Jewellery</span><span>Silver Collections</span><span>Custom Designs</span>
+    <span>Bridal Sets</span><span>Heritage Craftsmanship</span><span>22 Karat Gold</span>
+    <span>925 Sterling Silver</span><span>Timeless Elegance</span>
+    <span>Gold Jewellery</span><span>Silver Collections</span><span>Custom Designs</span>
+    <span>Bridal Sets</span><span>Heritage Craftsmanship</span><span>22 Karat Gold</span>
+    <span>925 Sterling Silver</span><span>Timeless Elegance</span>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual fi">
+        <div class="about-img-wrap">
+          <img id="about-img"
+            src="https://images.pexels.com/photos/1395306/pexels-photo-1395306.jpeg?auto=compress&cs=tinysrgb&w=700"
+            alt="Artisan crafting jewellery" loading="lazy"/>
+        </div>
+        <div class="about-stat"><strong>20+</strong><small>Years of Trust</small></div>
+      </div>
+      <div class="fi">
+        <div class="ornament"><span></span><i>✦</i><span></span></div>
+        <span class="section-label">Our Story</span>
+        <h2 class="section-title">Where Tradition<br/><em style="font-style:italic;color:var(--gold-light)">Meets Mastery</em></h2>
+        <p class="section-body">Founded in 2003, Keshavi Jewellers was born from a single conviction — that every piece of jewellery should tell a story as precious as the metals from which it is made. Rooted in India's rich goldsmithing heritage, our artisans blend centuries-old techniques with contemporary sensibilities.</p>
+        <p class="section-body" style="margin-top:.9rem">From our workshop to your wrist, every creation passes through hands that have spent decades perfecting the art of fine jewellery. We believe in creating not just ornaments, but heirlooms — pieces destined to be passed down through generations.</p>
+        <div class="about-pillars">
+          <div class="pillar"><span class="pillar-icon">⚒</span><h4>Handcrafted</h4><p>Shaped by master artisans with decades of experience.</p></div>
+          <div class="pillar"><span class="pillar-icon">✦</span><h4>Hallmarked</h4><p>BIS-certified gold and 925 sterling silver — purity guaranteed.</p></div>
+          <div class="pillar"><span class="pillar-icon">♾</span><h4>Timeless</h4><p>Designs that transcend seasons and stand the test of time.</p></div>
+          <div class="pillar"><span class="pillar-icon">❤</span><h4>Ethical</h4><p>Responsibly sourced materials and fair-trade practices always.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CATEGORIES ══ -->
+<section id="categories" class="section" style="padding-top:0">
+  <div class="container">
+    <div class="cats-intro fi">
+      <div class="ornament"><span></span><i>✦</i><span></span></div>
+      <span class="section-label">Our Collections</span>
+      <h2 class="section-title">Curated for Every Occasion</h2>
+    </div>
+    <div class="cats-grid">
+
+      <!-- Gold -->
+      <div class="cat-card fi" onclick="openModal('gold')" role="button" tabindex="0" aria-label="Gold Jewellery — click to learn more">
+        <div class="cat-img-bg gold-bg">
+          <img src="https://images.pexels.com/photos/10983783/pexels-photo-10983783.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Gold Jewellery" loading="lazy"/>
+        </div>
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <span class="cat-tag">Hallmarked 22 KT</span>
+          <h3>Gold Jewellery</h3>
+          <p>Necklaces, bangles, earrings in 22-karat gold — from temple designs to modern geometric forms.</p>
+          <div class="cat-cta">Explore <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M5.5 1l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Silver -->
+      <div class="cat-card fi" onclick="openModal('silver')" role="button" tabindex="0" aria-label="Silver Jewellery — click to learn more">
+        <div class="cat-img-bg silver-bg">
+          <img src="https://images.pexels.com/photos/6858613/pexels-photo-6858613.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Silver Jewellery" loading="lazy"/>
+        </div>
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <span class="cat-tag">925 Sterling Silver</span>
+          <h3>Silver Jewellery</h3>
+          <p>Oxidised motifs, delicate filigree, and contemporary minimal forms for every taste.</p>
+          <div class="cat-cta">Explore <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M5.5 1l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Custom -->
+      <div class="cat-card fi" onclick="openModal('custom')" role="button" tabindex="0" aria-label="Custom Designs — click to learn more">
+        <div class="cat-img-bg custom-bg">
+          <img src="https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Custom Designs" loading="lazy"/>
+        </div>
+        <div class="cat-overlay"></div>
+        <div class="cat-body">
+          <span class="cat-tag">Bespoke Service</span>
+          <h3>Custom Designs</h3>
+          <p>Collaborate with master craftsmen to create a one-of-a-kind piece — truly yours alone.</p>
+          <div class="cat-cta">Explore <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M5.5 1l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ GALLERY ══ -->
+<section id="gallery" class="section">
+  <div class="container">
+    <div class="gal-intro fi">
+      <div class="ornament"><span></span><i>✦</i><span></span></div>
+      <span class="section-label">Featured Collection</span>
+      <h2 class="section-title">Pieces That Captivate</h2>
+    </div>
+    <div class="gal-grid fi">
+      <div class="gal-item" onclick="openGalleryModal(0)" role="button" tabindex="0">
+        <img src="https://images.pexels.com/photos/2697787/pexels-photo-2697787.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Gold Necklace Set" loading="lazy"/>
+        <div class="gal-hover"><span>Gold Necklace Set</span></div>
+      </div>
+      <div class="gal-item" onclick="openGalleryModal(1)" role="button" tabindex="0">
+        <img src="https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Drop Earrings" loading="lazy"/>
+        <div class="gal-hover"><span>Drop Earrings</span></div>
+      </div>
+      <div class="gal-item" onclick="openGalleryModal(2)" role="button" tabindex="0">
+        <img src="https://images.pexels.com/photos/9428037/pexels-photo-9428037.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Gold Bangles" loading="lazy"/>
+        <div class="gal-hover"><span>Gold Bangles</span></div>
+      </div>
+      <div class="gal-item" onclick="openGalleryModal(3)" role="button" tabindex="0">
+        <img src="https://images.pexels.com/photos/5370645/pexels-photo-5370645.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Silver Ring" loading="lazy"/>
+        <div class="gal-hover"><span>Silver Ring</span></div>
+      </div>
+      <div class="gal-item" onclick="openGalleryModal(4)" role="button" tabindex="0">
+        <img src="https://images.pexels.com/photos/5370707/pexels-photo-5370707.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Bridal Set" loading="lazy"/>
+        <div class="gal-hover"><span>Bridal Set</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHY ══ -->
+<section id="why" class="section">
+  <div class="container">
+    <div class="why-intro fi">
+      <div class="ornament"><span></span><i>✦</i><span></span></div>
+      <span class="section-label">The Keshavi Promise</span>
+      <h2 class="section-title">Why Connoisseurs Choose Us</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fi"><div class="why-num">01</div><span class="why-icon">💎</span><h3>Premium Quality</h3><p>Every metal and gemstone is rigorously sourced and certified. We accept nothing less than the finest materials.</p></div>
+      <div class="why-card fi"><div class="why-num">02</div><span class="why-icon">⚒</span><h3>Trusted Craftsmanship</h3><p>Our karigars carry forward skills honed over generations. Each piece is handcrafted with painstaking precision.</p></div>
+      <div class="why-card fi"><div class="why-num">03</div><span class="why-icon">✦</span><h3>Timeless Designs</h3><p>We draw equally from classical Indian motifs and refined contemporary aesthetics — designs that never date.</p></div>
+      <div class="why-card fi"><div class="why-num">04</div><span class="why-icon">🏆</span><h3>Certified Purity</h3><p>BIS-hallmarked gold and assay-certified silver — transparent, trustworthy, and guaranteed every time.</p></div>
+      <div class="why-card fi"><div class="why-num">05</div><span class="why-icon">🔄</span><h3>Lifetime Exchange</h3><p>We offer a lifetime exchange programme, honouring the full value of your Keshavi jewellery always.</p></div>
+      <div class="why-card fi"><div class="why-num">06</div><span class="why-icon">🎁</span><h3>Bespoke Experience</h3><p>Gift-wrapping, engraving, custom orders — every Keshavi purchase is a curated experience end to end.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section id="testimonials" class="section">
+  <div class="testi-bg-q" aria-hidden="true">"</div>
+  <div class="container">
+    <div class="testi-intro fi">
+      <div class="ornament"><span></span><i>✦</i><span></span></div>
+      <span class="section-label">Client Stories</span>
+      <h2 class="section-title">Words from Our Patrons</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card fi">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Keshavi crafted my bridal set with such precision and artistry — every aunt at the wedding stopped to admire it. The attention to detail was absolutely extraordinary."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" id="av1">P</div>
+          <div><div class="testi-name">Priya Sharma</div><div class="testi-meta">Mumbai · Bridal Collection</div></div>
+        </div>
+      </div>
+      <div class="testi-card fi">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"I commissioned a custom piece from a sketch my grandmother had saved. They recreated it flawlessly and elevated it into something even more magnificent. Heirloom quality."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" id="av2">A</div>
+          <div><div class="testi-name">Ananya Reddy</div><div class="testi-meta">Hyderabad · Custom Design</div></div>
+        </div>
+      </div>
+      <div class="testi-card fi">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"The silver collection is unlike anything I've seen — modern, yet deeply rooted in heritage. Six pieces over three years and each time I walk out feeling I've acquired something truly special."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" id="av3">R</div>
+          <div><div class="testi-name">Rohit Mehta</div><div class="testi-meta">Delhi · Silver Collection</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="fi">
+        <div class="ornament" style="justify-content:flex-start"><span></span><i>✦</i><span></span></div>
+        <span class="section-label">Get in Touch</span>
+        <h2 class="section-title">We'd Love to Hear from You</h2>
+        <p class="section-body" style="margin-bottom:2rem">Whether searching for the perfect piece, planning a bespoke creation, or simply exploring our collections — our team guides you with warmth and expertise.</p>
+        <div class="contact-detail"><span class="contact-detail-icon">📍</span><div class="contact-detail-text"><strong>Address</strong><span>123, Jewellers' Lane, Karol Bagh<br/>New Delhi – 110005 <em style="font-size:.74rem;color:var(--gold-dim)">(Placeholder)</em></span></div></div>
+        <div class="contact-detail"><span class="contact-detail-icon">📞</span><div class="contact-detail-text"><strong>Phone</strong><span>+91 XXXXX XXXXX (Placeholder)</span></div></div>
+        <div class="contact-detail"><span class="contact-detail-icon">✉</span><div class="contact-detail-text"><strong>Email</strong><span>hello@keshavijewellers.com (Placeholder)</span></div></div>
+        <div class="contact-detail"><span class="contact-detail-icon">🕐</span><div class="contact-detail-text"><strong>Store Hours</strong><span>Mon – Sat: 10:00 AM – 8:00 PM<br/>Sunday: 11:00 AM – 6:00 PM</span></div></div>
+        <div class="store-note"><p>Visit our store for the latest collection and experience the craftsmanship first-hand — no appointment needed.</p></div>
+      </div>
+      <div class="fi">
+        <div class="c-form">
+          <div class="f-row">
+            <div class="fg"><label for="f-name">Your Name</label><input type="text" id="f-name" placeholder="e.g. Priya Sharma" autocomplete="name"/></div>
+            <div class="fg"><label for="f-phone">Phone Number</label><input type="tel" id="f-phone" placeholder="+91 XXXXX XXXXX" autocomplete="tel"/></div>
+          </div>
+          <div class="fg"><label for="f-email">Email Address</label><input type="email" id="f-email" placeholder="your@email.com" autocomplete="email"/></div>
+          <div class="fg">
+            <label for="f-interest">I'm Interested In</label>
+            <select id="f-interest">
+              <option value="">— Select a collection —</option>
+              <option value="gold">Gold Jewellery</option>
+              <option value="silver">Silver Jewellery</option>
+              <option value="custom">Custom Design</option>
+              <option value="bridal">Bridal Collection</option>
+              <option value="gift">Gift Consultation</option>
+            </select>
+          </div>
+          <div class="fg"><label for="f-msg">Your Message</label><textarea id="f-msg" placeholder="Tell us about the piece you're looking for, your budget, or any questions you have…"></textarea></div>
+          <button class="btn-send" type="button" id="sendBtn" onclick="handleSend()"><span id="sendLabel">Send Enquiry</span></button>
+          <p class="form-note">✦ This form is for demonstration purposes only. No data is collected or transmitted.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="footer-logo">Keshavi Jewellers</span>
+        <p>Fine jewellery crafted with devotion, worn with pride. From our workshop to your world — every piece carries a promise of excellence.</p>
+        <div class="footer-socials">
+          <a class="social-link" aria-label="Instagram" onclick="showToast('Instagram — coming soon!')">IG</a>
+          <a class="social-link" aria-label="Facebook"  onclick="showToast('Facebook — coming soon!')">FB</a>
+          <a class="social-link" aria-label="Pinterest" onclick="showToast('Pinterest — coming soon!')">PI</a>
+          <a class="social-link" aria-label="YouTube"   onclick="showToast('YouTube — coming soon!')">YT</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Collections</h4>
+        <ul>
+          <li><a onclick="openModal('gold')">Gold Jewellery</a></li>
+          <li><a onclick="openModal('silver')">Silver Jewellery</a></li>
+          <li><a onclick="openModal('custom')">Custom Designs</a></li>
+          <li><a href="#categories">Bridal Collection</a></li>
+          <li><a href="#categories">Gift Sets</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#why">Our Craft</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#testimonials">Client Stories</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Policies</h4>
+        <ul>
+          <li><a onclick="showToast('Hallmarking & Purity — coming soon')">Hallmarking &amp; Purity</a></li>
+          <li><a onclick="showToast('Lifetime Exchange policy — coming soon')">Lifetime Exchange</a></li>
+          <li><a onclick="showToast('Repair Services info — coming soon')">Repair Services</a></li>
+          <li><a onclick="showToast('Shipping Policy — coming soon')">Shipping Policy</a></li>
+          <li><a onclick="showToast('Privacy Policy — coming soon')">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Keshavi Jewellers. All rights reserved.</p>
+      <p class="disc">✦ This is a sample website concept for demonstration purposes only. Not a real business.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════
+   DATA STORE
+════════════════════════════════ */
+const MODALS = {
+  gold:{
+    img:'https://images.pexels.com/photos/10983783/pexels-photo-10983783.jpeg?auto=compress&cs=tinysrgb&w=660',
+    tag:'Hallmarked 22 KT Gold',title:'Gold Jewellery',
+    body:'Our gold collection is a celebration of India\'s centuries-old goldsmithing tradition. Every piece — from intricately carved temple necklaces to sleek contemporary bangles — is crafted in hallmarked 22-karat gold, certified for purity and weight. Whether you seek a statement bridal set or an everyday pair of earrings, our range offers unmatched variety and craftsmanship.',
+    features:['22 KT BIS-Hallmarked Gold','Hand-engraved & cast designs','Necklaces, bangles, earrings, rings','Available in yellow & rose gold tones','Lifetime exchange & buyback guarantee']
+  },
+  silver:{
+    img:'https://images.pexels.com/photos/6858613/pexels-photo-6858613.jpeg?auto=compress&cs=tinysrgb&w=660',
+    tag:'925 Sterling Silver',title:'Silver Jewellery',
+    body:'Our silver line draws from the best of Indian artisan traditions — oxidised filigree work, tribal-inspired motifs, and clean contemporary silhouettes. Crafted in 925 sterling silver, each piece is assay-certified and finished to a mirror polish or antique lustre, depending on the design. Perfect for everyday wear or a distinctive statement.',
+    features:['925 Sterling Silver — Assay Certified','Oxidised & high-polish finishes','Filigree, tribal & modern designs','Rings, necklaces, cuffs & anklets','Anti-tarnish protective coating']
+  },
+  custom:{
+    img:'https://images.pexels.com/photos/1191531/pexels-photo-1191531.jpeg?auto=compress&cs=tinysrgb&w=660',
+    tag:'Bespoke Design Service',title:'Custom Designs',
+    body:'Bring your vision to life with our bespoke jewellery service. Share a sketch, a reference, a memory, or simply describe what you\'re imagining — our master craftsmen will translate it into a one-of-a-kind creation. From initial concept sketches to wax models and the final hand-finished piece, you\'ll be part of every step of the journey.',
+    features:['Personalised design consultation','3D CAD rendering before production','Any metal — gold, silver, platinum','Gemstone sourcing & setting','4–6 week turnaround on average']
+  }
+};
+
+const GALLERY = [
+  {img:'https://images.pexels.com/photos/2697787/pexels-photo-2697787.jpeg?auto=compress&cs=tinysrgb&w=660',tag:'Featured Piece',title:'Gold Necklace Set',body:'A grand statement necklace in 22-karat gold, handcrafted using traditional jadau techniques. Ideal for bridal and festive occasions.',features:['22 KT Hallmarked Gold','Jadau handcraft technique','Bridal & festive wear','Custom sizing available']},
+  {img:'https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=660',tag:'Silver Collection',title:'Drop Earrings',body:'Elegant oxidised silver drop earrings with tribal-inspired motifs. Lightweight and perfect for both casual and formal wear.',features:['925 Sterling Silver','Oxidised finish','Tribal-inspired motifs','Hypoallergenic hooks']},
+  {img:'https://images.pexels.com/photos/9428037/pexels-photo-9428037.jpeg?auto=compress&cs=tinysrgb&w=660',tag:'Gold Collection',title:'Gold Bangles',body:'A stacked set of hand-carved gold bangles. Hollow-core construction for a lightweight feel with all the visual grandeur of solid gold.',features:['22 KT Hallmarked Gold','Hollow-core for comfort','Hand-carved motifs','Set of 4 bangles']},
+  {img:'https://images.pexels.com/photos/5370645/pexels-photo-5370645.jpeg?auto=compress&cs=tinysrgb&w=660',tag:'Silver Collection',title:'Sterling Silver Ring',body:'A bold statement ring in 925 sterling silver, set with a single smoky topaz. Adjustable band for a perfect fit.',features:['925 Sterling Silver','Smoky topaz centre stone','Adjustable band','Matte finish option']},
+  {img:'https://images.pexels.com/photos/5370707/pexels-photo-5370707.jpeg?auto=compress&cs=tinysrgb&w=660',tag:'Bridal Collection',title:'Bridal Jewellery Set',body:'A complete bridal set — necklace, maang tikka, earrings, and bangles — crafted in 22-karat gold with kundan and meenakari work.',features:['22 KT Hallmarked Gold','Kundan & meenakari work','Full bridal set included','Custom colour options']}
+];
+
+/* ════════════════════════════════
+   MODAL
+════════════════════════════════ */
+function openModal(key){
+  const d = MODALS[key]; if(!d) return;
+  _showModal(d.img,d.tag,d.title,d.body,d.features||[]);
+}
+function openGalleryModal(i){
+  const d = GALLERY[i]; if(!d) return;
+  _showModal(d.img,d.tag,d.title,d.body,d.features||[]);
+}
+function _showModal(imgSrc,tag,title,body,features){
+  const ov = document.getElementById('modal-overlay');
+  const img = document.getElementById('modal-img');
+  img.src = imgSrc;
+  img.onerror = function(){ this.onerror=null; this.src='https://picsum.photos/seed/'+title.replace(/\s/g,'')+'/660/260'; };
+  document.getElementById('modal-tag').textContent   = tag;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent  = body;
+  document.getElementById('modal-features').innerHTML = features.map(f=>`<li>${f}</li>`).join('');
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(()=>ov.classList.add('visible'));
+}
+function closeModal(){
+  const ov = document.getElementById('modal-overlay');
+  ov.classList.remove('visible');
+  setTimeout(()=>{ ov.classList.remove('open'); document.body.style.overflow=''; },350);
+}
+document.getElementById('modal-overlay').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ════════════════════════════════
+   TOAST
+════════════════════════════════ */
+let toastT;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+/* ════════════════════════════════
+   FORM
+════════════════════════════════ */
+function handleSend(){
+  const name  = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if(!name)  { showToast('Please enter your name.'); return; }
+  if(!email||!email.includes('@')){ showToast('Please enter a valid email address.'); return; }
+  const btn   = document.getElementById('sendBtn');
+  const label = document.getElementById('sendLabel');
+  btn.style.cssText = 'background:#1a3a1a;color:#5cba5c;pointer-events:none;padding:.95rem 2.5rem;font-size:.7rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;';
+  label.textContent = '✦ Enquiry Sent!';
+  showToast('Thank you, '+name+'! We\'ll be in touch shortly.');
+  setTimeout(()=>{
+    btn.style.cssText='';
+    label.textContent='Send Enquiry';
+  },3500);
+}
+
+/* ════════════════════════════════
+   NAVBAR + BACK-TO-TOP
+════════════════════════════════ */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', ()=>{
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+  document.getElementById('btt').classList.toggle('show', window.scrollY > 500);
+}, {passive:true});
+
+/* ════════════════════════════════
+   HAMBURGER
+════════════════════════════════ */
+const hbg    = document.getElementById('hbg');
+const mobNav = document.getElementById('mobNav');
+hbg.addEventListener('click', ()=>{
+  const open = hbg.classList.toggle('open');
+  hbg.setAttribute('aria-expanded', open);
+  mobNav.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+function closeMob(){
+  hbg.classList.remove('open');
+  hbg.setAttribute('aria-expanded','false');
+  mobNav.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ════════════════════════════════
+   SCROLL FADE-IN
+════════════════════════════════ */
+const fiEls = document.querySelectorAll('.fi');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const sibs = [...entry.target.parentElement.querySelectorAll('.fi')];
+    const idx  = sibs.indexOf(entry.target);
+    setTimeout(()=>entry.target.classList.add('show'), idx * 80);
+    obs.unobserve(entry.target);
+  });
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+fiEls.forEach(el=>obs.observe(el));
+
+/* ════════════════════════════════
+   ACTIVE NAV LINK
+════════════════════════════════ */
+const sections   = document.querySelectorAll('section[id]');
+const navAnchors = document.querySelectorAll('#navLinks a');
+const navObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navAnchors.forEach(a=>a.classList.remove('active'));
+      const a = document.querySelector(`#navLinks a[href="#${e.target.id}"]`);
+      if(a) a.classList.add('active');
+    }
+  });
+},{threshold:0.45});
+sections.forEach(s=>navObs.observe(s));
+
+/* ════════════════════════════════
+   CURSOR DOT (desktop)
+════════════════════════════════ */
+const cdot = document.getElementById('cdot');
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{
+    cdot.style.left = e.clientX+'px';
+    cdot.style.top  = e.clientY+'px';
+  });
+} else { cdot.style.display='none'; }
+
+/* ════════════════════════════════
+   LOAD PEXELS IMAGES WITH FALLBACKS
+   (loads lazily, falls back to picsum if blocked)
+════════════════════════════════ */
+document.querySelectorAll('img[loading="lazy"]').forEach(img=>{
+  img.addEventListener('error', function(){
+    if(this.dataset.tried) return;
+    this.dataset.tried = '1';
+    // Build a deterministic picsum fallback based on alt text
+    const seed = (this.alt||'jewel').replace(/\s+/g,'-').toLowerCase();
+    this.src = `https://picsum.photos/seed/${seed}/700/500`;
+  });
+});
+
+/* Keyboard accessibility for cat-card / gal-item */
+document.querySelectorAll('[role="button"]').forEach(el=>{
+  el.addEventListener('keypress', e=>{ if(e.key==='Enter'||e.key===' ') el.click(); });
+});
+</script>
+</body>
+</html>
