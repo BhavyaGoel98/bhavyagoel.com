@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Keshavi Jewellers | Elegance in Every Detail</title>
+  <!-- Google Fonts: elegant serif + clean sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ---------- CSS RESET & VARIABLES ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --black: #0b0b0b;
+      --rich-black: #1a1a1a;
+      --gold: #d4af37;
+      --gold-light: #f5e7b2;
+      --gold-dark: #b4941e;
+      --white: #ffffff;
+      --off-white: #f9f9f9;
+      --gray-light: #eaeaea;
+      --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.06);
+      --shadow-gold: 0 10px 25px rgba(212, 175, 55, 0.12);
+      --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --border-radius: 2px;
+      --section-padding: 5rem 2rem;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--white);
+      color: var(--rich-black);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .serif {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    h2 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    h2:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+    }
+    .section-title-center h2:after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ---------- UTILITIES ---------- */
+    .text-gold { color: var(--gold); }
+    .bg-black { background-color: var(--black); }
+    .bg-gold { background-color: var(--gold); }
+    .bg-off-white { background-color: var(--off-white); }
+    
+    .btn {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      background: transparent;
+      border-radius: 0;
+    }
+    .btn-gold {
+      background-color: var(--gold);
+      color: var(--black);
+      border-color: var(--gold);
+    }
+    .btn-gold:hover {
+      background-color: transparent;
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+    .btn-outline-light {
+      border-color: var(--white);
+      color: var(--white);
+    }
+    .btn-outline-light:hover {
+      background-color: var(--white);
+      color: var(--black);
+    }
+    .btn-outline-gold {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .btn-outline-gold:hover {
+      background-color: var(--gold);
+      color: var(--black);
+    }
+
+    /* ---------- HEADER / NAVIGATION ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 0.8rem 0;
+      transition: var(--transition);
+    }
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+    }
+    .logo a {
+      text-decoration: none;
+      color: var(--black);
+    }
+    .logo span {
+      color: var(--gold);
+    }
+    .nav-links {
+      display: flex;
+      gap: 3rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--rich-black);
+      font-weight: 400;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: var(--transition);
+      padding-bottom: 5px;
+      border-bottom: 1px solid transparent;
+    }
+    .nav-links a:hover {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+    .mobile-menu-btn {
+      display: none;
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: var(--black);
+      cursor: pointer;
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      background: linear-gradient(135deg, #0f0f0f 0%, #1e1e1e 100%);
+      color: var(--white);
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 70% 30%, rgba(212,175,55,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-content {
+      max-width: 700px;
+      padding: 2rem 0;
+      position: relative;
+      z-index: 2;
+    }
+    .hero h1 {
+      font-size: 5rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      color: var(--white);
+    }
+    .hero h1 .gold {
+      color: var(--gold);
+    }
+    .hero .tagline {
+      font-size: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--gold-light);
+    }
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      opacity: 0.9;
+      max-width: 550px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* ---------- FADE-IN ANIMATION (scroll reveal) ---------- */
+    .fade-section {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- ABOUT ---------- */
+    .about {
+      padding: var(--section-padding);
+      background: var(--white);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-text p {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      color: #333;
+    }
+    .about-highlight {
+      border-left: 3px solid var(--gold);
+      padding-left: 1.8rem;
+      margin-top: 2rem;
+    }
+    .about-image {
+      background: url('https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=800') center/cover no-repeat;
+      min-height: 380px;
+      border: 1px solid var(--gold-light);
+      box-shadow: var(--shadow-gold);
+    }
+
+    /* ---------- CATEGORIES ---------- */
+    .categories {
+      padding: var(--section-padding);
+      background: var(--off-white);
+    }
+    .section-title-center {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+    .category-card {
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      text-align: center;
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+    .category-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-gold);
+      border-color: var(--gold-light);
+    }
+    .category-img {
+      height: 280px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .category-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.1), transparent);
+    }
+    .category-content {
+      padding: 2rem 1.5rem;
+    }
+    .category-content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 0.7rem;
+    }
+    .category-content p {
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+    .link-gold {
+      text-decoration: none;
+      color: var(--gold-dark);
+      font-weight: 500;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid transparent;
+      transition: var(--transition);
+    }
+    .link-gold:hover {
+      border-bottom-color: var(--gold);
+    }
+
+    /* ---------- GALLERY ---------- */
+    .gallery {
+      padding: var(--section-padding);
+      background: var(--white);
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .gallery-item {
+      aspect-ratio: 3/4;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .gallery-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 25px 35px -10px rgba(212,175,55,0.25);
+    }
+    .gallery-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      padding: 2rem 1rem 1rem;
+      color: white;
+      opacity: 0;
+      transition: var(--transition);
+      transform: translateY(10px);
+    }
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .gallery-overlay span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    /* ---------- WHY CHOOSE US ---------- */
+    .features {
+      padding: var(--section-padding);
+      background: var(--rich-black);
+      color: var(--white);
+    }
+    .features h2 { color: var(--white); }
+    .features h2:after { background: var(--gold); }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      margin-top: 2.5rem;
+    }
+    .feature {
+      text-align: center;
+      padding: 1.5rem;
+    }
+    .feature i {
+      font-size: 2.8rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .feature h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--gold-light);
+    }
+    .feature p {
+      opacity: 0.85;
+    }
+
+    /* ---------- TESTIMONIALS ---------- */
+    .testimonials {
+      padding: var(--section-padding);
+      background: var(--off-white);
+    }
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .testimonial-card {
+      background: var(--white);
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      border: 1px solid #f0f0f0;
+    }
+    .testimonial-card:hover {
+      box-shadow: var(--shadow-gold);
+    }
+    .testimonial-card i {
+      color: var(--gold);
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+    .testimonial-text {
+      font-style: italic;
+      margin-bottom: 1.8rem;
+      color: #2a2a2a;
+    }
+    .client {
+      font-weight: 600;
+      color: var(--gold-dark);
+      letter-spacing: 1px;
+    }
+
+    /* ---------- CONTACT ---------- */
+    .contact {
+      padding: var(--section-padding);
+      background: var(--white);
+    }
+    .contact-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .contact-info h3 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .contact-detail {
+      margin: 2rem 0;
+    }
+    .contact-detail p {
+      margin-bottom: 0.7rem;
+      font-size: 1.1rem;
+    }
+    .contact-detail i {
+      color: var(--gold);
+      width: 30px;
+    }
+    .placeholder-note {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-top: 1rem;
+    }
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #ddd;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--off-white);
+      transition: var(--transition);
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      border-color: var(--gold);
+      outline: none;
+      background: white;
+    }
+    .contact-form button {
+      width: 100%;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      background: var(--black);
+      color: var(--white);
+      padding: 3rem 2rem 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .footer-brand h3 {
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .footer-links h4, .footer-contact h4 {
+      color: var(--gold-light);
+      margin-bottom: 1.2rem;
+      font-size: 1.3rem;
+    }
+    .footer-links ul {
+      list-style: none;
+    }
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+    .footer-links a {
+      color: #ccc;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+    .footer-disclaimer {
+      grid-column: 1/-1;
+      border-top: 1px solid #333;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media screen and (max-width: 992px) {
+      h2 { font-size: 2.5rem; }
+      .hero h1 { font-size: 4rem; }
+      .category-grid, .features-grid, .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-image { order: -1; min-height: 300px; }
+    }
+
+    @media screen and (max-width: 768px) {
+      .header-container { padding: 0 1rem; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        gap: 1.5rem;
+        text-align: center;
+        border-bottom: 2px solid var(--gold);
+      }
+      .nav-links.show { display: flex; }
+      .mobile-menu-btn { display: block; }
+      
+      .hero { min-height: 80vh; padding: 2rem 0; }
+      .hero h1 { font-size: 3.2rem; }
+      
+      .category-grid, .features-grid, .testimonial-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .contact-container { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; text-align: center; }
+      h2:after { left: 50%; transform: translateX(-50%); }
+      .section-title-center h2:after { left: 50%; }
+    }
+
+    /* small screens */
+    @media screen and (max-width: 480px) {
+      .hero-buttons .btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo"><a href="#">KESHAVI<span> JEWELLERS</span></a></div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#categories">Collections</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+      <div class="container hero-content fade-section visible">
+        <h1>Crafting <span class="gold">Elegance</span><br>In Every Detail</h1>
+        <div class="tagline">— Keshavi Jewellers —</div>
+        <p>Where tradition meets contemporary design. Handpicked gold, silver, and bespoke creations for the discerning.</p>
+        <div class="hero-buttons">
+          <a href="#categories" class="btn btn-gold">Explore Collection</a>
+          <a href="#contact" class="btn btn-outline-light">Visit Boutique</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="about fade-section">
+      <div class="container about-grid">
+        <div class="about-text">
+          <h2>Our Legacy</h2>
+          <p>Founded on the principles of trust and impeccable artistry, Keshavi Jewellers has been synonymous with heirloom-quality jewellery since 1982. Every piece is a testament to our master craftsmen's dedication.</p>
+          <p>We blend age-old techniques with modern aesthetics, ensuring each creation — from intricate gold necklaces to minimalist silver — tells a story of timeless beauty.</p>
+          <div class="about-highlight">
+            <p><i class="fas fa-gem text-gold"></i> <strong>100% certified & ethically sourced</strong></p>
+            <p><i class="fas fa-hands text-gold"></i> <strong>Three generations of goldsmith expertise</strong></p>
+          </div>
+        </div>
+        <div class="about-image" aria-label="Craftsmanship at Keshavi"></div>
+      </div>
+    </section>
+
+    <!-- PRODUCT CATEGORIES -->
+    <section id="categories" class="categories fade-section">
+      <div class="container section-title-center">
+        <h2>Curated Collections</h2>
+        <p style="max-width:600px; margin:1rem auto 0; color:#444;">Discover the perfect expression of you</p>
+      </div>
+      <div class="container category-grid">
+        <!-- Gold -->
+        <div class="category-card">
+          <div class="category-img" style="background-image: url('https://images.pexels.com/photos/248077/pexels-photo-248077.jpeg?auto=compress&cs=tinysrgb&w=600');"></div>
+          <div class="category-content">
+            <h3>Gold Jewellery</h3>
+            <p>22k & 18k gold, handcrafted with precision. Necklaces, bangles, and earrings.</p>
+            <a href="#" class="link-gold">View Gold <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <!-- Silver -->
+        <div class="category-card">
+          <div class="category-img" style="background-image: url('https://images.pexels.com/photos/1252983/pexels-photo-1252983.jpeg?auto=compress&cs=tinysrgb&w=600');"></div>
+          <div class="category-content">
+            <h3>Silver Jewellery</h3>
+            <p>Sterling silver with contemporary flair. Oxidised, minimalist, and festive designs.</p>
+            <a href="#" class="link-gold">View Silver <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <!-- Custom -->
+        <div class="category-card">
+          <div class="category-img" style="background-image: url('https://images.pexels.com/photos/1201694/pexels-photo-1201694.jpeg?auto=compress&cs=tinysrgb&w=600');"></div>
+          <div class="category-content">
+            <h3>Custom Designs</h3>
+            <p>Bring your vision to life. Bespoke engagement rings, remodelling, and more.</p>
+            <a href="#" class="link-gold">Enquire now <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED GALLERY -->
+    <section id="gallery" class="gallery fade-section">
+      <div class="container section-title-center">
+        <h2>Featured Collection</h2>
+      </div>
+      <div class="container gallery-grid">
+        <div class="gallery-item" style="background-image: url('https://images.pexels.com/photos/265856/pexels-photo-265856.jpeg?auto=compress&cs=tinysrgb&w=600');">
+          <div class="gallery-overlay"><span>Royal Heritage Necklace</span></div>
+        </div>
+        <div class="gallery-item" style="background-image: url('https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=600');">
+          <div class="gallery-overlay"><span>Solitaire Radiance</span></div>
+        </div>
+        <div class="gallery-item" style="background-image: url('https://images.pexels.com/photos/985343/pexels-photo-985343.jpeg?auto=compress&cs=tinysrgb&w=600');">
+          <div class="gallery-overlay"><span>Golden Weave Bangles</span></div>
+        </div>
+        <div class="gallery-item" style="background-image: url('https://images.pexels.com/photos/1161547/pexels-photo-1161547.jpeg?auto=compress&cs=tinysrgb&w=600');">
+          <div class="gallery-overlay"><span>Silver Moon Pendant</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="features fade-section">
+      <div class="container section-title-center">
+        <h2>The Keshavi Promise</h2>
+      </div>
+      <div class="container features-grid">
+        <div class="feature">
+          <i class="fas fa-certificate"></i>
+          <h3>Premium Quality</h3>
+          <p>BIS hallmarked, ethically sourced materials and conflict‑free diamonds.</p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-hammer"></i>
+          <h3>Trusted Craftsmanship</h3>
+          <p>Skilled artisans with decades of experience in traditional & modern techniques.</p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-hourglass-half"></i>
+          <h3>Timeless Designs</h3>
+          <p>Pieces that transcend trends, becoming heirlooms for generations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials fade-section">
+      <div class="container section-title-center">
+        <h2>Cherished by Many</h2>
+      </div>
+      <div class="container testimonial-grid">
+        <div class="testimonial-card">
+          <i class="fas fa-quote-left"></i>
+          <p class="testimonial-text">The custom design process was seamless. They understood exactly what I wanted for my wedding ring. Absolute perfection.</p>
+          <p class="client">— Ananya S.</p>
+        </div>
+        <div class="testimonial-card">
+          <i class="fas fa-quote-left"></i>
+          <p class="testimonial-text">I've been a patron for years. The gold quality and finish are unmatched. It's the only place I trust for festive jewellery.</p>
+          <p class="client">— Rajiv M.</p>
+        </div>
+        <div class="testimonial-card">
+          <i class="fas fa-quote-left"></i>
+          <p class="testimonial-text">Their silver collection is modern yet classic. I receive compliments every time I wear their pieces.</p>
+          <p class="client">— Priya K.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="contact fade-section">
+      <div class="container contact-container">
+        <div class="contact-info">
+          <h2>Visit Our Atelier</h2>
+          <p style="font-size:1.2rem;">Experience the elegance in person.</p>
+          <div class="contact-detail">
+            <p><i class="fas fa-map-pin"></i> 27, Gold Souk Avenue, Mumbai (sample address)</p>
+            <p><i class="fas fa-phone-alt"></i> +91 98765 43210 (placeholder)</p>
+            <p><i class="fas fa-envelope"></i> concierge@keshavijewellers.in</p>
+            <p class="placeholder-note"><i class="fas fa-info-circle"></i> Concept demo — not a real store.</p>
+          </div>
+          <p><strong>Visit our store for latest collection</strong> — appointments recommended.</p>
+        </div>
+        <div class="contact-form">
+          <form id="demoContactForm">
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Email Address" required>
+            <textarea rows="4" placeholder="Your Message / Enquiry"></textarea>
+            <button type="submit" class="btn btn-gold">Send Message</button>
+            <p style="font-size:0.8rem; margin-top:1rem; opacity:0.7;">This form is for demonstration only.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>KESHAVI JEWELLERS</h3>
+        <p style="color:#bbb; margin-top:0.8rem;">Elegance in Every Detail</p>
+      </div>
+      <div class="footer-links">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#categories">Collections</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#">Journal</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Care Guide</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Connect</h4>
+        <p><i class="fab fa-instagram"></i> @keshavi.jewellers</p>
+        <p><i class="fab fa-facebook-f"></i> /keshavijewellers</p>
+        <p style="margin-top:1rem;"><i class="far fa-clock"></i> Mon-Sat: 11am – 8pm</p>
+      </div>
+      <div class="footer-disclaimer">
+        <p>✨ This is a sample website concept created for demonstration purposes. Not a real business. ✨<br>
+        © 2026 Keshavi Jewellers (concept). All design rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      "use strict";
+
+      // Mobile menu toggle
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const navLinks = document.getElementById('navLinks');
+      if (menuBtn) {
+        menuBtn.addEventListener('click', () => {
+          navLinks.classList.toggle('show');
+        });
+      }
+
+      // Close mobile menu on link click
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('show');
+        });
+      });
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href === "#" || href === "") return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // Intersection Observer for fade-in animations
+      const fadeElements = document.querySelectorAll('.fade-section');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+      
+      fadeElements.forEach(el => observer.observe(el));
+      
+      // Ensure hero is visible immediately (already has visible class)
+      
+      // Contact form prevent default (demo)
+      const form = document.getElementById('demoContactForm');
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          alert('✨ Thank you for your interest. This is a concept form — we’ll be in touch (in theory).');
+          form.reset();
+        });
+      }
+
+      // Additional hover smoothness for gallery etc is CSS
+    })();
+  </script>
+  <!-- subtle extra polish: close menu on resize -->
+</body>
+</html>
