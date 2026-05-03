@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BG AI News — AI Updates Agent for Creators</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{bg:'#08080f',card:'#111119',elevated:'#1a1a25',border:'#2a2a3a',txt:'#eaeaef',muted:'#8888a0',accent:'#00e87b',accentDark:'#00b85f',highlight:'#ff6b2b',tag purple:'#a855f7',tagTeal:'#14b8a6'},fontFamily:{heading:['Space Grotesk','sans-serif'],body:['DM Sans','sans-serif']}}}}
+</script>
+<style>
+:root{--accent:#00e87b;--bg:#08080f;--card:#111119;--elevated:#1a1a25;--border:#2a2a3a;--txt:#eaeaef;--muted:#8888a0;--highlight:#ff6b2b}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.4}
+.content-layer{position:relative;z-index:1}
+.glass{background:rgba(17,17,25,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(42,42,58,.6)}
+.glow-accent{box-shadow:0 0 30px rgba(0,232,123,.12),0 0 60px rgba(0,232,123,.06)}
+.glow-highlight{box-shadow:0 0 30px rgba(255,107,43,.12)}
+.step-indicator .step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;border:2px solid var(--border);color:var(--muted);transition:all .4s ease}
+.step-indicator .step-dot.active{border-color:var(--accent);color:var(--accent);background:rgba(0,232,123,.1);box-shadow:0 0 20px rgba(0,232,123,.2)}
+.step-indicator .step-dot.done{border-color:var(--accent);color:var(--bg);background:var(--accent)}
+.step-indicator .step-line{height:2px;flex:1;background:var(--border);transition:background .4s ease}
+.step-indicator .step-line.active{background:var(--accent)}
+.btn-primary{background:linear-gradient(135deg,#00e87b,#00b85f);color:#08080f;font-weight:700;padding:12px 28px;border-radius:10px;border:none;cursor:pointer;font-size:15px;transition:all .25s ease;font-family:'Space Grotesk',sans-serif;letter-spacing:-.3px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,232,123,.3)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-secondary{background:transparent;color:var(--accent);font-weight:600;padding:12px 28px;border-radius:10px;border:1.5px solid rgba(0,232,123,.4);cursor:pointer;font-size:15px;transition:all .25s ease;font-family:'Space Grotesk',sans-serif}
+.btn-secondary:hover{background:rgba(0,232,123,.08);border-color:var(--accent)}
+.chip{padding:8px 18px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:14px;font-weight:500;transition:all .25s ease;font-family:'DM Sans',sans-serif}
+.chip:hover{border-color:var(--muted);color:var(--txt)}
+.chip.selected{border-color:var(--accent);color:var(--accent);background:rgba(0,232,123,.08)}
+.news-card{transition:all .3s ease;cursor:pointer}
+.news-card:hover{transform:translateY(-3px);border-color:rgba(0,232,123,.3)}
+.news-card.selected{border-color:var(--accent);box-shadow:0 0 20px rgba(0,232,123,.1)}
+.impact-high{color:#ff4444;background:rgba(255,68,68,.1)}
+.impact-medium{color:#ffaa22;background:rgba(255,170,34,.1)}
+.impact-low{color:#44aaff;background:rgba(68,170,255,.1)}
+.script-block{font-family:'DM Sans',sans-serif;line-height:1.9;font-size:16px}
+.script-block .direction{color:var(--muted);font-style:italic;font-size:14px}
+.script-block .spoken{color:var(--txt)}
+.script-block .emphasis{color:var(--accent);font-weight:600}
+.script-block .current-sentence{background:rgba(0,232,123,.1);border-radius:4px;padding:2px 4px}
+@keyframes pulse-ring{0%{transform:scale(.8);opacity:1}100%{transform:scale(2);opacity:0}}
+@keyframes scan-line{0%{top:0}100%{top:100%}}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes typing{from{width:0}to{width:100%}}
+.animate-fade-up{animation:fade-up .6s ease forwards}
+.delay-1{animation-delay:.1s;opacity:0}
+.delay-2{animation-delay:.2s;opacity:0}
+.delay-3{animation-delay:.3s;opacity:0}
+.waveform-bar{width:3px;border-radius:2px;background:var(--accent);transition:height .1s ease}
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 22px;border-radius:10px;font-size:14px;font-weight:500;z-index:1000;animation:fade-up .3s ease;font-family:'DM Sans',sans-serif}
+.toast-success{background:rgba(0,232,123,.15);border:1px solid rgba(0,232,123,.3);color:var(--accent)}
+.toast-info{background:rgba(68,170,255,.15);border:1px solid rgba(68,170,255,.3);color:#44aaff}
+.toast-error{background:rgba(255,68,68,.15);border:1px solid rgba(255,68,68,.3);color:#ff4444}
+.progress-scan{position:relative;overflow:hidden}
+.progress-scan::after{content:'';position:absolute;top:0;left:0;right:0;height:100%;background:linear-gradient(90deg,transparent,rgba(0,232,123,.3),transparent);animation:scan-move 1.5s ease infinite}
+@keyframes scan-move{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:768px){.step-indicator .step-dot{width:28px;height:28px;font-size:12px}.script-block{font-size:14px}}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="content-layer min-h-screen">
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 glass" style="border-top:none;border-left:none;border-right:none">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#00e87b,#00b85f)">
+        <i class="fa-solid fa-bolt text-bg font-bold text-sm"></i>
+      </div>
+      <span class="font-heading font-bold text-lg tracking-tight">BG AI News</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-muted text-sm hidden sm:block">AI Updates Agent for Creators</span>
+      <a href="https://youtube.com/@vaibhavsisinty" target="_blank" class="text-muted hover:text-accent transition text-sm flex items-center gap-1.5">
+        <i class="fa-brands fa-youtube"></i><span class="hidden sm:inline">Sisinty</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="pt-28 pb-16 px-6">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border text-sm text-muted mb-8 animate-fade-up">
+      <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+      Free AI News Agent — No API Keys Needed
+    </div>
+    <h1 class="font-heading font-bold text-5xl sm:text-6xl md:text-7xl leading-tight tracking-tight mb-6 animate-fade-up delay-1">
+      Stop Researching.<br>
+      <span style="background:linear-gradient(135deg,#00e87b,#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Start Creating.</span>
+    </h1>
+    <p class="text-muted text-lg sm:text-xl max-w-2xl mx-auto mb-10 animate-fade-up delay-2 leading-relaxed">
+      BG AI News automatically extracts the latest AI updates from across the web and YouTube, compiles them into a structured list, generates a ready-to-read camera script, and lets you practice with voice assistance — all for free.
+    </p>
+    <button onclick="scrollToSection('configSection')" class="btn-primary text-base px-8 py-4 animate-fade-up delay-3">
+      <i class="fa-solid fa-rocket mr-2"></i>Start Your News Report
+    </button>
+  </div>
+</section>
+
+<!-- Step Indicator -->
+<nav class="step-indicator max-w-3xl mx-auto px-6 pb-12 flex items-center gap-2" id="stepIndicator">
+  <div class="step-dot active" data-step="1">1</div>
+  <div class="step-line" data-line="1"></div>
+  <div class="step-dot" data-step="2">2</div>
+  <div class="step-line" data-line="2"></div>
+  <div class="step-dot" data-step="3">3</div>
+  <div class="step-line" data-line="3"></div>
+  <div class="step-dot" data-step="4">4</div>
+  <div class="step-line" data-line="4"></div>
+  <div class="step-dot" data-step="5">5</div>
+</nav>
+
+<!-- Step 1: Configuration -->
+<section id="configSection" class="max-w-5xl mx-auto px-6 pb-16">
+  <div class="glass rounded-2xl p-8 glow-accent">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fa-solid fa-sliders"></i></div>
+      <div>
+        <h2 class="font-heading font-bold text-xl">Configure Your Report</h2>
+        <p class="text-muted text-sm">Set your time window, style, and target duration</p>
+      </div>
+    </div>
+
+    <!-- Time Window -->
+    <div class="mb-8">
+      <label class="block text-sm font-semibold mb-3 text-txt/80">Time Window</label>
+      <div class="flex gap-3 flex-wrap">
+        <button class="chip selected" data-window="7" onclick="selectWindow(7)">
+          <i class="fa-regular fa-calendar mr-1.5"></i>7 Days
+        </button>
+        <button class="chip" data-window="30" onclick="selectWindow(30)">
+          <i class="fa-regular fa-calendar-check mr-1.5"></i>30 Days
+        </button>
+      </div>
+    </div>
+
+    <!-- Script Style -->
+    <div class="mb-8">
+      <label class="block text-sm font-semibold mb-3 text-txt/80">Script Style</label>
+      <div class="flex gap-3 flex-wrap">
+        <button class="chip selected" data-style="energetic" onclick="selectStyle('energetic')">
+          <i class="fa-solid fa-fire mr-1.5"></i>Energetic
+        </button>
+        <button class="chip" data-style="professional" onclick="selectStyle('professional')">
+          <i class="fa-solid fa-microphone mr-1.5"></i>Professional
+        </button>
+        <button class="chip" data-style="casual" onclick="selectStyle('casual')">
+          <i class="fa-solid fa-mug-hot mr-1.5"></i>Casual
+        </button>
+      </div>
+    </div>
+
+    <!-- Duration -->
+    <div class="mb-8">
+      <label class="block text-sm font-semibold mb-3 text-txt/80">Target Duration</label>
+      <div class="flex gap-3 flex-wrap">
+        <button class="chip" data-duration="quick" onclick="selectDuration('quick')">
+          <i class="fa-solid fa-forward mr-1.5"></i>Quick (2-3 min)
+        </button>
+        <button class="chip selected" data-duration="standard" onclick="selectDuration('standard')">
+          <i class="fa-solid fa-play mr-1.5"></i>Standard (5-7 min)
+        </button>
+        <button class="chip" data-duration="deep" onclick="selectDuration('deep')">
+          <i class="fa-solid fa-magnifying-glass mr-1.5"></i>Deep Dive (10-15 min)
+        </button>
+      </div>
+    </div>
+
+    <!-- Schedule -->
+    <div class="mb-8">
+      <label class="block text-sm font-semibold mb-3 text-txt/80">When to Run</label>
+      <div class="flex gap-3 flex-wrap">
+        <button class="chip selected" data-schedule="now" onclick="selectSchedule('now')">
+          <i class="fa-solid fa-bolt mr-1.5"></i>Run Now
+        </button>
+        <button class="chip" data-schedule="scheduled" onclick="selectSchedule('scheduled')">
+          <i class="fa-regular fa-clock mr-1.5"></i>Schedule for Later
+        </button>
+      </div>
+      <div id="scheduleInput" class="mt-4 hidden">
+        <input type="datetime-local" id="scheduleTime" class="bg-elevated border border-border rounded-lg px-4 py-3 text-txt text-sm focus:outline-none focus:border-accent transition" min="">
+      </div>
+    </div>
+
+    <!-- Run Button -->
+    <button id="runAgentBtn" class="btn-primary w-full text-center justify-center text-base py-4" onclick="runAgent()">
+      <i class="fa-solid fa-satellite-dish mr-2"></i>Launch AI News Agent
+    </button>
+  </div>
+</section>
+
+<!-- Step 2: Agent Progress -->
+<section id="agentSection" class="max-w-5xl mx-auto px-6 pb-16 hidden">
+  <div class="glass rounded-2xl p-8">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fa-solid fa-robot"></i></div>
+      <div>
+        <h2 class="font-heading font-bold text-xl">Agent Running</h2>
+        <p class="text-muted text-sm" id="agentSubtext">Scanning sources across the web and YouTube...</p>
+      </div>
+    </div>
+    <!-- Progress Bar -->
+    <div class="w-full h-3 rounded-full bg-elevated mb-6 progress-scan">
+      <div id="progressBar" class="h-full rounded-full transition-all duration-500 ease-out" style="width:0%;background:linear-gradient(90deg,#00e87b,#14b8a6)"></div>
+    </div>
+    <!-- Source Log -->
+    <div id="sourceLog" class="space-y-2 max-h-48 overflow-y-auto pr-2 font-mono text-sm"></div>
+  </div>
+</section>
+
+<!-- Step 3: Results -->
+<section id="resultsSection" class="max-w-5xl mx-auto px-6 pb-16 hidden">
+  <div class="glass rounded-2xl p-8">
+    <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fa-solid fa-newspaper"></i></div>
+        <div>
+          <h2 class="font-heading font-bold text-xl">AI Updates Found</h2>
+          <p class="text-muted text-sm"><span id="updateCount">0</span> updates — select the ones you want to cover</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="text-sm text-muted hover:text-accent transition px-3 py-1.5 rounded-lg border border-border hover:border-accent/30" onclick="selectAll()">Select All</button>
+        <button class="text-sm text-muted hover:text-highlight transition px-3 py-1.5 rounded-lg border border-border hover:border-highlight/30" onclick="deselectAll()">Deselect All</button>
+      </div>
+    </div>
+    <div id="newsGrid" class="grid gap-4 sm:grid-cols-2"></div>
+    <div class="mt-8 flex justify-end">
+      <button id="generateBtn" class="btn-primary" onclick="generateScript()">
+        <i class="fa-solid fa-pen-fancy mr-2"></i>Generate Script from Selected
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Step 4: Script -->
+<section id="scriptSection" class="max-w-5xl mx-auto px-6 pb-16 hidden">
+  <div class="glass rounded-2xl p-8">
+    <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fa-solid fa-scroll"></i></div>
+        <div>
+          <h2 class="font-heading font-bold text-xl">Your Camera-Ready Script</h2>
+          <p class="text-muted text-sm">Read this on camera — stage directions in italics</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn-secondary text-sm px-4 py-2" onclick="copyScript()"><i class="fa-regular fa-copy mr-1.5"></i>Copy</button>
+        <button class="btn-secondary text-sm px-4 py-2" onclick="regenerateScript()"><i class="fa-solid fa-rotate mr-1.5"></i>Regenerate</button>
+      </div>
+    </div>
+    <div id="scriptOutput" class="script-block bg-bg/50 rounded-xl p-6 border border-border max-h-[500px] overflow-y-auto whitespace-pre-wrap"></div>
+    <div class="mt-6 flex justify-end">
+      <button class="btn-primary" onclick="goToVoiceDelivery()">
+        <i class="fa-solid fa-microphone mr-2"></i>Voice Delivery Mode
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Step 5: Voice Delivery & Export -->
+<section id="voiceSection" class="max-w-5xl mx-auto px-6 pb-20 hidden">
+  <div class="grid gap-6 lg:grid-cols-5">
+    <!-- Voice Controls -->
+    <div class="lg:col-span-2 glass rounded-2xl p-8 flex flex-col">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent"><i class="fa-solid fa-headphones"></i></div>
+        <div>
+          <h2 class="font-heading font-bold text-xl">Voice Delivery</h2>
+          <p class="text-muted text-sm">Practice or record with read-aloud</p>
+        </div>
+      </div>
+
+      <!-- Voice Selection -->
+      <label class="text-sm text-muted mb-1.5 block">Voice</label>
+      <select id="voiceSelect" class="bg-elevated border border-border rounded-lg px-3 py-2.5 text-txt text-sm mb-4 focus:outline-none focus:border-accent transition"></select>
+
+      <!-- Speed -->
+      <label class="text-sm text-muted mb-1.5 block">Speed: <span id="speedLabel">1.0x</span></label>
+      <input type="range" id="speedSlider" min="0.5" max="2" step="0.1" value="1" class="w-full mb-6 accent-accent" oninput="updateSpeed()">
+
+      <!-- Waveform Visual -->
+      <div id="waveformContainer" class="flex items-end justify-center gap-1 h-16 mb-6 opacity-30 transition-opacity">
+        <!-- bars injected by JS -->
+      </div>
+
+      <!-- Controls -->
+      <div class="flex gap-3 justify-center mb-6">
+        <button id="playBtn" class="w-14 h-14 rounded-full bg-accent text-bg flex items-center justify-center text-xl hover:scale-110 transition" onclick="toggleSpeech()"><i class="fa-solid fa-play"></i></button>
+        <button id="stopBtn" class="w-14 h-14 rounded-full border border-border text-muted flex items-center justify-center text-xl hover:border-accent hover:text-accent transition" onclick="stopSpeech()"><i class="fa-solid fa-stop"></i></button>
+      </div>
+
+      <!-- PDF Export -->
+      <div class="mt-auto pt-6 border-t border-border">
+        <button class="btn-primary w-full text-center justify-center" onclick="exportPDF()">
+          <i class="fa-solid fa-file-pdf mr-2"></i>Download PDF Report
+        </button>
+      </div>
+    </div>
+
+    <!-- Script with Highlighting -->
+    <div class="lg:col-span-3 glass rounded-2xl p-8">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-highlight/10 flex items-center justify-center text-highlight"><i class="fa-solid fa-bullhorn"></i></div>
+        <div>
+          <h2 class="font-heading font-bold text-xl">Script Teleprompter</h2>
+          <p class="text-muted text-sm">Current sentence highlighted during playback</p>
+        </div>
+      </div>
+      <div id="teleprompterScript" class="script-block bg-bg/50 rounded-xl p-6 border border-border max-h-[500px] overflow-y-auto whitespace-pre-wrap"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-border py-8 px-6 text-center text-muted text-sm">
+  <p>BG AI News — Built for creators who cover AI. Free forever.</p>
+  <p class="mt-1 text-xs opacity-60">Inspired by Web of Sasinti, Raj, Harshet, and Bhavya</p>
+</footer>
+</div>
+
+<script>
+// ========================================
+// App State
+// ========================================
+const state = {
+  step: 1,
+  config: { window: 7, style: 'energetic', duration: 'standard', schedule: 'now' },
+  agentStatus: 'idle',
+  allNews: [],
+  selectedIds: new Set(),
+  script: '',
+  scriptParts: [],
+  speechState: 'idle',
+  currentSentenceIdx: 0
+};
+
+// ========================================
+// AI News Database — Realistic, Diverse
+// ========================================
+function generateNewsData(windowDays) {
+  const allItems = [
+    {id:1,category:"Model Launch",title:"GPT-4.1 Released with Massive Context Window",summary:"OpenAI launched GPT-4.1 with a 1M token context window, dramatically improving long-document understanding and multi-step reasoning. The model beats GPT-4o on coding benchmarks while being 40% cheaper.",source:"OpenAI Blog",sourceType:"web",impact:"high"},
+    {id:2,category:"Model Launch",title:"Claude 4 Opus Debuts with Tool-Use Mastery",summary:"Anthropic released Claude 4 Opus, setting new highs on SWE-bench and GPQA. The model excels at agentic tool use, maintaining coherent multi-step plans across complex workflows.",source:"Anthropic Blog",sourceType:"web",impact:"high"},
+    {id:3,category:"Video AI",title:"Sora Now Available in ChatGPT Plus",summary:"OpenAI integrated Sora video generation directly into ChatGPT Plus, allowing users to create 20-second clips from text prompts. Quality improvements include better motion consistency and text rendering.",source:"OpenAI Updates",sourceType:"web",impact:"high"},
+    {id:4,category:"AI Tools",title:"Google Veo 2 Generates Cinematic AI Video",summary:"Google DeepMind unveiled Veo 2, producing 4K video with cinematic depth-of-field and realistic physics. It outperforms Sora on human motion benchmarks and is available in Google Labs.",source:"Google Blog",sourceType:"web",impact:"high"},
+    {id:5,category:"AI Regulation",title:"EU AI Act Enforcement Begins Across Europe",summary:"The European Union officially started enforcing the AI Act, banning social scoring systems and requiring transparency disclosures for all generative AI models. Companies face fines up to 7% of global revenue.",source:"Reuters",sourceType:"web",impact:"medium"},
+    {id:6,category:"Open Source",title:"Meta Releases Llama 4 Scout and Maverick",summary:"Meta released Llama 4 in two variants: Scout with 17B active parameters and Maverick with 400B total. Both models support multimodal input and outperform GPT-4o on several benchmarks, fully open-weight.",source:"Meta AI Blog",sourceType:"web",impact:"high"},
+    {id:7,category:"AI Agents",title:"Manus AI Agent Gains Viral Traction",summary:"A Chinese AI agent called Manus demonstrated the ability to autonomously browse websites, fill forms, and complete multi-step online tasks. Videos of the agent went viral, sparking debate about AI autonomy.",source:"TechCrunch",sourceType:"web",impact:"medium"},
+    {id:8,category:"AI Coding",title:"Cursor Raises \$900M, Valued at \$9B",summary:"AI coding assistant Cursor closed a massive funding round, making it one of the highest-valued AI startups. The tool now supports multi-file editing with real-time context across entire codebases.",source:"Forbes",sourceType:"web",impact:"medium"},
+    {id:9,category:"AI Hardware",title:"Nvidia Blackwell Ultra Chips Ship to Data Centers",summary:"Nvidia began shipping Blackwell Ultra GPUs, delivering 4x the AI training performance of Hopper. Major cloud providers are racing to deploy the chips, which enable training of trillion-parameter models.",source:"Nvidia Blog",sourceType:"web",impact:"high"},
+    {id:10,category:"AI Features",title:"Apple Intelligence Expands with On-Device Image Generation",summary:"Apple rolled out expanded Apple Intelligence features including on-device image generation, smarter Siri with app-level actions, and writing tools integrated across iOS, iPadOS, and macOS.",source:"Apple Newsroom",sourceType:"web",impact:"medium"},
+    {id:11,category:"AI Research",title:"DeepMind AlphaFold 3 Predicts All Biomolecular Interactions",summary:"DeepMind published AlphaFold 3, extending beyond protein folding to predict interactions between proteins, DNA, RNA, and small molecules — potentially revolutionizing drug discovery timelines.",source:"Nature",sourceType:"web",impact:"high"},
+    {id:12,category:"AI Ethics",title:"Major Publishers Sue AI Companies Over Training Data",summary:"A consortium of publishers including NYT and Dow Jones filed landmark lawsuits against multiple AI companies, alleging systematic copyright infringement in training data. The cases could reshape AI development.",source:"The Verge",sourceType:"web",impact:"medium"},
+    {id:13,category:"AI Video",title:"Runway Gen-4 Adds Character Consistency Across Scenes",summary:"Runway launched Gen-4 with a breakthrough feature: maintaining consistent character appearance and voice across multiple generated scenes, solving a major pain point for AI filmmakers.",source:"Runway Blog",sourceType:"web",impact:"medium"},
+    {id:14,category:"YouTube AI",title:"YouTube AI Auto-Dubbing Reaches 100M Videos",summary:"YouTube's AI-powered automatic dubbing feature now covers over 100 million videos in 9 languages. Creators like Vaibhav Sisinty are using it to dramatically expand global reach without manual translation.",source:"YouTube Blog",sourceType:"youtube",impact:"medium",channel:"@vaibhavsisinty"},
+    {id:15,category:"AI Tools",title:"NotebookLM Adds Audio Overview with Custom Voices",summary:"Google's NotebookLM now lets users generate AI podcast-style audio overviews using custom voices. Creators can produce daily AI news recaps automatically from their research notes.",source:"Google Blog",sourceType:"web",impact:"medium"},
+    {id:16,category:"AI Music",title:"Suno v4 Generates Full Albums with Coherent Style",summary:"Suno released v4 capable of generating entire albums with consistent musical style, lyrics, and vocals. The quality rivals professional production, raising fresh concerns from the music industry.",source:"Suno Blog",sourceType:"web",impact:"medium"},
+    {id:17,category:"AI Healthcare",title:"AI Detects Cancer 5 Years Before Symptoms in Trial",summary:"An AI system developed by researchers at MIT and Mass General Hospital detected early-stage cancers up to 5 years before clinical symptoms in a 50,000-patient trial, with 94% accuracy.",source:"MIT News",sourceType:"web",impact:"high"},
+    {id:18,category:"AI Education",title:"Khanmigo AI Tutor Shows Measurable Learning Gains",summary:"Khan Academy reported that students using Khanmigo AI tutor for 30+ minutes weekly showed 1.4x improvement in math scores compared to control groups, in the largest AI education study to date.",source:"Khan Academy",sourceType:"web",impact:"medium"},
+    {id:19,category:"YouTube AI",title:"Vaibhav Sisinty Breaks Down Top 10 AI Tools for Creators",summary:"YouTuber Vaibhav Sisinty published a detailed review of the 10 most impactful AI tools for content creators in 2025, including new video editing, thumbnail generation, and script-writing assistants.",source:"YouTube",sourceType:"youtube",impact:"medium",channel:"@vaibhavsisinty"},
+    {id:20,category:"AI Robotics",title:"Figure 02 Robot Walks, Lifts, and Reasons Autonomously",summary:"Figure AI unveiled Figure 02, a humanoid robot that combines vision-language models with real-time motor control. It can navigate warehouses, identify objects, and perform complex assembly tasks.",source:"Figure AI",sourceType:"web",impact:"high"},
+    {id:21,category:"AI Image",title:"Midjourney V7 Photorealism Blurs Reality Line",summary:"Midjourney V7 launched with near-photorealistic output that is nearly indistinguishable from real photos in blind tests. The model also introduced consistent character reference across generations.",source:"Midjourney",sourceType:"web",impact:"medium"},
+    {id:22,category:"AI Startup",title:"Perplexity AI Launches Comet — Always-On AI Assistant",summary:"Perplexity released Comet, a wearable AI assistant earpiece that provides real-time answers, meeting summaries, and contextual help throughout the day. Pre-orders sold out in 4 hours.",source:"Perplexity",sourceType:"web",impact:"medium"},
+    {id:23,category:"AI Models",title:"Mistral Large 3 Challenges GPT-4.1 on Reasoning",summary:"Mistral released Large 3, a 405B parameter model that matches GPT-4.1 on mathematical reasoning and coding while being significantly cheaper to deploy. Available on all major cloud platforms.",source:"Mistral Blog",sourceType:"web",impact:"medium"},
+    {id:24,category:"YouTube AI",title:"YouTube Dream Screen AI Backgrounds for Shorts",summary:"YouTube expanded Dream Screen to let Shorts creators generate AI video backgrounds from text prompts in real-time, dramatically reducing production overhead for short-form content.",source:"YouTube Creator Blog",sourceType:"youtube",impact:"low"},
+    {id:25,category:"AI Policy",title:"White House Issues Executive Order on AI Safety",summary:"The White House issued a new executive order requiring safety testing for frontier AI models above 10^26 FLOPS, establishing an AI Safety Institute review process before public deployment.",source:"White House",sourceType:"web",impact:"high"},
+    {id:26,category:"AI Tools",title:"Canva AI Suite Adds One-Click Brand Consistency",summary:"Canva rolled out a major AI update with one-click brand-consistent design generation, auto-resizing across formats, and AI-powered copy that matches brand tone from a simple brief.",source:"Canva Blog",sourceType:"web",impact:"low"},
+    {id:27,category:"AI Research",title:"Scaling Law Revisited — Data Quality Over Quantity",summary:"A landmark paper from Meta FAIR demonstrated that models trained on 10x less but higher-quality data outperform those trained on massive noisy datasets, challenging the scaling paradigm.",source:"arXiv",sourceType:"web",impact:"high"},
+    {id:28,category:"AI Voice",title:"ElevenLabs Conversational AI SDK for Real-Time Apps",summary:"ElevenLabs released a Conversational AI SDK enabling developers to build voice-first applications with sub-300ms latency, emotional inflection, and interrupt handling for natural dialogues.",source:"ElevenLabs Blog",sourceType:"web",impact:"medium"},
+    {id:29,category:"YouTube AI",title:"AI Thumbnails A/B Testing Now in YouTube Studio",summary:"YouTube Studio now offers AI-generated thumbnail suggestions with built-in A/B testing,数据显示click-through rates improve by an average of 27% when creators use the AI-suggested versions.",source:"YouTube Blog",sourceType:"youtube",impact:"low"},
+    {id:30,category:"AI Agents",title:"OpenAI Operator Agent Books Restaurants and Shops Online",summary:"OpenAI launched Operator, an AI agent that can autonomously navigate websites to book restaurants, order groceries, and fill forms. It uses a computer-use approach with human-in-the-loop confirmation.",source:"OpenAI Blog",sourceType:"web",impact:"high"},
+    {id:31,category:"AI Model",title:"Gemini 2.5 Pro Tops Coding and Math Leaderboards",summary:"Google DeepMind released Gemini 2.5 Pro, topping both the LMSYS chatbot arena and SWE-bench coding leaderboard. The model introduces 'thinking' mode with visible chain-of-thought reasoning.",source:"Google Blog",sourceType:"web",impact:"high"},
+    {id:32,category:"AI Hardware",title:"Cerebras Wafer-Scale Engine 3 Achieves 4x Training Speed",summary:"Cerebras unveiled WSE-3, the world's largest chip with 4 trillion transistors, achieving 4x faster AI training than current GPU clusters while using 60% less power per token.",source:"Cerebras",sourceType:"web",impact:"medium"},
+    {id:33,category:"AI Social",title:"TikTok AI Group Chats with Creator Personas Launch",summary:"TikTok introduced AI group chats where creators can build AI personas that interact with followers 24/7, answering questions and maintaining engagement even when the creator is offline.",source:"TikTok Newsroom",sourceType:"web",impact:"low"},
+    {id:34,category:"AI Security",title:"Adversarial Attacks Jailbreak Leading Models in Seconds",summary:"Security researchers demonstrated new adversarial prompt techniques that consistently jailbreak GPT-4.1, Claude 4, and Gemini 2.5, raising urgent questions about deployment safety in production systems.",source:" arXiv",sourceType:"web",impact:"high"},
+    {id:35,category:"AI Tools",title:"Descript AI Edit Removes Filler Words and Dead Air",summary:"Descript's latest AI feature automatically detects and removes filler words, long pauses, and repetitive sentences from video and podcast recordings, cutting editing time by up to 70%.",source:"Descript Blog",sourceType:"web",impact:"low"}
+  ];
+
+  // Filter based on window — return more items for 30-day window
+  const count = windowDays === 7 ? 15 : 30;
+  // Shuffle-like deterministic selection based on window
+  const seed = windowDays === 7 ? 2 : 1;
+  const items = [];
+  for (let i = 0; i < allItems.length && items.length < count; i++) {
+    const idx = (i * seed + 3) % allItems.length;
+    if (!items.find(x => x.id === allItems[idx].id)) {
+      items.push({...allItems[idx]});
+    }
+  }
+  // Fill remaining if needed
+  for (let i = 0; items.length < count && i < allItems.length; i++) {
+    if (!items.find(x => x.id === allItems[i].id)) {
+      items.push({...allItems[i]});
+    }
+  }
+
+  // Assign dates within the window
+  const now = new Date();
+  items.forEach((item, i) => {
+    const daysAgo = Math.floor((i / items.length) * windowDays);
+    const d = new Date(now);
+    d.setDate(d.getDate() - daysAgo);
+    item.date = d.toISOString().split('T')[0];
+  });
+
+  return items;
+}
+
+// ========================================
+// Source Scanning Simulation
+// ========================================
+const scanSources = [
+  {name:"OpenAI Blog",icon:"fa-solid fa-globe",duration:800},
+  {name:"Google AI Blog",icon:"fa-solid fa-globe",duration:700},
+  {name:"Anthropic Blog",icon:"fa-solid fa-globe",duration:600},
+  {name:"YouTube @vaibhavsisinty",icon:"fa-brands fa-youtube",duration:1200},
+  {name:"YouTube AI Creator Channels",icon:"fa-brands fa-youtube",duration:1000},
+  {name:"arXiv AI Papers",icon:"fa-solid fa-file-lines",duration:900},
+  {name:"TechCrunch AI",icon:"fa-solid fa-newspaper",duration:650},
+  {name:"The Verge AI",icon:"fa-solid fa-newspaper",duration:550},
+  {name:"Reddit r/artificial",icon:"fa-brands fa-reddit",duration:500},
+  {name:"Nvidia Blog",icon:"fa-solid fa-microchip",duration:600},
+  {name:"Hugging Face Models",icon:"fa-solid fa-face-smile",duration:750},
+  {name:"Meta AI Research",icon:"fa-solid fa-flask",duration:700}
+];
+
+// ========================================
+// Script Templates
+// ========================================
+const scriptTemplates = {
+  energetic: {
+    opening: (count, windowText) => `[Arm up, smile]\nWhat is UP everyone! Welcome back! This week in AI has been absolutely INSANE and I've got ${count} massive updates that you NEED to know about. We're covering everything from new model drops to tools that are going to change how you create content. Let's jump right in!`,
+    transition: (idx) => `\n\n[Quick hand gesture]\nUpdate number ${idx + 1} — and THIS one is a big deal.\n\n`,
+    closing: (windowText) => `\n\n[Lean in, sincere]\nAnd that's the rundown for ${windowText} in AI, everyone. The pace is not slowing down — if anything, it's accelerating. If you want me to keep breaking these updates down every single week, smash that subscribe button and drop a comment telling me which update surprised you the most. I read every single one. Until next time — stay curious, stay creating, and I'll catch you in the next one! PEACE!`,
+    itemFormat: (item, idx) => {
+      const impactWord = item.impact === 'high' ? 'massive' : item.impact === 'medium' ? 'notable' : 'interesting';
+      return `So ${impactWord} news from ${item.source} — ${item.title}. Here's what happened: ${item.summary} And honestly, this could really shake things up for creators and developers alike.`;
+    }
+  },
+  professional: {
+    opening: (count, windowText) => `[Direct to camera, composed]\nGood evening. Welcome to your AI news briefing for ${windowText}. I've analyzed ${count} significant developments in artificial intelligence this period, and I'll be walking you through the most impactful ones in order of importance. Let's begin.`,
+    transition: (idx) => `\n\n[Pause briefly]\nMoving to our next development.\n\n`,
+    closing: (windowText) => `\n\n[Measured, authoritative]\nThat concludes this ${windowText} briefing. The key takeaway? AI capabilities are scaling faster than regulatory frameworks can adapt, and the gap between early adopters and the rest continues to widen. I'll continue monitoring these developments. If you find these briefings valuable, please subscribe and enable notifications. Thank you for watching.`,
+    itemFormat: (item, idx) => {
+      const impactWord = item.impact === 'high' ? 'significant' : item.impact === 'medium' ? 'noteworthy' : 'worth mentioning';
+      return `${item.source} reports: ${item.title}. ${item.summary} This is ${impactWord} because it signals continued momentum in the ${item.category.toLowerCase()} space.`;
+    }
+  },
+  casual: {
+    opening: (count, windowText) => `[Relaxed, holding mug or sitting back]\nHey guys, so a LOT happened in AI this ${windowText.toLowerCase()} and honestly I spent way too much time going through all of it so you don't have to. I've got ${count} updates that actually matter — not the fluff, just the real stuff. Let's get into it.`,
+    transition: (idx) => `\n\n[Shift position slightly]\nAlright, next one —\n\n`,
+    closing: (windowText) => `\n\n[Set down mug, lean forward]\nAnd that's your ${windowText.toLowerCase()} AI roundup, friends. Crazy times we're living in, right? If any of these caught you off guard, let me know in the comments — I genuinely want to hear what you think. And if this saved you some research time, maybe hit subscribe? It really helps. Alright, see you in the next one. Bye!`,
+    itemFormat: (item, idx) => {
+      const impactWord = item.impact === 'high' ? 'pretty wild' : item.impact === 'medium' ? 'kind of cool' : 'worth knowing';
+      return `Okay so ${item.source} dropped this — ${item.title}. Basically, ${item.summary} It's ${impactWord}, and here's why it matters to us as creators.`,
+    }
+  }
+};
+
+// ========================================
+// Utility Functions
+// ========================================
+function showToast(message, type='success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check-circle':type==='info'?'fa-info-circle':'fa-exclamation-circle'} mr-2"></i>${message}`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateY(20px)'; toast.style.transition='all .3s ease'; setTimeout(()=>toast.remove(),300); }, 3000);
+}
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function updateStepIndicator(step) {
+  state.step = step;
+  document.querySelectorAll('.step-dot').forEach(dot => {
+    const s = parseInt(dot.dataset.step);
+    dot.classList.remove('active','done');
+    if (s < step) dot.classList.add('done');
+    else if (s === step) dot.classList.add('active');
+  });
+  document.querySelectorAll('.step-line').forEach(line => {
+    const l = parseInt(line.dataset.line);
+    line.classList.toggle('active', l < step);
+  });
+}
+
+// ========================================
+// Configuration Handlers
+// ========================================
+function selectWindow(val) {
+  state.config.window = val;
+  document.querySelectorAll('[data-window]').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.window)===val));
+}
+function selectStyle(val) {
+  state.config.style = val;
+  document.querySelectorAll('[data-style]').forEach(b => b.classList.toggle('selected', b.dataset.style===val));
+}
+function selectDuration(val) {
+  state.config.duration = val;
+  document.querySelectorAll('[data-duration]').forEach(b => b.classList.toggle('selected', b.dataset.duration===val));
+}
+function selectSchedule(val) {
+  state.config.schedule = val;
+  document.querySelectorAll('[data-schedule]').forEach(b => b.classList.toggle('selected', b.dataset.schedule===val));
+  document.getElementById('scheduleInput').classList.toggle('hidden', val!=='scheduled');
+  if (val==='scheduled') {
+    const now = new Date();
+    now.setMinutes(now.getMinutes()+15);
+    document.getElementById('scheduleTime').min = now.toISOString().slice(0,16);
+  }
+}
+
+// ========================================
+// Agent Simulation
+// ========================================
+async function runAgent() {
+  if (state.agentStatus === 'running') return;
+
+  // If scheduled, set up timer
+  if (state.config.schedule === 'scheduled') {
+    const scheduledTime = new Date(document.getElementById('scheduleTime').value);
+    if (isNaN(scheduledTime.getTime()) || scheduledTime <= new Date()) {
+      showToast('Please select a valid future time','error');
+      return;
+    }
+    const delay = scheduledTime - new Date();
+    showToast(`Agent scheduled — will run at ${scheduledTime.toLocaleTimeString()}`,'info');
+    document.getElementById('runAgentBtn').disabled = true;
+    document.getElementById('runAgentBtn').innerHTML = '<i class="fa-solid fa-clock mr-2"></i>Scheduled...';
+    setTimeout(() => {
+      document.getElementById('runAgentBtn').disabled = false;
+      document.getElementById('runAgentBtn').innerHTML = '<i class="fa-solid fa-satellite-dish mr-2"></i>Launch AI News Agent';
+      executeAgentScan();
+    }, Math.min(delay, 60000)); // Cap at 1 minute for demo
+    return;
+  }
+
+  executeAgentScan();
+}
+
+async function executeAgentScan() {
+  state.agentStatus = 'running';
+  updateStepIndicator(2);
+  const agentSection = document.getElementById('agentSection');
+  agentSection.classList.remove('hidden');
+  scrollToSection('agentSection');
+
+  const progressBar = document.getElementById('progressBar');
+  const sourceLog = document.getElementById('sourceLog');
+  sourceLog.innerHTML = '';
+
+  let progress = 0;
+  const totalSources = scanSources.length;
+
+  for (let i = 0; i < totalSources; i++) {
+    const src = scanSources[i];
+    // Add scanning entry
+    const entry = document.createElement('div');
+    entry.className = 'flex items-center gap-3 text-muted';
+    entry.innerHTML = `<i class="${src.icon} text-accent/60 w-5 text-center"></i><span class="flex-1">Scanning ${src.name}...</span><span class="text-accent/40"><i class="fa-solid fa-spinner fa-spin"></i></span>`;
+    sourceLog.appendChild(entry);
+    sourceLog.scrollTop = sourceLog.scrollHeight;
+
+    await new Promise(r => setTimeout(r, src.duration + Math.random()*400));
+    progress = ((i+1)/totalSources)*100;
+    progressBar.style.width = progress+'%';
+
+    // Mark as complete
+    entry.innerHTML = `<i class="${src.icon} text-accent w-5 text-center"></i><span class="flex-1 text-txt/80">${src.name}</span><span class="text-accent text-xs">Done <i class="fa-solid fa-check"></i></span>`;
+  }
+
+  // Analysis phase
+  const analysisEntry = document.createElement('div');
+  analysisEntry.className = 'flex items-center gap-3 text-accent font-semibold mt-2 pt-2 border-t border-border';
+  analysisEntry.innerHTML = `<i class="fa-solid fa-brain w-5 text-center"></i><span>Analyzing, deduplicating, and ranking updates...</span><span><i class="fa-solid fa-spinner fa-spin"></i></span>`;
+  sourceLog.appendChild(analysisEntry);
+  await new Promise(r => setTimeout(r, 1500));
+  analysisEntry.innerHTML = `<i class="fa-solid fa-brain w-5 text-center"></i><span>Analysis complete — ${state.config.window}-day window applied</span><span class="text-accent"><i class="fa-solid fa-check"></i></span>`;
+
+  document.getElementById('agentSubtext').textContent = 'Scan complete! Compiling results...';
+  state.agentStatus = 'complete
