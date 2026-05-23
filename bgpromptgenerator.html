@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BG Fame Prompt Generator — AI Prompt Crafting Studio</title>
+  <meta name="description" content="Generate refined, copy-paste-ready AI prompts optimized for ChatGPT, Claude, Gemini, Midjourney, and more. Powered by BG Fame.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════
+       DESIGN SYSTEM — BG Fame Dark Gold Theme
+       ═══════════════════════════════════════════════════ */
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-card: rgba(20, 20, 20, 0.65);
+      --bg-card-hover: rgba(30, 30, 30, 0.75);
+      --bg-input: rgba(255, 255, 255, 0.04);
+      --bg-input-focus: rgba(255, 255, 255, 0.07);
+      --gold: #FFD700;
+      --gold-dim: #c9a800;
+      --gold-glow: rgba(255, 215, 0, 0.15);
+      --gold-glow-strong: rgba(255, 215, 0, 0.30);
+      --text-primary: #f0f0f0;
+      --text-secondary: #9a9a9a;
+      --text-muted: #666;
+      --border: rgba(255, 255, 255, 0.06);
+      --border-gold: rgba(255, 215, 0, 0.20);
+      --danger: #ff4d4d;
+      --success: #34d399;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+      --shadow-card: 0 8px 32px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 40px rgba(255,215,0,0.08);
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --glass-blur: blur(20px);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+    }
+    body {
+      font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    /* ── Ambient background effects ── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -40%;
+      left: -20%;
+      width: 80vw;
+      height: 80vw;
+      background: radial-gradient(circle, rgba(255,215,0,0.03) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%;
+      right: -20%;
+      width: 70vw;
+      height: 70vw;
+      background: radial-gradient(circle, rgba(255,215,0,0.025) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* ── Layout ── */
+    .app-container {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding: 40px 0 32px;
+      position: relative;
+    }
+    .header-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .header-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--gold), #b8860b);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: #0a0a0a;
+      box-shadow: 0 4px 20px rgba(255,215,0,0.2);
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold) 0%, #fff8dc 50%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+    /* ── Glass card ── */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-card);
+      transition: var(--transition);
+    }
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+    .form-label .label-icon {
+      margin-right: 5px;
+      font-size: 0.85rem;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239a9a9a' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: var(--bg-input-focus);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.6;
+    }
+    textarea::placeholder {
+      color: var(--text-muted);
+    }
+    select option {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    /* ── Custom AI input ── */
+    .custom-ai-input {
+      display: none;
+      margin-top: 8px;
+    }
+    .custom-ai-input.visible {
+      display: block;
+    }
+    .custom-ai-input input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.88rem;
+      transition: var(--transition);
+    }
+    .custom-ai-input input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+    /* ── Generate button ── */
+    .generate-btn {
+      grid-column: 1 / -1;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--gold), #e6c200, var(--gold-dim));
+      background-size: 200% auto;
+      color: #0a0a0a;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .generate-btn:hover:not(:disabled) {
+      background-position: right center;
+      box-shadow: 0 6px 28px var(--gold-glow-strong);
+      transform: translateY(-1px);
+    }
+    .generate-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    .generate-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .generate-btn .btn-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    /* ── Loading spinner ── */
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(10,10,10,0.2);
+      border-top-color: #0a0a0a;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading .spinner { display: inline-block; }
+    .loading .btn-text { display: none; }
+    /* ── Result section ── */
+    .result-section {
+      margin-top: 28px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.4s, transform 0.4s;
+      display: none;
+    }
+    .result-section.visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .result-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .result-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .icon-btn {
+      padding: 8px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .icon-btn:hover {
+      border-color: var(--border-gold);
+      color: var(--gold);
+      background: var(--gold-glow);
+    }
+    .icon-btn.copied {
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .result-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .result-box::-webkit-scrollbar { width: 6px; }
+    .result-box::-webkit-scrollbar-track { background: transparent; }
+    .result-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    /* ── Error message ── */
+    .error-msg {
+      background: rgba(255,77,77,0.08);
+      border: 1px solid rgba(255,77,77,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      color: var(--danger);
+      font-size: 0.88rem;
+      margin-top: 16px;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+    /* ── History section ── */
+    .history-section {
+      margin-top: 40px;
+    }
+    .history-section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .history-section h2 .count {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .history-empty {
+      text-align: center;
+      padding: 32px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .history-item {
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .history-item:hover {
+      border-color: var(--border-gold);
+      background: var(--bg-card-hover);
+    }
+    .history-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .history-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .history-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--gold-glow);
+      color: var(--gold);
+      border: 1px solid var(--border-gold);
+    }
+    .history-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .history-item-preview {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .history-item-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .history-item-actions button {
+      padding: 4px 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .history-item-actions button:hover {
+      color: var(--gold);
+      border-color: var(--border-gold);
+    }
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 40px 0 0;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+    .footer span {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .app-container { padding: 16px 14px 40px; }
+      .header { padding: 24px 0 20px; }
+      .glass-card { padding: 20px 16px; }
+      .form-grid { grid-template-columns: 1fr; gap: 14px; }
+      .generate-btn { padding: 14px 24px; }
+      .result-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    /* ── Toast notification ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 2000;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    /* ── Decorative divider ── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+      margin: 36px 0;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-brand">
+        <div class="header-logo">BG</div>
+        <h1>Fame Prompt Generator</h1>
+      </div>
+      <p>Instant, client-side professional AI prompt engineering</p>
+    </header>
+    <!-- Main Form Card -->
+    <main class="glass-card animate-in">
+      <form id="promptForm" autocomplete="off">
+        <div class="form-grid">
+          <!-- Target AI -->
+          <div class="form-group">
+            <label class="form-label" for="targetAI">
+              <span class="label-icon">🤖</span> Target AI
+            </label>
+            <select id="targetAI">
+              <option value="ChatGPT">ChatGPT</option>
+              <option value="Claude" selected>Claude</option>
+              <option value="Gemini">Gemini</option>
+              <option value="DeepSeek">DeepSeek</option>
+              <option value="Midjourney">Midjourney</option>
+              <option value="Runway">Runway</option>
+              <option value="Sora">Sora</option>
+              <option value="ElevenLabs">ElevenLabs</option>
+              <option value="Other">Other (custom)</option>
+            </select>
+            <div class="custom-ai-input" id="customAIWrap">
+              <input type="text" id="customAIName" placeholder="Enter AI name…">
+            </div>
+          </div>
+          <!-- Tone -->
+          <div class="form-group">
+            <label class="form-label" for="tone">
+              <span class="label-icon">🎨</span> Tone
+            </label>
+            <select id="tone">
+              <option value="Professional">Professional</option>
+              <option value="Creative">Creative</option>
+              <option value="Technical">Technical</option>
+              <option value="Casual">Casual</option>
+            </select>
+          </div>
+          <!-- Purpose -->
+          <div class="form-group">
+            <label class="form-label" for="purpose">
+              <span class="label-icon">🎯</span> Purpose
+            </label>
+            <select id="purpose">
+              <option value="Coding">Coding</option>
+              <option value="Image">Image Generation</option>
+              <option value="Video">Video Generation</option>
+              <option value="Writing">Writing</option>
+              <option value="Business">Business</option>
+              <option value="Research">Research</option>
+            </select>
+          </div>
+          <!-- Output Length hint -->
+          <div class="form-group">
+            <label class="form-label" for="outputLength">
+              <span class="label-icon">📏</span> Prompt Length
+            </label>
+            <select id="outputLength">
+              <option value="Concise">Concise</option>
+              <option value="Detailed" selected>Detailed</option>
+              <option value="Comprehensive">Comprehensive</option>
+            </select>
+          </div>
+          <!-- Rough Idea -->
+          <div class="form-group full-width">
+            <label class="form-label" for="roughIdea">
+              <span class="label-icon">💡</span> Your Rough Idea
+            </label>
+            <textarea
+              id="roughIdea"
+              placeholder="Describe what you want to create… e.g. 'a fitness tracking app with social features and AI coaching' or 'a cinematic shot of a futuristic Tokyo at sunset'"
+              rows="4"
+            ></textarea>
+          </div>
+          <!-- Generate Button -->
+          <button class="generate-btn" type="submit" id="generateBtn">
+            <span class="btn-content">
+              <span class="btn-text">✨ Generate Prompt</span>
+              <span class="spinner"></span>
+            </span>
+          </button>
+        </div>
+      </form>
+      <!-- Error -->
+      <div class="error-msg" id="errorMsg"></div>
+      <!-- Result -->
+      <div class="result-section" id="resultSection">
+        <div class="result-header">
+          <h2>✦ Generated Prompt</h2>
+          <div class="result-actions">
+            <button class="icon-btn" id="copyBtn" type="button">📋 Copy</button>
+            <button class="icon-btn" id="regenerateBtn" type="button">🔄 Regenerate</button>
+          </div>
+        </div>
+        <div class="result-box" id="resultBox"></div>
+      </div>
+    </main>
+    <!-- Divider -->
+    <hr class="section-divider">
+    <!-- History -->
+    <section class="history-section glass-card" id="historySection">
+      <h2>
+        🕐 Prompt History
+        <span class="count" id="historyCount">0</span>
+      </h2>
+      <div id="historyContainer">
+        <div class="history-empty" id="historyEmpty">No prompts generated yet. Create your first one above!</div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </section>
+    <!-- Footer -->
+    <footer class="footer">
+      Built with 🏆 by <span>BG Fame</span> · 100% Local Engine
+    </footer>
+  </div>
+  <script>
+    /* ═══════════════════════════════════════════════════
+       STATE & DOM REFS
+       ═══════════════════════════════════════════════════ */
+    const $ = (sel) => document.querySelector(sel);
+    const els = {
+      form:            $('#promptForm'),
+      targetAI:        $('#targetAI'),
+      customAIWrap:    $('#customAIWrap'),
+      customAIName:    $('#customAIName'),
+      tone:            $('#tone'),
+      purpose:         $('#purpose'),
+      outputLength:    $('#outputLength'),
+      roughIdea:       $('#roughIdea'),
+      generateBtn:     $('#generateBtn'),
+      errorMsg:        $('#errorMsg'),
+      resultSection:   $('#resultSection'),
+      resultBox:       $('#resultBox'),
+      copyBtn:         $('#copyBtn'),
+      regenerateBtn:   $('#regenerateBtn'),
+      historyCount:    $('#historyCount'),
+      historyEmpty:    $('#historyEmpty'),
+      historyList:     $('#historyList'),
+      toast:           $('#toast'),
+    };
+    let history = [];
+    let lastParams = null;
+    let isGenerating = false;
+    /* ═══════════════════════════════════════════════════
+       CUSTOM AI TOGGLE
+       ═══════════════════════════════════════════════════ */
+    els.targetAI.addEventListener('change', () => {
+      const isOther = els.targetAI.value === 'Other';
+      els.customAIWrap.classList.toggle('visible', isOther);
+      if (isOther) setTimeout(() => els.customAIName.focus(), 100);
+    });
+    /* ═══════════════════════════════════════════════════
+       TOAST
+       ═══════════════════════════════════════════════════ */
+    let toastTimer = null;
+    function showToast(msg) {
+      els.toast.textContent = msg;
+      els.toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => els.toast.classList.remove('show'), 2500);
+    }
+    /* ═══════════════════════════════════════════════════
+       COPY BUTTON
+       ═══════════════════════════════════════════════════ */
+    els.copyBtn.addEventListener('click', () => {
+      const text = els.resultBox.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        els.copyBtn.classList.add('copied');
+        els.copyBtn.innerHTML = '✅ Copied!';
+        showToast('Prompt copied to clipboard');
+        setTimeout(() => {
+          els.copyBtn.classList.remove('copied');
+          els.copyBtn.innerHTML = '📋 Copy';
+        }, 2000);
+      });
+    });
+    /* ═══════════════════════════════════════════════════
+       REGENERATE
+       ═══════════════════════════════════════════════════ */
+    els.regenerateBtn.addEventListener('click', () => {
+      if (lastParams && !isGenerating) {
+        generatePrompt(lastParams, true);
+      }
+    });
+    /* ═══════════════════════════════════════════════════
+       LOCAL PROMPT GENERATION ENGINE (STRICT SCHEMA)
+       ═══════════════════════════════════════════════════ */
+    function runLocalGeneration(params, isRegenerate = false) {
+      const { targetAI, tone, purpose, outputLength, roughIdea } = params;
+      // Dynamic variation index for regeneration styling
+      const seed = isRegenerate ? Math.floor(Math.random() * 4) : 0;
+      // ── (A) Dynamic title generation ──
+      const cleanIdea = roughIdea.replace(/[\n\r]+/g, ' ').trim();
+      const ideaTitle = cleanIdea.length > 50 ? cleanIdea.slice(0, 48) + '...' : cleanIdea;
+      const titleLine = `${targetAI} Prompt Optimization for ${purpose} [${tone} Tone] - "${ideaTitle}"`;
+      // ── (B) Persona mapping ──
+      const personas = {
+        Coding: {
+          Professional: `Senior Software Architect specializing in clean coding standards, robust systems, enterprise design patterns, and elegant architectures.`,
+          Creative: `Creative Technologist and interactive UI designer specializing in building animations, engaging user journeys, and modern visual states.`,
+          Technical: `Lead Performance Engineer and DevOps Systems Specialist focused on absolute efficiency, memory profiling, and algorithm design.`,
+          Casual: `Friendly Senior pair-programmer giving pragmatic, easily readable, and straightforward modular design instructions.`
+        },
+        Image: {
+          Professional: `Commercial Studio Art Director and Editorial Photographer specializing in premium branding imagery.`,
+          Creative: `Surrealist Visual Concept Artist and Digital Illustrator specializing in cinematic worldbuilding and ethereal compositions.`,
+          Technical: `Expert Cinematographer and 3D Technical Director specializing in photorealistic engine renders, dynamic split lighting, and lens metrics.`,
+          Casual: `Trendy Digital Collage Creator and casual street photographer designing for vibrant social media posts.`
+        },
+        Video: {
+          Professional: `Polished Commercial Film Director and Director of Photography specializing in fluid camera motions and storytelling.`,
+          Creative: `Avant-garde Visual Multimedia Artist specializing in high-concept dreamscapes, seamless frame transitions, and emotional visual pacing.`,
+          Technical: `Physics VFX Specialist and CGI Supervisor focusing on hyper-accurate fluid simulations, environmental lighting, and render settings.`,
+          Casual: `Energetic Social Content Creator focusing on quick camera transitions, catchy aesthetics, and engaging everyday footage.`
+        },
+        Writing: {
+          Professional: `Elite Corporate Communications Lead and Senior Brand Publisher focusing on authoritative, crisp, and high-impact messaging.`,
+          Creative: `Award-winning Novelist and Creative Screenwriter specializing in deep characters, gripping subtext, and rich prose styling.`,
+          Technical: `Distinguished Technical Writer specializing in documentation, simplifying dense systems, and absolute modular clarity.`,
+          Casual: `Vibrant and friendly Content Strategist crafting conversational, relatable, and fun storytelling pieces.`
+        },
+        Business: {
+          Professional: `Principal Strategy Consultant from an elite firm specializing in scalable business frameworks and board-ready strategy decks.`,
+          Creative: `Growth Hacker and Innovative Product Designer specializing in disruptive positioning and virality.`,
+          Technical: `Quantitative Market Analyst and Business Intelligence Developer specializing in metrics, KPIs, and audit reporting.`,
+          Casual: `Experienced Startup Mentor giving practical, direct, and straightforward startup advice to save time and launch fast.`
+        },
+        Research: {
+          Professional: `Principal Research Scientist adhering to the absolute highest academic rigor, literature transparency, and analytical integrity.`,
+          Creative: `Interdisciplinary Thinking Expert specializing in finding unexpected synthesis and analogies across disparate fields.`,
+          Technical: `Senior Data Scientist and Academic Auditor specializing in methodology, checking for bias, and analyzing datasets.`,
+          Casual: `Curious Science Communicator translating complex theories into incredibly fun, approachable analogies.`
+        }
+      };
+      const selectedPersona = personas[purpose]?.[tone] || `${tone} Expert in ${purpose}`;
+      
+      let behaviorModifier = "";
+      if (tone === 'Professional') {
+        behaviorModifier = "Maintain a formal, authoritative, and structured communication style. Organize points clearly using precise technical terminology.";
+      } else if (tone === 'Creative') {
+        behaviorModifier = "Utilize expressive, highly conceptual, and evocative wording. Think outside the box and suggest bold, original approaches.";
+      } else if (tone === 'Technical') {
+        behaviorModifier = "Provide highly detailed, analytical, and performance-focused terminology. Focus on exact specifications, parameters, configurations, and logical validation.";
+      } else {
+        behaviorModifier = "Adopt a highly conversational, friendly, and straightforward peer-to-peer tone. Keep explanations accessible and pragmatic.";
+      }
+      const roleStance = `You are a world-class ${selectedPersona}. Your behavioral stance is to solve the prompt directive with absolute mastery, applying elite best practices. ${behaviorModifier}`;
+      // ── (C) Task formulation ──
+      let actionVerb = "";
+      if (purpose === 'Coding') actionVerb = "Architect, code, and document a fully realized, modular software solution";
+      else if (purpose === 'Image') actionVerb = "Compose a hyper-detailed, award-winning visual prompt";
+      else if (purpose === 'Video') actionVerb = "Outline a breathtaking cinematic motion clip blueprint";
+      else if (purpose === 'Writing') actionVerb = "Draft an engaging, high-fidelity copy or content asset";
+      else if (purpose === 'Business') actionVerb = "Build an actionable, high-performance strategy blueprint";
+      else actionVerb = "Conduct a rigorous, objective research synthesis analysis";
+      const task = `Act on the user's rough idea: "${cleanIdea}". You must ${actionVerb.toLowerCase()} that fulfills all output requirements, conforms strictly to the provided constraints, and matches the specified tone.`;
+      // ── (D) Context formulation ──
+      const targetAIContexts = {
+        ChatGPT: "Optimized for GPT-4o's broad semantic understanding, highly responsive role-play capabilities, and interactive feedback loops.",
+        Claude: "Optimized for Claude 3.5 Sonnet's outstanding logical reasoning, analytical depth, XML tagging structure, and dense documentation capabilities.",
+        Gemini: "Optimized for Gemini 1.5 / 2.5 Pro's massive long-context window, multimodal cross-referencing capabilities, and highly structured data tables.",
+        DeepSeek: "Optimized for DeepSeek-R1's deep-thinking reinforcement learning loop, requiring comprehensive chain-of-thought analysis and edge-case auditing.",
+        Midjourney: "Optimized for Midjourney v6.0's syntax, camera lenses, aspect ratios, lightning tags, rendering parameters, and raw camera prompts.",
+        Runway: "Optimized for Gen-2/Gen-3 motion synthesis, requiring precise camera pans, speeds, lighting dynamics, and fluid physics parameters.",
+        Sora: "Optimized for physical world simulation video parameters, specifying accurate spatial layouts, camera paths, textures, and material interactions.",
+        ElevenLabs: "Optimized for high-fidelity speech synthesis parameters, detailing accent models, vocal stability, expressive dynamics, and clarity settings."
+      };
+      const aiContext = targetAIContexts[targetAI] || `Optimized for ${targetAI}'s specialized syntax, prompt architecture guidelines, and logic-handling styles.`;
+      const context = `This request is part of a high-priority campaign requiring ${tone.toLowerCase()} ${purpose.toLowerCase()} delivery. We are engineering this prompt for the ${targetAI} AI model to leverage its unique strengths. ${aiContext}`;
+      // ── (E) Inputs available ──
+      const inputs = `- \`rough_idea\`: "${cleanIdea}"
+- \`target_ai\`: "${targetAI}"
+- \`assigned_tone\`: "${tone}"
+- \`assigned_purpose\`: "${purpose}"
+- \`assigned_length\`: "${outputLength}"`;
+      // ── (F) Output Requirements ──
+      let formatReq = "";
+      let structureReq = "";
+      
+      // Determine format requirements based on Purpose and AI
+      if (['Midjourney', 'Runway', 'Sora'].includes(targetAI)) {
+        formatReq = "Descriptive visual keywords separated by commas, camera aspect ratios, lens specifications, stylistic tags, and rendering values.";
+        structureReq = `[Visual Style & Subject], [Environmental Settings & Textures], [Camera Mechanics, Aperture & Lighting], [Render Model parameters (e.g. Midjourney: --ar ${seed === 0 ? '16:9' : seed === 1 ? '9:16' : '1:1'} --v 6.0${isRegenerate ? ' --chaos 20' : ''})]`;
+      } else if (targetAI === 'ElevenLabs') {
+        formatReq = "A structured sound directions profile followed by the target speaker's script with dynamic direction tags.";
+        structureReq = `### 🎙️ VOICE PROFILE
+[Voice Specs: Accent, Age, Style, Tone]
+### ⚙️ AUDIO PARAMETERS
+[Stability %, Clarity %, Style Exaggeration %]
+### 📖 SPEAKER SCRIPT & BRACKET DIRECTIONS
+[Directions in brackets e.g. (whispers), (dramatic pause)] followed by text.`;
+      } else if (targetAI === 'Claude') {
+        formatReq = "Extensively structured Markdown code block containing highly specific XML tags.";
+        structureReq = `<thinking_process> (Step-by-step reasoning) </thinking_process>
+<context> (Target background) </context>
+<instructions> (Detailed directives) </instructions>
+<expected_output> (Format, specifications, files) </expected_output>`;
+      } else {
+        // Standard text-based markdown
+        formatReq = "Exhaustive markdown document utilizing headers, nested lists, clean code snippets, and comparative tables where applicable.";
+        if (outputLength === 'Concise') {
+          structureReq = `- **Core Response**: Immediate, high-impact answer or codebase file.
+- **Top 3 Takeaways**: Bulleted key highlights.`;
+        } else if (outputLength === 'Detailed') {
+          structureReq = `- **Architectural Overview**: Brief design layout.
+- **Implementation Details**: Comprehensive code/text delivery.
+- **Verification & Explanations**: Details of logic and choices made.`;
+        } else {
+          structureReq = `- **Executive Overview / System Architecture**: Visual ASCII layout or design.
+- **Core Implementation**: Comprehensive files, code, or drafts.
+- **Edge-Cases & Exception Handling Audit**: Factual risk mitigations.
+- **Scaling / Future Maintenance Checklist**: How to expand this asset.`;
+        }
+      }
+      const outputRequirements = `**Format**: ${formatReq}
+**Structure**: 
+${structureReq}
+**Tone**: strictly ${tone.toLowerCase()} (${behaviorModifier.split('.')[0]})
+**Length**: ${outputLength} (${outputLength === 'Concise' ? 'under 300 words' : outputLength === 'Detailed' ? '600-1000 words' : 'comprehensive, fully fleshed out with no placeholder comments'})`;
+      // ── (G) Constraints / Do-nots ──
+      const commonConstraints = [
+        "Do not include any conversational filler (e.g., 'Sure, here is...', 'Hope this helps!')",
+        "Do not use deprecated functions, outdated syntax, or obsolete methods.",
+        "Do not leave incomplete code blocks, truncated drafts, or comments telling the user to write code themselves."
+      ];
+      const specificConstraints = {
+        Coding: [
+          "Do not write monolithic scripts; maintain strict single-responsibility modularity.",
+          "Do not omit comprehensive error handling (try-catch, boundary checks).",
+          "Do not hardcode parameters; extract configurations clearly."
+        ],
+        Image: [
+          "Do not use vague adjectives (e.g., 'beautiful', 'stunning') without physical visual descriptions.",
+          "Do not use flat lighting or solid backgrounds unless explicitly defined.",
+          "Do not place focal subjects directly dead-center; utilize cinematic rule-of-thirds composition."
+        ],
+        Video: [
+          "Do not generate static shots; insist on camera movement, velocity, and fluid motion.",
+          "Do not create physics-defying morphing transitions unless surrealism is explicitly requested.",
+          "Do not clip textures or render with muddy shadows."
+        ],
+        Writing: [
+          "Do not use generic buzzwords (e.g., 'synergy', 'revolutionize', 'delve', 'testament').",
+          "Do not write passive sentences; maintain strong, active voice structure.",
+          "Do not write overly long paragraphs; keep pacing dynamic."
+        ],
+        Business: [
+          "Do not provide generic theoretical tips; provide actionable, metrics-driven directives.",
+          "Do not ignore realistic operational budgets or resource limitations.",
+          "Do not list strategies without defining their matching KPI measurement metrics."
+        ],
+        Research: [
+          "Do not state unverified facts without indicating level of evidence or confidence.",
+          "Do not gloss over contradictory data; explicitly audit conflicting findings.",
+          "Do not use biased or emotionally charged language; maintain scientific objectivity."
+        ]
+      };
+      const constraintsList = [...commonConstraints, ...(specificConstraints[purpose] || [])]
+        .map(c => `- ${c}`)
+        .join('\n');
+      // ── (H) Examples / References ──
+      const examplesMap = {
+        Coding: {
+          Professional: `\`\`\`typescript
+// Good Modular Architecture Example
+interface Logger {
+  log(message: string): void;
+}
+class ConsoleLogger implements Logger {
+  log(message: string): void { console.log(\`[LOG]: \${message}\`); }
+}
+class UserService {
+  constructor(private logger: Logger) {}
+  createUser(name: string): void {
+    if (!name) throw new Error("Name is required");
+    this.logger.log(\`Creating user: \${name}\`);
+  }
+}
+\`\`\``,
+          Creative: `\`\`\`javascript
+// Highly interactive UI visual state changes using custom CSS variables
+const button = document.querySelector('.fame-btn');
+button.addEventListener('mousemove', (e) => {
+  const rect = button.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  button.style.setProperty('--x', \`\${x}px\`);
+  button.style.setProperty('--y', \`\${y}px\`);
+});
+\`\`\``,
+          Technical: `\`\`\`javascript
+// High-performance debounce utility protecting event cycles
+function debounce(fn, delayMs) {
+  let timer = null;
+  return function(...args) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delayMs);
+  };
+}
+\`\`\``,
+          Casual: `\`\`\`javascript
+// Straightforward, practical fetch call showing simple error parsing
+async function loadUserData(userId) {
+  try {
+    const res = await fetch(\`/api/users/\${userId}\`);
+    if (!res.ok) return console.warn("Failed to find user");
+    const data = await res.json();
+    updateProfile(data);
+  } catch (err) {
+    console.error("Network issue:", err);
+  }
+}
+\`\`\``
+        },
+        Image: {
+          Professional: `"Commercial luxury cologne bottle resting on a black volcanic rock slab. Water droplets, dramatic side-studio key light, dark minimalist background, high contrast, crisp glass reflection, shot on Hasselblad 100MP, --ar 16:9"`,
+          Creative: `"An ancient futuristic astronaut walking through a floating bioluminescent garden in deep space. Neon vines wrapping around asteroids, volumetric stellar glow, cosmic dust, mystical, cinematic, octane render, --ar 16:9"`,
+          Technical: `"Low angle wide shot of a concrete brutalist villa at sunset. Architectural photography, sharp linear shadows, 24mm wide angle lens, f/8 aperture, natural golden hour lighting, cinematic raytraced shadow mapping, --ar 16:9 --style raw"`,
+          Casual: `"A candid double-exposure shot of a person's silhouette merged with a busy Tokyo street at night. Neon signs, rain reflections, heavy film grain, shot on Fujifilm Superia 400, authentic candid, --ar 4:5"`
+        }
+      };
+      let exampleContent = "";
+      if (examplesMap[purpose]?.[tone]) {
+        exampleContent = `Here is a high-fidelity reference demonstrating the expected standard:
+${examplesMap[purpose][tone]}`;
+      } else {
+        // Placeholders based on purpose
+        if (purpose === 'Image' || purpose === 'Video') {
+          exampleContent = `Reference structure for visual tagging:
+"Subject description, camera lens size (e.g. 85mm), exact lighting (e.g. volumetric split key-light), style tags (e.g. photorealistic), and engine settings (e.g. --ar 16:9 --v 6.0)"`;
+        } else {
+          exampleContent = `Standard framework style:
+"Adopt role -> Process inputs -> Generate structured outputs cleanly using clear headings, skipping conversational remarks."`;
+        }
+      }
+      // ── (I) Execution checklist ──
+      const checklists = {
+        Coding: [
+          "Confirm all modules are cleanly decoupled.",
+          "Ensure try-catch structures handle edge scenarios.",
+          "Check that all interfaces and models are strongly typed.",
+          "Verify no placeholder comments remain in the logic."
+        ],
+        Image: [
+          "Verify camera aspect ratio parameter (--ar) is appended.",
+          "Confirm lighting environment is explicitly described.",
+          "Check that no generic words like 'beautiful' or 'stunning' are used.",
+          "Ensure lens or camera model parameters are listed."
+        ],
+        Video: [
+          "Check that a camera direction action verb is defined.",
+          "Verify lighting transitions are specified.",
+          "Confirm frame velocity or physics states are listed."
+        ],
+        Writing: [
+          "Verify all passive voice constructs have been converted to active.",
+          "Audit text for redundant buzzwords or generic jargon.",
+          "Check that readability metrics match target audience pacing."
+        ],
+        Business: [
+          "Verify every proposed initiative has a matching measurable KPI.",
+          "Check that operational milestones specify realistic time bounds.",
+          "Confirm budget and resource allocations are factually accounted for."
+        ],
+        Research: [
+          "Verify statements are categorized by level of scientific evidence.",
+          "Ensure contradictory findings are balanced and presented.",
+          "Confirm citations or auditing sources are listed in the references."
+        ]
+      };
+      const checklistItems = (checklists[purpose] || ["Verify all inputs are processed.", "Confirm constraints are fully respected."])
+        .map((item, index) => `${index + 1}. [ ] ${item}`)
+        .join('\n');
+      // ── (J) Conflict resolution ──
+      let conflictResolution = "";
+      if (purpose === 'Coding') {
+        conflictResolution = `**Conflict resolution**
+- If code modularity conflicts with speed performance, prioritize modularity and add performance profiling notes.
+- If strict typing conflicts with rapid structural dynamics, prioritize typing and utilize safe generic schemas.`;
+      } else if (purpose === 'Image' || purpose === 'Video') {
+        conflictResolution = `**Conflict resolution**
+- If hyper-realism parameters conflict with creative/surreal art styling, prioritize stylistic mood and cinematic global illumination.
+- If camera lens settings conflict with render clarity, prioritize aperture and composition framing.`;
+      } else if (purpose === 'Research' || purpose === 'Business') {
+        conflictResolution = `**Conflict resolution**
+- If strategic scaling speed conflicts with resource stability, prioritize operational safety metrics.
+- If qualitative findings conflict with quantitative metrics, prioritize quantitative statistical integrity and audit the qualitative bias.`;
+      } else {
+        conflictResolution = `**Conflict resolution**
+- If creative flow conflicts with output constraints, prioritize strict output formatting and restructure the tone to compensate.`;
+      }
+      // Assemble prompt following the strict user structure
+      promptText = `**Title**
+${titleLine}
+**Role & stance**
+${roleStance}
+**Task**
+${task}
+**Context**
+${context}
+**Inputs available**
+${inputs}
+**Output requirements**
+${outputRequirements}
+**Constraints / Do-nots**
+${constraintsList}
+**Examples / References**
+${exampleContent}
+**Execution checklist**
+${checklistItems}
+${conflictResolution}`;
+      return promptText;
+    }
+    /* ═══════════════════════════════════════════════════
+       GENERATE PROMPT FLOW
+       ═══════════════════════════════════════════════════ */
+    async function generatePrompt(params, isRegenerate = false) {
+      isGenerating = true;
+      setLoading(true);
+      hideError();
+      lastParams = { ...params };
+      try {
+        // Mock a brief premium delay to show the loader (500ms)
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const promptText = runLocalGeneration(params, isRegenerate);
+        // Display result
+        els.resultBox.textContent = promptText;
+        els.resultSection.classList.add('visible');
+        // Scroll to result smoothly
+        els.resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Add to history
+        addToHistory({
+          targetAI: params.targetAI,
+          tone: params.tone,
+          purpose: params.purpose,
+          roughIdea: params.roughIdea,
+          prompt: promptText,
+          timestamp: Date.now(),
+        });
+        showToast('Prompt engineered successfully!');
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        isGenerating = false;
+        setLoading(false);
+      }
+    }
+    /* ═══════════════════════════════════════════════════
+       FORM SUBMIT
+       ═══════════════════════════════════════════════════ */
+    els.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (isGenerating) return;
+      const targetAI = els.targetAI.value === 'Other'
+        ? (els.customAIName.value.trim() || 'Custom AI')
+        : els.targetAI.value;
+      const roughIdea = els.roughIdea.value.trim();
+      if (!roughIdea) {
+        showError('Please enter your rough idea before generating.');
+        els.roughIdea.focus();
+        return;
+      }
+      const params = {
+        targetAI,
+        tone: els.tone.value,
+        purpose: els.purpose.value,
+        outputLength: els.outputLength.value,
+        roughIdea,
+      };
+      generatePrompt(params);
+    });
+    /* ═══════════════════════════════════════════════════
+       UI HELPERS
+       ═══════════════════════════════════════════════════ */
+    function setLoading(on) {
+      els.generateBtn.disabled = on;
+      els.generateBtn.classList.toggle('loading', on);
+    }
+    function showError(msg) {
+      els.errorMsg.textContent = '⚠ ' + msg;
+      els.errorMsg.classList.add('visible');
+    }
+    function hideError() {
+      els.errorMsg.classList.remove('visible');
+    }
+    /* ═══════════════════════════════════════════════════
+       HISTORY
+       ═══════════════════════════════════════════════════ */
+    function addToHistory(entry) {
+      history.unshift(entry);
+      if (history.length > 10) history.pop();
+      renderHistory();
+    }
+    function renderHistory() {
+      els.historyCount.textContent = history.length;
+      els.historyEmpty.style.display = history.length ? 'none' : 'block';
+      els.historyList.innerHTML = '';
+      history.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+          <div class="history-item-header">
+            <div class="history-item-meta">
+              <span class="history-badge">${escapeHtml(item.targetAI)}</span>
+              <span class="history-badge" style="background: rgba(255,255,255,0.04); color: var(--text-secondary); border-color: var(--border);">${escapeHtml(item.purpose)}</span>
+              <span class="history-time">${formatTime(item.timestamp)}</span>
+            </div>
+            <div class="history-item-actions">
+              <button type="button" data-action="copy" data-index="${idx}" title="Copy prompt">📋</button>
+              <button type="button" data-action="load" data-index="${idx}" title="Load into result">↗</button>
+            </div>
+          </div>
+          <div class="history-item-preview">${escapeHtml(item.prompt)}</div>
+        `;
+        els.historyList.appendChild(div);
+      });
+      // Event delegation for history buttons
+      els.historyList.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.index);
+          const item = history[idx];
+          if (!item) return;
+          if (btn.dataset.action === 'copy') {
+            navigator.clipboard.writeText(item.prompt).then(() => {
+              showToast('Prompt copied from history');
+            });
+          } else if (btn.dataset.action === 'load') {
+            els.resultBox.textContent = item.prompt;
+            els.resultSection.classList.add('visible');
+            els.resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            showToast('Prompt loaded');
+          }
+        });
+      });
+    }
+    function formatTime(ts) {
+      const d = new Date(ts);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+    renderHistory();
+    /* ═══════════════════════════════════════════════════
+       KEYBOARD SHORTCUT: Ctrl/Cmd+Enter to generate
+       ═══════════════════════════════════════════════════ */
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (!isGenerating) {
+          els.form.requestSubmit();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
