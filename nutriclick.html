@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriClick</title>
+  
+  <!-- Modern Outfit & Inter Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Styling Tokens & Premium Slate Palette */
+    body {
+      background-color: #080a10;
+      color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Glassmorphic Panel HUD overlays */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* Neon scan laser sweeps */
+    .scan-laser {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #10b981;
+      box-shadow: 0 0 15px #10b981, 0 0 30px #059669;
+      animation: laser-sweep 2.5s infinite linear;
+    }
+
+    @keyframes laser-sweep {
+      0% { top: 0%; }
+      50% { top: 100%; }
+      100% { top: 0%; }
+    }
+
+    /* Custom liquid hydration bar */
+    .water-fill {
+      transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Streak fire glow effects */
+    .fire-glow {
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.18);
+    }
+    
+    .water-glow {
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.15);
+    }
+
+    /* Custom thin scrollbar track */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.35);
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col selection:bg-emerald-500/30 selection:text-white" onload="initApp()">
+
+  <!-- Main Container -->
+  <div id="app-root" class="flex-grow flex flex-col relative min-h-screen">
+    
+    <!-- ============================================================== -->
+    <!-- VIEW: immersive Welcome explainer landing page -->
+    <!-- ============================================================== -->
+    <div id="view-landing" class="flex-1 flex flex-col justify-center items-center py-12 px-6 md:px-12 relative">
+      <!-- Ambient backing lights -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+      <div class="absolute top-1/2 left-1/4 w-[300px] h-[300px] bg-sky-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div class="max-w-4xl w-full text-center space-y-8 z-10">
+        <!-- Logo Branding -->
+        <div class="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
+          <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-xl shadow-emerald-500/10 border border-emerald-400/20 bg-gray-950 flex items-center justify-center p-2.5">
+            <!-- Simulated premium logo -->
+            <div class="w-full h-full rounded-xl bg-gradient-to-tr from-emerald-500 to-emerald-400 flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-8 h-8 text-white animate-pulse"></i>
+            </div>
+          </div>
+          <h1 class="text-5xl md:text-6xl font-outfit font-black text-white tracking-tight leading-none mt-2">
+            Nutri<span class="bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">Click</span>
+          </h1>
+          <p class="text-gray-400 text-lg md:text-xl font-medium max-w-2xl mt-1 leading-relaxed">
+            The clinical-grade, AI-first food auditor. Scan complex plates, audit packaged foods, and decode metabolic health in seconds.
+          </p>
+        </div>
+
+        <!-- Explainer Grid cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 text-left animate-in fade-in duration-1000 delay-200">
+          <!-- Card 1 -->
+          <div class="glass-panel rounded-3xl p-6 relative overflow-hidden group hover:border-emerald-500/25 transition-all">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mb-4">
+              <i data-lucide="camera" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-base font-extrabold text-white font-outfit">1. AI Plate Segmentor</h3>
+            <p class="text-xs text-gray-400 mt-2 leading-relaxed">
+              Log regular homemade thalis, mixed foods, or snacks. Our AI separates food contours, estimates portion sizes, surface oils, and glycemic indices.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="glass-panel rounded-3xl p-6 relative overflow-hidden group hover:border-amber-500/25 transition-all">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mb-4">
+              <i data-lucide="search" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-base font-extrabold text-white font-outfit">2. Packaged Food Auditor</h3>
+            <p class="text-xs text-gray-400 mt-2 leading-relaxed">
+              Upload only the FRONT image of any packaged snack or soda. We identify variant details, read ingredients list via OCR, and audit harmful emulsifiers, stabilizers, and seed oils.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="glass-panel rounded-3xl p-6 relative overflow-hidden group hover:border-sky-500/25 transition-all">
+            <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center mb-4">
+              <i data-lucide="sparkle" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-base font-extrabold text-white font-outfit">3. Metabolic Recommender</h3>
+            <p class="text-xs text-gray-400 mt-2 leading-relaxed">
+              Enter your physical parameters, weight loss targets, age, and food allergies. The engine automatically maps custom clean meal alternatives matching your target deficit limits.
+            </p>
+          </div>
+        </div>
+
+        <!-- Launch CTA -->
+        <div class="pt-6">
+          <button onclick="launchWorkspace()" class="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 hover:scale-[1.02] active:scale-[0.98] text-white rounded-2xl text-sm font-extrabold transition-all border border-emerald-400/20 shadow-xl shadow-emerald-500/20 flex items-center gap-2 mx-auto cursor-pointer font-outfit">
+            Launch Application Workspace <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- VIEW: MAIN WORKSPACE INTERFACE -->
+    <!-- ============================================================== -->
+    <div id="view-workspace" class="hidden flex-grow flex flex-col pb-12 animate-in fade-in duration-500">
+      
+      <!-- --- HEADER NAVBAR --- -->
+      <header class="sticky top-0 z-35 w-full glass-panel border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-950/20 border border-emerald-400/20 shrink-0">
+            <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <h1 onclick="resetToLanding()" class="text-xl font-bold tracking-tight text-white flex items-center gap-1.5 cursor-pointer font-outfit">
+              Nutri<span class="text-emerald-400">Click</span>
+            </h1>
+            <p class="text-xs text-gray-400">AI Nutrition Specialist</p>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1.5 p-1 rounded-xl bg-gray-900/60 border border-white/5">
+          <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Dashboard
+          </button>
+          <button onclick="switchTab('profile')" id="tab-btn-profile" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-gray-400 hover:text-white">
+            Profile Goals & Recommender
+          </button>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 p-1.5 bg-gray-950/80 rounded-xl border border-white/5">
+            <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i>
+            <span id="header-date" class="text-xs font-bold text-gray-200 py-0.5">Today</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main workspace content -->
+      <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 py-8 w-full">
+        
+        <!-- ============================================================== -->
+        <!-- SCREEN: DASHBOARD TAB -->
+        <!-- ============================================================== -->
+        <div id="screen-dashboard" class="space-y-8 animate-in fade-in duration-300">
+          
+          <!-- Top Grid stats HUD -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Daily Calorie Goal Ring HUD -->
+            <div class="glass-panel rounded-3xl p-6 flex flex-col items-center relative overflow-hidden group">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all duration-500"></div>
+              <h3 class="text-sm font-bold text-gray-400 self-start mb-4 uppercase tracking-wider font-outfit">Calorie Intake HUD</h3>
+              
+              <div class="relative w-44 h-44 flex items-center justify-center">
+                <!-- Calorie Ring SVG -->
+                <svg class="w-full h-full transform -rotate-90">
+                  <circle cx="88" cy="88" r="76" stroke="rgba(255, 255, 255, 0.04)" stroke-width="10" fill="transparent" />
+                  <circle
+                    id="calorie-progress-ring"
+                    cx="88"
+                    cy="88"
+                    r="76"
+                    stroke="#10b981"
+                    stroke-width="10"
+                    fill="transparent"
+                    stroke-dasharray="477"
+                    stroke-dashoffset="477"
+                    class="transition-all duration-1000 ease-out"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="absolute flex flex-col items-center text-center">
+                  <span id="hud-calories-left" class="text-3xl font-black text-white tracking-tight font-outfit">2200</span>
+                  <span class="text-[10px] text-gray-400 font-mono tracking-widest uppercase mt-0.5">kcal left</span>
+                  <span class="text-xs text-gray-500 font-medium mt-1">Goal: <span id="hud-calorie-goal">2200</span></span>
+                </div>
+              </div>
+
+              <div class="w-full grid grid-cols-3 gap-3 mt-6 border-t border-white/5 pt-4 text-center">
+                <div>
+                  <span id="hud-protein-fraction" class="block text-emerald-400 text-xs font-bold font-mono tracking-tight">0 / 165g</span>
+                  <span class="text-[10px] text-gray-500 uppercase font-bold">Protein</span>
+                </div>
+                <div>
+                  <span id="hud-carbs-fraction" class="block text-amber-400 text-xs font-bold font-mono tracking-tight">0 / 220g</span>
+                  <span class="text-[10px] text-gray-500 uppercase font-bold">Carbs</span>
+                </div>
+                <div>
+                  <span id="hud-fat-fraction" class="block text-rose-400 text-xs font-bold font-mono tracking-tight">0 / 73g</span>
+                  <span class="text-[10px] text-gray-500 uppercase font-bold">Fats</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Logger launchers -->
+            <div class="md:col-span-2 glass-panel rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group">
+              <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all duration-500"></div>
+              
+              <div>
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h2 class="text-2xl font-black text-white tracking-tight flex items-center gap-2 font-outfit">
+                      Audit Your Daily Plate <i data-lucide="sparkle" class="w-5 h-5 text-emerald-400 fill-emerald-400 animate-pulse"></i>
+                    </h2>
+                    <p class="text-sm text-gray-400 mt-1 max-w-md leading-relaxed">
+                      NutriClick visualizes overlaps on thali macros and front-of-pack food safety audits. Select a scan launcher to log:
+                    </p>
+                  </div>
+                  
+                  <!-- Streak HUD -->
+                  <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 fire-glow animate-bounce">
+                    <i data-lucide="flame" class="w-4 h-4 fill-amber-500"></i>
+                    <span class="text-xs font-black font-mono">5 DAY STREAK</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                  <!-- Launcher 1: Regular Food -->
+                  <button onclick="openFoodModal()" class="glass-panel border-white/5 hover:border-emerald-500/40 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 group/btn bg-gradient-to-b from-gray-900/40 to-transparent hover:scale-[1.02] cursor-pointer">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center group-hover/btn:bg-emerald-500 group-hover/btn:text-white transition-all">
+                      <i data-lucide="camera" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                      <span class="block text-sm font-bold text-white font-outfit">AI Plate Logger</span>
+                      <span class="text-[10px] text-gray-500 block mt-0.5">Thalis, custom mixed plates</span>
+                    </div>
+                  </button>
+
+                  <!-- Launcher 2: Packaged Food -->
+                  <button onclick="openPackagedModal()" class="glass-panel border-white/5 hover:border-emerald-500/40 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 group/btn bg-gradient-to-b from-gray-900/40 to-transparent hover:scale-[1.02] cursor-pointer">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center group-hover/btn:bg-emerald-500 group-hover/btn:text-white transition-all">
+                      <i data-lucide="search" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                      <span class="block text-sm font-bold text-white font-outfit">Packaged Food Auditor</span>
+                      <span class="text-[10px] text-gray-500 block mt-0.5">OCR front label, additives checks</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <div class="mt-6 border-t border-white/5 pt-4 flex gap-4 text-xs text-gray-400">
+                <span class="flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Emulsifiers scanner enabled</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="droplet" class="w-4 h-4 text-sky-400"></i> Water tank active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mid Dashboard Row: Timeline vs Fasting & Water -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left 2 Cols: Timeline logs list -->
+            <div class="lg:col-span-2 space-y-4">
+              <div class="flex justify-between items-center">
+                <h3 class="text-lg font-black text-white flex items-center gap-2 font-outfit">
+                  Daily Logging Timeline <i data-lucide="calendar-days" class="w-5 h-5 text-emerald-400"></i>
+                </h3>
+                <span id="timeline-count" class="text-xs font-bold text-gray-400 bg-gray-900 px-2.5 py-1 rounded-lg border border-white/5">0 logs logged</span>
+              </div>
+
+              <!-- Main feed wrapper -->
+              <div id="timeline-feed" class="space-y-4">
+                <!-- Log Cards will be appended here dynamically -->
+              </div>
+            </div>
+
+            <!-- Right 1 Col: Water Glass and Fasting Stopwatch -->
+            <div class="space-y-6">
+              
+              <!-- Hydration Water tank -->
+              <div class="glass-panel rounded-3xl p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-xl"></div>
+                
+                <div class="flex justify-between items-center mb-4">
+                  <div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider font-outfit">Hydration Tank</h3>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Target: 3000ml</p>
+                  </div>
+                  <span id="hud-water-value" class="text-lg font-black text-sky-400 font-outfit">0ml</span>
+                </div>
+
+                <!-- Water Tank Box -->
+                <div class="h-32 w-full bg-gray-950/50 rounded-2xl border border-white/5 overflow-hidden relative flex flex-col justify-end">
+                  <div id="water-tank-fill" class="w-full bg-gradient-to-t from-sky-500 to-sky-400 water-fill water-glow" style="height: 0%"></div>
+                  <div class="absolute inset-0 flex items-center justify-center flex-col text-center pointer-events-none">
+                    <span id="water-tank-percent" class="text-xs font-black text-white font-mono">0% Filled</span>
+                  </div>
+                </div>
+
+                <!-- Add Water actions -->
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                  <button onclick="addWater(250)" class="py-2.5 px-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 font-bold text-xs hover:bg-sky-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> 250ml
+                  </button>
+                  <button onclick="addWater(500)" class="py-2.5 px-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 font-bold text-xs hover:bg-sky-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> 500ml
+                  </button>
+                </div>
+
+                <button onclick="undoWater()" id="btn-undo-water" class="w-full py-2 mt-2 rounded-xl border border-glass-border bg-gray-950/20 text-gray-500 hover:text-rose-400 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer hidden">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Clear Last Water Entry
+                </button>
+              </div>
+
+              <!-- Fasting timer stopwatch -->
+              <div class="glass-panel rounded-3xl p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl"></div>
+                
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 font-outfit">Fasting Ring</h3>
+
+                <div class="flex flex-col items-center py-2 text-center space-y-4">
+                  <div class="w-28 h-28 rounded-full border-4 border-amber-500/10 border-t-amber-500 flex items-center justify-center animate-spin-slow">
+                    <div class="w-24 h-24 rounded-full bg-gray-950/80 border border-white/5 flex flex-col items-center justify-center">
+                      <span id="fasting-hud-clock" class="text-lg font-black text-white font-mono">00:00:00</span>
+                      <span class="text-[9px] text-gray-500 uppercase font-bold tracking-widest mt-0.5">elapsed</span>
+                    </div>
+                  </div>
+
+                  <button id="btn-fasting-toggle" onclick="toggleFasting()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white rounded-xl text-xs font-extrabold transition-all border border-amber-400/20 flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i data-lucide="clock" class="w-4 h-4"></i> Start 16:8 Fast
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN: PROFILE & RECOMMENDATIONS TAB -->
+        <!-- ============================================================== -->
+        <div id="screen-profile" class="hidden space-y-8 animate-in fade-in duration-300">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Side: Profile Goal Setting Form -->
+            <div class="lg:col-span-1 glass-panel rounded-3xl p-6 space-y-6">
+              <h3 class="text-lg font-black text-white flex items-center gap-2 font-outfit border-b border-white/5 pb-3">
+                Profile Goals <i data-lucide="settings" class="w-5 h-5 text-emerald-400"></i>
+              </h3>
+
+              <div class="space-y-4 text-left">
+                <!-- Calorie Target slider -->
+                <div>
+                  <div class="flex justify-between text-xs font-bold text-gray-400 mb-1">
+                    <span>DAILY CALORIE LIMIT</span>
+                    <span id="profile-val-calories" class="text-emerald-400 font-mono font-black">2200 kcal</span>
+                  </div>
+                  <input type="range" id="profile-input-calories" min="1200" max="4000" step="50" value="2200" oninput="updateProfileDisplay()" class="w-full accent-emerald-500 cursor-pointer">
+                </div>
+
+                <!-- Weight target slider -->
+                <div>
+                  <div class="flex justify-between text-xs font-bold text-gray-400 mb-1">
+                    <span>CURRENT WEIGHT</span>
+                    <span id="profile-val-weight" class="text-emerald-400 font-mono font-black">74.5 kg</span>
+                  </div>
+                  <input type="range" id="profile-input-weight" min="40" max="150" step="0.5" value="74.5" oninput="updateProfileDisplay()" class="w-full accent-emerald-500 cursor-pointer">
+                </div>
+
+                <!-- Dietary Exclusions dropdown -->
+                <div>
+                  <label class="text-[10px] text-gray-400 uppercase font-bold block mb-1">DIETARY PREFERENCE</label>
+                  <select id="profile-input-preference" onchange="saveProfileData()" class="w-full bg-gray-950 border border-white/5 rounded-xl p-3 text-xs font-bold text-white outline-none cursor-pointer">
+                    <option value="omnivore">Omnivore (Everything)</option>
+                    <option value="vegan">Vegan (100% Plant-Based)</option>
+                    <option value="vegetarian_no_eggs">Vegetarian (No Eggs)</option>
+                    <option value="vegetarian_eggs">Vegetarian (Includes Eggs)</option>
+                    <option value="keto">Keto (High Fat / Low Carb)</option>
+                    <option value="paleo">Paleo (Clean Whole Foods)</option>
+                  </select>
+                </div>
+
+                <!-- Exclusion text tag -->
+                <div>
+                  <label class="text-[10px] text-gray-400 uppercase font-bold block mb-1">ALLERGIES / INGREDIENT EXCLUSIONS</label>
+                  <input type="text" id="profile-input-allergies" value="peanuts" onchange="saveProfileData()" class="w-full bg-gray-950 border border-white/5 rounded-xl p-3 text-xs font-medium text-white outline-none placeholder:text-gray-600" placeholder="e.g. peanuts, dairy, gluten">
+                  <span class="text-[9px] text-gray-500 block mt-1 leading-normal">
+                    Separated by commas. NutriClick will flag ingredients matching these terms and exclude them from your recommendations.
+                  </span>
+                </div>
+
+                <button onclick="saveProfileData(true)" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-extrabold transition-all border border-emerald-400/20 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/10">
+                  Save Profiles Configuration
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Side: AI Personalized Recommendations Pool -->
+            <div class="lg:col-span-2 space-y-6">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 class="text-xl font-black text-white flex items-center gap-2 font-outfit">
+                    AI Clean Meal Swaps <i data-lucide="sparkle" class="w-5 h-5 text-emerald-400 fill-emerald-400 animate-pulse"></i>
+                  </h3>
+                  <p class="text-xs text-gray-400 mt-0.5">Proactive recommendations conforming to deficits and exclusions.</p>
+                </div>
+              </div>
+
+              <!-- Recommendation grid -->
+              <div id="recommender-feed" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Swaps will render here -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+
+      <!-- ============================================================== -->
+      <!-- CHAT COMPONENT: FLOATING NUTRITION COACH TIMER -->
+      <!-- ============================================================== -->
+      <!-- Floating action button drawer opener -->
+      <button onclick="toggleCoach()" id="btn-coach-trigger" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-600 hover:scale-105 text-white shadow-xl shadow-emerald-500/20 border border-emerald-400/20 flex items-center justify-center cursor-pointer transition-all">
+        <i data-lucide="message-square" class="w-6 h-6 animate-pulse"></i>
+      </button>
+
+      <!-- Coach Panel Drawer sidebar overlay -->
+      <div id="coach-sidebar" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-gray-950 border-l border-white/10 shadow-2xl transition-all duration-300 translate-x-full flex flex-col">
+        
+        <!-- Header -->
+        <div class="p-6 border-b border-white/5 flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-extrabold text-white font-outfit">AI Nutrition Coach</span>
+              <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest font-mono">Syncing log context</span>
+            </div>
+          </div>
+          <button onclick="toggleCoach()" class="p-2 rounded-lg border border-white/5 text-gray-400 hover:text-white text-xs cursor-pointer">
+            Close
+          </button>
+        </div>
+
+        <!-- Chat messages view -->
+        <div id="coach-messages-box" class="flex-grow p-6 overflow-y-auto space-y-4 text-left">
+          <!-- Initial Coach greeting -->
+          <div class="flex items-start gap-3 max-w-[85%] animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+              <i data-lucide="bot" class="w-4.5 h-4.5"></i>
+            </div>
+            <div class="p-3.5 bg-gray-900 border border-white/5 rounded-2xl rounded-tl-none text-xs leading-relaxed text-gray-300 font-medium">
+              Hello! I am your AI Nutrition Coach inside NutriClick. Ask me any question—I will coordinate with your logged thalis and active calorie metrics to provide clinical eating swaps!
+            </div>
+          </div>
+        </div>
+
+        <!-- Predefined prompt templates -->
+        <div class="p-4 border-t border-white/5 bg-gray-900/40">
+          <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Suggested Prompts</p>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="sendSuggestedCoach('I had a heavy biryani lunch, what should I eat next?')" class="py-1.5 px-2.5 rounded-lg border border-white/5 bg-gray-950 text-[10px] text-gray-400 hover:text-emerald-400 hover:border-emerald-500/20 transition-all font-medium cursor-pointer">
+              Biryani Swap
+            </button>
+            <button onclick="sendSuggestedCoach('What packaged food warnings should I look out for?')" class="py-1.5 px-2.5 rounded-lg border border-white/5 bg-gray-950 text-[10px] text-gray-400 hover:text-emerald-400 hover:border-emerald-500/20 transition-all font-medium cursor-pointer">
+              NOVA warnings
+            </button>
+            <button onclick="sendSuggestedCoach('Suggest a low-carb veggie snack.')" class="py-1.5 px-2.5 rounded-lg border border-white/5 bg-gray-950 text-[10px] text-gray-400 hover:text-emerald-400 hover:border-emerald-500/20 transition-all font-medium cursor-pointer">
+              Low carb snack
+            </button>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <form id="coach-chat-form" onsubmit="submitCoachChat(event)" class="p-4 border-t border-white/5 bg-gray-950">
+          <div class="relative flex items-center">
+            <input type="text" id="coach-chat-input" placeholder="Ask your coach anything..." class="w-full bg-gray-900 border border-white/5 focus:border-emerald-500/40 rounded-xl py-3 px-4 text-xs font-semibold text-white outline-none placeholder:text-gray-600 pr-12">
+            <button type="submit" class="absolute right-2 p-1.5 bg-emerald-500 hover:bg-emerald-600 rounded-lg text-white cursor-pointer hover:scale-105 active:scale-95 transition-all">
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL WINDOW: AI REGULAR FOOD LOGGER -->
+    <!-- ============================================================== -->
+    <div id="modal-food" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+      <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 relative flex flex-col max-h-[90vh] overflow-y-auto animate-in zoom-in duration-300">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-white/5 mb-6">
+          <div>
+            <h3 class="text-lg font-black text-white flex items-center gap-1.5 font-outfit">
+              AI Food Plate Logger <i data-lucide="camera" class="text-emerald-400 w-5 h-5"></i>
+            </h3>
+            <p class="text-xs text-gray-400 mt-0.5">Identify thali macro segmentations, portion metrics, and oil/ghee loads.</p>
+          </div>
+          <button onclick="closeFoodModal()" class="p-2 rounded-lg text-gray-400 hover:text-white border border-white/5 cursor-pointer text-xs">
+            Cancel
+          </button>
+        </div>
+
+        <!-- Step 1: Upload / Input Form -->
+        <div id="food-modal-step-upload" class="space-y-6">
+          <form onsubmit="performFoodScan(event)" class="space-y-6">
+            <div>
+              <label class="text-[10px] text-gray-400 uppercase font-bold block mb-2 font-outfit">Select Meal Category</label>
+              <div class="grid grid-cols-4 gap-2">
+                <button type="button" onclick="setLogMealType('Breakfast')" id="meal-type-btn-Breakfast" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 cursor-pointer">Breakfast</button>
+                <button type="button" onclick="setLogMealType('Lunch')" id="meal-type-btn-Lunch" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all border border-white/5 bg-gray-900 text-gray-400 hover:text-white cursor-pointer">Lunch</button>
+                <button type="button" onclick="setLogMealType('Dinner')" id="meal-type-btn-Dinner" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all border border-white/5 bg-gray-900 text-gray-400 hover:text-white cursor-pointer">Dinner</button>
+                <button type="button" onclick="setLogMealType('Snack')" id="meal-type-btn-Snack" class="py-2.5 px-3 rounded-xl text-xs font-bold transition-all border border-white/5 bg-gray-900 text-gray-400 hover:text-white cursor-pointer">Snack</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Upload Box -->
+              <div class="border border-dashed border-white/10 hover:border-emerald-500/30 rounded-2xl p-6 text-center bg-gray-950/20 transition-all flex flex-col items-center justify-center relative min-h-[160px] cursor-pointer group">
+                <input type="file" accept="image/*" onchange="triggerFoodPreview(event)" class="absolute inset-0 opacity-0 cursor-pointer">
+                <div id="food-upload-prompt" class="flex flex-col items-center">
+                  <i data-lucide="upload" class="w-8 h-8 text-gray-600 group-hover:text-emerald-400 transition-all mb-2 animate-pulse"></i>
+                  <span class="text-xs font-bold text-gray-300">Upload Food Photo</span>
+                  <span class="text-[9px] text-gray-500 block mt-1">Accepts thali images or beverages</span>
+                </div>
+                <img id="food-upload-preview" class="hidden max-h-36 object-contain rounded-xl">
+              </div>
+
+              <!-- Plate description -->
+              <div class="flex flex-col gap-2">
+                <label class="text-[10px] text-gray-400 uppercase font-bold block font-outfit">Plate Description</label>
+                <textarea id="food-input-text" placeholder="e.g. 2 rotis with yellow dal tadka..." class="flex-grow min-h-[100px] w-full bg-gray-950 border border-white/5 focus:border-emerald-500/40 rounded-2xl p-3.5 text-xs font-medium text-white outline-none placeholder:text-gray-600 resize-none"></textarea>
+                <div class="flex justify-between items-center text-[10px] text-gray-500 font-semibold mt-1">
+                  <span class="flex items-center gap-1"><i data-lucide="mic" class="w-3 h-3 text-emerald-400"></i> Voice input active</span>
+                  <span>Optional mixed input</span>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-food-scan-submit" class="w-full bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white py-3.5 px-4 rounded-xl text-xs font-extrabold transition-all border border-emerald-400/20 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/10">
+              <i data-lucide="sparkles" class="w-4 h-4 fill-white"></i> Perform AI Visual Contour Scan
+            </button>
+          </form>
+        </div>
+
+        <!-- Step 2: Scanning screen -->
+        <div id="food-modal-step-scanning" class="hidden py-12 text-center flex flex-col items-center justify-center relative overflow-hidden h-64">
+          <div class="relative max-h-48 overflow-hidden rounded-2xl border border-white/5 bg-gray-950/60 p-2">
+            <div id="scan-preview-img-container" class="relative max-h-40 min-w-[200px] flex items-center justify-center">
+              <i data-lucide="camera" class="w-12 h-12 text-emerald-400 animate-pulse"></i>
+            </div>
+            <div class="scan-laser"></div>
+          </div>
+          <p class="text-sm font-bold text-white mt-6 font-outfit">Segmenting overlaps & assessing portion densities...</p>
+          <p class="text-[10px] text-gray-400 tracking-wider uppercase mt-1 animate-pulse">Consulting clinical nutritionist directory</p>
+        </div>
+
+        <!-- Step 3: Audited display results -->
+        <div id="food-modal-step-audited" class="hidden space-y-6 text-left">
+          <!-- Main Macro Dashboard -->
+          <div class="glass-panel p-5 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-4 relative overflow-hidden">
+            <div>
+              <span class="block text-[10px] text-gray-500 uppercase font-black">Estimated Energy</span>
+              <span id="audit-val-calories" class="text-2xl font-black text-white font-outfit">0 kcal</span>
+            </div>
+            <div>
+              <span class="block text-[10px] text-gray-500 uppercase font-black">Segment Score</span>
+              <span id="audit-val-score" class="text-2xl font-black text-emerald-400 font-outfit">0</span>
+            </div>
+            <div>
+              <span class="block text-[10px] text-gray-500 uppercase font-black">Glycemic Load</span>
+              <span id="audit-val-gl" class="text-2xl font-black text-amber-400 font-outfit">0</span>
+            </div>
+            <div>
+              <span class="block text-[10px] text-gray-500 uppercase font-black">Satiety Index</span>
+              <span id="audit-val-satiety" class="text-2xl font-black text-sky-400 font-outfit">0 / 100</span>
+            </div>
+          </div>
+
+          <!-- Detected items loops -->
+          <div class="space-y-3">
+            <h4 class="text-xs uppercase font-extrabold text-white font-outfit">Segmented Plate Components</h4>
+            <div id="audit-segmented-items" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <!-- Item badges will render here -->
+            </div>
+          </div>
+
+          <!-- Insights -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl bg-gray-900 border border-white/5">
+              <h5 class="text-xs uppercase font-extrabold text-white font-outfit mb-2 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Digestion Impact</h5>
+              <p id="audit-val-digestion" class="text-xs text-gray-400 leading-relaxed"></p>
+            </div>
+            <div class="p-4 rounded-2xl bg-gray-900 border border-white/5 space-y-2">
+              <h5 class="text-xs uppercase font-extrabold text-white font-outfit mb-2 flex items-center gap-1.5"><i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Nutrition Coach Swap Swaps</h5>
+              <ul id="audit-val-insights" class="space-y-1.5 list-disc pl-4 text-xs text-gray-400">
+                <!-- Insights list -->
+              </ul>
+            </div>
+          </div>
+
+          <button onclick="commitScannedFood()" class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-black transition-all border border-emerald-400/20 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/10 font-outfit">
+            <i data-lucide="check" class="w-4 h-4"></i> Save Scanned Plate to Daily Timeline
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL WINDOW: PACKAGED FOOD AUDITOR -->
+    <!-- ============================================================== -->
+    <div id="modal-packaged" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+      <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 relative flex flex-col max-h-[90vh] overflow-y-auto animate-in zoom-in duration-300">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-4 border-b border-white/5 mb-6">
+          <div>
+            <h3 class="text-lg font-black text-white flex items-center gap-1.5 font-outfit">
+              Packaged Food Auditor <i data-lucide="search" class="text-emerald-400 w-5 h-5"></i>
+            </h3>
+            <p class="text-xs text-gray-400 mt-0.5">Audit palm oils, toxic stabilizers, processing indexes, and gut-inflaming additives.</p>
+          </div>
+          <button onclick="closePackagedModal()" class="p-2 rounded-lg text-gray-400 hover:text-white border border-white/5 cursor-pointer text-xs">
+            Cancel
+          </button>
+        </div>
+
+        <!-- Step 1: Upload image form -->
+        <div id="packaged-modal-step-upload" class="space-y-6">
+          <form onsubmit="performPackagedScan(event)" class="space-y-6">
+            
+            <div class="border border-dashed border-white/10 hover:border-emerald-500/30 rounded-2xl p-8 text-center bg-gray-950/20 transition-all flex flex-col items-center justify-center relative min-h-[220px] cursor-pointer group">
+              <input type="file" accept="image/*" onchange="triggerPackagedPreview(event)" class="absolute inset-0 opacity-0 cursor-pointer">
+              <div id="packaged-upload-prompt" class="flex flex-col items-center">
+                <i data-lucide="upload" class="w-10 h-10 text-gray-600 group-hover:text-emerald-400 transition-all mb-3 animate-pulse"></i>
+                <span class="text-sm font-bold text-gray-300 font-outfit">Upload Package FRONT Image</span>
+                <span class="text-xs text-gray-500 block mt-1">Upload brand labels (e.g. Coca Cola, Maggi, Whole Truth)</span>
+              </div>
+              <img id="packaged-upload-preview" class="hidden max-h-44 object-contain rounded-xl">
+            </div>
+
+            <div class="p-4 bg-gray-900 border border-white/5 rounded-xl flex gap-3">
+              <i data-lucide="info" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+              <p class="text-xs text-gray-400 leading-normal text-left">
+                <strong class="text-white block mb-0.5 font-outfit">Zero-Friction Front-Only Scanning</strong>
+                NutriClick scans the FRONT package label and uses vision OCR to identify variant flairs, matching raw ingredients automatically to flag seed oils and stabilizers! No back-hunting required.
+              </p>
+            </div>
+
+            <button type="submit" id="btn-packaged-scan-submit" class="w-full bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white py-3.5 px-4 rounded-xl text-xs font-extrabold transition-all border border-emerald-400/20 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/10">
+              <i data-lucide="sparkles" class="w-4 h-4 fill-white"></i> Perform Deep Toxicity Audit
+            </button>
+          </form>
+        </div>
+
+        <!-- Step 2: Scanning screen -->
+        <div id="packaged-modal-step-scanning" class="hidden py-12 text-center flex flex-col items-center justify-center relative overflow-hidden h-64">
+          <div class="relative max-h-48 overflow-hidden rounded-2xl border border-white/5 bg-gray-950/60 p-2">
+            <div id="packaged-scan-preview-img-container" class="relative max-h-40 min-w-[200px] flex items-center justify-center">
+              <i data-lucide="search" class="w-12 h-12 text-emerald-400 animate-pulse"></i>
+            </div>
+            <div class="scan-laser"></div>
+          </div>
+          <p class="text-sm font-bold text-white mt-6 font-outfit">Performing Optical Character Recognition (OCR)...</p>
+          <p class="text-[10px] text-gray-400 tracking-wider uppercase mt-1 animate-pulse">Decoding preservatives chemical indexes</p>
+        </div>
+
+        <!-- Step 3: Audited packaged results -->
+        <div id="packaged-modal-step-audited" class="hidden space-y-6 text-left">
+          <!-- Top score flairs -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Health Score -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between">
+              <span class="text-[10px] text-gray-500 uppercase font-black">Health Clean Rating</span>
+              <div class="flex items-baseline gap-1 mt-2">
+                <span id="pack-val-score" class="text-3xl font-black text-white font-outfit">0</span>
+                <span class="text-xs text-emerald-400 font-bold">/100</span>
+              </div>
+            </div>
+
+            <!-- NOVA Processing level -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between">
+              <span class="text-[10px] text-gray-500 uppercase font-black">Processing NOVA Group</span>
+              <div class="mt-2">
+                <span id="pack-val-nova-badge" class="px-3 py-1 rounded-xl text-xs font-black font-mono">GROUP 4</span>
+                <span class="text-[9px] text-gray-500 block mt-1">Ultra-processed indicator</span>
+              </div>
+            </div>
+
+            <!-- Transparency Rating -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between">
+              <span class="text-[10px] text-gray-500 uppercase font-black">Transparency Rating</span>
+              <div class="flex items-baseline gap-1 mt-2">
+                <span id="pack-val-transparency" class="text-3xl font-black text-white font-outfit">0%</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Product Details Header -->
+          <div class="p-4 rounded-2xl bg-gray-900 border border-white/5 flex gap-4 items-center">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+              <i data-lucide="package" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h4 id="pack-val-title" class="text-base font-black text-white font-outfit"></h4>
+              <p id="pack-val-claims" class="text-xs text-emerald-400 font-semibold"></p>
+            </div>
+          </div>
+
+          <!-- Warnings panel -->
+          <div id="pack-critical-warnings-box" class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex gap-3">
+            <i data-lucide="shield-alert" class="w-5 h-5 text-rose-400 shrink-0 mt-0.5 animate-pulse"></i>
+            <div>
+              <span class="block text-xs font-black text-rose-400 font-outfit">Critical Additives & Oils Alerts</span>
+              <ul id="pack-warnings-list" class="space-y-1.5 list-disc pl-4 text-xs text-gray-400 mt-2">
+                <!-- Warnings list -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Additives grid details -->
+          <div class="space-y-3">
+            <h4 class="text-xs uppercase font-extrabold text-white font-outfit">Audited Stabilizers & Chemicals</h4>
+            <div id="pack-additives-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <!-- Additives detailed cards -->
+            </div>
+          </div>
+
+          <!-- Seed oil & sweetness indicators -->
+          <div id="pack-seed-oil-box" class="p-4 rounded-2xl bg-rose-500/5 border border-white/5 flex gap-3">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-400 shrink-0 mt-0.5"></i>
+            <div>
+              <span class="block text-xs font-black text-white font-outfit">Refined Seed Oil Detection</span>
+              <p id="pack-seed-oil-desc" class="text-xs text-gray-400 leading-normal mt-1"></p>
+            </div>
+          </div>
+
+          <!-- Metabolic Insights -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl bg-gray-900 border border-white/5">
+              <h5 class="text-xs uppercase font-extrabold text-white font-outfit mb-2 flex items-center gap-1.5"><i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Metabolic Wellness Impact</h5>
+              <p id="pack-val-metabolic" class="text-xs text-gray-400 leading-relaxed"></p>
+            </div>
+            <div class="p-4 rounded-2xl bg-gray-900 border border-white/5">
+              <h5 class="text-xs uppercase font-extrabold text-white font-outfit mb-2 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> Intestinal Mucosal Gut Impact</h5>
+              <p id="pack-val-gut" class="text-xs text-gray-400 leading-relaxed"></p>
+            </div>
+          </div>
+
+          <button onclick="commitScannedPackaged()" class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-black transition-all border border-emerald-400/20 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/10 font-outfit">
+            <i data-lucide="check" class="w-4 h-4"></i> Log Packaged Item to Daily Feed
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- CLIENT STATE & SIMULATION DATABASE CONTROLLER (Vanilla JS) -->
+  <!-- ============================================================== -->
+  <script>
+    // State variables
+    let viewMode = 'landing'; // landing | app
+    let activeTab = 'dashboard'; // dashboard | profile
+    
+    // Core Profile settings state
+    let profile = {
+      calorieTarget: 2200,
+      proteinTargetG: 165,
+      carbsTargetG: 220,
+      fatTargetG: 73,
+      dietaryPreference: 'vegetarian_no_eggs',
+      allergies: 'peanuts',
+      weightKg: 74.5,
+      weightTarget: 68.0,
+      age: 28,
+      activityLevel: 'moderate'
+    };
+
+    // Database simulation states
+    let todayTotals = { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0, sodium: 0 };
+    let loggedMeals = [];
+    let loggedWater = 0;
+    let waterLogs = []; // array of ml entries
+    
+    // Fasting clock states
+    let fastingActive = false;
+    let fastingStartTime = null;
+    let fastingInterval = null;
+    let fastingTimerDisplay = "00:00:00";
+
+    // Modal Logging temporary upload states
+    let showFoodModalState = false;
+    let showPackagedModalState = false;
+    let logMealType = 'Breakfast';
+    let logInputText = '';
+    let selectedFile = null;
+    let imagePreviewUrl = null;
+    let scannedAuditData = null;
+
+    // Simulated Food Directory Seed
+    const foodItemDirectory = [
+      {
+        name: "Whole Wheat Roti",
+        brand: "Homemade",
+        isPackaged: false,
+        servingSizeG: 35,
+        calories: 104,
+        proteinG: 3.1,
+        carbsG: 21.0,
+        fatG: 0.8,
+        fiberG: 2.8,
+        sodiumMg: 1.0,
+        sugarG: 0.1,
+        novaGroup: 1,
+        healthScore: 92,
+        ingredients: "Whole wheat flour, Water, ghee"
+      },
+      {
+        name: "Yellow Dal Tadka",
+        brand: "Homemade",
+        isPackaged: false,
+        servingSizeG: 150,
+        calories: 148,
+        proteinG: 7.8,
+        carbsG: 21.5,
+        fatG: 3.5,
+        fiberG: 5.2,
+        sodiumMg: 380,
+        sugarG: 0.5,
+        novaGroup: 1,
+        healthScore: 94,
+        ingredients: "Yellow split peas, Turmeric, Cumin, Mustard seeds, Ghee, Garlic, Ginger"
+      },
+      {
+        name: "Paneer Bhurji",
+        brand: "Homemade",
+        isPackaged: false,
+        servingSizeG: 150,
+        calories: 280,
+        proteinG: 16.5,
+        carbsG: 8.2,
+        fatG: 20.8,
+        fiberG: 2.1,
+        sodiumMg: 420,
+        sugarG: 2.4,
+        novaGroup: 1,
+        healthScore: 89,
+        ingredients: "Cottage cheese, Onion, Tomato, Capsicum, Ghee, Turmeric, Chili powder"
+      },
+      {
+        name: "Steamed Ragi Dosa",
+        brand: "Homemade",
+        isPackaged: false,
+        servingSizeG: 180,
+        calories: 210,
+        proteinG: 5.8,
+        carbsG: 39.5,
+        fatG: 3.8,
+        fiberG: 4.8,
+        sodiumMg: 320,
+        sugarG: 0.2,
+        novaGroup: 1,
+        healthScore: 95,
+        ingredients: "Fermented ragi and black gram batter, trace oil"
+      },
+      {
+        name: "Peanut Butter Cacao Protein Bar",
+        brand: "Whole Truth",
+        isPackaged: true,
+        servingSizeG: 50,
+        calories: 218,
+        proteinG: 12.0,
+        carbsG: 18.5,
+        fatG: 10.8,
+        fiberG: 4.2,
+        sodiumMg: 60,
+        sugarG: 9.5,
+        novaGroup: 3,
+        healthScore: 88,
+        ingredients: "Dates, Peanuts, Whey Protein, Cocoa butter"
+      },
+      {
+        name: "2-Minute Masala Noodles",
+        brand: "Maggi",
+        isPackaged: true,
+        servingSizeG: 70,
+        calories: 310,
+        proteinG: 7.2,
+        carbsG: 44.5,
+        fatG: 12.0,
+        fiberG: 2.0,
+        sodiumMg: 920,
+        sugarG: 1.5,
+        novaGroup: 4,
+        healthScore: 32,
+        ingredients: "Refined wheat flour (Maida), Palm oil, Salt, Wheat gluten, Mineral (Calcium carbonate). Spice mix: MSG, flavor enhancer, sulfur dioxide, caramel color."
+      },
+      {
+        name: "Coca Cola Classic",
+        brand: "Coca Cola",
+        isPackaged: true,
+        servingSizeG: 330,
+        calories: 139,
+        proteinG: 0.0,
+        carbsG: 35.0,
+        fatG: 0.0,
+        fiberG: 0.0,
+        sodiumMg: 15,
+        sugarG: 35.0,
+        novaGroup: 4,
+        healthScore: 15,
+        ingredients: "Carbonated water, Sugar, Caramel color Class IV, Phosphoric acid, Caffeine"
+      }
+    ];
+
+    // Simulated Food Canditates Recommendation Pool
+    const mealRecommenderPool = [
+      {
+        name: "Yellow Dal Tadka with 2 Rotis",
+        mealType: "Lunch",
+        calories: 356,
+        protein: 14.0,
+        carbs: 63.5,
+        fat: 5.1,
+        dietary: ["vegetarian_no_eggs", "vegetarian_eggs", "omnivore"],
+        ingredients: ["toor dal", "wheat", "ghee", "cumin"],
+        rationale: "Clean whole grains combined with plant legumes. Extremely high fiber stabilizing your glucose curve."
+      },
+      {
+        name: "Egg Bhurji with Multi-grain Roti",
+        mealType: "Breakfast",
+        calories: 320,
+        protein: 19.5,
+        carbs: 22.0,
+        fat: 14.8,
+        dietary: ["vegetarian_eggs", "omnivore"],
+        ingredients: ["eggs", "wheat", "oil", "onion"],
+        rationale: "Protein-dense eggs supply essential amino acids helping build lean muscle mass."
+      },
+      {
+        name: "Tofu Garden Salad with Olive Oil",
+        mealType: "Dinner",
+        calories: 245,
+        protein: 14.5,
+        carbs: 8.2,
+        fat: 19.5,
+        dietary: ["vegan", "vegetarian_no_eggs", "vegetarian_eggs", "omnivore", "keto"],
+        ingredients: ["tofu", "cucumber", "lettuce", "olive oil"],
+        rationale: "100% plant-based and low-glycemic. High in healthy monounsaturated fats, perfect for overnight recovery."
+      },
+      {
+        name: "Paneer Bhurji with standard Roti",
+        mealType: "Lunch",
+        calories: 384,
+        protein: 19.6,
+        carbs: 29.2,
+        fat: 21.6,
+        dietary: ["vegetarian_no_eggs", "vegetarian_eggs", "omnivore"],
+        ingredients: ["paneer", "wheat", "tomato", "ghee"],
+        rationale: "Slow-digesting cottage cheese keeps you full for up to 4 hours, reducing calorie urges."
+      },
+      {
+        name: "Almond-Crusted Keto Avocado Toast",
+        mealType: "Breakfast",
+        calories: 310,
+        protein: 9.0,
+        carbs: 12.0,
+        fat: 26.5,
+        dietary: ["vegan", "vegetarian_no_eggs", "vegetarian_eggs", "omnivore", "keto", "paleo"],
+        ingredients: ["avocado", "almond flour", "seeds"],
+        rationale: "Rich in clean fats and extremely low net-carbs, keeping your insulin flat and fat oxidation high."
+      },
+      {
+        name: "Steamed Ragi Dosa with Coconut Chutney",
+        mealType: "Breakfast",
+        calories: 295,
+        protein: 6.8,
+        carbs: 48.0,
+        fat: 8.5,
+        dietary: ["vegan", "vegetarian_no_eggs", "vegetarian_eggs", "omnivore"],
+        ingredients: ["ragi", "rice batter", "coconut"],
+        rationale: "Fermented ragi is loaded with natural calcium and complex fibers supportive of microbiome diversity."
+      }
+    ];
+
+    // Initializer
+    function initApp() {
+      lucide.createIcons();
+      recalculateMacros();
+      renderTimeline();
+      updateProfileDisplay();
+      generateRecommendations();
+    }
+
+    // Toggle views
+    function launchWorkspace() {
+      document.getElementById('view-landing').classList.add('hidden');
+      document.getElementById('view-workspace').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function resetToLanding() {
+      document.getElementById('view-workspace').classList.add('hidden');
+      document.getElementById('view-landing').classList.remove('hidden');
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      
+      const dashBtn = document.getElementById('tab-btn-dashboard');
+      const profBtn = document.getElementById('tab-btn-profile');
+      
+      const dashScreen = document.getElementById('screen-dashboard');
+      const profScreen = document.getElementById('screen-profile');
+
+      if (tab === 'dashboard') {
+        dashBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+        profBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-gray-400 hover:text-white";
+        
+        dashScreen.classList.remove('hidden');
+        profScreen.classList.add('hidden');
+      } else {
+        profBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+        dashBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-gray-400 hover:text-white";
+        
+        profScreen.classList.remove('hidden');
+        dashScreen.classList.add('hidden');
+        generateRecommendations();
+      }
+      lucide.createIcons();
+    }
+
+    // Calculate quotas
+    function recalculateMacros() {
+      let calories = 0, protein = 0, carbs = 0, fat = 0, fiber = 0, sugar = 0, sodium = 0;
+      
+      loggedMeals.forEach(m => {
+        calories += m.calories;
+        protein += m.protein;
+        carbs += m.carbs;
+        fat += m.fat;
+        fiber += m.fiber || 0;
+        sugar += m.sugar || 0;
+        sodium += m.sodium || 0;
+      });
+
+      todayTotals = { calories, protein, carbs, fat, fiber, sugar, sodium };
+      
+      const caloriesLeft = Math.max(0, profile.calorieTarget - calories);
+      document.getElementById('hud-calories-left').innerText = caloriesLeft;
+      document.getElementById('hud-calorie-goal').innerText = profile.calorieTarget;
+      
+      // Update SVG calorie circle progress ring
+      const ring = document.getElementById('calorie-progress-ring');
+      const percent = Math.min(100, (calories / profile.calorieTarget) * 100);
+      const circumference = 477; // 2 * pi * r (76)
+      const offset = circumference - (circumference * percent) / 100;
+      ring.setAttribute('stroke-dashoffset', offset);
+
+      // Fractions
+      document.getElementById('hud-protein-fraction').innerText = `${Math.round(protein)} / ${profile.proteinTargetG}g`;
+      document.getElementById('hud-carbs-fraction').innerText = `${Math.round(carbs)} / ${profile.carbsTargetG}g`;
+      document.getElementById('hud-fat-fraction').innerText = `${Math.round(fat)} / ${profile.fatTargetG}g`;
+    }
+
+    // Profile Settings updates
+    function updateProfileDisplay() {
+      const calIn = document.getElementById('profile-input-calories');
+      const wtIn = document.getElementById('profile-input-weight');
+      
+      profile.calorieTarget = parseInt(calIn.value);
+      profile.weightKg = parseFloat(wtIn.value);
+      
+      document.getElementById('profile-val-calories').innerText = `${profile.calorieTarget} kcal`;
+      document.getElementById('profile-val-weight').innerText = `${profile.weightKg} kg`;
+
+      // Split ratios automatically (Protein 30%, Carbs 40%, Fats 30%)
+      profile.proteinTargetG = Math.round((profile.calorieTarget * 0.30) / 4);
+      profile.carbsTargetG = Math.round((profile.calorieTarget * 0.40) / 4);
+      profile.fatTargetG = Math.round((profile.calorieTarget * 0.30) / 9);
+
+      recalculateMacros();
+    }
+
+    function saveProfileData(alertUser = false) {
+      const prefIn = document.getElementById('profile-input-preference');
+      const allIn = document.getElementById('profile-input-allergies');
+      
+      profile.dietaryPreference = prefIn.value;
+      profile.allergies = allIn.value;
+      
+      generateRecommendations();
+      recalculateMacros();
+
+      if (alertUser) {
+        alert("Personalized calorie targets, allergen parameters, and swaps have been successfully updated!");
+      }
+    }
+
+    // Dynamic clean recommendation feed creator
+    function generateRecommendations() {
+      const pref = profile.dietaryPreference;
+      const allergyExclusions = profile.allergies.toLowerCase().split(',').map(s => s.trim());
+      
+      const filtered = mealRecommenderPool.filter(meal => {
+        // Preference mapping check
+        const dietaryMatch = meal.dietary.includes(pref);
+        
+        // Exclude allergies matching any item ingredients
+        const allergyConflict = meal.ingredients.some(ing => 
+          allergyExclusions.some(exclusion => exclusion && ing.includes(exclusion))
+        );
+
+        return dietaryMatch && !allergyConflict;
+      });
+
+      const container = document.getElementById('recommender-feed');
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-8 text-center text-xs text-gray-500 border border-dashed border-white/5 rounded-2xl">
+            No recommendation matches. Try broadening your profile dietary exclusions.
+          </div>
+        `;
+        return;
+      }
+
+      filtered.slice(0, 3).forEach(meal => {
+        const div = document.createElement('div');
+        div.className = "glass-panel p-5 rounded-2xl flex flex-col justify-between hover:border-emerald-500/25 transition-all text-left relative overflow-hidden group";
+        div.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-3">
+              <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-wider">${meal.mealType}</span>
+              <span class="text-xs font-mono font-bold text-gray-400">${meal.calories} kcal</span>
+            </div>
+            <h4 class="text-sm font-black text-white font-outfit mb-1">${meal.name}</h4>
+            <p class="text-[11px] text-gray-400 leading-normal leading-relaxed">${meal.rationale}</p>
+          </div>
+          
+          <button onclick="quickLogRecommendation('${meal.name}', ${meal.calories}, ${meal.protein}, ${meal.carbs}, ${meal.fat}, '${meal.mealType}')" class="mt-4 w-full py-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-white transition-all text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 cursor-pointer">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Log Clean Swap
+          </button>
+        `;
+        container.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    function quickLogRecommendation(name, cal, prot, carb, fat, type) {
+      const newMeal = {
+        id: Math.random().toString(36).substring(7),
+        mealType: type,
+        name: name,
+        calories: cal,
+        protein: prot,
+        carbs: carb,
+        fat: fat,
+        quality: 94,
+        digestion: "Highly clean prebiotic indices, promoting flat metabolic curves.",
+        insights: ["Exceptional nutrient-dense swap logged."]
+      };
+      
+      loggedMeals.push(newMeal);
+      recalculateMacros();
+      renderTimeline();
+    }
+
+    // Modal Operations
+    function openFoodModal() {
+      document.getElementById('modal-food').classList.remove('hidden');
+      setLogMealType('Breakfast');
+      document.getElementById('food-input-text').value = '';
+      document.getElementById('food-upload-preview').classList.add('hidden');
+      document.getElementById('food-upload-prompt').classList.remove('hidden');
+      document.getElementById('food-modal-step-upload').classList.remove('hidden');
+      document.getElementById('food-modal-step-scanning').classList.add('hidden');
+      document.getElementById('food-modal-step-audited').classList.add('hidden');
+      selectedFile = null;
+      imagePreviewUrl = null;
+      scannedAuditData = null;
+      lucide.createIcons();
+    }
+
+    function closeFoodModal() {
+      document.getElementById('modal-food').classList.add('hidden');
+    }
+
+    function openPackagedModal() {
+      document.getElementById('modal-packaged').classList.remove('hidden');
+      document.getElementById('packaged-upload-preview').classList.add('hidden');
+      document.getElementById('packaged-upload-prompt').classList.remove('hidden');
+      document.getElementById('packaged-modal-step-upload').classList.remove('hidden');
+      document.getElementById('packaged-modal-step-scanning').classList.add('hidden');
+      document.getElementById('packaged-modal-step-audited').classList.add('hidden');
+      selectedFile = null;
+      imagePreviewUrl = null;
+      scannedAuditData = null;
+      lucide.createIcons();
+    }
+
+    function closePackagedModal() {
+      document.getElementById('modal-packaged').classList.add('hidden');
+    }
+
+    function setLogMealType(type) {
+      logMealType = type;
+      ["Breakfast", "Lunch", "Dinner", "Snack"].forEach(t => {
+        const btn = document.getElementById(`meal-type-btn-${t}`);
+        if (t === type) {
+          btn.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition-all border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 cursor-pointer";
+        } else {
+          btn.className = "py-2.5 px-3 rounded-xl text-xs font-bold transition-all border border-white/5 bg-gray-900 text-gray-400 hover:text-white cursor-pointer";
+        }
+      });
+    }
+
+    // Handle previewing images locally
+    function triggerFoodPreview(e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          imagePreviewUrl = evt.target.result;
+          const img = document.getElementById('food-upload-preview');
+          img.src = imagePreviewUrl;
+          img.classList.remove('hidden');
+          document.getElementById('food-upload-prompt').classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function triggerPackagedPreview(e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          imagePreviewUrl = evt.target.result;
+          const img = document.getElementById('packaged-upload-preview');
+          img.src = imagePreviewUrl;
+          img.classList.remove('hidden');
+          document.getElementById('packaged-upload-prompt').classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Simulated vision scanner regular food Plate
+    function performFoodScan(e) {
+      e.preventDefault();
+      const query = document.getElementById('food-input-text').value;
+      if (!query && !selectedFile) return;
+
+      document.getElementById('food-modal-step-upload').classList.add('hidden');
+      document.getElementById('food-modal-step-scanning').classList.remove('hidden');
+
+      // Add preview to scanning box
+      const container = document.getElementById('scan-preview-img-container');
+      if (imagePreviewUrl) {
+        container.innerHTML = `<img src="${imagePreviewUrl}" class="max-h-40 object-contain rounded-xl opacity-60">`;
+      } else {
+        container.innerHTML = `<i data-lucide="camera" class="w-12 h-12 text-emerald-400 animate-pulse"></i>`;
+      }
+      lucide.createIcons();
+
+      setTimeout(() => {
+        // Trigger simulated intelligence Plate analyzer
+        simulateRegularPlateAnalysis(query);
+      }, 2500);
+    }
+
+    function simulateRegularPlateAnalysis(query) {
+      const norm = query.toLowerCase();
+      let matchedItems = [];
+      let totalCal = 0, totalProt = 0, totalCarb = 0, totalFat = 0, totalFib = 0, totalSod = 0;
+      
+      // Local natural matching scans
+      const isDalRoti = norm.includes("roti") || norm.includes("dal") || norm.includes("tadka");
+      const isPaneer = norm.includes("paneer") || norm.includes("bhurji");
+      const isDosa = norm.includes("dosa") || norm.includes("ragi");
+      
+      if (isDalRoti || (!isPaneer && !isDosa)) {
+        // Seed standard thali segments
+        matchedItems.push(
+          { name: "Whole Wheat Roti", estimated_calories: 208, portion_estimated: "2 pieces (70g)", macros: { protein_g: 6.2, carbs_g: 42.0, fat_g: 1.6, fiber_g: 5.6 }, oil_detected: false },
+          { name: "Yellow Dal Tadka", estimated_calories: 148, portion_estimated: "1 katori (150g)", macros: { protein_g: 7.8, carbs_g: 21.5, fat_g: 3.5, fiber_g: 5.2 }, oil_detected: true, oil_source: "Ghee tadka" }
+        );
+        totalCal = 356; totalProt = 14.0; totalCarb = 63.5; totalFat = 5.1; totalFib = 10.8; totalSod = 381;
+      } else if (isPaneer) {
+        matchedItems.push(
+          { name: "Paneer Bhurji", estimated_calories: 280, portion_estimated: "1 serving (150g)", macros: { protein_g: 16.5, carbs_g: 8.2, fat_g: 20.8, fiber_g: 2.1 }, oil_detected: true, oil_source: "Ghee brushing" }
+        );
+        totalCal = 280; totalProt = 16.5; totalCarb = 8.2; totalFat = 20.8; totalFib = 2.1; totalSod = 420;
+      } else if (isDosa) {
+        matchedItems.push(
+          { name: "Steamed Ragi Dosa", estimated_calories: 210, portion_estimated: "1 large piece (180g)", macros: { protein_g: 5.8, carbs_g: 39.5, fat_g: 3.8, fiber_g: 4.8 }, oil_detected: false }
+        );
+        totalCal = 210; totalProt = 5.8; totalCarb = 39.5; totalFat = 3.8; totalFib = 4.8; totalSod = 320;
+      }
+
+      scannedAuditData = {
+        isPackaged: false,
+        mealType: logMealType,
+        inputText: query || "Visual thali capture scan",
+        calories: totalCal,
+        protein: totalProt,
+        carbs: totalCarb,
+        fat: totalFat,
+        fiber: totalFib,
+        sodium: totalSod,
+        overallQualityScore: totalFat > 15 ? 78 : 94,
+        glycemicLoad: Math.round(totalCarb * 0.4),
+        satietyScore: totalFib > 5 ? 85 : 60,
+        digestionImpact: "High prebiotic fiber content; excellent indices supporting robust gut health dynamics.",
+        insights: [
+          totalFib < 5.0 ? "Add raw salad greens to boost fiber buffer bounds." : "Outstanding fiber buffer in this plate!",
+          "Macro proportions are optimal for stabilizing blood glucose."
+        ],
+        detected_items: matchedItems
+      };
+
+      // Fill audit steps UI
+      document.getElementById('audit-val-calories').innerText = `${totalCal} kcal`;
+      document.getElementById('audit-val-score').innerText = `${scannedAuditData.overallQualityScore}/100`;
+      document.getElementById('audit-val-gl').innerText = scannedAuditData.glycemicLoad;
+      document.getElementById('audit-val-satiety').innerText = `${scannedAuditData.satietyScore} / 100`;
+      
+      const segmentedBox = document.getElementById('audit-segmented-items');
+      segmentedBox.innerHTML = '';
+      matchedItems.forEach(item => {
+        const block = document.createElement('div');
+        block.className = "p-3 rounded-xl bg-gray-900 border border-white/5 text-xs text-left";
+        block.innerHTML = `
+          <div class="flex justify-between items-start font-bold">
+            <span class="text-white">${item.name}</span>
+            <span class="text-emerald-400 font-mono">${item.estimated_calories} kcal</span>
+          </div>
+          <p class="text-[10px] text-gray-500 mt-0.5">Portions: ${item.portion_estimated}</p>
+          <div class="flex gap-2 text-[9px] text-gray-400 mt-2 font-mono font-bold">
+            <span>P: ${item.macros.protein_g}g</span>
+            <span>C: ${item.macros.carbs_g}g</span>
+            <span>F: ${item.macros.fat_g}g</span>
+          </div>
+          ${item.oil_detected ? `<span class="mt-2 block text-[9px] text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded w-max">Ghee/Oil sheen flag: ${item.oil_source}</span>` : ''}
+        `;
+        segmentedBox.appendChild(block);
+      });
+
+      document.getElementById('audit-val-digestion').innerText = scannedAuditData.digestionImpact;
+      
+      const insightsList = document.getElementById('audit-val-insights');
+      insightsList.innerHTML = '';
+      scannedAuditData.insights.forEach(insight => {
+        const li = document.createElement('li');
+        li.innerText = insight;
+        insightsList.appendChild(li);
+      });
+
+      document.getElementById('food-modal-step-scanning').classList.add('hidden');
+      document.getElementById('food-modal-step-audited').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function commitScannedFood() {
+      if (!scannedAuditData) return;
+      
+      const meal = {
+        id: Math.random().toString(36).substring(7),
+        mealType: scannedAuditData.mealType,
+        name: scannedAuditData.detected_items.map(i => i.name).join(' & ') || scannedAuditData.inputText,
+        calories: scannedAuditData.calories,
+        protein: scannedAuditData.protein,
+        carbs: scannedAuditData.carbs,
+        fat: scannedAuditData.fat,
+        fiber: scannedAuditData.fiber,
+        sodium: scannedAuditData.sodium,
+        quality: scannedAuditData.overallQualityScore,
+        digestion: scannedAuditData.digestionImpact,
+        insights: scannedAuditData.insights
+      };
+
+      loggedMeals.push(meal);
+      recalculateMacros();
+      renderTimeline();
+      closeFoodModal();
+    }
+
+    // Simulated packaged brand labels OCR audits
+    function performPackagedScan(e) {
+      e.preventDefault();
+      if (!selectedFile) return;
+
+      document.getElementById('packaged-modal-step-upload').classList.add('hidden');
+      document.getElementById('packaged-modal-step-scanning').classList.remove('hidden');
+
+      const container = document.getElementById('packaged-scan-preview-img-container');
+      container.innerHTML = `<img src="${imagePreviewUrl}" class="max-h-40 object-contain rounded-xl opacity-60">`;
+      lucide.createIcons();
+
+      setTimeout(() => {
+        // Trigger simulation
+        simulatePackagedAnalysis(selectedFile.name);
+      }, 2500);
+    }
+
+    function simulatePackagedAnalysis(fileName) {
+      const name = fileName.toLowerCase();
+      let foodItem = foodItemDirectory[5]; // Default: Maggi Noodles (ultra processed)
+      
+      if (name.includes("coke") || name.includes("cola")) {
+        foodItem = foodItemDirectory[6]; // Coca Cola
+      } else if (name.includes("bar") || name.includes("truth") || name.includes("protein")) {
+        foodItem = foodItemDirectory[4]; // Whole Truth Bar (healthy processed)
+      }
+
+      scannedAuditData = {
+        isPackaged: true,
+        brand: foodItem.brand,
+        product_name: foodItem.name,
+        variant: "Standard Retail Portion",
+        front_claims: foodItem.brand === "Whole Truth" ? ["100% Clean Label", "No Added Sugar"] : ["Tasty & Instant", "Spice Mix Enclosed"],
+        nova_group: foodItem.novaGroup,
+        health_score: foodItem.healthScore,
+        transparency: foodItem.brand === "Whole Truth" ? 95 : 45,
+        calories: foodItem.calories,
+        protein: foodItem.proteinG,
+        carbs: foodItem.carbsG,
+        fat: foodItem.fatG,
+        fiber: foodItem.fiberG,
+        sugar: foodItem.sugarG,
+        sodium: foodItem.sodiumMg,
+        warnings: foodItem.novaGroup === 4 ? [
+          "Ultra-processed food alert: NOVA Group 4.",
+          `Extremely high sodium content: ${foodItem.sodiumMg}mg per packet (exceeds 40% daily allowance).`,
+          "Contains refined Palmolein, an oxidized inflammatory seed oil."
+        ] : ["None. 100% whole minimally processed ingredients!"],
+        metabolic: foodItem.novaGroup === 4 
+          ? "Simple starches fried in highly-heated seed oils will trigger rapid insulin cycles and subsequent fatigue crashes."
+          : "Highly balanced complex carbohydrates, healthy dates, and raw whey proteins keeping blood sugar flat.",
+        gut: foodItem.novaGroup === 4
+          ? "Synthetic food chemicals and emulsifiers are highly correlated with degradation of the gut mucus barrier."
+          : "Rich prebiotic prebiotic fibers feeding beneficial gut bacteria and supporting optimal assimilation.",
+        additives: foodItem.brand === "Whole Truth" ? [] : [
+          { name: "E621 (MSG)", category: "Flavor Enhancer", risk: "Medium", effect: "Over-stimulates satiety receptors." },
+          { name: "E150d (Caramel Color)", category: "Colorant", risk: "High", effect: "Undergoes heat synthesis, trace contaminants." }
+        ]
+      };
+
+      // Populate UI panels
+      document.getElementById('pack-val-score').innerText = scannedAuditData.health_score;
+      document.getElementById('pack-val-transparency').innerText = `${scannedAuditData.transparency}%`;
+      
+      const badge = document.getElementById('pack-val-nova-badge');
+      badge.innerText = `NOVA GROUP ${scannedAuditData.nova_group}`;
+      if (scannedAuditData.nova_group === 4) {
+        badge.className = "px-3 py-1 rounded-xl text-xs font-black font-mono bg-rose-500/10 border border-rose-500/25 text-rose-400";
+      } else {
+        badge.className = "px-3 py-1 rounded-xl text-xs font-black font-mono bg-emerald-500/10 border border-emerald-500/25 text-emerald-400";
+      }
+
+      document.getElementById('pack-val-title').innerText = `[${scannedAuditData.brand}] ${scannedAuditData.product_name}`;
+      document.getElementById('pack-val-claims').innerText = scannedAuditData.front_claims.join(" • ");
+
+      const warningsList = document.getElementById('pack-warnings-list');
+      warningsList.innerHTML = '';
+      scannedAuditData.warnings.forEach(w => {
+        const li = document.createElement('li');
+        li.innerText = w;
+        warningsList.appendChild(li);
+      });
+
+      const warningBox = document.getElementById('pack-critical-warnings-box');
+      if (scannedAuditData.nova_group === 4) {
+        warningBox.className = "p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex gap-3";
+      } else {
+        warningBox.className = "p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex gap-3";
+      }
+
+      // Additives check
+      const addGrid = document.getElementById('pack-additives-grid');
+      addGrid.innerHTML = '';
+      if (scannedAuditData.additives.length === 0) {
+        addGrid.innerHTML = `
+          <div class="col-span-full py-4 text-center text-xs text-gray-500 border border-dashed border-white/5 rounded-2xl">
+            Zero chemical additives or synthetic colorants identified in this product labels.
+          </div>
+        `;
+      } else {
+        scannedAuditData.additives.forEach(add => {
+          const card = document.createElement('div');
+          card.className = "p-3.5 rounded-xl bg-gray-900 border border-white/5 text-xs text-left";
+          card.innerHTML = `
+            <div class="flex justify-between items-start font-bold mb-1.5">
+              <span class="text-white">${add.name}</span>
+              <span class="px-1.5 py-0.5 rounded text-[8px] font-black uppercase font-mono tracking-tight ${
+                add.risk === 'High' ? 'bg-rose-500/10 text-rose-400' : 'bg-amber-500/10 text-amber-400'
+              }">${add.risk} Risk</span>
+            </div>
+            <p class="text-[10px] text-gray-500 uppercase font-bold">Category: ${add.category}</p>
+            <p class="text-[10px] text-gray-400 leading-normal mt-1 leading-normal">${add.effect}</p>
+          `;
+          addGrid.appendChild(card);
+        });
+      }
+
+      // Oils
+      const oilDesc = document.getElementById('pack-seed-oil-desc');
+      if (scannedAuditData.nova_group === 4) {
+        oilDesc.innerHTML = `Identified refined vegetable fats (<strong>Palmolein Oil</strong>). Oxidized under extreme heat refinement; loaded with inflammatory polyunsaturated lipid chains.`;
+      } else {
+        oilDesc.innerHTML = `Zero hydrogenated or refined seed oils found. Pure, raw fats mapped natively.`;
+      }
+
+      document.getElementById('pack-val-metabolic').innerText = scannedAuditData.metabolic;
+      document.getElementById('pack-val-gut').innerText = scannedAuditData.gut;
+
+      document.getElementById('packaged-modal-step-scanning').classList.add('hidden');
+      document.getElementById('packaged-modal-step-audited').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function commitScannedPackaged() {
+      if (!scannedAuditData) return;
+
+      const snack = {
+        id: Math.random().toString(36).substring(7),
+        mealType: 'Snack',
+        name: `Packaged: [${scannedAuditData.brand}] ${scannedAuditData.product_name}`,
+        calories: scannedAuditData.calories,
+        protein: scannedAuditData.protein,
+        carbs: scannedAuditData.carbs,
+        fat: scannedAuditData.fat,
+        fiber: scannedAuditData.fiber,
+        sodium: scannedAuditData.sodium,
+        quality: scannedAuditData.health_score,
+        digestion: scannedAuditData.gut,
+        insights: scannedAuditData.warnings
+      };
+
+      loggedMeals.push(snack);
+      recalculateMacros();
+      renderTimeline();
+      closePackagedModal();
+    }
+
+    // Hydration liquid water controller
+    function addWater(amount) {
+      loggedWater += amount;
+      waterLogs.push(amount);
+      
+      document.getElementById('hud-water-value').innerText = `${loggedWater}ml`;
+      
+      const percent = Math.min(100, (loggedWater / 3000) * 100);
+      document.getElementById('water-tank-fill').style.height = `${percent}%`;
+      document.getElementById('water-tank-percent').innerText = `${Math.round(percent)}% Filled`;
+
+      document.getElementById('btn-undo-water').classList.remove('hidden');
+    }
+
+    function undoWater() {
+      if (waterLogs.length > 0) {
+        const lastVal = waterLogs.pop();
+        loggedWater = Math.max(0, loggedWater - lastVal);
+        
+        document.getElementById('hud-water-value').innerText = `${loggedWater}ml`;
+        
+        const percent = Math.min(100, (loggedWater / 3000) * 100);
+        document.getElementById('water-tank-fill').style.height = `${percent}%`;
+        document.getElementById('water-tank-percent').innerText = `${Math.round(percent)}% Filled`;
+      }
+      
+      if (waterLogs.length === 0) {
+        document.getElementById('btn-undo-water').classList.add('hidden');
+      }
+    }
+
+    // Intermittent Fasting stopwatches
+    function toggleFasting() {
+      const btn = document.getElementById('btn-fasting-toggle');
+      if (!fastingActive) {
+        // Start Fast
+        fastingActive = true;
+        fastingStartTime = new Date().getTime();
+        btn.innerText = "Stop / Log 16:8 Fast";
+        btn.className = "w-full py-3 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white rounded-xl text-xs font-extrabold transition-all border border-rose-400/20 flex items-center justify-center gap-1.5 cursor-pointer";
+        
+        fastingInterval = setInterval(() => {
+          const now = new Date().getTime();
+          const diff = now - fastingStartTime;
+          
+          const hrs = Math.floor(diff / (1000 * 60 * 60));
+          const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+          fastingTimerDisplay = `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+          document.getElementById('fasting-hud-clock').innerText = fastingTimerDisplay;
+        }, 1000);
+      } else {
+        // Stop fast
+        fastingActive = false;
+        clearInterval(fastingInterval);
+        fastingInterval = null;
+        document.getElementById('fasting-hud-clock').innerText = "00:00:00";
+        btn.innerText = "Start 16:8 Fast";
+        btn.className = "w-full py-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white rounded-xl text-xs font-extrabold transition-all border border-amber-400/20 flex items-center justify-center gap-1.5 cursor-pointer";
+        alert(`Fasting cycle recorded successfully! You fasted for ${fastingTimerDisplay}. Excellent metabolic rest window!`);
+      }
+    }
+
+    // Timeline logs rendering
+    function renderTimeline() {
+      const container = document.getElementById('timeline-feed');
+      const countBadge = document.getElementById('timeline-count');
+      
+      container.innerHTML = '';
+      countBadge.innerText = `${loggedMeals.length} logs logged`;
+
+      if (loggedMeals.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 glass-panel rounded-3xl flex flex-col items-center justify-center text-center text-gray-500">
+            <i data-lucide="inbox" class="w-8 h-8 text-gray-700 mb-2"></i>
+            <span class="text-xs font-bold text-gray-400">Timeline Empty</span>
+            <span class="text-[10px] text-gray-600 mt-1">Upload thali photos or packaged bar codes to decode meals</span>
+          </div>
+        `;
+        return;
+      }
+
+      loggedMeals.forEach(meal => {
+        const card = document.createElement('div');
+        card.className = "glass-panel rounded-2xl p-5 relative overflow-hidden group hover:border-emerald-500/20 transition-all text-left animate-in slide-in-from-bottom-2 duration-300";
+        
+        let scoreClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+        if (meal.quality < 40) scoreClass = "bg-rose-500/10 text-rose-400 border-rose-500/20";
+        else if (meal.quality < 80) scoreClass = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+
+        card.innerHTML = `
+          <div class="flex justify-between items-start gap-4 mb-3">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-lg border text-[9px] font-black uppercase tracking-wider font-mono ${
+                  meal.mealType === 'Breakfast' ? 'bg-sky-500/10 text-sky-400 border-sky-500/20' :
+                  meal.mealType === 'Lunch' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                  meal.mealType === 'Dinner' ? 'bg-violet-500/10 text-violet-400 border-violet-500/20' :
+                  'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                }">${meal.mealType}</span>
+                <span class="text-[10px] text-gray-500 font-bold font-mono">Decoded context</span>
+              </div>
+              <h4 class="text-sm font-black text-white mt-1.5 font-outfit">${meal.name}</h4>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-xl border text-[10px] font-black font-mono uppercase shrink-0 ${scoreClass}">Grade: ${meal.quality}</span>
+              <button onclick="deleteMeal('${meal.id}')" class="p-2 rounded-xl border border-white/5 hover:border-rose-500/20 hover:text-rose-400 text-gray-500 transition-all cursor-pointer">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 border-y border-white/5 text-xs">
+            <div>
+              <span class="block text-[9px] text-gray-500 uppercase font-black font-mono">Energy</span>
+              <span class="font-bold text-white font-mono">${meal.calories} kcal</span>
+            </div>
+            <div>
+              <span class="block text-[9px] text-gray-500 uppercase font-black font-mono">Protein</span>
+              <span class="font-bold text-emerald-400 font-mono">${meal.protein}g</span>
+            </div>
+            <div>
+              <span class="block text-[9px] text-gray-500 uppercase font-black font-mono">Carbs</span>
+              <span class="font-bold text-amber-400 font-mono">${meal.carbs}g</span>
+            </div>
+            <div>
+              <span class="block text-[9px] text-gray-500 uppercase font-black font-mono">Fats</span>
+              <span class="font-bold text-rose-400 font-mono">${meal.fat}g</span>
+            </div>
+          </div>
+
+          <div class="pt-3 space-y-2 text-xs leading-normal">
+            <p class="text-gray-400"><strong class="text-white font-outfit">Gut Index:</strong> ${meal.digestion}</p>
+            <div class="flex gap-2 flex-wrap items-center mt-2">
+              <i data-lucide="shield-alert" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+              <span class="text-[10px] font-semibold text-emerald-400">${meal.insights[0]}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function deleteMeal(id) {
+      loggedMeals = loggedMeals.filter(m => m.id !== id);
+      recalculateMacros();
+      renderTimeline();
+    }
+
+    // Floating Coach Chat drawers
+    function toggleCoach() {
+      const bar = document.getElementById('coach-sidebar');
+      if (bar.classList.contains('translate-x-full')) {
+        bar.classList.remove('translate-x-full');
+      } else {
+        bar.classList.add('translate-x-full');
+      }
+    }
+
+    function sendSuggestedCoach(text) {
+      document.getElementById('coach-chat-input').value = text;
+      submitCoachChat(null);
+    }
+
+    function submitCoachChat(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('coach-chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = '';
+      
+      const box = document.getElementById('coach-messages-box');
+      
+      // User message
+      const userDiv = document.createElement('div');
+      userDiv.className = "flex items-start gap-3 max-w-[85%] ml-auto justify-end animate-in fade-in slide-in-from-bottom-2 duration-300";
+      userDiv.innerHTML = `
+        <div class="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl rounded-tr-none text-xs leading-relaxed text-emerald-300 font-medium text-left">
+          ${text}
+        </div>
+      `;
+      box.appendChild(userDiv);
+      box.scrollTop = box.scrollHeight;
+
+      // Simulated Intelligent response matching current daily metrics
+      setTimeout(() => {
+        const remaining = Math.max(0, profile.calorieTarget - todayTotals.calories);
+        let coachAnswer = `Focus on slow digesting proteins and complex fibers right now. You have ${remaining} kcal remaining for today. I highly recommend a light Dal tadka tadka salad bowl!`;
+        
+        const norm = text.toLowerCase();
+        if (norm.includes("biryani") || norm.includes("cheat")) {
+          coachAnswer = "Biryani is extremely calorie and saturated-fat dense! Make sure to take a 15-minute walk post-meal and double down on hydration logs to counter glucose curves.";
+        } else if (norm.includes("warnings") || norm.includes("nova") || norm.includes("packaged")) {
+          coachAnswer = "Audited processed snacks fall under NOVA Group 4. They contain synthetic E-numbers (msg flavorings) degrading mucus gut walls. Swap them for clean protein bars!";
+        } else if (norm.includes("snack") || norm.includes("carb")) {
+          coachAnswer = `With ${remaining} kcal remaining, snack on a clean Whole Wheat Dosa or roasted chickpeas. Keep simple carbs flat to trigger healthy ketosis overnight.`;
+        }
+
+        const botDiv = document.createElement('div');
+        botDiv.className = "flex items-start gap-3 max-w-[85%] animate-in fade-in slide-in-from-bottom-2 duration-300";
+        botDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+            <i data-lucide="bot" class="w-4.5 h-4.5"></i>
+          </div>
+          <div class="p-3.5 bg-gray-900 border border-white/5 rounded-2xl rounded-tl-none text-xs leading-relaxed text-gray-300 font-medium text-left">
+            ${coachAnswer}
+          </div>
+        `;
+        box.appendChild(botDiv);
+        box.scrollTop = box.scrollHeight;
+        lucide.createIcons();
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>
