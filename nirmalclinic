@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nirmal Newborn and Child Clinic | Dr. Gajendra Kumar - Best Pediatrician in Rohini, Delhi</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Nirmal Newborn and Child Clinic in Rohini Sector 22, Delhi. Lead pediatrician Dr. Gajendra Kumar offers over 17+ years of clinical experience. Specializing in newborn screening, complete vaccinations, developmental milestone tracking, and general child healthcare. Book consultation for ₹500.">
+  <meta name="keywords" content="Pediatrician in Rohini, Child specialist Sector 22 Rohini, Newborn doctor Rohini, Dr. Gajendra Kumar, Child vaccination center Rohini Delhi, Nirmal Newborn and Child Clinic, Best pediatrician in Delhi NCR, Kids clinic Rohini">
+  <meta name="author" content="Dr. Gajendra Kumar">
+  <link rel="canonical" href="https://nirmalclinic.in">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nirmalclinic.in">
+  <meta property="og:title" content="Nirmal Newborn and Child Clinic | Dr. Gajendra Kumar">
+  <meta property="og:description" content="Over 17+ Years of Dedicated Clinical Experience. Leading pediatric care in Rohini Sector 22, Delhi. Complete immunization, newborn screening & milestones tracking.">
+  <meta property="og:image" content="assets/hero-clinic.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://nirmalclinic.in">
+  <meta property="twitter:title" content="Nirmal Newborn and Child Clinic | Pediatrician in Rohini">
+  <meta property="twitter:description" content="Expert pediatric care by Dr. Gajendra Kumar (17+ yrs experience). ₹500 fee, dual locations in Rohini, Delhi.">
+  <meta property="twitter:image" content="assets/hero-clinic.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/baby.svg">
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            deepTeal: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a'
+            },
+            cyanTint: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              200: '#a5f3fc',
+              300: '#67e8f9'
+            },
+            charcoal: '#1e293b',
+            slateMuted: '#64748b'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome v6 Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Custom CSS Rules -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Local JSON-LD Structured Data Schema for Medical Business SEO -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalBusiness",
+      "name": "Nirmal Newborn and Child Clinic (Newborn & Child Care Centre)",
+      "alternateName": "Nirmal Newborn and Child Clinic",
+      "image": "assets/hero-clinic.png",
+      "description": "Premium newborn & pediatric care in Rohini Sector 22, Delhi led by senior pediatrician Dr. Gajendra Kumar with over 17+ years of experience.",
+      "url": "https://nirmalclinic.in",
+      "telephone": "+918800280628",
+      "priceRange": "INR 500",
+      "medicalSpecialty": "Pediatrics",
+      "founder": {
+        "@type": "Person",
+        "name": "Dr. Gajendra Kumar",
+        "jobTitle": "Lead Pediatrician",
+        "knowsAbout": "Pediatric Medicine, Infant Development, Pediatric Immunizations",
+        "description": "Dr. Gajendra Kumar is a senior pediatrician in Delhi with over 17+ years of dedicated clinical experience."
+      },
+      "priceRange": "₹500",
+      "address": [
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "Plot No. 7, Ground Floor, nearby Government Sarvodaya Co-Ed Vidyalaya, Pocket 8, Sector 22, Rohini",
+          "addressLocality": "Delhi",
+          "postalCode": "110086",
+          "addressCountry": "IN"
+        },
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "334/335, Pocket 4, Sector 22, Rohini",
+          "addressLocality": "Delhi",
+          "postalCode": "110086",
+          "addressCountry": "IN"
+        }
+      ],
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "11:00",
+          "closes": "13:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "17:00",
+          "closes": "21:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "10:00",
+          "closes": "13:00"
+        }
+      ]
+    }
+  </script>
+</head>
+<body class="bg-slate-50 antialiased text-charcoal">
+
+  <!-- STICKY NAVIGATION BAR -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-300 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        
+        <!-- Logo Branding -->
+        <a href="#" class="flex items-center gap-3 group">
+          <div class="h-10 w-10 sm:h-12 sm:w-12 bg-deepTeal-600 rounded-xl flex items-center justify-center text-white shadow-md group-hover:bg-deepTeal-700 transition-colors">
+            <i class="fa-solid fa-baby-carriage text-xl sm:text-2xl"></i>
+          </div>
+          <div>
+            <span class="block text-base sm:text-lg font-extrabold text-deepTeal-700 font-display tracking-tight leading-tight">
+              Nirmal Clinic
+            </span>
+            <span class="block text-[10px] sm:text-xs font-semibold text-slateMuted uppercase tracking-wider">
+              Newborn & Child Care
+            </span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-slateMuted">
+          <a href="#about" class="hover:text-deepTeal-600 transition-colors">About the Doctor</a>
+          <a href="#services" class="hover:text-deepTeal-600 transition-colors">Medical Services</a>
+          <a href="#timings" class="hover:text-deepTeal-600 transition-colors">Timings</a>
+          <a href="#locations" class="hover:text-deepTeal-600 transition-colors">Find Clinic</a>
+          <a href="https://www.instagram.com/newborn4clinic/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-pink-600 hover:text-pink-700 transition-colors font-semibold">
+            <i class="fa-brands fa-instagram text-base"></i>
+            Follow Us for Child Care Tips
+          </a>
+        </nav>
+
+        <!-- CTA Action Buttons -->
+        <div class="hidden sm:flex items-center gap-3">
+          <a href="tel:+918800280628" class="inline-flex items-center gap-2 px-5 py-2.5 bg-deepTeal-600 hover:bg-deepTeal-700 text-white font-semibold text-sm rounded-full shadow-md hover:shadow-lg transition-all hover-scale pulse-button">
+            <i class="fa-solid fa-phone"></i>
+            Book Appointment
+          </a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="p-2 text-deepTeal-700 hover:bg-deepTeal-50 rounded-lg md:hidden transition-colors" aria-label="Toggle navigation menu">
+          <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg border-b border-teal-100/50 flex-col py-4 px-6 gap-4">
+      <a href="#about" class="py-2 text-slate-700 font-medium hover:text-deepTeal-600 transition-colors">About the Doctor</a>
+      <a href="#services" class="py-2 text-slate-700 font-medium hover:text-deepTeal-600 transition-colors">Medical Services</a>
+      <a href="#timings" class="py-2 text-slate-700 font-medium hover:text-deepTeal-600 transition-colors">Timings</a>
+      <a href="#locations" class="py-2 text-slate-700 font-medium hover:text-deepTeal-600 transition-colors">Find Clinic</a>
+      <a href="https://www.instagram.com/newborn4clinic/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 py-2 text-pink-600 font-semibold hover:text-pink-700 transition-colors">
+        <i class="fa-brands fa-instagram text-lg"></i>
+        Follow Us for Child Care Tips
+      </a>
+      <a href="tel:+918800280628" class="w-full text-center py-3 bg-deepTeal-600 hover:bg-deepTeal-700 text-white font-semibold rounded-full shadow-md transition-colors flex items-center justify-center gap-2">
+        <i class="fa-solid fa-phone"></i>
+        Book Appointment
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden hero-pattern">
+    <div class="absolute inset-0 bg-gradient-to-b from-cyanTint-50 via-teal-50/20 to-transparent pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Hero Content -->
+        <div class="lg:col-span-7 space-y-6 scroll-reveal">
+          
+          <!-- Live Timing Status Badge -->
+          <div class="flex flex-wrap items-center gap-3">
+            <span id="clinic-live-status" class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-deepTeal-700 bg-deepTeal-100/50 rounded-full border border-teal-200/50 shadow-sm">
+              <span class="status-pulse h-2 w-2 rounded-full bg-teal-500 mr-0.5"></span>
+              Live Status Check
+            </span>
+            <span class="text-xs sm:text-sm font-medium text-slateMuted" id="clinic-status-text">
+              Checking clinic hours...
+            </span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight font-display">
+            Nirmal Newborn and <br>
+            <span class="text-deepTeal-600 bg-gradient-to-r from-deepTeal-600 to-teal-500 bg-clip-text text-transparent">Child Clinic</span>
+          </h1>
+          
+          <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
+            Welcome to the premier <strong class="text-slate-800">Newborn & Child Care Centre</strong> in Rohini Sector 22, Delhi. We deliver trust-building healthcare and comprehensive pediatric support to give your child a healthy start in life.
+          </p>
+
+          <!-- Core Doctor Info Card -->
+          <div class="flex items-center gap-4 p-4 rounded-2xl bg-white border border-teal-100/60 shadow-sm max-w-lg">
+            <div class="h-14 w-14 bg-cyanTint-100 rounded-xl flex items-center justify-center text-deepTeal-600 text-2xl flex-shrink-0">
+              <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-slateMuted uppercase tracking-wider">Lead Pediatrician</div>
+              <h3 class="text-lg font-bold text-slate-800 leading-snug">Dr. Gajendra Kumar</h3>
+              <p class="text-sm font-semibold text-deepTeal-600">Over 17+ Years of Dedicated Clinical Experience</p>
+            </div>
+          </div>
+
+          <!-- Trust KPIs & Call-to-actions -->
+          <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-md">
+            <a href="tel:+918800280628" class="flex-1 inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-deepTeal-600 hover:bg-deepTeal-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all hover-scale text-base text-center">
+              <i class="fa-solid fa-phone text-lg"></i>
+              Call Clinic Now
+            </a>
+            <a href="#locations" class="flex-1 inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-2xl border border-slate-200 shadow-sm transition-all hover-scale text-base text-center">
+              <i class="fa-solid fa-map-location-dot text-lg text-deepTeal-600"></i>
+              Directions
+            </a>
+          </div>
+
+          <!-- Consultation Fee Highlight -->
+          <div class="flex items-center gap-2.5 text-sm font-semibold text-slateMuted">
+            <div class="h-6 w-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <span>Standard Consultation Fee: <strong class="text-slate-800">₹500</strong></span>
+            <span class="text-slate-300">|</span>
+            <span>Direct Patient Walking Available</span>
+          </div>
+
+        </div>
+
+        <!-- Right Hero Image/Illustration -->
+        <div class="lg:col-span-5 relative flex justify-center scroll-reveal">
+          <div class="relative w-full max-w-md lg:max-w-none">
+            <!-- Decorative colored bubbles behind image -->
+            <div class="absolute -top-10 -left-10 w-48 h-48 bg-cyanTint-100 rounded-full filter blur-2xl opacity-60"></div>
+            <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-teal-100 rounded-full filter blur-2xl opacity-60"></div>
+            
+            <div class="relative z-10 overflow-hidden rounded-3xl border-4 border-white shadow-2xl premium-shadow hover-scale">
+              <img src="assets/hero-clinic.png" alt="Dr. Gajendra Kumar Clinic Illustration - Friendly pediatrician showing child growth table to a parent with toddler at Nirmal Newborn and Child Clinic Rohini Delhi" class="w-full h-auto object-cover">
+              
+              <!-- Subtle Floating Trust Badge -->
+              <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md px-4 py-3 rounded-2xl border border-teal-50 flex items-center gap-3 shadow-md">
+                <div class="h-10 w-10 bg-deepTeal-600 rounded-full flex items-center justify-center text-white">
+                  <i class="fa-solid fa-certificate"></i>
+                </div>
+                <div>
+                  <span class="block text-xs font-bold text-slateMuted uppercase tracking-wider">Delhi Local Care</span>
+                  <span class="block text-sm font-bold text-slate-800">Highly Recommended Pediatric Specialist</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTICE BADGE & STATISTICS -->
+  <section class="bg-white border-y border-teal-50 py-8 relative z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+        
+        <!-- Important Notice Badge -->
+        <div class="flex items-start gap-4 p-4 rounded-2xl bg-cyanTint-50 border border-cyanTint-200 max-w-3xl">
+          <span class="flex-shrink-0 h-10 w-10 bg-deepTeal-600 text-white rounded-xl flex items-center justify-center text-lg animate-bounce">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </span>
+          <div>
+            <div class="text-xs font-extrabold text-deepTeal-700 uppercase tracking-widest leading-none mb-1">Important Patient Advisory</div>
+            <p class="text-sm font-semibold text-slate-700">
+              "Prior phone registration is highly recommended to minimize waiting intervals."
+            </p>
+          </div>
+        </div>
+
+        <!-- Phone Verification Direct Link -->
+        <div class="flex items-center gap-4 flex-shrink-0">
+          <div class="text-right">
+            <span class="block text-xs font-bold text-slateMuted uppercase tracking-wider">Immediate Registration Helpline</span>
+            <a href="tel:+918800280628" class="block text-xl sm:text-2xl font-black text-deepTeal-600 hover:text-deepTeal-700 transition-colors">
+              +91 88002 80628
+            </a>
+          </div>
+          <a href="tel:+918800280628" class="h-12 w-12 bg-deepTeal-600 hover:bg-deepTeal-700 text-white rounded-full flex items-center justify-center text-xl shadow-md hover-scale" aria-label="Call clinic directly">
+            <i class="fa-solid fa-phone"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MEDICAL CORE SERVICES SECTION -->
+  <section id="services" class="py-20 bg-slate-50 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-16 scroll-reveal">
+        <span class="text-xs font-bold text-deepTeal-600 uppercase tracking-widest bg-deepTeal-100/40 px-3 py-1.5 rounded-full border border-teal-200/30">Clinical Expertise</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-3 font-display">Medical Core Services</h2>
+        <p class="text-slate-600 leading-relaxed">
+          Nirmal Newborn and Child Clinic is dedicated to offering specialized medical services designed to ensure your baby's physical, behavioral, and developmental wellness.
+        </p>
+      </div>
+
+      <!-- Services Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Card 1: Newborn Screening -->
+        <div class="glass-card rounded-3xl p-8 hover-scale transition-all duration-300 border border-teal-50 scroll-reveal scroll-reveal-item">
+          <div class="flex items-start gap-5">
+            <div class="h-14 w-14 bg-teal-50 rounded-2xl flex items-center justify-center text-deepTeal-600 text-3xl flex-shrink-0 shadow-sm border border-teal-100">
+              <i class="fa-solid fa-baby"></i>
+            </div>
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-slate-800 font-display">Newborn Screening</h3>
+              <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+                Comprehensive development tracking, feeding assessments, and initial critical screening metrics for infants.
+              </p>
+              <ul class="space-y-2 pt-2 text-sm text-slate-600 font-medium">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Neonatal Development Audits</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Infant Feeding & Latch Support</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Critical Congenital Screenings</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Complete Vaccination Hub -->
+        <div class="glass-card rounded-3xl p-8 hover-scale transition-all duration-300 border border-teal-50 scroll-reveal scroll-reveal-item">
+          <div class="flex items-start gap-5">
+            <div class="h-14 w-14 bg-cyanTint-50 rounded-2xl flex items-center justify-center text-teal-600 text-3xl flex-shrink-0 shadow-sm border border-cyanTint-100">
+              <i class="fa-solid fa-syringe"></i>
+            </div>
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-slate-800 font-display">Complete Vaccination Hub</h3>
+              <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+                Age-appropriate pediatric immunization schedules following global medical safety charts.
+              </p>
+              <ul class="space-y-2 pt-2 text-sm text-slate-600 font-medium">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> WHO & IAP Immunization Charts</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Safe Vaccine Handling Protocols</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Painless & Combination Vaccine Availability</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Developmental Milestone Tracking -->
+        <div class="glass-card rounded-3xl p-8 hover-scale transition-all duration-300 border border-teal-50 scroll-reveal scroll-reveal-item">
+          <div class="flex items-start gap-5">
+            <div class="h-14 w-14 bg-cyanTint-50 rounded-2xl flex items-center justify-center text-teal-600 text-3xl flex-shrink-0 shadow-sm border border-cyanTint-100">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-slate-800 font-display">Milestone Evaluation</h3>
+              <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+                Early milestone evaluations alongside tailored ADHD and Autism screening support programs.
+              </p>
+              <ul class="space-y-2 pt-2 text-sm text-slate-600 font-medium">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Cognitive & Motor Skill Assessments</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> ADHD Behavioral Screenings</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Autism Spectrum Early Assessments</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: General Pediatrics -->
+        <div class="glass-card rounded-3xl p-8 hover-scale transition-all duration-300 border border-teal-50 scroll-reveal scroll-reveal-item">
+          <div class="flex items-start gap-5">
+            <div class="h-14 w-14 bg-teal-50 rounded-2xl flex items-center justify-center text-deepTeal-600 text-3xl flex-shrink-0 shadow-sm border border-teal-100">
+              <i class="fa-solid fa-stethoscope"></i>
+            </div>
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-slate-800 font-display">General Pediatrics</h3>
+              <p class="text-slate-600 leading-relaxed text-sm sm:text-base">
+                Accurate diagnosis and expert management plans for seasonal infections, childhood asthma, and chronic skin/respiratory allergies.
+              </p>
+              <ul class="space-y-2 pt-2 text-sm text-slate-600 font-medium">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Seasonal Infection & Fever Management</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Pediatric Asthma Care Plans</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-deepTeal-600 text-xs"></i> Chronic Allergy & Skin Care Support</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Trust Stats -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 scroll-reveal">
+        <div class="bg-white p-6 rounded-2xl border border-teal-100/50 shadow-sm text-center">
+          <span class="block text-3xl sm:text-4xl font-extrabold text-deepTeal-600 font-display">17+</span>
+          <span class="block text-xs font-bold text-slateMuted uppercase tracking-wider mt-1">Years Clinical Experience</span>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-teal-100/50 shadow-sm text-center">
+          <span class="block text-3xl sm:text-4xl font-extrabold text-deepTeal-600 font-display">₹500</span>
+          <span class="block text-xs font-bold text-slateMuted uppercase tracking-wider mt-1">Standard Consultation Fee</span>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-teal-100/50 shadow-sm text-center">
+          <span class="block text-3xl sm:text-4xl font-extrabold text-deepTeal-600 font-display">100%</span>
+          <span class="block text-xs font-bold text-slateMuted uppercase tracking-wider mt-1">Safe Vaccinations</span>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-teal-100/50 shadow-sm text-center">
+          <span class="block text-3xl sm:text-4xl font-extrabold text-deepTeal-600 font-display">2</span>
+          <span class="block text-xs font-bold text-slateMuted uppercase tracking-wider mt-1">Rohini Branch Locations</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PEDIATRICIAN BIOGRAPHY & TRUST SECTION -->
+  <section id="about" class="py-20 bg-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Doctor Visual Element -->
+        <div class="lg:col-span-5 scroll-reveal">
+          <div class="relative max-w-sm mx-auto">
+            <!-- Background Cyan Rings -->
+            <div class="absolute inset-0 bg-gradient-to-tr from-cyanTint-200 to-teal-50 rounded-3xl transform rotate-6 scale-105 shadow-md"></div>
+            
+            <div class="relative bg-white rounded-3xl p-6 border border-teal-100 shadow-xl text-center">
+              <div class="h-32 w-32 bg-deepTeal-600 rounded-full mx-auto flex items-center justify-center text-white text-5xl mb-6 shadow-inner">
+                <i class="fa-solid fa-stethoscope"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-800 font-display">Dr. Gajendra Kumar</h3>
+              <p class="text-sm font-semibold text-deepTeal-600 uppercase tracking-widest mt-1">Lead Pediatrician</p>
+              
+              <div class="mt-6 pt-6 border-t border-slate-100 space-y-3 text-left text-sm text-slate-600 font-medium">
+                <div class="flex items-center gap-3">
+                  <i class="fa-solid fa-award text-deepTeal-600"></i>
+                  <span>17+ Years of Dedicated Experience</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i class="fa-solid fa-user-graduate text-deepTeal-600"></i>
+                  <span>Senior Pediatrics & Infant Specialist</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i class="fa-solid fa-heart-pulse text-deepTeal-600"></i>
+                  <span>Trustworthy, Gentle Childcare</span>
+                </div>
+              </div>
+
+              <!-- Consultation CTA inside card -->
+              <a href="tel:+918800280628" class="mt-6 w-full inline-flex items-center justify-center gap-2 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl text-sm transition-all hover-scale">
+                <i class="fa-solid fa-phone"></i>
+                Call Doctor Directly
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Biography text -->
+        <div class="lg:col-span-7 space-y-6 scroll-reveal">
+          <span class="text-xs font-bold text-deepTeal-600 uppercase tracking-widest bg-deepTeal-100/40 px-3 py-1.5 rounded-full border border-teal-200/30">Clinical Director</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">Dr. Gajendra Kumar</h2>
+          <h4 class="text-lg font-bold text-slate-700 leading-snug">Expert Newborn, Infant, and Pediatric Medical Professional in Rohini, Delhi.</h4>
+          
+          <p class="text-slate-600 leading-relaxed">
+            With **Over 17+ Years of Dedicated Clinical Experience**, Dr. Gajendra Kumar has established himself as a cornerstone of neonatal and pediatric healthcare in North Delhi. His practice focuses heavily on preventative care, family-centered communication, and clinical diagnosis excellence.
+          </p>
+          
+          <p class="text-slate-600 leading-relaxed">
+            Dr. Kumar is dedicated to assisting parents navigate the challenges of childhood development. From newborn screening evaluations to tailored developmental and milestone tracking, he provides the highest quality diagnostic management for children of all ages.
+          </p>
+
+          <!-- Standard checklist of medical care guidelines -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-slate-700 font-semibold text-sm">
+            <div class="flex items-center gap-2.5">
+              <i class="fa-solid fa-square-check text-deepTeal-600 text-base"></i>
+              <span>High Quality Infant Evaluations</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i class="fa-solid fa-square-check text-deepTeal-600 text-base"></i>
+              <span>Painless Vaccinations & Schedules</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i class="fa-solid fa-square-check text-deepTeal-600 text-base"></i>
+              <span>Global Medical Safety Charts</span>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <i class="fa-solid fa-square-check text-deepTeal-600 text-base"></i>
+              <span>Family-Focused Counseling</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CLINIC TIMINGS & HOURS SECTION -->
+  <section id="timings" class="py-20 bg-slate-50 relative border-t border-teal-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Timings Table Column -->
+        <div class="lg:col-span-6 space-y-6 scroll-reveal">
+          <span class="text-xs font-bold text-deepTeal-600 uppercase tracking-widest bg-deepTeal-100/40 px-3 py-1.5 rounded-full border border-teal-200/30">Hours of Practice</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">Clinic Timings & Sessions</h2>
+          <p class="text-slate-600 leading-relaxed">
+            Please refer below to our verified daily scheduling options to ensure minimized waiting intervals. In case of emergency check-ins, please dial the direct number first.
+          </p>
+
+          <!-- Timings Table Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-teal-100/60 shadow-md">
+            <div class="space-y-4">
+              
+              <!-- Monday to Saturday morning -->
+              <div class="flex items-center justify-between py-3 border-b border-slate-100">
+                <span class="font-bold text-slate-800 text-sm sm:text-base">Monday to Saturday <span class="block text-xs font-medium text-slateMuted">Morning Session</span></span>
+                <span class="font-bold text-deepTeal-600 text-sm sm:text-base bg-deepTeal-50 px-3.5 py-1.5 rounded-xl border border-teal-100">11:00 AM – 01:00 PM</span>
+              </div>
+
+              <!-- Monday to Saturday evening -->
+              <div class="flex items-center justify-between py-3 border-b border-slate-100">
+                <span class="font-bold text-slate-800 text-sm sm:text-base">Monday to Saturday <span class="block text-xs font-medium text-slateMuted">Evening Session</span></span>
+                <span class="font-bold text-deepTeal-600 text-sm sm:text-base bg-deepTeal-50 px-3.5 py-1.5 rounded-xl border border-teal-100">05:00 PM – 09:00 PM</span>
+              </div>
+
+              <!-- Sunday session -->
+              <div class="flex items-center justify-between py-3">
+                <span class="font-bold text-slate-800 text-sm sm:text-base">Sunday Session <span class="block text-xs font-medium text-rose-500 font-semibold">Special Hours</span></span>
+                <span class="font-bold text-amber-600 text-sm sm:text-base bg-amber-50 px-3.5 py-1.5 rounded-xl border border-amber-100">10:00 AM – 01:00 PM</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Consultation & Notice Column -->
+        <div class="lg:col-span-6 space-y-6 scroll-reveal">
+          
+          <div class="bg-cyanTint-50 rounded-3xl p-6 sm:p-8 border border-cyanTint-200 space-y-6">
+            <h3 class="text-xl font-bold text-deepTeal-800 font-display">Consultation Guidance</h3>
+            
+            <div class="space-y-4">
+              
+              <!-- Point 1 -->
+              <div class="flex items-start gap-3">
+                <div class="h-6 w-6 bg-deepTeal-600 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5 shadow-sm">
+                  <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm sm:text-base">Prior Phone Registration</h4>
+                  <p class="text-xs sm:text-sm text-slate-600">"Prior phone registration is highly recommended to minimize waiting intervals."</p>
+                </div>
+              </div>
+
+              <!-- Point 2 -->
+              <div class="flex items-start gap-3">
+                <div class="h-6 w-6 bg-deepTeal-600 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5 shadow-sm">
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm sm:text-base">Consultation Fee</h4>
+                  <p class="text-xs sm:text-sm text-slate-600">Standard Pediatric Consultation Session charges: <strong>₹500</strong> per check-up.</p>
+                </div>
+              </div>
+
+              <!-- Point 3 -->
+              <div class="flex items-start gap-3">
+                <div class="h-6 w-6 bg-deepTeal-600 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5 shadow-sm">
+                  <i class="fa-solid fa-headset"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm sm:text-base">Direct Helpline</h4>
+                  <p class="text-xs sm:text-sm text-slate-600">Need directions or have an emergency case? Contact us at: <a href="tel:+918800280628" class="text-deepTeal-700 font-bold hover:underline">+91 88002 80628</a></p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Instant Booking Button -->
+            <a href="tel:+918800280628" class="w-full inline-flex items-center justify-center gap-3 py-4 bg-deepTeal-600 hover:bg-deepTeal-700 text-white font-black rounded-2xl shadow-md transition-all hover-scale">
+              <i class="fa-solid fa-phone-volume"></i>
+              Register Your Slot: +91 88002 80628
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DUAL CLINIC LOCATIONS SECTION -->
+  <section id="locations" class="py-20 bg-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-16 scroll-reveal">
+        <span class="text-xs font-bold text-deepTeal-600 uppercase tracking-widest bg-deepTeal-100/40 px-3 py-1.5 rounded-full border border-teal-200/30">Dual Setup Locations</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-3 font-display">Find Our Clinics in Rohini</h2>
+        <p class="text-slate-600 leading-relaxed">
+          Dr. Gajendra Kumar offers clinical consultations across two premium setups in Rohini Sector 22, Delhi. Explore the directions below for easy navigational steps.
+        </p>
+      </div>
+
+      <!-- Locations Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Primary Location Card -->
+        <div class="bg-slate-50 border border-teal-100/50 rounded-3xl p-6 sm:p-8 hover-scale transition-all duration-300 flex flex-col justify-between shadow-md scroll-reveal scroll-reveal-item">
+          <div class="space-y-6">
+            
+            <div class="flex items-center justify-between">
+              <span class="px-3.5 py-1.5 text-xs font-bold text-deepTeal-700 bg-deepTeal-100/60 rounded-xl uppercase tracking-wider">Primary Branch Location</span>
+              <div class="h-10 w-10 bg-deepTeal-600 text-white rounded-full flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-hospital"></i>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-slate-800 font-display">Plot No. 7 Setup</h3>
+              <p class="text-slate-600 leading-relaxed text-sm sm:text-base font-medium">
+                Plot No. 7, Ground Floor, nearby Government Sarvodaya Co-Ed Vidyalaya, Pocket 8, Sector 22, Rohini, Delhi, 110086.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-200/60 grid grid-cols-2 gap-4 text-xs font-semibold text-slateMuted">
+              <div>
+                <i class="fa-solid fa-location-crosshairs text-deepTeal-600 mr-1.5"></i>
+                Sector 22, Rohini
+              </div>
+              <div>
+                <i class="fa-solid fa-compass text-deepTeal-600 mr-1.5"></i>
+                Ground Floor Access
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Maps Action Button -->
+          <div class="pt-6">
+            <a href="https://www.google.com/maps/search/?api=1&query=Plot+No.+7+Ground+Floor+nearby+Government+Sarvodaya+Co-Ed+Vidyalaya+Pocket+8+Sector+22+Rohini+Delhi+110086" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2.5 py-3.5 bg-deepTeal-600 hover:bg-deepTeal-700 text-white font-bold rounded-2xl text-sm transition-all hover-scale shadow-sm">
+              <i class="fa-solid fa-map-location-dot"></i>
+              Open in Google Maps
+            </a>
+          </div>
+        </div>
+
+        <!-- Extended Setup Card -->
+        <div class="bg-slate-50 border border-teal-100/50 rounded-3xl p-6 sm:p-8 hover-scale transition-all duration-300 flex flex-col justify-between shadow-md scroll-reveal scroll-reveal-item">
+          <div class="space-y-6">
+            
+            <div class="flex items-center justify-between">
+              <span class="px-3.5 py-1.5 text-xs font-bold text-cyan-700 bg-cyan-100 rounded-xl uppercase tracking-wider">Extended Setup Location</span>
+              <div class="h-10 w-10 bg-teal-600 text-white rounded-full flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-clinic-medical"></i>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-slate-800 font-display">Pocket 4 Setup</h3>
+              <p class="text-slate-600 leading-relaxed text-sm sm:text-base font-medium">
+                334/335, Pocket 4, Sector 22, Rohini, Delhi, 110086.
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-200/60 grid grid-cols-2 gap-4 text-xs font-semibold text-slateMuted">
+              <div>
+                <i class="fa-solid fa-location-crosshairs text-teal-600 mr-1.5"></i>
+                Sector 22, Rohini
+              </div>
+              <div>
+                <i class="fa-solid fa-compass text-teal-600 mr-1.5"></i>
+                Alternate Setup
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Maps Action Button -->
+          <div class="pt-6">
+            <a href="https://www.google.com/maps/search/?api=1&query=334+335+Pocket+4+Sector+22+Rohini+Delhi+110086" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2.5 py-3.5 bg-deepTeal-600 hover:bg-deepTeal-700 text-white font-bold rounded-2xl text-sm transition-all hover-scale shadow-sm">
+              <i class="fa-solid fa-map-location-dot"></i>
+              Open in Google Maps
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF & INSTAGRAM CONNECTIONS -->
+  <section class="py-16 bg-cyanTint-50 border-y border-cyanTint-100 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-3xl p-8 sm:p-12 border border-teal-100 shadow-xl scroll-reveal">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- CTA text -->
+          <div class="lg:col-span-8 space-y-4">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-extrabold text-pink-700 bg-pink-50 rounded-full border border-pink-200/50 shadow-sm">
+              <i class="fa-brands fa-instagram text-sm"></i>
+              Active Social Community
+            </span>
+            
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display">
+              Follow Us for Child Care Tips on Instagram!
+            </h2>
+            
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl">
+              Connect directly with our community of local Rohini families. We regularly post practical baby wellness guidelines, immunization scheduling warnings, and healthy home nutrition reminders under our official handle: <strong class="text-slate-800">@newborn4clinic</strong>.
+            </p>
+          </div>
+
+          <!-- Social Button Link -->
+          <div class="lg:col-span-4 flex justify-start lg:justify-end">
+            <a href="https://www.instagram.com/newborn4clinic/" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white font-black rounded-2xl shadow-md hover-scale text-base text-center">
+              <i class="fa-brands fa-instagram text-xl"></i>
+              Follow Us for Child Care Tips
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CLINIC FOOTER BLOCK -->
+  <footer class="bg-slate-900 text-slate-400 pt-16 pb-8 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-slate-800/80">
+        
+        <!-- Footer Column 1: Clinic identity -->
+        <div class="md:col-span-5 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 bg-deepTeal-600 rounded-xl flex items-center justify-center text-white">
+              <i class="fa-solid fa-baby-carriage text-xl"></i>
+            </div>
+            <span class="text-lg font-black text-white font-display tracking-tight">Nirmal Newborn and Child Clinic</span>
+          </div>
+          <p class="text-sm text-slate-400 leading-relaxed max-w-sm">
+            Expert medical diagnostic and preventative pediatric healthcare in Rohini Sector 22, Delhi. Under senior consultation guidance of senior pediatrician Dr. Gajendra Kumar.
+          </p>
+          
+          <!-- Contact Numbers -->
+          <div class="pt-2 space-y-2">
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-widest">Helpline Number</div>
+            <a href="tel:+918800280628" class="text-white hover:text-deepTeal-500 font-black text-lg transition-colors block">
+              +91 88002 80628
+            </a>
+          </div>
+        </div>
+
+        <!-- Footer Column 2: Quick Links -->
+        <div class="md:col-span-3 space-y-4">
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider font-display">Core Services</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="#services" class="hover:text-white transition-colors">Newborn Development Care</a></li>
+            <li><a href="#services" class="hover:text-white transition-colors">Complete Pediatric Vaccinations</a></li>
+            <li><a href="#services" class="hover:text-white transition-colors">Milestone & Behavioral Tracking</a></li>
+            <li><a href="#services" class="hover:text-white transition-colors">General Pediatrics Asthma/Allergy</a></li>
+          </ul>
+        </div>
+
+        <!-- Footer Column 3: Contact & Timings info -->
+        <div class="md:col-span-4 space-y-4">
+          <h4 class="text-sm font-bold text-white uppercase tracking-wider font-display">Timings Summary</h4>
+          <div class="space-y-3 text-sm">
+            <div>
+              <span class="block text-white font-medium">Monday to Saturday:</span>
+              <span class="block text-slate-400">11:00 AM – 01:00 PM (Morning)</span>
+              <span class="block text-slate-400">05:00 PM – 09:00 PM (Evening)</span>
+            </div>
+            <div>
+              <span class="block text-white font-medium">Sunday Hours:</span>
+              <span class="block text-amber-500">10:00 AM – 01:00 PM</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom copyright information & legal local details -->
+      <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div>
+          &copy; 2026 Nirmal Newborn and Child Clinic (Newborn & Child Care Centre). All Rights Reserved.
+        </div>
+        <div class="flex items-center gap-6">
+          <span>Dr. Gajendra Kumar - MD Pediatrics Specialist</span>
+          <span>Consultation Fee: ₹500</span>
+          <a href="https://www.instagram.com/newborn4clinic/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors flex items-center gap-1">
+            <i class="fa-brands fa-instagram"></i>
+            @newborn4clinic
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- FLOATING QUICK-ACTION WHATSAPP ENGINE -->
+  <a href="https://wa.me/918800280628?text=Hello%20Dr.%20Gajendra%20Kumar,%20I'd%20like%20to%20inquire%20about%20booking%20an%20appointment%20for%20my%20child%20at%20Nirmal%20Newborn%20and%20Child%20Clinic." 
+     target="_blank" 
+     rel="noopener noreferrer" 
+     class="fixed bottom-6 right-6 z-50 h-14 w-14 sm:h-16 sm:w-16 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl shadow-xl hover-scale transition-all"
+     aria-label="Contact clinic via WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Link custom logic script -->
+  <script src="app.js"></script>
+</body>
+</html>
