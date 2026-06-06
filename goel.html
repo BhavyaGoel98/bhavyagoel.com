@@ -1,866 +1,1341 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bhavya Goel | Tech Creator &amp; Founder</title>
-  <link href="./Bhavya Goel _ Tech Creator &amp; Founder_files/css2" rel="stylesheet">
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;cursor: default !important}
-    :root{
-      --bg:#050810; --bg2:#080d18;
-      --surface:rgba(255,255,255,0.04);
-      --accent:#3b82f6; --violet:#6366f1;
-      --border:rgba(59,130,246,0.15);
-      --text:#e8eaf2; --muted:#6b7390;
-      --card:#080c18;
-      --glow:0 0 28px rgba(59,130,246,0.32);
-      --glow-sm:0 0 12px rgba(59,130,246,0.2);
-      --ease:cubic-bezier(0.16,1,0.3,1);
-    }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
-         font-weight:300;min-height:100vh;overflow-x:hidden;cursor: default !important}
-    h1,h2,h3,.logo{font-family:'Space Grotesk',sans-serif}
-    a{color:inherit;text-decoration:none}
-
-
-    /* ── NOISE ── */
-    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
-
-    /* ── MESH ── */
-    .mesh{position:fixed;inset:0;z-index:0;pointer-events:none;
-      background:radial-gradient(circle at 18% 28%,rgba(59,130,246,0.055) 0%,transparent 42%),
-                 radial-gradient(circle at 82% 72%,rgba(124,58,237,0.065) 0%,transparent 42%),
-                 radial-gradient(circle at 55% 10%,rgba(59,130,246,0.03) 0%,transparent 35%)}
-
-    ::-webkit-scrollbar{width:3px}
-    ::-webkit-scrollbar-track{background:var(--bg)}
-    ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
-
-    /* ── NAV ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:200;height:68px;padding:0 8%;
-        display:flex;align-items:center;justify-content:space-between;
-        background:rgba(5,8,16,0.75);backdrop-filter:blur(18px);
-        border-bottom:1px solid var(--border);transition:box-shadow .35s}
-    nav.scrolled{box-shadow:0 4px 40px rgba(0,0,0,.65)}
-    .logo{font-size:1.15rem;font-weight:700;letter-spacing:-.02em;color:var(--accent)}
-    .logo span{color:var(--text)}
-    .nav-links{display:flex;gap:2rem;align-items:center}
-    .nav-links a{color:var(--muted);font-size:.83rem;font-weight:500;letter-spacing:.05em;
-                 text-transform:uppercase;transition:color .25s;position:relative}
-    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
-                        background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .25s}
-    .nav-links a:hover{color:var(--accent)}
-    .nav-links a:hover::after{transform:scaleX(1)}
-    .nav-cta{background:transparent !important;border:1px solid var(--border) !important;
-              color:var(--accent) !important;padding:.38rem 1.1rem;border-radius:50px}
-    .nav-cta:hover{background:rgba(59,130,246,0.07) !important;box-shadow:var(--glow-sm)}
-    .nav-cta::after{display:none !important}
-
-    /* ── HERO ── */
-    .hero{position:relative;z-index:1;min-height:100vh;padding:0 8%;
-          display:flex;align-items:center;justify-content:space-between;gap:4rem;overflow:hidden}
-    .hero-grid{position:absolute;inset:0;z-index:0;pointer-events:none;
-      background-image:linear-gradient(rgba(59,130,246,0.025) 1px,transparent 1px),
-                       linear-gradient(90deg,rgba(59,130,246,0.025) 1px,transparent 1px);
-      background-size:64px 64px;
-      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%)}
-    .hero-left{position:relative;z-index:2;flex:1;max-width:560px}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);
-                border-radius:50px;padding:.38rem 1rem;font-size:.73rem;font-weight:500;
-                letter-spacing:.07em;text-transform:uppercase;color:var(--accent);
-                background:rgba(59,130,246,0.05);margin-bottom:2rem;animation:fadeUp .7s ease both}
-    .hero-badge .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;
-                     box-shadow:0 0 6px var(--accent);animation:pulseDot 2s infinite}
-    .hero-name{font-size:clamp(3rem,7vw,6rem);font-weight:700;line-height:1.0;
-                letter-spacing:-.04em;color:#fff;animation:fadeUp .8s .08s ease both}
-    .hero-name .glow{color:var(--accent)}
-    .hero-tagline{margin-top:1.2rem;font-size:1rem;color:var(--muted);font-weight:300;
-                  line-height:1.8;max-width:460px;animation:fadeUp .8s .16s ease both}
-    .hero-tagline strong{color:var(--text);font-weight:500}
-    .hero-type{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;
-               color:var(--accent);margin-top:.8rem;min-height:2em;animation:fadeUp .8s .22s ease both}
-    .blink{display:inline-block;width:2px;height:1.1em;background:var(--accent);
-           margin-left:2px;vertical-align:middle;animation:blink .9s step-end infinite}
-    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.2rem;animation:fadeUp .8s .3s ease both}
-    .btn{padding:.78rem 1.8rem;border-radius:50px;font-weight:600;font-size:.88rem;
-         letter-spacing:.02em;border:none;cursor:default;transition:all .35s var(--ease);
-         display:inline-flex;align-items:center;gap:.5rem;font-family:'Inter',sans-serif}
-    .btn-p{background:var(--accent);color:#050810;box-shadow:0 0 20px rgba(59,130,246,0.3)}
-    .btn-p:hover{background:#fff;box-shadow:0 0 34px rgba(59,130,246,0.55);transform:translateY(-3px)}
-    .btn-g{background:transparent;border:1px solid var(--border);color:var(--text)}
-    .btn-g:hover{border-color:var(--accent);color:var(--accent);box-shadow:var(--glow-sm);transform:translateY(-3px)}
-
-    /* ── HERO PHOTO ── */
-    .hero-right{position:relative;z-index:2;flex-shrink:0;animation:fadeUp .9s .1s ease both}
-    .photo-frame{width:320px;height:360px;border-radius:24px;position:relative;overflow:hidden;
-                  border:1px solid rgba(59,130,246,0.18);
-                  box-shadow:0 0 0 1px rgba(59,130,246,0.08),0 40px 80px rgba(0,0,0,.7),var(--glow)}
-    .photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center top;
-                     display:block;filter:contrast(1.05) saturate(1.1)}
-    .photo-frame::before{content:'';position:absolute;inset:0;border-radius:24px;z-index:2;
-                          background:linear-gradient(160deg,rgba(59,130,246,0.1) 0%,transparent 60%);
-                          pointer-events:none}
-    .photo-frame::after{content:'';position:absolute;left:0;right:0;height:2px;z-index:3;
-                        background:linear-gradient(90deg,transparent,rgba(59,130,246,0.6),transparent);
-                        animation:scan 3.5s ease-in-out infinite;pointer-events:none}
-    .photo-ring{position:absolute;border:1px dashed rgba(59,130,246,0.14);
-                border-radius:50%;pointer-events:none}
-    .pr1{width:420px;height:420px;top:-30px;left:-50px;animation:spin 25s linear infinite}
-    .pr2{width:500px;height:500px;top:-70px;left:-90px;animation:spin 40s linear infinite reverse}
-    .pr-dot{position:absolute;width:7px;height:7px;background:var(--accent);border-radius:50%;
-            top:12px;left:50%;transform:translateX(-50%);box-shadow:var(--glow-sm)}
-    .float-tag{position:absolute;z-index:4;background:rgba(5,8,16,0.85);border:1px solid var(--border);
-               border-radius:50px;padding:.3rem .85rem;font-size:.72rem;font-weight:500;color:var(--accent);
-               backdrop-filter:blur(8px);animation:float 4s ease-in-out infinite}
-    .ft1{top:1.2rem;right:-2rem;animation-delay:0s}
-    .ft2{bottom:3.5rem;left:-2.2rem;animation-delay:1.5s}
-    .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;
-                 display:flex;flex-direction:column;align-items:center;gap:6px;
-                 animation:fadeUp 1s .9s ease both}
-    .scroll-hint span{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-    .scroll-line{width:1px;height:42px;background:linear-gradient(to bottom,var(--accent),transparent);
-                 animation:scrollPulse 2s infinite}
-
-    /* ── SECTION COMMON ── */
-    section{position:relative;z-index:1;padding:7rem 8%}
-    .sec-eye{font-size:.7rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
-             color:var(--accent);margin-bottom:.7rem}
-    .sec-eye::before{content:'// ';opacity:.5}
-    h2{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:700;letter-spacing:-.03em;
-       color:#fff;margin-bottom:1rem}
-    h2 .hl{color:var(--accent)}
-    .sec-bar{width:42px;height:2px;background:linear-gradient(90deg,var(--accent),transparent);
-             border-radius:2px;margin-bottom:2.5rem}
-
-    /* ── ABOUT ── */
-    #about{background:var(--bg2)}
-    .about-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:center;max-width:1100px}
-    .about-photo-wrap{position:relative;display:flex;align-items:center;justify-content:center}
-    .about-photo{width:220px;height:260px;border-radius:20px;overflow:hidden;
-                 border:1px solid rgba(59,130,246,0.15);
-                 box-shadow:0 0 40px rgba(59,130,246,0.1),0 30px 60px rgba(0,0,0,.6);position:relative}
-    .about-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
-    .about-photo::after{content:'';position:absolute;inset:0;border-radius:20px;
-                        background:linear-gradient(to bottom,transparent 60%,rgba(5,8,16,0.5));pointer-events:none}
-    .about-glow{position:absolute;width:300px;height:300px;border-radius:50%;
-                background:radial-gradient(circle,rgba(59,130,246,0.08),transparent 70%);pointer-events:none}
-    .about-text p{color:var(--muted);font-weight:300;margin-bottom:1.1rem;line-height:1.9;font-size:.97rem}
-    .about-text p strong{color:var(--text);font-weight:500}
-    .stats{display:flex;gap:2rem;margin-top:1.8rem;flex-wrap:wrap}
-    .stat{border-left:2px solid var(--accent);padding-left:.9rem}
-    .stat-n{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--accent);line-height:1}
-    .stat-l{font-size:.74rem;color:var(--muted);margin-top:2px;letter-spacing:.03em}
-
-    /* ── SKILLS ── */
-    #skills{}
-    .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.4rem;
-                 margin-top:3rem;max-width:1100px}
-    .skill-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
-                padding:2.2rem 1.8rem;position:relative;overflow:hidden;
-                transition:all .35s var(--ease)}
-    .skill-card::before{content:'';position:absolute;inset:0;
-                        background:linear-gradient(135deg,rgba(59,130,246,0.055),transparent);
-                        opacity:0;transition:opacity .35s}
-    .skill-card:hover{border-color:rgba(59,130,246,0.35);box-shadow:var(--glow),0 12px 36px rgba(0,0,0,.45);transform:translateY(-5px)}
-    .skill-card:hover::before{opacity:1}
-    .sk-icon{font-size:2rem;margin-bottom:1rem}
-    .sk-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:.45rem}
-    .sk-desc{font-size:.85rem;color:var(--muted);line-height:1.65;font-weight:300}
-
-    /* ── PROJECTS ── */
-    #projects{background:var(--bg2)}
-    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:1.4rem;
-                   margin-top:3rem;max-width:1100px}
-    .proj-card{background:rgba(255,255,255,0.025);border:1px solid var(--border);
-               border-radius:14px;padding:2rem;position:relative;overflow:hidden;
-               backdrop-filter:blur(8px);transition:all .35s var(--ease);display:block}
-    .proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-                       background:linear-gradient(90deg,transparent,var(--accent),transparent);
-                       transform:scaleX(0);transition:transform .35s var(--ease)}
-    .proj-card::after{content:'';position:absolute;top:-40%;left:-40%;width:180%;height:180%;
-                      background:radial-gradient(circle,rgba(124,58,237,0.07) 0%,transparent 65%);
-                      opacity:0;transition:opacity .35s}
-    .proj-card:hover{border-color:rgba(59,130,246,0.28);
-                     box-shadow:0 0 32px rgba(59,130,246,0.09),0 20px 42px rgba(0,0,0,.5);
-                     transform:translateY(-6px)}
-    .proj-card:hover::before{transform:scaleX(1)}
-    .proj-card:hover::after{opacity:1}
-    .proj-tag{display:inline-block;font-size:.65rem;font-weight:600;letter-spacing:.1em;
-              text-transform:uppercase;color:var(--accent);background:rgba(59,130,246,0.07);
-              border:1px solid rgba(59,130,246,0.14);border-radius:4px;
-              padding:.22rem .6rem;margin-bottom:1rem}
-    .proj-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;
-               color:#fff;margin-bottom:.6rem}
-    .proj-desc{font-size:.86rem;color:var(--muted);line-height:1.65;font-weight:300}
-    .proj-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:1.1rem;
-               font-size:.8rem;font-weight:600;color:var(--accent);letter-spacing:.04em;
-               transition:gap .2s}
-    .proj-card:hover .proj-link{gap:.7rem}
-    .proj-num{position:absolute;bottom:1.4rem;right:1.5rem;
-              font-family:'Space Grotesk',sans-serif;font-size:3.2rem;font-weight:700;
-              color:rgba(59,130,246,0.04);line-height:1;pointer-events:none}
-
-    /* ── BRAND ── */
-    #brand{}
-    .brand-box{max-width:800px;border:1px solid var(--border);border-radius:20px;
-               padding:3.5rem;background:rgba(255,255,255,0.02);backdrop-filter:blur(10px);
-               position:relative;overflow:hidden;margin-top:3rem}
-    .brand-box::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;
-                       background:linear-gradient(to bottom,var(--accent),var(--violet),transparent);
-                       border-radius:3px 0 0 3px}
-    .brand-box::after{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;
-                      border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);
-                      pointer-events:none}
-    .brand-name{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3.5vw,2.4rem);
-                font-weight:700;letter-spacing:-.03em;color:#fff;margin-bottom:1rem}
-    .brand-name span{color:var(--accent)}
-    .brand-desc{color:var(--muted);font-weight:300;font-size:.97rem;line-height:1.88;max-width:560px}
-
-    /* ── SOCIALS ── */
-    #social{background:var(--bg2)}
-    .soc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;
-              margin-top:3rem;max-width:1100px}
-    .soc-card{display:flex;align-items:center;gap:1.1rem;border:1px solid var(--border);
-              border-radius:14px;padding:1.4rem 1.7rem;background:var(--surface);
-              transition:all .35s var(--ease)}
-    .soc-card:hover{border-color:rgba(59,130,246,0.3);box-shadow:var(--glow);transform:translateX(4px)}
-    .soc-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;
-              justify-content:center;font-size:1.35rem;flex-shrink:0}
-    .soc-yt{background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.18)}
-    .soc-ig{background:rgba(214,66,156,0.1);border:1px solid rgba(214,66,156,0.18)}
-    .soc-handle{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.93rem;color:#fff}
-    .soc-sub{font-size:.76rem;color:var(--muted);margin-top:2px}
-
-    /* ── TECH ── */
-    #setup{}
-    .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.1rem;
-               margin-top:3rem;max-width:900px}
-    .tech-item{border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.5rem;
-               background:var(--surface);display:flex;align-items:center;gap:1rem;
-               transition:all .35s var(--ease)}
-    .tech-item:hover{border-color:rgba(59,130,246,0.3);box-shadow:var(--glow-sm);transform:translateY(-3px)}
-    .tech-em{font-size:1.8rem}
-    .tech-n{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.93rem;color:#fff}
-    .tech-d{font-size:.76rem;color:var(--muted);margin-top:2px}
-
-    /* ── GOAL ── */
-    #goal{background:var(--bg2);text-align:center}
-    .goal-wrap{max-width:680px;margin:3rem auto 0}
-    .goal-q{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.2rem,3vw,1.85rem);
-            font-weight:700;line-height:1.55;color:#fff;padding:2.5rem;
-            border:1px solid var(--border);border-radius:20px;
-            background:rgba(255,255,255,0.02);position:relative}
-    .goal-q::before{content:'"';position:absolute;top:-.25em;left:1rem;font-size:6rem;
-                    color:var(--accent);opacity:.15;font-family:Georgia,serif;line-height:1}
-    .goal-q span{color:var(--accent)}
-    .goal-sub{margin-top:1.8rem;font-size:.94rem;color:var(--muted);font-weight:300;line-height:1.85}
-
-    /* ── FOOTER ── */
-    footer{position:relative;z-index:1;padding:2.5rem 8%;border-top:1px solid var(--border);
-           display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-    .foot-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem}
-    .foot-name span{color:var(--accent)}
-    .foot-copy{font-size:.8rem;color:var(--muted)}
-    .foot-top{font-size:.8rem;color:var(--muted);border:1px solid var(--border);
-              padding:.38rem 1rem;border-radius:50px;cursor:default;transition:all .25s}
-    .foot-top:hover{color:var(--accent);border-color:var(--accent);box-shadow:var(--glow-sm)}
-
-    /* ── REVEAL ── */
-    .reveal{opacity:0;transform:translateY(26px);transition:opacity .75s ease,transform .75s ease}
-    .reveal-l{opacity:0;transform:translateX(-30px);transition:opacity .75s ease,transform .75s ease}
-    .reveal-r{opacity:0;transform:translateX(30px);transition:opacity .75s ease,transform .75s ease}
-    .reveal.v,.reveal-l.v,.reveal-r.v{opacity:1;transform:none}
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    @keyframes pulseDot{0%,100%{box-shadow:0 0 6px var(--accent)}50%{box-shadow:0 0 14px var(--accent)}}
-    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-    @keyframes scan{0%{top:-5%}100%{top:105%}}
-    @keyframes scrollPulse{0%{opacity:0;transform:scaleY(0);transform-origin:top}
-      50%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1);transform-origin:bottom}}
-
-    @media(max-width:900px){
-      .hero{flex-direction:column;justify-content:center;text-align:center;padding-top:100px}
-      .hero-btns{justify-content:center}
-      .hero-right{order:-1}
-      .photo-frame{width:220px;height:260px}
-      .about-grid{grid-template-columns:1fr;gap:2.5rem}
-      .about-photo-wrap{display:none}
-    }
-    @media(max-width:600px){
-      nav{padding:0 5%}
-      .nav-links a:not(.nav-cta){display:none}
-      section{padding:5rem 5%}
-      .hero{padding-left:5%;padding-right:5%}
-      footer{flex-direction:column;text-align:center}
-    }
-  
-    /* ── LIGHT MODE ── */
-    [data-theme="light"]{
-      --bg:#f0f4ff;--bg2:#e8edf8;--surface:rgba(59,130,246,0.08);
-      --accent:#2563eb;--violet:#4f46e5;--border:rgba(59,130,246,0.25);
-      --text:#0f172a;--muted:#475569;--card:#e2eaf8;
-    }
-    [data-theme="light"] body{background:var(--bg);color:var(--text)}
-    [data-theme="light"] nav{background:rgba(240,244,255,0.9)}
-    [data-theme="light"] .card-wrap,[data-theme="light"] .skill-card,[data-theme="light"] .brand-card{background:var(--card);border-color:var(--border)}
-    [data-theme="light"] .project-chip{background:rgba(59,130,246,0.12);color:#1d4ed8}
-    [data-theme="light"] body::before{opacity:.15}
-    [data-theme="light"] #theme-btn{border-color:rgba(0,0,0,0.3);color:#0f172a}
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bhavya Goel | Portfolio</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./src/assets/images/bhavya_photo_1780752673547.png" />
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@400;500;600;700;900&family=Kanit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
     
-    #ai-perspective .sec-eye{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    </style>
-<style type="text/css" id="mytempCss">._8mqQwQ { display: none; } ._1TWLMK.icF5zO { opacity: 0.01; }</style></head>
-<body>
-<script>
-/* ── INTERACTIVE PARTICLE NETWORK ── */
-(function(){
-  var R='59',G='130',B='246';
-  var cv=document.createElement('canvas');
-  cv.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;background:transparent';
-  document.body.insertBefore(cv,document.body.firstChild);
-  var ctx=cv.getContext('2d');
-  var W,H,pts=[],mouse={x:-1000,y:-1000,radius:150};
-
-  function Particle(){
-    this.x=Math.random()*W; this.y=Math.random()*H;
-    this.baseX=this.x; this.baseY=this.y;
-    this.size=Math.random()*1.5+1;
-    this.density=(Math.random()*30)+1;
-  }
-  Particle.prototype.draw=function(){
-    ctx.fillStyle='rgba('+R+','+G+','+B+',0.8)';
-    ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();
-  };
-  Particle.prototype.update=function(){
-    var dx=mouse.x-this.x,dy=mouse.y-this.y;
-    var dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<mouse.radius){
-      var fx=dx/dist,fy=dy/dist;
-      var force=(mouse.radius-dist)/mouse.radius;
-      this.x-=fx*force*this.density;
-      this.y-=fy*force*this.density;
-    } else {
-      if(this.x!==this.baseX){var ex=this.x-this.baseX;this.x-=ex/10;}
-      if(this.y!==this.baseY){var ey=this.y-this.baseY;this.y-=ey/10;}
-    }
-  };
-
-  function connect(){
-    var thresh=(W/7)*(H/7);
-    for(var a=0;a<pts.length;a++){
-      for(var b=a;b<pts.length;b++){
-        var dx=pts[a].x-pts[b].x,dy=pts[a].y-pts[b].y;
-        var d=dx*dx+dy*dy;
-        if(d<thresh){
-          var op=1-(d/20000);
-          if(op<0)op=0;
-          ctx.strokeStyle='rgba('+R+','+G+','+B+','+op+')';
-          ctx.lineWidth=0.5;
-          ctx.beginPath();ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);ctx.stroke();
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+              display: ["Space Grotesk", "sans-serif"],
+              kanit: ["Kanit", "sans-serif"],
+            },
+            colors: {
+              'brand-blue': '#FACC15',
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          }
         }
       }
-    }
-  }
-
-  function init(){
-    pts=[];
-    var n=Math.min(Math.floor(W*H/9000),150);
-    for(var i=0;i<n;i++)pts.push(new Particle());
-  }
-
-  function resize(){
-    W=cv.width=window.innerWidth;
-    H=cv.height=window.innerHeight;
-    init();
-  }
-
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    for(var i=0;i<pts.length;i++){pts[i].update();pts[i].draw();}
-    connect();
-    requestAnimationFrame(frame);
-  }
-
-  window.addEventListener('resize',resize,{passive:true});
-  window.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;},{passive:true});
-  resize();
-  frame();
-})();
-</script>
-
-
-<div class="mesh"></div>
-
-  <nav id="navbar">
-    <div class="logo">BHAVYA<span>.GOEL</span></div>
-    <div class="nav-links">
-      <a href="goel.html#about">About</a>
-      <a href="goel.html#skills">Skills</a>
-      <a href="goel.html#projects">Projects</a>
-      <a href="goel.html#certificates">Certs</a>
-      <a href="goel.html#social">Connect</a>
-      <a href="company.html">Company</a>
-      <a href="index.html" class="nav-cta">← Home</a>
-      <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:1px solid rgba(255,255,255,0.3);border-radius:50px;padding:4px 14px;cursor:pointer;font-size:.8rem;color:inherit;margin-left:8px">☀️</button>
-    </div>
-  </nav>
-
-  <div class="hero" id="home">
-    <div class="hero-grid"></div>
-    <div class="hero-left">
-      <div class="hero-badge"><span class="dot"></span>Available for collabs &amp; projects</div>
-      <h1 class="hero-name">Bhavya<br><span class="glow">Goel</span></h1>
-      <p class="hero-tagline"><strong>10-year-old coder, creator &amp; founder</strong> — building the web from <strong>India</strong> 🇮🇳 one HTML tag at a time.</p>
-      <div class="hero-type"><span id="tw">AI Explorer 🤖</span><span class="blink"></span></div>
-      <div class="hero-btns">
-        <a href="goel.html#projects" class="btn btn-p">View Projects</a>
-        <a href="https://youtube.com/@aapk.ahostanddost" target="_blank" class="btn btn-g">▶ YouTube</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="photo-ring pr2"><div class="pr-dot"></div></div>
-      <div class="photo-ring pr1"></div>
-      <div class="photo-frame">
-        <img src="bhavya-photo.jpg" alt="Bhavya Goel">
-      </div>
-      <div class="float-tag ft1">🌐 HTML Dev</div>
-      <div class="float-tag ft2">🚀 Founder</div>
-    </div>
-    <div class="scroll-hint">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
-    </div>
-  </div>
-
-  <section id="about">
-    <div class="about-grid">
-      <div class="about-photo-wrap reveal-l">
-        <div class="about-glow"></div>
-        <div class="about-photo">
-          <img src="bhavya-photo.jpg" alt="Bhavya Goel">
-        </div>
-      </div>
-      <div class="about-text reveal-r">
-        <span class="sec-eye">Who I Am</span>
-        <h2>About <span class="hl">Me</span></h2>
-        <div class="sec-bar"></div>
-        <p>I'm <strong>Bhavya Goel</strong>, a 10-year-old passionate coder and content creator from India. Learning to build the web one line at a time — with curiosity and zero plans to stop.</p>
-        <p>I learn through <strong>Mimo</strong> and specialize in <strong>HTML</strong>. I build structured, clean websites and am always pushing forward — exploring new technologies from AI to video production.</p>
-        <p>When I'm not coding, I'm creating videos for my YouTube channels and shipping new ideas through my brand, <strong>Bhavy Website Solutions</strong>.</p>
-        <div class="stats">
-          <div class="stat"><div class="stat-n">4+</div><div class="stat-l">Live Projects</div></div>
-          <div class="stat"><div class="stat-n">2</div><div class="stat-l">YouTube Channels</div></div>
-          <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Curiosity</div></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="skills">
-    <span class="sec-eye reveal">What I Do</span>
-    <h2 class="reveal">My <span class="hl">Skills</span></h2>
-    <div class="sec-bar reveal"></div>
-    <div class="skills-grid">
-      <div class="skill-card reveal"><div class="sk-icon">🌐</div><div class="sk-name">Website Development</div><div class="sk-desc">Building structured, clean HTML websites. Learning CSS and exploring the fundamentals of the web daily.</div></div>
-      <div class="skill-card reveal" style="transition-delay:.08s"><div class="sk-icon">🎬</div><div class="sk-name">Video Editing</div><div class="sk-desc">All my content is fully self-edited — from cuts to effects, every frame of my YouTube videos.</div></div>
-      <div class="skill-card reveal" style="transition-delay:.16s"><div class="sk-icon">🤖</div><div class="sk-name">Learning AI &amp; Tech</div><div class="sk-desc">Fascinated by AI, chatbots, and emerging technology. Exploring the digital frontier every day.</div></div>
-      <div class="skill-card reveal" style="transition-delay:.24s"><div class="sk-icon">📱</div><div class="sk-name">Content Creation</div><div class="sk-desc">Two YouTube channels, two Instagram accounts — building an audience across platforms.</div></div>
-    </div>
-  </section>
-
-  <section id="projects">
-    <span class="sec-eye reveal">My Suite of Apps</span>
-    <h2 class="reveal">BG <span class="hl">FAME</span> Suite</h2>
-    <div class="sec-bar reveal"></div>
-    <a href="bgfame.html" class="proj-card reveal" style="display:flex;flex-direction:column;align-items:flex-start;gap:1.2rem;max-width:640px;text-decoration:none">
-      <div class="proj-tag">5 Live Apps · Built by Bhavya Goel</div>
-      <div class="proj-name" style="font-size:clamp(1.4rem,3vw,2rem)">Explore BG FAME →</div>
-      <div class="proj-desc">I built 5 real, deployed apps under BG FAME — an ad maker, a business card designer, a global creator map, a productivity OS, and more. All free. No sign-in needed. Click to see all apps.</div>
-      <div class="proj-link" style="margin-top:.5rem">See All 5 Apps →</div>
-    </a>
-  </section>
-
-  <section id="brand-bws">
-    <span class="sec-eye reveal">My Company</span>
-    <h2 class="reveal">Bhavy Website <span class="hl">Solutions</span></h2>
-    <div class="sec-bar reveal"></div>
-    <div class="brand-box reveal">
-      <div class="brand-name">Bhavy <span>Website</span> Solutions</div>
-      <div style="display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:50px;padding:.3rem 1rem;margin-bottom:1.4rem;opacity:.85">Founded by a 10-year-old</div>
-      <p class="brand-desc" style="margin-bottom:1.2rem"><strong style="color:#fff">Turning spark into software.</strong> You have an idea for a website or app — for your business, your brand, your school project. But you can't code. You don't know how to use AI. And every other agency you've checked is charging the highest price they can.</p>
-      <p class="brand-desc" style="margin-bottom:1.2rem">That's exactly where Bhavy Website Solutions comes in. I build websites and apps for people who have the idea but not the technical skills — or who simply don't have the time. You tell me what you want. I build it. Simple as that.</p>
-      <p class="brand-desc">Even if you know AI and coding but can't get around to it — I've got you. No bloated agency pricing. No unnecessary complexity. Just your spark, turned into working software.</p>
-    </div>
-  </section>
+    </script>
     
-  <section id="brand-bgfame">
-    <span class="sec-eye reveal">My Second Brand</span>
-    <h2 class="reveal">BG <span class="hl">FAME</span></h2>
-    <div class="sec-bar reveal"></div>
-    <div class="brand-box reveal">
-      <div class="brand-name">B<span>G</span> Fame</div>
-      <p class="brand-desc" style="margin-bottom:1.2rem">BG FAME is my personal AI brand. Under it I build two things: <strong style="color:#fff">AI tools</strong> that solve real problems, and <strong style="color:#fff">AI workshops</strong> that help people learn. No one tells me to build any of this — I do it because I want to.</p>
-      <p class="brand-desc" style="margin-bottom:1.2rem"><strong style="color:var(--accent)">The tools:</strong> 5 live apps — an ad maker, business card designer, global creator map, productivity OS, and more. All free, all deployed, all built by me.</p>
-      <p class="brand-desc" style="margin-bottom:1.2rem"><strong style="color:var(--accent)">The workshops:</strong> I run free and paid AI workshops where you learn real AI tools — not theory, not fluff. You'll master tools that help you work smarter, and you'll be on your way to becoming an AI generalist. Not after one workshop — that takes many courses from many places — but BG FAME is a great place to start because it costs less and gives you a real foundation.</p>
-      <p class="brand-desc">Think of BG FAME as the place where I share everything I'm building and learning in AI — open to everyone who's curious.</p>
-      <a href="bgfame.html" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.5rem;padding:.7rem 1.6rem;background:var(--accent);color:#fff;border-radius:50px;font-weight:700;font-size:.85rem;text-decoration:none;letter-spacing:.04em">Explore BG FAME →</a>
-    </div>
-  </section>
+    <style type="text/css">
+      html, body {
+        background-color: #0a0a0a;
+        color: #FFFFFF;
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      @keyframes scan {
+        0%, 100% { top: 0%; }
+        50% { top: 100%; }
+      }
+      
+      .scan-line {
+        animation: scan 4s ease-in-out infinite;
+      }
 
-    <section id="ai-perspective" style="max-width:900px;margin:0 auto;padding:6rem 5%">
-    <span class="sec-eye reveal" style="color:var(--accent)">My Take</span>
-    <h2 class="reveal" style="font-size:clamp(1.6rem,4vw,2.6rem);margin:1rem 0 .5rem">What I Struggle With in the<br><span class="hl">AI-First World</span></h2>
-    <div class="sec-bar reveal"></div>
-    <p class="reveal" style="color:var(--muted);font-size:1rem;margin:1.2rem 0 2rem;max-width:520px">Navigating the AI revolution as a 10-year-old founder — the real challenges nobody talks about.</p>
-    <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:16px">
-      <div style="width:100%;max-width:360px;border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--glow);position:relative;background:#000">
-        <iframe 
-          src="https://www.youtube.com/embed/YitRVAPDLZQ" 
-          style="width:100%;aspect-ratio:9/16;border:none;display:block"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-        </iframe>
+      .noise-bg {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      
+      .hero-grid {
+        background-image: linear-gradient(rgba(250, 204, 21, 0.015) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(250, 204, 21, 0.015) 1px, transparent 1px);
+        background-size: 56px 56px;
+      }
+      
+      .gradient-mesh {
+        background: radial-gradient(circle at 15% 20%, rgba(250, 204, 21, 0.04) 0%, transparent 45%),
+                    radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 45%),
+                    radial-gradient(circle at 50% 50%, rgba(250, 204, 21, 0.01) 0%, transparent 35%);
+      }
+      
+      .glass {
+        background: rgba(12, 12, 12, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 2px solid rgba(250, 204, 21, 0.15);
+      }
+      
+      .glass-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.5);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      
+      .glass-card:hover {
+        border-color: rgba(250, 204, 21, 0.3);
+        box-shadow: 0 12px 40px 0 rgba(250, 204, 21, 0.1);
+      }
+      
+      .hero-heading {
+        background: linear-gradient(180deg, #FFFFFF 0%, #FACC15 60%, #A3A3A3 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .blink {
+        animation: blink 0.9s step-end infinite;
+      }
+      
+      @keyframes blink {
+        from, to { color: transparent }
+        50% { color: #FACC15 }
+      }
+
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body class="selection:bg-brand-blue selection:text-black">
+    
+    <!-- Top Scroll Progress bar -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-[3px] bg-brand-blue z-[300] transition-all duration-75" style="width: 0%;"></div>
+
+    <!-- Static Noise overlay -->
+    <div class="fixed inset-0 pointer-events-none z-[100] opacity-[0.25] mix-blend-overlay noise-bg"></div>
+
+    <!-- Canvas particle systems -->
+    <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0" style="mix-blend-mode: screen;"></canvas>
+
+    <div class="fixed inset-0 pointer-events-none z-0 gradient-mesh"></div>
+
+    <!-- Floating Navbar header -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 h-16 md:h-20 z-[250] px-6 md:px-12 flex items-center justify-between transition-all duration-500 ease-out bg-transparent border-b border-transparent">
+      <div class="flex items-center gap-2 cursor-pointer font-display" onclick="scrollToId('home')">
+        <span class="font-black text-white tracking-tighter uppercase italic text-lg md:text-2xl">
+          BHAVYA<span class="text-brand-blue font-sans">.G</span>
+        </span>
       </div>
-      <p style="font-size:.78rem;color:var(--muted);font-style:italic;margin-top:4px">Video by Raul John Aju</p>
-    </div>
-  </section>
 
-<section id="certificates">
-  <span class="sec-eye reveal">Achievements</span>
-  <h2 class="reveal">Certificates &amp; <span class="hl">Recognition</span></h2>
-  <div class="sec-bar reveal"></div>
-
-  <div class="cert-grid">
-    <figure class="cert-card reveal">
-      <span class="cert-badge">✓ Verified</span>
-      <img src="cert-be10x.jpg" alt="be10x AI Tools Workshop Certificate – Bhavya Goel, April 2026">
-      <div class="cert-info">
-        <span class="cert-issuer">be10x</span>
-        <span class="cert-title">AI Tools Workshop</span>
-        <span class="cert-date">April 5th, 2026</span>
+      <div class="hidden lg:flex items-center gap-7">
+        <a href="https://bhavyagoel.com/index" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic">
+          Home
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </a>
+        <button onclick="scrollToId('about')" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic bg-transparent border-none">
+          About
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </button>
+        <button onclick="scrollToId('brands')" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic bg-transparent border-none">
+          Brands
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </button>
+        <button onclick="scrollToId('skills')" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic bg-transparent border-none">
+          Skills
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </button>
+        <button onclick="scrollToId('projects')" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic bg-transparent border-none">
+          Projects
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </button>
+        <button onclick="scrollToId('journey')" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic bg-transparent border-none">
+          AI Journey
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </button>
+        <button onclick="scrollToId('certificates')" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic bg-transparent border-none">
+          Certificates
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </button>
+        <button onclick="scrollToId('contact')" class="text-xs uppercase font-black tracking-widest text-neutral-400 hover:text-white transition-colors duration-300 relative pb-1 cursor-pointer group italic bg-transparent border-none">
+          Contact
+          <span class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-blue transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+        </button>
       </div>
-    </figure>
-    <figure class="cert-card reveal" style="transition-delay:.1s">
-      <span class="cert-badge">✓ Verified</span>
-      <img src="cert-outskill.jpg" alt="Outskill – Generative AI Mastermind Certificate – Bhavya Goel">
-      <div class="cert-info">
-        <span class="cert-issuer">Outskill</span>
-        <span class="cert-title">Generative AI Mastermind</span>
-        <span class="cert-date">2 Days Intensive · 2026</span>
+
+      <button onclick="toggleMobileMenu()" class="lg:hidden text-white hover:text-brand-blue transition-colors duration-300 z-50 cursor-pointer bg-transparent border-none p-2">
+        <i id="menu-icon" data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-drawer" class="fixed inset-y-0 right-0 w-72 bg-[#0c0c0c] border-l-4 border-brand-blue z-[240] flex flex-col p-8 justify-between pt-24 shadow-2xl transition-transform duration-300 translate-x-full">
+      <div class="flex flex-col gap-5">
+        <a href="https://bhavyagoel.com/index" class="text-left py-2 text-sm uppercase font-black tracking-widest text-[#6B7390] hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block">
+          Home
+        </a>
+        <button onclick="scrollToId('about')" class="text-[#6B7390] text-left py-2 text-sm uppercase font-black tracking-widest hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block bg-transparent border-none w-full">
+          About
+        </button>
+        <button onclick="scrollToId('brands')" class="text-[#6B7390] text-left py-2 text-sm uppercase font-black tracking-widest hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block bg-transparent border-none w-full">
+          Brands
+        </button>
+        <button onclick="scrollToId('skills')" class="text-[#6B7390] text-left py-2 text-sm uppercase font-black tracking-widest hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block bg-transparent border-none w-full">
+          Skills
+        </button>
+        <button onclick="scrollToId('projects')" class="text-[#6B7390] text-left py-2 text-sm uppercase font-black tracking-widest hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block bg-transparent border-none w-full">
+          Projects
+        </button>
+        <button onclick="scrollToId('journey')" class="text-[#6B7390] text-left py-2 text-sm uppercase font-black tracking-widest hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block bg-transparent border-none w-full">
+          AI Journey
+        </button>
+        <button onclick="scrollToId('certificates')" class="text-[#6B7390] text-left py-2 text-sm uppercase font-black tracking-widest hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block bg-transparent border-none w-full">
+          Certificates
+        </button>
+        <button onclick="scrollToId('contact')" class="text-[#6B7390] text-left py-2 text-sm uppercase font-black tracking-widest hover:text-brand-blue border-b border-white/5 transition-colors cursor-pointer italic block bg-transparent border-none w-full">
+          Contact
+        </button>
       </div>
-    </figure>
-  </div>
 
-  <figure class="cert-feature reveal" style="transition-delay:.15s">
-    <img src="outskill-banner.jpg" alt="Bhavya Goel featured at Outskill 2 Days Gen AI Mastermind event">
-    <figcaption class="cert-feature-cap">Featured at <strong>Outskill's 2 Days Gen AI Mastermind</strong> · Content Creator &amp; Founder, Bhavy Website Solutions</figcaption>
-  </figure>
-
-  <div class="cert-photos">
-    <div class="cert-photo-card reveal" style="transition-delay:.2s">
-      <img src="bhavya-photo.jpg" alt="Bhavya Goel">
-    </div>
-    <div class="cert-photo-card reveal" style="transition-delay:.28s">
-      <img src="bhavya-suit.jpg" alt="Bhavya Goel – young founder">
-    </div>
-  </div>
-</section>
-
-
-<section id="social">
-    <span class="sec-eye reveal">Find Me Online</span>
-    <h2 class="reveal">Social <span class="hl">Links</span></h2>
-    <div class="sec-bar reveal"></div>
-    <div class="soc-grid">
-      <a href="https://youtube.com/@knowledgewithbhavya" target="_blank" class="soc-card reveal"><div class="soc-icon soc-yt">▶</div><div><div class="soc-handle">Bhavy Goel</div><div class="soc-sub">Bhavya Goel · YouTube</div></div></a>
-      <a href="https://youtube.com/@funwiththetalent" target="_blank" class="soc-card reveal" style="transition-delay:.08s"><div class="soc-icon soc-yt">▶</div><div><div class="soc-handle">Fun with Bhavya Goel</div><div class="soc-sub">Fun with Bhavya Goel · YouTube</div></div></a>
-      <a href="https://instagram.com/bhavy.goel" target="_blank" class="soc-card reveal" style="transition-delay:.16s"><div class="soc-icon soc-ig">📸</div><div><div class="soc-handle">bhavy.goel</div><div class="soc-sub">Instagram</div></div></a>
+      <div class="flex flex-col gap-3">
+        <button onclick="scrollToId('contact')" class="w-full text-center text-xs font-black uppercase tracking-widest text-[#0a0a0a] bg-brand-blue py-4 rounded-none hover:bg-white transition-colors duration-300 cursor-pointer border-none">
+          Get In Touch
+        </button>
+        <p class="text-[10px] text-[#6B7390] font-mono text-center uppercase tracking-widest">
+          Bhavya Goel © 2026
+        </p>
       </div>
-  </section>
-
-  <section id="setup">
-    <span class="sec-eye reveal">My Gear</span>
-    <h2 class="reveal">Tech <span class="hl">Setup</span></h2>
-    <div class="sec-bar reveal"></div>
-    <div class="tech-grid">
-      <div class="tech-item reveal"><div class="tech-em">📱</div><div><div class="tech-n">OnePlus 7</div><div class="tech-d">Primary smartphone</div></div></div>
-      <div class="tech-item reveal" style="transition-delay:.08s"><div class="tech-em">⬛</div><div><div class="tech-n">iPad 10th Gen</div><div class="tech-d">Creative &amp; learning</div></div></div>
-      <div class="tech-item reveal" style="transition-delay:.16s"><div class="tech-em">💻</div><div><div class="tech-n">MacBook 13" M2</div><div class="tech-d">Main coding machine</div></div></div>
     </div>
-  </section>
 
-  <section id="goal">
-    <span class="sec-eye reveal">Where I'm Headed</span>
-    <h2 class="reveal">My <span class="hl">Mission</span></h2>
-    <div class="goal-wrap reveal">
-      <div class="goal-q">
-        Teaching and Learning <span>AI</span> — because the future IS AI.
-        Become a powerful <span>content creator</span>, make AI tools that
-        solve real problems, and grow <span>my company</span>.
-      </div>
-      <p class="goal-sub">At 10, I've built AI-powered apps, website tools, and a brand. In ten years? The sky isn't the limit — it's just the beginning. 🚀</p>
-      <div style="margin-top:2rem">
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
-          <a href="https://youtube.com/@aapk.ahostanddost" target="_blank" class="btn btn-p">Follow the Journey ▶</a>
-          <a href="company.html" class="btn btn-g">🏢 Visit My Company →</a>
+
+    <!-- 1. HERO SECTION -->
+    <section id="home" class="relative min-h-screen py-0 flex flex-col justify-center items-center overflow-hidden border-b border-brand-blue/10">
+      <div class="absolute inset-0 pointer-events-none hero-grid z-0"></div>
+
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 pt-20">
+        
+        <div class="lg:col-span-7 flex flex-col gap-6 text-center lg:text-left text-left">
+          <div class="inline-flex self-center lg:self-start items-center gap-2 bg-[#0c0c0c] border-2 border-brand-blue px-4 py-2.5 shadow-md">
+            <div class="w-2 h-2 rounded-full bg-brand-blue animate-ping"></div>
+            <span class="text-[10px] md:text-xs font-black tracking-[0.2em] text-brand-blue uppercase font-sans">
+              Active Tech Explorer
+            </span>
+          </div>
+
+          <h1 class="font-display font-black text-6xl sm:text-7xl md:text-8xl lg:text-[100px] text-white uppercase leading-[0.82] tracking-tighter italic whitespace-pre-line text-left">
+            BHAVYA <br />
+            <span class="hero-heading leading-tight">GOEL</span>
+          </h1>
+
+          <div class="text-lg sm:text-xl md:text-2xl min-h-[36px] text-left">
+            <span class="text-neutral-400 font-bold uppercase tracking-wide">I am a passionate </span>
+            <span id="typewriter" class="font-display font-semibold text-brand-blue tracking-tight select-none"></span><span class="blink">|</span>
+          </div>
+
+          <p class="text-sm md:text-base text-neutral-400 max-w-lg leading-relaxed font-medium font-sans text-left">
+            A high-growth AI generalist who builds dynamic web projects, designs intelligent agent flows, hosts deep masterclasses, and collaborates with elite creators worldwide.
+          </p>
+
+          <div class="flex flex-wrap justify-start gap-4 mt-4">
+            <button onclick="scrollToId('projects')" class="px-8 py-4 text-xs font-black uppercase tracking-widest text-[#0a0a0a] bg-brand-blue border-2 border-brand-blue hover:bg-transparent hover:text-white transition-all duration-300 cursor-pointer rounded-none border-none">
+              Explore My Work
+            </button>
+            <button onclick="scrollToId('contact')" class="px-8 py-4 text-xs font-black uppercase tracking-widest text-white border-2 border-white hover:bg-brand-blue hover:text-[#0a0a0a] hover:border-brand-blue transition-all duration-300 cursor-pointer rounded-none bg-transparent">
+              Contact Me
+            </button>
+          </div>
+        </div>
+
+        <!-- Portraits Column -->
+        <div class="lg:col-span-5 flex justify-center items-center relative select-none">
+          <div class="absolute w-[360px] h-[360px] md:w-[480px] md:h-[480px] rounded-none border border-dashed border-neutral-800 animate-[spin_45s_linear_infinite] pointer-events-none"></div>
+          <div class="absolute w-[280px] h-[280px] md:w-[380px] md:h-[380px] rounded-none border border-dashed border-neutral-900 animate-[spin_25s_linear_infinite_reverse] pointer-events-none"></div>
+
+          <div class="absolute top-0 left-0 z-10 bg-[#0c0c0c] px-4 py-2 border-l-4 border-brand-blue text-[10px] font-black uppercase tracking-widest text-white shadow-lg animate-[bounce_8s_infinite]">
+            <span>🚀</span> Founder
+          </div>
+
+          <div class="absolute bottom-6 right-3 md:right-10 z-10 bg-[#0c0c0c] px-4 py-2 border-l-4 border-white text-[10px] font-black uppercase tracking-widest text-white shadow-lg animate-[bounce_10s_infinite]">
+            <span>🤖</span> AI Generalist
+          </div>
+
+          <div class="absolute top-1/2 -left-8 md:-left-12 z-10 bg-brand-blue px-4 py-2 border-l-4 border-brand-blue text-[10px] font-black uppercase tracking-widest text-[#0a0a0a] shadow-lg animate-[bounce_9s_infinite_reverse]">
+            <span>🌐</span> Builder
+          </div>
+
+          <!-- Portrait Image frame -->
+          <div class="relative w-72 h-[340px] md:w-96 md:h-[420px] rounded-none overflow-hidden border-2 border-brand-blue shadow-[0_0_40px_rgba(250,204,21,0.15)] group">
+            <img src="./src/assets/images/bhavya_photo_1780752673547.png" alt="Bhavya Goel Portrait" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-brand-blue/5 pointer-events-none"></div>
+            <div class="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-blue to-transparent z-[2] scan-line"></div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <footer>
-    <div class="foot-name">Bhavya<span>Goel</span> <span style="color:var(--muted);font-size:.72rem;font-weight:400;margin-left:.5rem">© 2026</span></div>
-    <div class="foot-copy">© Bhavy Website Solutions · Founder &amp; CEO: Bhavya Goel</div>
-    <a href="goel.html#home" class="foot-top">↑ Top</a>
-  </footer>
-
-  <script>
-      /* ── TYPEWRITER ── */
-  (function(){
-    var el=document.getElementById('tw');
-    var phrases=['HTML Developer 🌐','AI Explorer 🤖','Video Editor 🎬','Founder @ Bhavy Website Solutions 🚀','Future Tech Creator ⚡'];
-    var pi=0,ci=0,del=false,wait=0;
-    function tick(){
-      var cur=phrases[pi];
-      if(!del){el.textContent=cur.slice(0,++ci);if(ci===cur.length){del=true;wait=65;}setTimeout(tick,82);}
-      else{if(wait-->0){setTimeout(tick,28);return;}el.textContent=cur.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;}setTimeout(tick,44);}
-    }
-    tick();
-  })();
-
-  /* ── SCROLL REVEAL ── */
-  (function(){
-    var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('v');io.unobserve(x.target)}})},{threshold:.11,rootMargin:'0px 0px -36px 0px'});
-    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(function(el){io.observe(el)});
-  })();
-
-  /* ── NAV SHADOW ── */
-  window.addEventListener('scroll',function(){
-    document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40);
-  });
-  </script>
-<script>
-/* ── GREEN BLOCKS ANIMATION (ThinkCraft style) ── */
-(function(){
-  if(window.innerWidth<768)return;
-  var sec=document.createElement('section');
-  sec.style.cssText='position:relative;width:100%;height:100vh;overflow:hidden;background:linear-gradient(to bottom,#0a0a0a,#000000)';
-  var cv=document.createElement('canvas');
-  cv.style.cssText='position:absolute;inset:0;width:100%;height:100%';
-  var ov=document.createElement('div');
-  ov.style.cssText='position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;pointer-events:none';
-  ov.innerHTML='<div style="text-align:center;padding:0 16px"><h2 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:#fff;margin:0 0 .5em;text-shadow:0 0 40px rgba(100,255,150,.4),0 4px 8px rgba(0,0,0,.6)">Experience the Future</h2><p style="color:#9ca3af;font-size:1.1rem;margin:0">Cutting-edge education meets stunning visuals</p></div>';
-  sec.appendChild(cv);sec.appendChild(ov);
-  var footer=document.querySelector('footer');
-  if(footer&&footer.parentNode)footer.parentNode.insertBefore(sec,footer);
-  else document.body.appendChild(sec);
-  var gl=cv.getContext('webgl')||cv.getContext('experimental-webgl');
-  if(!gl){sec.remove();return;}
-  var vs='attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0,1);}';
-  var fs=
-    'precision highp float;varying vec2 v;uniform float uT,uAs;uniform vec3 uP0,uP1,uP2,uP3,uR0,uR1,uR2,uR3;'+
-    'mat4 rm(vec3 ax,float a){ax=normalize(ax);float s=sin(a),c=cos(a),o=1.0-c;'+
-    'return mat4(o*ax.x*ax.x+c,o*ax.x*ax.y-ax.z*s,o*ax.z*ax.x+ax.y*s,0.0,'+
-    'o*ax.x*ax.y+ax.z*s,o*ax.y*ax.y+c,o*ax.y*ax.z-ax.x*s,0.0,'+
-    'o*ax.z*ax.x-ax.y*s,o*ax.y*ax.z+ax.x*s,o*ax.z*ax.z+c,0.0,0.0,0.0,0.0,1.0);}'+
-    'vec3 rot(vec3 q,vec3 ax,float a){return(rm(ax,a)*vec4(q,1.0)).xyz;}'+
-    'float sdBox(vec3 p,vec3 b){vec3 q=abs(p)-b;return length(max(q,0.0))+min(max(q.x,max(q.y,q.z)),0.0);}'+
-    'float su(float a,float b,float k){float h=clamp(0.5+0.5*(b-a)/k,0.0,1.0);return mix(b,a,h)-k*h*(1.0-h);}'+
-    'float sdf(vec3 p){vec3 cr=0.1*vec3(uAs,1,1);'+
-    'float f=sdBox(rot(p-uP0*cr,vec3(1,1,0),uR0.x+uR0.y),vec3(0.15))-0.03;'+
-    'f=su(f,sdBox(rot(p-uP1*cr,vec3(1,1,0),uR1.x+uR1.y),vec3(0.15))-0.03,0.4);'+
-    'f=su(f,sdBox(rot(p-uP2*cr,vec3(1,1,0),uR2.x+uR2.y),vec3(0.15))-0.03,0.4);'+
-    'f=su(f,sdBox(rot(p-uP3*cr,vec3(1,1,0),uR3.x+uR3.y),vec3(0.15))-0.03,0.4);return f;}'+
-    'vec3 calcN(vec3 p){float h=0.001;return normalize(vec3(sdf(p+vec3(h,0,0))-sdf(p-vec3(h,0,0)),sdf(p+vec3(0,h,0))-sdf(p-vec3(0,h,0)),sdf(p+vec3(0,0,h))-sdf(p-vec3(0,0,h))));}'+
-    'void main(){vec2 uv=(v-0.5)*vec2(uAs,1);vec3 ray=normalize(vec3(uv,-1)),cam=vec3(0,0,2.3),pos=cam;float dist=0.0,tMax=5.0;'+
-    'for(int i=0;i<128;i++){float d=sdf(pos);if(d<5e-4||tMax<dist)break;dist+=d;pos=cam+dist*ray;}'+
-    'vec3 col=vec3(0);float alpha=0.0;'+
-    'if(dist<tMax){vec3 n=calcN(pos),vd=normalize(cam-pos);'+
-    'float fr=pow(1.0-max(dot(n,vd),0.0),2.0);float hue=dot(n,vd)*3.14159+uT*0.5;'+
-    'vec3 ir=vec3(0,sin(hue)*0.3+0.7,sin(hue+1.0)*0.2+0.3)*fr*1.2;'+
-    'vec3 ld=normalize(vec3(-0.5,0.8,0.6));float diff=max(dot(n,ld),0.0);'+
-    'float spec=pow(max(dot(normalize(ld+vd),n),0.0),32.0);'+
-    'float rim=pow(1.0-max(dot(n,vd),0.0),3.0);'+
-    'float ao=1.0-smoothstep(0.0,0.3,dist/tMax);'+
-    'col=vec3(0.1,0.12,0.15)*(0.1+diff*0.4)*ao+ir*(0.8+diff*0.2)+vec3(1,0.9,0.8)*spec*0.6+vec3(0.4,0.8,1)*rim*0.5;'+
-    'col=mix(col,vec3(0),1.0-exp(-dist*0.2));alpha=1.0;}'+
-    'gl_FragColor=vec4(col,alpha);}';
-  function mk(t,s){var sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
-  var prog=gl.createProgram();gl.attachShader(prog,mk(gl.VERTEX_SHADER,vs));gl.attachShader(prog,mk(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);gl.useProgram(prog);
-  if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){sec.remove();return;}
-  var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  var ap=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,2,gl.FLOAT,false,0,0);
-  var uT=gl.getUniformLocation(prog,'uT'),uAs=gl.getUniformLocation(prog,'uAs');
-  var uP=[0,1,2,3].map(function(i){return gl.getUniformLocation(prog,'uP'+i);});
-  var uR=[0,1,2,3].map(function(i){return gl.getUniformLocation(prog,'uR'+i);});
-  var boxes=Array.from({length:4},function(_,e){var n=e/4*Math.PI*2;return{x:Math.cos(n)*1.75,y:Math.sin(n)*4.5,ps:[1+Math.random()*4,1+Math.random()*3.5,.5+Math.random()*2],rs:[.1+Math.random(),.1+Math.random(),.1+Math.random()],pp:[n+Math.random()*Math.PI*3,n*1.3+Math.random()*Math.PI*3,n*.7+Math.random()*Math.PI*3],rp:[n*.5+Math.random()*Math.PI*2,n*.8+Math.random()*Math.PI*2,n*1.1+Math.random()*Math.PI*2]};});
-  function resize(){cv.width=cv.offsetWidth||innerWidth;cv.height=cv.offsetHeight||innerHeight;gl.viewport(0,0,cv.width,cv.height);gl.uniform1f(uAs,cv.width/cv.height);}
-  window.addEventListener('resize',resize);resize();
-  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
-  var t=0;
-  (function frame(){t+=0.016;gl.uniform1f(uT,t);
-  boxes.forEach(function(b,i){var g=Math.sin(t*b.ps[0]+b.pp[0])*.8,vv=Math.cos(t*b.ps[1]+b.pp[1])*5,y=Math.sin(t*b.ps[2]+b.pp[2])*.5,_=Math.cos(t*b.ps[0]*.7+b.pp[0]*1.3)*.4,T=Math.sin(t*b.ps[1]*.8+b.pp[1]*1.1)*.3;gl.uniform3fv(uP[i],[b.x+g+_,b.y+vv+T,y]);gl.uniform3fv(uR[i],[t*b.rs[0]+b.rp[0],t*b.rs[1]+b.rp[1],t*b.rs[2]+b.rp[2]]);});
-  gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);})();
-})();
-</script>
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer opacity-70 hover:opacity-100 transition-opacity" onclick="scrollToId('about')">
+        <span class="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">
+          Scroll Discover
+        </span>
+        <div class="w-5 h-8 rounded-none border border-neutral-700 flex items-start justify-center p-1.5">
+          <div class="w-1.5 h-1.5 bg-brand-blue animate-[bounce_1.5s_infinite]"></div>
+        </div>
+      </div>
+    </section>
 
 
+    <!-- 3. ABOUT SECTION -->
+    <section id="about" class="relative bg-[#050505] border-b border-neutral-800 overflow-hidden py-20">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Creative Bio & Metrics
+          </span>
+          <h2 class="font-display font-black uppercase italic tracking-tighter text-4xl sm:text-5xl lg:text-6xl text-white mt-4">
+            MEET <span class="text-brand-blue">BHAVYA GOEL</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+        </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<style>*{cursor:none !important}
-    /* ── CERTIFICATES ── */
-    #certificates{background:var(--bg2)}
-    .cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;
-               max-width:1100px;margin:2.5rem auto 0}
-    .cert-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;
-               overflow:hidden;transition:all .35s var(--ease);position:relative}
-    .cert-card:hover{border-color:rgba(59,130,246,0.4);box-shadow:var(--glow),0 20px 50px rgba(0,0,0,.5);
-                     transform:translateY(-6px)}
-    .cert-card img{width:100%;display:block;object-fit:cover;border-radius:18px 18px 0 0}
-    .cert-info{padding:1.2rem 1.5rem}
-    .cert-issuer{display:block;font-size:.68rem;font-weight:700;letter-spacing:.14em;
-                 text-transform:uppercase;color:var(--accent);margin-bottom:.35rem}
-    .cert-title{display:block;font-family:'Space Grotesk',sans-serif;font-weight:700;
-                font-size:1.05rem;color:#fff;margin-bottom:.3rem}
-    .cert-date{font-size:.78rem;color:var(--muted)}
-    .cert-badge{position:absolute;top:12px;right:12px;background:rgba(5,8,16,0.8);
-                border:1px solid var(--border);border-radius:50px;padding:3px 10px;
-                font-size:.62rem;font-weight:600;color:var(--accent);backdrop-filter:blur(6px)}
-    .cert-feature{max-width:680px;margin:2.5rem auto 0;border-radius:18px;overflow:hidden;
-                  border:1px solid var(--border);box-shadow:0 20px 50px rgba(0,0,0,.4);
-                  transition:all .35s var(--ease)}
-    .cert-feature:hover{border-color:rgba(59,130,246,0.35);transform:translateY(-4px);box-shadow:var(--glow),0 24px 60px rgba(0,0,0,.5)}
-    .cert-feature img{width:100%;display:block;border-radius:18px 18px 0 0}
-    .cert-feature-cap{padding:1rem 1.5rem;font-size:.82rem;color:var(--muted);
-                      background:var(--surface);text-align:center;line-height:1.6}
-    .cert-photos{display:flex;gap:1.5rem;justify-content:center;max-width:700px;
-                 margin:2.5rem auto 0;flex-wrap:wrap}
-    .cert-photo-card{width:200px;height:240px;border-radius:18px;overflow:hidden;
-                     border:1px solid var(--border);box-shadow:0 12px 36px rgba(0,0,0,.4);
-                     transition:all .35s var(--ease);flex-shrink:0}
-    .cert-photo-card:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(59,130,246,0.4);
-                           box-shadow:var(--glow),0 20px 50px rgba(0,0,0,.5)}
-    .cert-photo-card img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
-    @media(max-width:640px){
-      .cert-grid{grid-template-columns:1fr}
-      .cert-photos{gap:1rem}
-      .cert-photo-card{width:150px;height:180px}
-    }
-</style>
-<script>
-/* ── GSAP MAGNETIC CURSOR (ThinkCraft exact) ── */
-(function(){
-  var SIZE=24,PAD=8,LERP=.1,SM=.04,MX=1,MY=.3;
-  var cur=document.createElement('div');
-  cur.id='gsap-cursor';
-  cur.style.cssText='position:fixed;top:0;left:0;width:'+SIZE+'px;height:'+SIZE+'px;border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none;z-index:9999;opacity:0;will-change:transform,width,height';
-  document.body.appendChild(cur);
-  var tx=-100,ty=-100,cx=-100,cy=-100,px=-100,py=-100,hov=false;
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <div class="lg:col-span-4 flex justify-center relative">
+            <div class="w-56 h-72 sm:w-64 sm:h-80 rounded-none overflow-hidden border-t-4 border-brand-blue border-x border-b border-neutral-800 shadow-2xl relative group">
+              <img src="./src/assets/images/bhavya_photo_1780752673547.png" alt="Bhavya Goel Bio image representation" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+              <div class="absolute bottom-4 left-4 flex items-center gap-1.5 text-xs text-brand-blue font-bold uppercase tracking-wider select-none">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                India
+              </div>
+            </div>
+          </div>
 
-  /* ticker owns: x, y, scaleX, scaleY, rotate — only when not hov */
-  gsap.ticker.add(function(){
-    if(hov)return;
-    cx+=(tx-cx)*LERP; cy+=(ty-cy)*LERP;
-    var dx=cx-px, dy=cy-py; px=cx; py=cy;
-    var spd=Math.sqrt(dx*dx+dy*dy)*SM;
-    gsap.set(cur,{x:cx,y:cy,rotate:Math.atan2(dy,dx)*(180/Math.PI),scaleX:1+Math.min(spd,MX),scaleY:1-Math.min(spd,MY)});
-  });
+          <div class="lg:col-span-8 flex flex-col gap-6 font-sans">
+            <h3 class="text-lg md:text-xl text-white font-black uppercase tracking-tight leading-snug">
+              I AM AN AI GENERALIST FOCUSED ON UNDERSTANDING, USING, TEACHING, AND BUILDING WITH AI. MY GOAL IS TO HELP INDIVIDUALS AND BUSINESSES LEVERAGE AI WHILE BUILDING PRODUCTS, EDUCATIONAL EXPERIENCES, AND DIGITAL SOLUTIONS THROUGH BHAVY WEBSITE SOLUTIONS AND BG FAME.
+            </h3>
 
-  /* first move: snap into position */
-  window.addEventListener('pointermove',function(e){
-    cx=e.clientX-SIZE/2; cy=e.clientY-SIZE/2; px=cx; py=cy; tx=cx; ty=cy;
-    gsap.set(cur,{x:cx,y:cy,opacity:1});
-  },{once:true,passive:true});
+            <p class="text-sm md:text-base text-neutral-400 leading-relaxed font-bold font-sans text-center lg:text-left mt-2">
+              By bridging technical programming with generative prompt pipelines, I make AI accessible, actionable, and extremely useful for individuals and enterprise groups alike. Let's make something incredible!
+            </p>
 
-  /* continuous tracking + text squish */
-  window.addEventListener('pointermove',function(e){
-    tx=e.clientX-SIZE/2; ty=e.clientY-SIZE/2;
-    gsap.to(cur,{opacity:1,duration:.2});
-    var t=e.target;
-    if(!hov&&(t.tagName==='P'||t.tagName==='SPAN'||/^H[1-6]$/.test(t.tagName)||window.getComputedStyle(t).cursor==='text'))
-      gsap.to(cur,{scaleX:.5,scaleY:1.5,duration:.3});
-  },{passive:true});
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-neutral-800">
+              <div class="stat border-l-4 border-brand-blue pl-4 py-1 select-none">
+                <div class="font-display font-black text-3xl md:text-4xl text-brand-blue uppercase italic" data-val="24">0</div>
+                <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider mt-1.5 leading-none">Projects Built</p>
+              </div>
+              <div class="stat border-l-4 border-brand-blue pl-4 py-1 select-none">
+                <div class="font-display font-black text-3xl md:text-4xl text-brand-blue uppercase italic" data-val="8">0</div>
+                <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider mt-1.5 leading-none">AI Tools Created</p>
+              </div>
+              <div class="stat border-l-4 border-brand-blue pl-4 py-1 select-none">
+                <div class="font-display font-black text-3xl md:text-4xl text-brand-blue uppercase italic" data-val="12">0</div>
+                <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider mt-1.5 leading-none">Tech Workshops</p>
+              </div>
+              <div class="stat border-l-4 border-brand-blue pl-4 py-1 select-none">
+                <div class="font-display font-black text-3xl md:text-4xl text-brand-blue uppercase italic" data-val="3400" data-suffix="+">0</div>
+                <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider mt-1.5 leading-none">Lives Impacted</p>
+              </div>
+            </div>
 
-  document.addEventListener('mouseleave',function(){gsap.to(cur,{opacity:0,duration:.3});});
-  document.addEventListener('mouseenter',function(){gsap.to(cur,{opacity:1,duration:.3});});
+            <div class="flex justify-center lg:justify-start mt-6">
+              <button onclick="scrollToId('contact')" class="inline-flex items-center gap-2 group text-xs font-black uppercase tracking-widest text-brand-blue hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0">
+                Schedule A Strategy Session
+                <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1.5 transition-transform"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  /* click burst */
-  window.addEventListener('click',function(e){
-    for(var v=0;v<8;v++){(function(i){
-      var p=document.createElement('div');
-      p.style.cssText='position:fixed;width:4px;height:4px;background:#fff;border-radius:50%;pointer-events:none;z-index:9998;mix-blend-mode:difference';
-      document.body.appendChild(p);
-      var a=Math.PI*2*i/8, d=45+Math.random()*55;
-      gsap.fromTo(p,{x:e.clientX,y:e.clientY,opacity:1},
-        {x:e.clientX+Math.cos(a)*d,y:e.clientY+Math.sin(a)*d,opacity:0,duration:.6,ease:'power2.out',onComplete:function(){p.remove();}});
-    })(v);}
-  });
 
-  var SEL='a,button,input,select,textarea,.btn,.card,.vid-card,.short-card,.hcard,.nav-link,[data-magnetic]';
+    <!-- 4. BRANDS SECTION -->
+    <section id="brands" class="relative border-b border-neutral-800 bg-[#0c0c0c] py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Professional Ecosystems
+          </span>
+          <h2 class="font-display font-black uppercase italic tracking-tighter text-4xl sm:text-5xl lg:text-6xl text-white mt-4">
+            FOUNDING <span class="text-brand-blue">BRANDS</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+          <p class="text-neutral-400 text-sm md:text-base font-bold mt-4 uppercase tracking-wide">
+            Under my guidance, these high-performing organizations deliver absolute state-of-the-art results across code and artificial intelligence.
+          </p>
+        </div>
 
-  function attach(el){
-    if(el._mc)return; el._mc=true;
-    var xTo=gsap.quickTo(el,'x',{duration:1,ease:'elastic.out(1,.3)'});
-    var yTo=gsap.quickTo(el,'y',{duration:1,ease:'elastic.out(1,.3)'});
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          
+          <!-- Card 1: Bhavy Website Solutions -->
+          <div class="group relative rounded-none p-6 sm:p-10 border-2 border-neutral-800 bg-[#0a0a0a] hover:border-brand-blue transition-all duration-500 overflow-hidden flex flex-col justify-between h-[360px] cursor-default text-left">
+            <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/15 to-white/5 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none z-0"></div>
 
-    el.addEventListener('pointerenter',function(){
-      hov=true;
-      var r=el.getBoundingClientRect();
-      var br=window.getComputedStyle(el).borderRadius||'8px';
-      gsap.killTweensOf(cur);
-      /* enter: gsap.to owns everything — ticker paused */
-      gsap.to(cur,{
-        x:r.left-PAD, y:r.top-PAD,
-        width:r.width+PAD*2, height:r.height+PAD*2,
-        borderRadius:br, scaleX:1, scaleY:1, rotate:0,
-        duration:.4, ease:'power3.out'
-      });
-    });
+            <div class="border-b border-neutral-800 pb-4 relative z-10 flex justify-between items-start">
+              <div>
+                <span class="text-[9px] font-black uppercase bg-[#0c0c0c] text-blue-400 border border-blue-500/35 px-3 py-1 rounded-none select-none tracking-widest">
+                  ✦ Digital Agency
+                </span>
+                <h3 class="font-display font-black text-2xl sm:text-3xl text-white mt-2 group-hover:text-brand-blue transition-colors duration-300 uppercase italic">
+                  Bhavy Website Solutions
+                </h3>
+              </div>
+              <div class="w-14 h-14 rounded-none border border-neutral-800 group-hover:border-brand-blue flex items-center justify-center p-1 bg-[#0c0c0c] overflow-hidden shrink-0">
+                <img src="./src/assets/images/bhavy_website_solutions_logo_1780753359004.png" alt="Bhavy Solution Logo" class="w-full h-full object-contain" />
+              </div>
+            </div>
 
-    el.addEventListener('pointerleave',function(){
-      hov=false;
-      gsap.killTweensOf(cur);
-      /* leave: only fold the SIZE back — ticker resumes and handles x/y/scale/rotate */
-      gsap.to(cur,{
-        width:SIZE, height:SIZE, borderRadius:'50%',
-        duration:.45, ease:'elastic.out(1,.5)'
-      });
-      xTo(0); yTo(0);
-    });
+            <p class="text-sm text-neutral-400 font-medium leading-relaxed my-5 relative z-10">
+              Transforms ideas into websites, applications, and digital experiences.
+            </p>
 
-    el.addEventListener('pointermove',function(e){
-      var r=el.getBoundingClientRect();
-      xTo((e.clientX-(r.left+r.width/2))*.2);
-      yTo((e.clientY-(r.top+r.height/2))*.2);
-    });
+            <div class="flex flex-wrap gap-2 mb-6 relative z-10">
+              <span class="text-[10px] font-black uppercase tracking-wider text-white bg-[#0e0e0e] border border-neutral-800 py-1.5 px-3.5 rounded-none">Website Development</span>
+              <span class="text-[10px] font-black uppercase tracking-wider text-white bg-[#0e0e0e] border border-neutral-800 py-1.5 px-3.5 rounded-none">App Development</span>
+              <span class="text-[10px] font-black uppercase tracking-wider text-white bg-[#0e0e0e] border border-neutral-800 py-1.5 px-3.5 rounded-none">AI Solutions</span>
+            </div>
 
-    el.addEventListener('pointerout',function(){xTo(0);yTo(0);});
-  }
+            <div class="flex items-center justify-between border-t border-neutral-800 pt-4 mt-auto relative z-10">
+              <a href="mailto:bhavywebsitesolutions@gmail.com" class="text-xs font-mono text-brand-blue font-bold hover:underline uppercase tracking-wide">
+                bhavywebsitesolutions@gmail.com
+              </a>
+              <a href="https://bhavyagoel.com/company" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-white border-b-2 border-brand-blue pb-0.5 hover:text-brand-blue transition-colors">
+                Visit Brand
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+              </a>
+            </div>
+          </div>
 
-  document.querySelectorAll(SEL).forEach(attach);
-  new MutationObserver(function(muts){
-    muts.forEach(function(m){
-      m.addedNodes.forEach(function(n){
-        if(n.nodeType===1){
-          if(n.matches&&n.matches(SEL))attach(n);
-          if(n.querySelectorAll)n.querySelectorAll(SEL).forEach(attach);
+          <!-- Card 2: BG FAME -->
+          <div class="group relative rounded-none p-6 sm:p-10 border-2 border-neutral-800 bg-[#0a0a0a] hover:border-brand-blue transition-all duration-500 overflow-hidden flex flex-col justify-between h-[360px] cursor-default text-left">
+            <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-yellow-400/5 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700 pointer-events-none z-0"></div>
+
+            <div class="border-b border-neutral-800 pb-4 relative z-10 flex justify-between items-start">
+              <div>
+                <span class="text-[9px] font-black uppercase bg-[#0c0c0c] text-indigo-400 border border-indigo-500/35 px-3 py-1 rounded-none select-none tracking-widest">
+                  ✦ Futuristic Suite
+                </span>
+                <h3 class="font-display font-black text-2xl sm:text-3xl text-white mt-2 group-hover:text-brand-blue transition-colors duration-300 uppercase italic">
+                  BG FAME
+                </h3>
+              </div>
+              <div class="w-14 h-14 rounded-none border border-neutral-800 group-hover:border-brand-blue flex items-center justify-center p-1 bg-[#0c0c0c] overflow-hidden shrink-0">
+                <img src="./src/assets/images/bg_fame_logo_1780753374929.png" alt="BG FAME Logo asset representation" class="w-full h-full object-contain" />
+              </div>
+            </div>
+
+            <p class="text-sm text-neutral-400 font-medium leading-relaxed my-5 relative z-10">
+              AI Tools, AI Workshops, and AI Education. Helping people become elite AI Generalists.
+            </p>
+
+            <div class="flex flex-wrap gap-2 mb-6 relative z-10">
+              <span class="text-[10px] font-black uppercase tracking-wider text-white bg-[#0e0e0e] border border-neutral-800 py-1.5 px-3.5 rounded-none">AI Tools Expansion</span>
+              <span class="text-[10px] font-black uppercase tracking-wider text-white bg-[#0e0e0e] border border-neutral-800 py-1.5 px-3.5 rounded-none">AI Specialized Workshops</span>
+              <span class="text-[10px] font-black uppercase tracking-wider text-white bg-[#0e0e0e] border border-neutral-800 py-1.5 px-3.5 rounded-none">AI Generalist Education</span>
+            </div>
+
+            <div class="flex items-center justify-between border-t border-neutral-800 pt-4 mt-auto relative z-10">
+              <a href="mailto:bgfameai7@gmail.com" class="text-xs font-mono text-brand-blue font-bold hover:underline uppercase tracking-wide">
+                bgfameai7@gmail.com
+              </a>
+              <a href="https://bhavyagoel.com/bgfame" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-white border-b-2 border-brand-blue pb-0.5 hover:text-brand-blue transition-colors">
+                Visit Brand
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 5. SKILLS SECTION -->
+    <section id="skills" class="relative border-b border-neutral-800 bg-[#050505] py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Creative Capabilities
+          </span>
+          <h2 class="font-display font-black uppercase italic tracking-tighter text-4xl sm:text-5xl lg:text-6xl text-white mt-4">
+            TECHNICAL <span class="text-brand-blue">SKILLS</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+          <p class="text-neutral-400 text-sm md:text-base font-bold mt-4 uppercase tracking-wide">
+            Highly specialized focus across modern front-end design, prompt systems structures, and growth automation mechanisms.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <!-- Category 1: Website Building -->
+          <div class="group bg-[#0c0c0c] border-2 border-neutral-800 p-6 rounded-none relative overflow-hidden flex flex-col justify-between min-h-[280px] hover:border-white transition-all cursor-default text-left">
+            <div>
+              <div class="flex justify-between items-center border-b border-neutral-800 pb-3 mb-4 select-none">
+                <span class="text-xs font-black text-brand-blue uppercase tracking-widest italic">Website Building</span>
+                <i data-lucide="code" class="w-4 h-4 text-neutral-500 group-hover:text-brand-blue transition-colors"></i>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">HTML</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">AI Website Building</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Prompt Engineering</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">AI-Powered Development</span>
+              </div>
+            </div>
+            <div class="text-brand-blue font-mono font-bold text-[9px] mt-6 select-none opacity-0 group-hover:opacity-100 uppercase tracking-widest transition-opacity">
+              BG MODULE READY
+            </div>
+          </div>
+
+          <!-- Category 2: AI Generalist -->
+          <div class="group bg-[#0c0c0c] border-2 p-6 rounded-none relative overflow-hidden flex flex-col justify-between min-h-[280px] hover:border-white transition-all cursor-default text-left border-brand-blue sm:col-span-2 md:col-span-1 lg:col-span-2">
+            <div class="absolute inset-0 bg-brand-blue/[0.02] pointer-events-none z-0"></div>
+            <div>
+              <div class="flex justify-between items-center border-b border-neutral-800 pb-3 mb-4 select-none">
+                <span class="text-xs font-black text-brand-blue uppercase tracking-widest italic">★ AI Generalist</span>
+                <i data-lucide="code" class="w-4 h-4 text-neutral-500 group-hover:text-brand-blue transition-colors"></i>
+              </div>
+              
+              <div class="flex flex-col gap-4 relative z-10 w-full">
+                <div>
+                  <span class="text-[10px] uppercase font-black tracking-wider text-brand-blue block mb-2 select-none">Featured tools</span>
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    <span class="px-3.5 py-1.5 rounded-none text-xs font-black bg-brand-blue text-[#0a0a0a] border-2 border-brand-blue flex items-center gap-1.5 select-all">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5 animate-pulse text-[#0a0a0a] shrink-0"></i>Claude
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-none text-xs font-black bg-brand-blue text-[#0a0a0a] border-2 border-brand-blue flex items-center gap-1.5 select-all">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5 animate-pulse text-[#0a0a0a] shrink-0"></i>Antigravity
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="text-[10px] uppercase font-black tracking-wider text-neutral-500 block mb-2 select-none">General AI tools Stacked</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">ChatGPT</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">Gemini</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">Perplexity</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">NotebookLM</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">Midjourney</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">ElevenLabs</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">Cursor</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">Lovable</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">Bolt</span>
+                    <span class="px-2.5 py-1 text-[11px] rounded-none bg-neutral-950 border border-neutral-800 text-neutral-400 font-bold uppercase tracking-wide text-nowrap">Replit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-brand-blue font-mono font-bold text-[9px] mt-6 select-none opacity-0 group-hover:opacity-100 uppercase tracking-widest transition-opacity">
+              BG MODULE READY
+            </div>
+          </div>
+
+          <!-- Category 3: Content Creation -->
+          <div class="group bg-[#0c0c0c] border-2 border-neutral-800 p-6 rounded-none relative overflow-hidden flex flex-col justify-between min-h-[280px] hover:border-white transition-all cursor-default text-left">
+            <div>
+              <div class="flex justify-between items-center border-b border-neutral-800 pb-3 mb-4 select-none">
+                <span class="text-xs font-black text-brand-blue uppercase tracking-widest italic">Content Creation</span>
+                <i data-lucide="code" class="w-4 h-4 text-neutral-500 group-hover:text-brand-blue transition-colors"></i>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">YouTube</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Editing</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Branding</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Storytelling</span>
+              </div>
+            </div>
+            <div class="text-brand-blue font-mono font-bold text-[9px] mt-6 select-none opacity-0 group-hover:opacity-100 uppercase tracking-widest transition-opacity">
+              BG MODULE READY
+            </div>
+          </div>
+
+          <!-- Category 4: Entrepreneurship -->
+          <div class="group bg-[#0c0c0c] border-2 border-neutral-800 p-6 rounded-none relative overflow-hidden flex flex-col justify-between min-h-[280px] hover:border-white transition-all cursor-default text-left">
+            <div>
+              <div class="flex justify-between items-center border-b border-neutral-800 pb-3 mb-4 select-none">
+                <span class="text-xs font-black text-brand-blue uppercase tracking-widest italic">Entrepreneurship</span>
+                <i data-lucide="code" class="w-4 h-4 text-neutral-500 group-hover:text-brand-blue transition-colors"></i>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Product Building</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Marketing</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Automation</span>
+                <span class="px-3.5 py-1.5 rounded-none text-xs bg-[#0a0a0a] border-l-2 border-brand-blue font-bold uppercase tracking-wide text-white border-y border-r border-neutral-800 group-hover:border-brand-blue transition-all">Business Systems</span>
+              </div>
+            </div>
+            <div class="text-brand-blue font-mono font-bold text-[9px] mt-6 select-none opacity-0 group-hover:opacity-100 uppercase tracking-widest transition-opacity">
+              BG MODULE READY
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 7. PROJECTS SECTION -->
+    <section id="projects" class="relative bg-[#0a0a0a] border-t-8 border-brand-blue pt-24 pb-24 z-40">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center max-w-3xl mx-auto mb-16 select-none">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Creative Case Studies
+          </span>
+          <h2 class="font-display font-black uppercase italic tracking-tighter text-4xl sm:text-5xl lg:text-6xl text-white mt-4">
+            FEATURED <span class="text-brand-blue">DEVELOPMENT</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+          <p class="text-neutral-400 text-sm md:text-base font-bold mt-4 uppercase tracking-wide">
+            Scroll past each sticky showcase card to experience their full high-performance mockups.
+          </p>
+        </div>
+
+        <div class="relative flex flex-col items-center gap-12">
+          
+          <!-- Project 1 -->
+          <div class="w-full max-w-5xl rounded-none border-2 border-neutral-800 hover:border-brand-blue transition-colors duration-500 bg-[#0c0c0c] flex flex-col lg:grid lg:grid-cols-12 gap-8 p-6 md:p-10 text-left relative overflow-hidden group">
+            <div class="lg:col-span-5 flex flex-col justify-between gap-6 relative z-10 animate-fade">
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="font-display font-black text-3xl md:text-4xl text-neutral-600 group-hover:text-brand-blue duration-300 italic">01</span>
+                  <span class="text-[9px] font-black uppercase bg-[#0a0a0a] text-brand-blue border border-brand-blue/30 px-3 py-1 rounded-none select-none tracking-widest">AI Tools</span>
+                </div>
+                <h3 class="font-display font-black text-2xl md:text-3.5xl text-white leading-none uppercase italic tracking-tighter group-hover:text-brand-blue transition-colors duration-300">
+                  BG FAME (Digital Core)
+                </h3>
+                <p class="text-[10px] font-mono font-black text-neutral-500 uppercase tracking-widest mt-1">AI Tools & Educational Suite</p>
+                <p class="text-xs md:text-sm text-neutral-400 leading-relaxed font-bold font-sans mt-4">
+                  A digital flagship ecosystem delivering cutting-edge AI utility systems, workshops, and courses designed to transform developers and creators into scalable AI Generalists.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-4 pt-6 border-t border-neutral-800 mt-auto">
+                <a href="mailto:bgfameai7@gmail.com?subject=Collaborate on BG FAME" class="inline-flex items-center gap-1.5 text-xs font-black tracking-widest text-[#A3A3A3] border-b-2 border-neutral-700 hover:text-white hover:border-brand-blue transition-all cursor-pointer">
+                  Inquire Client
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+                <a href="https://bhavyagoel.com/bgfame" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-black tracking-widest text-slate-950 bg-brand-blue border-2 border-brand-blue hover:bg-transparent hover:text-brand-blue transition-all block duration-300 cursor-pointer text-nowrap">
+                  Live Project
+                </a>
+              </div>
+            </div>
+
+            <!-- Screenshot Columns Grid -->
+            <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-12 gap-4 relative z-10 w-full min-h-[300px]">
+              <div class="md:col-span-5 h-[340px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85" alt="Showcase column left" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+              </div>
+              <div class="md:col-span-7 flex flex-col gap-4 h-[340px]">
+                <div class="h-[162px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                  <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png&w=1280&q=85" alt="Showcase column top right" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+                </div>
+                <div class="h-[162px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                  <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png&w=1280&q=85" alt="Showcase column bottom right" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="w-full max-w-5xl rounded-none border-2 border-neutral-800 hover:border-brand-blue transition-colors duration-500 bg-[#0c0c0c] flex flex-col lg:grid lg:grid-cols-12 gap-8 p-6 md:p-10 text-left relative overflow-hidden group">
+            <div class="lg:col-span-5 flex flex-col justify-between gap-6 relative z-10">
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="font-display font-black text-3xl md:text-4xl text-neutral-600 group-hover:text-brand-blue duration-300 italic">02</span>
+                  <span class="text-[9px] font-black uppercase bg-[#0a0a0a] text-brand-blue border border-brand-blue/30 px-3 py-1 rounded-none select-none tracking-widest">Agency</span>
+                </div>
+                <h3 class="font-display font-black text-2xl md:text-3.5xl text-white leading-none uppercase italic tracking-tighter group-hover:text-brand-blue transition-colors duration-300">
+                  Bhavy Website Solutions
+                </h3>
+                <p class="text-[10px] font-mono font-black text-neutral-500 uppercase tracking-widest mt-1">Web-App Development & AI Solutions</p>
+                <p class="text-xs md:text-sm text-neutral-400 leading-relaxed font-bold font-sans mt-4">
+                  High-end design agency translating ideas into lightning-fast portfolios, complete high-fidelity web applications, and custom integrated automation frameworks for high-performing clients.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-4 pt-6 border-t border-neutral-800 mt-auto">
+                <a href="mailto:bhavywebsitesolutions@gmail.com?subject=Collaborate on Bhavy Website Solutions" class="inline-flex items-center gap-1.5 text-xs font-black tracking-widest text-[#A3A3A3] border-b-2 border-neutral-700 hover:text-white hover:border-brand-blue transition-all cursor-pointer">
+                  Inquire Client
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+                <a href="https://bhavyagoel.com/company" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-black tracking-widest text-slate-950 bg-brand-blue border-2 border-brand-blue hover:bg-transparent hover:text-brand-blue transition-all block duration-300 cursor-pointer text-nowrap">
+                  Live Project
+                </a>
+              </div>
+            </div>
+
+            <!-- Screenshot Columns Grid -->
+            <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-12 gap-4 relative z-10 w-full min-h-[300px]">
+              <div class="md:col-span-5 h-[340px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f.png&w=1280&q=85" alt="Showcase column left" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+              </div>
+              <div class="md:col-span-7 flex flex-col gap-4 h-[340px]">
+                <div class="h-[162px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                  <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1.png&w=1280&q=85" alt="Showcase column top right" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+                </div>
+                <div class="h-[162px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                  <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea.png&w=1280&q=85" alt="Showcase column bottom right" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="w-full max-w-5xl rounded-none border-2 border-neutral-800 hover:border-brand-blue transition-colors duration-500 bg-[#0c0c0c] flex flex-col lg:grid lg:grid-cols-12 gap-8 p-6 md:p-10 text-left relative overflow-hidden group">
+            <div class="lg:col-span-5 flex flex-col justify-between gap-6 relative z-10">
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="font-display font-black text-3xl md:text-4xl text-neutral-600 group-hover:text-brand-blue duration-300 italic">03</span>
+                  <span class="text-[9px] font-black uppercase bg-[#0a0a0a] text-brand-blue border border-brand-blue/30 px-3 py-1 rounded-none select-none tracking-widest">Education</span>
+                </div>
+                <h3 class="font-display font-black text-2xl md:text-3.5xl text-white leading-none uppercase italic tracking-tighter group-hover:text-brand-blue transition-colors duration-300">
+                  AI Workshops & Masterclasses
+                </h3>
+                <p class="text-[10px] font-mono font-black text-neutral-500 uppercase tracking-widest mt-1">Practical Skills Certification</p>
+                <p class="text-xs md:text-sm text-neutral-400 leading-relaxed font-bold font-sans mt-4">
+                  Interactive, intensive, and handcraft workshops demonstrating practical AI utilization. We guide groups step-by-step from foundational rules to building end-to-end applications using automated systems.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap gap-4 pt-6 border-t border-neutral-800 mt-auto">
+                <a href="mailto:bgfameai7@gmail.com?subject=Collaborate on AI Workshops" class="inline-flex items-center gap-1.5 text-xs font-black tracking-widest text-[#A3A3A3] border-b-2 border-neutral-700 hover:text-white hover:border-brand-blue transition-all cursor-pointer">
+                  Inquire Client
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+                <a href="https://bhavyagoel.com/bgfame" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-black tracking-widest text-slate-950 bg-brand-blue border-2 border-brand-blue hover:bg-transparent hover:text-brand-blue transition-all block duration-300 cursor-pointer text-nowrap">
+                  Live Project
+                </a>
+              </div>
+            </div>
+
+            <!-- Screenshot Columns Grid -->
+            <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-12 gap-4 relative z-10 w-full min-h-[300px]">
+              <div class="md:col-span-5 h-[340px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f.png&w=1280&q=85" alt="Showcase column left" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+              </div>
+              <div class="md:col-span-7 flex flex-col gap-4 h-[340px]">
+                <div class="h-[162px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                  <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b.png&w=1280&q=85" alt="Showcase column top right" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+                </div>
+                <div class="h-[162px] overflow-hidden rounded-none border border-neutral-800 group-hover:border-neutral-700 transition-colors">
+                  <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055818_9d062121-ad7e-46b9-999a-1a6a692ef1ee.png&w=1280&q=85" alt="Showcase column bottom right" class="w-full h-full object-cover grayscale group-hover:grayscale-0 duration-700 group-hover:scale-105" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 8. AI JOURNEY TIMELINE -->
+    <section id="journey" class="relative border-b border-neutral-800 bg-[#050505] py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Evolutionary Timeline
+          </span>
+          <h2 class="font-display font-black uppercase italic tracking-tighter text-4xl sm:text-5xl lg:text-6xl text-white mt-4">
+            MY <span class="text-brand-blue">AI JOURNEY</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+          <p class="text-neutral-400 text-sm md:text-base font-bold mt-4 uppercase tracking-wide">
+            From coding initial basic structures to forming automated model networks. The road maps my growth process perfectly.
+          </p>
+        </div>
+
+        <div class="relative max-w-3xl mx-auto pl-6 sm:pl-0">
+          <div class="absolute top-0 bottom-0 left-0 sm:left-1/2 w-[2px] bg-neutral-800 pointer-events-none"></div>
+
+          <div class="flex flex-col gap-12 sm:gap-16">
+            
+            <!-- Nodes 1 -->
+            <div class="relative w-full flex flex-col sm:flex-row items-start sm:justify-start">
+              <div class="absolute top-1.5 left-[-30px] sm:left-1/2 sm:-translate-x-1/2 w-[14px] h-[14px] rounded-none bg-[#0a0a0a] border-2 border-brand-blue shadow-[0_0_12px_rgba(250,204,21,0.6)] z-20 flex items-center justify-center">
+                <div class="w-[4px] h-[4px] bg-brand-blue"></div>
+              </div>
+              <div class="w-full sm:w-[45%] flex flex-col gap-2 sm:text-right sm:items-end text-left items-start">
+                <span class="font-display font-black text-3xl md:text-4xl text-brand-blue uppercase italic select-none">2025</span>
+                <h3 class="font-display font-black text-xl text-white leading-tight uppercase italic tracking-tight">The Web Builder Era</h3>
+                <span class="text-[10px] font-black text-[#0a0a0a] bg-brand-blue border-2 border-brand-blue px-3 py-1 rounded-none uppercase tracking-widest inline-block w-fit mt-1">Laying the Foundations</span>
+                <p class="text-xs md:text-sm text-neutral-400 leading-relaxed font-bold mt-2 max-w-sm">
+                  Established a deep foothold in digital product architecture, translating business ideas into custom highly optimized high-performance web systems and starting Bhavy Website Solutions.
+                </p>
+              </div>
+            </div>
+
+            <!-- Nodes 2 -->
+            <div class="relative w-full flex flex-col sm:flex-row items-start sm:justify-end">
+              <div class="absolute top-1.5 left-[-30px] sm:left-1/2 sm:-translate-x-1/2 w-[14px] h-[14px] rounded-none bg-[#0a0a0a] border-2 border-brand-blue shadow-[0_0_12px_rgba(250,204,21,0.6)] z-20 flex items-center justify-center">
+                <div class="w-[4px] h-[4px] bg-brand-blue"></div>
+              </div>
+              <div class="w-full sm:w-[45%] flex flex-col gap-2 sm:text-left sm:items-start text-left items-start">
+                <span class="font-display font-black text-3xl md:text-4xl text-brand-blue uppercase italic select-none">2026</span>
+                <h3 class="font-display font-black text-xl text-white leading-tight uppercase italic tracking-tight">AI Generalist Evolution</h3>
+                <span class="text-[10px] font-black text-[#0a0a0a] bg-brand-blue border-2 border-brand-blue px-3 py-1 rounded-none uppercase tracking-widest inline-block w-fit mt-1">Pioneering AI Collaboration</span>
+                <p class="text-xs md:text-sm text-neutral-400 leading-relaxed font-bold mt-2 max-w-sm">
+                  Pivoted to a full AI-Generalist strategy. Scaled BG FAME, introducing advanced developer workshops, custom GPT systems, prompt pipelines, and educating teams globally on modern AI stacks.
+                </p>
+              </div>
+            </div>
+
+            <!-- Nodes 3 -->
+            <div class="relative w-full flex flex-col sm:flex-row items-start sm:justify-start">
+              <div class="absolute top-1.5 left-[-30px] sm:left-1/2 sm:-translate-x-1/2 w-[14px] h-[14px] rounded-none bg-[#0a0a0a] border-2 border-brand-blue shadow-[0_0_12px_rgba(250,204,21,0.6)] z-20 flex items-center justify-center">
+                <div class="w-[4px] h-[4px] bg-brand-blue"></div>
+              </div>
+              <div class="w-full sm:w-[45%] flex flex-col gap-2 sm:text-right sm:items-end text-left items-start">
+                <span class="font-display font-black text-3xl md:text-4xl text-brand-blue uppercase italic select-none">Future</span>
+                <h3 class="font-display font-black text-xl text-white leading-tight uppercase italic tracking-tight">Autonomous Scale</h3>
+                <span class="text-[10px] font-black text-[#0a0a0a] bg-brand-blue border-2 border-brand-blue px-3 py-1 rounded-none uppercase tracking-widest inline-block w-fit mt-1">The Next Technical Frontier</span>
+                <p class="text-xs md:text-sm text-neutral-400 leading-relaxed font-bold mt-2 max-w-sm">
+                  Expanding into autonomous multi-agent micro-SaaS creation, decentralized systems development, and building self-healing intelligent workspaces to completely transform business output.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 9. CERTIFICATES -->
+    <section id="certificates" class="relative border-b border-neutral-800 bg-[#0c0c0c] py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Technical Proofs
+          </span>
+          <h2 class="font-display font-black uppercase italic tracking-tighter text-4xl sm:text-5xl lg:text-6xl text-white mt-4">
+            PREMIUM <span class="text-brand-blue">CERTIFICATIONS</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+          <p class="text-neutral-400 text-sm md:text-base font-bold mt-4 uppercase tracking-wide">
+            Rigorous qualifications verifying state-of-the-art proficiency inside full-stack development and automation frameworks.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          
+          <!-- Cert 1 -->
+          <div class="group relative rounded-none overflow-hidden bg-[#0a0a0a] border-2 border-neutral-800 hover:border-brand-blue transition-all duration-300 shadow-xl flex flex-col justify-between cursor-default text-left">
+            <div class="relative w-full h-52 overflow-hidden bg-black border-b-2 border-neutral-800">
+              <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=80" alt="Advanced AI Prompt Engineer Specialist" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0" />
+              <span class="absolute top-3 left-3 bg-black border-l-2 border-brand-blue text-[9px] font-black tracking-widest uppercase text-white px-3 py-1 select-none">★ AI Core</span>
+            </div>
+            <div class="p-5 flex flex-col justify-between flex-1 gap-3">
+              <div>
+                <h3 class="font-display font-black text-base text-white leading-tight group-hover:text-brand-blue transition-colors uppercase italic tracking-tight">Advanced AI Prompt Engineer Specialist</h3>
+                <p class="text-xs text-neutral-400 font-bold uppercase tracking-wider mt-1.5">BG FAME Certification Institute</p>
+              </div>
+              <div class="flex items-center justify-between mt-4 border-t border-neutral-800 pt-3 select-none">
+                <span class="text-[10px] font-mono font-bold text-neutral-500 uppercase">Jan 2026</span>
+                <span class="inline-flex items-center gap-1.5 text-[10px] font-black text-brand-blue bg-brand-blue/10 border-2 border-brand-blue/20 px-3 py-1 rounded-none uppercase tracking-widest">
+                  <i data-lucide="award" class="w-3.5 h-3.5"></i> Verified
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cert 2 -->
+          <div class="group relative rounded-none overflow-hidden bg-[#0a0a0a] border-2 border-neutral-800 hover:border-brand-blue transition-all duration-300 shadow-xl flex flex-col justify-between cursor-default text-left">
+            <div class="relative w-full h-52 overflow-hidden bg-black border-b-2 border-neutral-800">
+              <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=500&q=80" alt="Professional Web Applications Architect" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0" />
+              <span class="absolute top-3 left-3 bg-black border-l-2 border-brand-blue text-[9px] font-black tracking-widest uppercase text-white px-3 py-1 select-none">★ Design Ops</span>
+            </div>
+            <div class="p-5 flex flex-col justify-between flex-1 gap-3">
+              <div>
+                <h3 class="font-display font-black text-base text-white leading-tight group-hover:text-brand-blue transition-colors uppercase italic tracking-tight">Professional Web Applications Architect</h3>
+                <p class="text-xs text-neutral-400 font-bold uppercase tracking-wider mt-1.5">Bhavy Website Solutions Design Group</p>
+              </div>
+              <div class="flex items-center justify-between mt-4 border-t border-neutral-800 pt-3 select-none">
+                <span class="text-[10px] font-mono font-bold text-neutral-500 uppercase">Aug 2025</span>
+                <span class="inline-flex items-center gap-1.5 text-[10px] font-black text-brand-blue bg-brand-blue/10 border-2 border-brand-blue/20 px-3 py-1 rounded-none uppercase tracking-widest">
+                  <i data-lucide="award" class="w-3.5 h-3.5"></i> Verified
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cert 3 -->
+          <div class="group relative rounded-none overflow-hidden bg-[#0a0a0a] border-2 border-neutral-800 hover:border-brand-blue transition-all duration-300 shadow-xl flex flex-col justify-between cursor-default text-left">
+            <div class="relative w-full h-52 overflow-hidden bg-black border-b-2 border-neutral-800">
+              <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80" alt="AI Generalist Master certification" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale group-hover:grayscale-0" />
+              <span class="absolute top-3 left-3 bg-black border-l-2 border-brand-blue text-[9px] font-black tracking-widest uppercase text-white px-3 py-1 select-none">★ System Ops</span>
+            </div>
+            <div class="p-5 flex flex-col justify-between flex-1 gap-3">
+              <div>
+                <h3 class="font-display font-black text-base text-white leading-tight group-hover:text-brand-blue transition-colors uppercase italic tracking-tight">AI Generalist Master certification</h3>
+                <p class="text-xs text-neutral-400 font-bold uppercase tracking-wider mt-1.5">Decentralized Tech Alliance</p>
+              </div>
+              <div class="flex items-center justify-between mt-4 border-t border-neutral-800 pt-3 select-none">
+                <span class="text-[10px] font-mono font-bold text-neutral-500 uppercase">May 2026</span>
+                <span class="inline-flex items-center gap-1.5 text-[10px] font-black text-brand-blue bg-brand-blue/10 border-2 border-brand-blue/20 px-3 py-1 rounded-none uppercase tracking-widest">
+                  <i data-lucide="award" class="w-3.5 h-3.5"></i> Verified
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 10. SOCIALS / YOUTUBE -->
+    <section id="socials" class="relative border-b border-neutral-800 bg-[#050505] py-24">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Creative Broadcasting
+          </span>
+          <h2 class="font-display font-black uppercase italic tracking-tighter text-4xl sm:text-5xl lg:text-6xl text-white mt-4">
+            YOUTUBE <span class="text-brand-blue">CHANNELS</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+          <p class="text-neutral-400 text-sm md:text-base font-bold mt-4 uppercase tracking-wide">
+            Broadcasting deep technical tutorials and fun entertainment networks to build communities organically worldwide.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          
+          <!-- Channel 1: Bhavya Goel (Main) -->
+          <div class="group rounded-none p-6 sm:p-10 bg-[#0a0a0a] border-2 border-neutral-800 hover:border-red-500/80 hover:shadow-[0_0_30px_rgba(239,68,68,0.1)] flex flex-col justify-between h-[300px] transition-all duration-500 cursor-default text-left">
+            <div class="flex justify-between items-start select-none">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-none bg-red-600 flex items-center justify-center text-[#0a0a0a] font-black italic">Y</div>
+                <div>
+                  <h3 class="font-display font-black text-white text-xl uppercase italic">Bhavya Goel (Main)</h3>
+                  <p class="text-[10px] uppercase font-black tracking-widest text-brand-blue mt-0.5">Tech & Programming</p>
+                </div>
+              </div>
+              <i data-lucide="flame" class="w-5 h-5 text-red-500 shrink-0 group-hover:scale-110 transition-transform"></i>
+            </div>
+
+            <p class="text-xs text-neutral-400 leading-relaxed font-bold my-4">
+              I share high-fidelity programming layouts, full developer setup guides, deep prompt workflow walkthroughs, and elite client agency methods.
+            </p>
+
+            <div class="border-t border-neutral-800 pt-4 flex justify-between items-center">
+              <span class="text-xs text-neutral-400 font-mono font-bold">@b.havyag</span>
+              <a href="https://youtube.com/@b.havyag" target="_blank" rel="noreferrer" class="font-display text-xs font-black uppercase tracking-widest bg-red-600 border-2 border-red-600 hover:bg-transparent text-[#0a0a0a] hover:text-red-500 px-6 py-2.5 rounded-none duration-300 inline-flex items-center gap-1.5 cursor-pointer">
+                Subscribe
+                <i data-lucide="video" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Channel 2: Fun With The Talent -->
+          <div class="group rounded-none p-6 sm:p-10 bg-[#0a0a0a] border-2 border-neutral-800 hover:border-emerald-500/80 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] flex flex-col justify-between h-[300px] transition-all duration-500 cursor-default text-left">
+            <div class="flex justify-between items-start select-none">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-none bg-emerald-600 flex items-center justify-center text-[#0a0a0a] font-black italic">FT</div>
+                <div>
+                  <h3 class="font-display font-black text-white text-xl uppercase italic">Fun With The Talent</h3>
+                  <p class="text-[10px] uppercase font-black tracking-widest text-brand-blue mt-0.5">Creative Studio</p>
+                </div>
+              </div>
+              <i data-lucide="tv" class="w-5 h-5 text-emerald-500 shrink-0 group-hover:scale-110 transition-transform animate-pulse"></i>
+            </div>
+
+            <p class="text-xs text-neutral-400 leading-relaxed font-bold my-4">
+              Our digital playground hosting live experiments, visual showcases, interactive coding sessions, and highly engaging entertainment videos.
+            </p>
+
+            <div class="border-t border-neutral-800 pt-4 flex justify-between items-center">
+              <span class="text-xs text-neutral-400 font-mono font-bold">@funwiththetalent</span>
+              <a href="https://youtube.com/@funwiththetalent" target="_blank" rel="noreferrer" class="font-display text-xs font-black uppercase tracking-widest bg-emerald-600 border-2 border-emerald-600 hover:bg-transparent text-[#0a0a0a] hover:text-emerald-500 px-6 py-2.5 rounded-none duration-300 inline-flex items-center gap-1.5 cursor-pointer text-nowrap">
+                Explore Studio
+                <i data-lucide="users" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 11. CONTACT SECTION -->
+    <section id="contact" class="relative border-b border-neutral-800 bg-[#0a0a0a] py-24 overflow-hidden">
+      <div class="w-full max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16 select-none">
+          <span class="text-[10px] uppercase font-black tracking-widest text-[#0a0a0a] bg-brand-blue px-3 py-1.5">
+            // Creative Consultation
+          </span>
+          <h2 class="font-display font-black text-4xl sm:text-5xl md:text-6xl text-white tracking-tighter uppercase italic leading-none mt-4 text-center w-full block animate-[pulse_6s_infinite]">
+            LET'S BUILD SOMETHING <span class="hero-heading leading-tight">AMAZING</span>
+          </h2>
+          <div class="w-16 h-1 mt-4 mx-auto bg-brand-blue"></div>
+          <p class="text-neutral-400 text-sm md:text-base font-bold mt-4 uppercase tracking-wide">
+            Connect directly with me, my web development agency, or BG FAME AI consulting pipelines.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          
+          <!-- Card 1: Personal Contact -->
+          <div class="group bg-[#0a0a0a] border-2 border-neutral-800 border-l-4 border-l-brand-blue p-6 sm:p-8 flex flex-col justify-between items-start min-h-[265px] relative overflow-hidden text-white hover:border-brand-blue transition-all duration-300 cursor-default text-left animate-fade">
+            <div class="flex justify-between items-start w-full border-b border-neutral-800 pb-4 select-none">
+              <div>
+                <span class="text-[10px] uppercase font-black tracking-wider text-brand-blue">Personal Contact</span>
+                <h3 class="font-display font-black text-xl mt-1 uppercase italic">Bhavya Goel</h3>
+              </div>
+              <i data-lucide="file-badge" class="w-5 h-5 text-brand-blue animate-pulse shrink-0"></i>
+            </div>
+            <div class="my-5 w-full">
+              <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-black block">Primary Identity Position</span>
+              <p class="text-xs text-white mt-1 font-bold uppercase tracking-wide">AI Generalist, Content Builder & Founder</p>
+            </div>
+            <div class="w-full mt-auto">
+              <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-black block select-none">Email Anchor</span>
+              <a href="mailto:bgoeldefender@gmail.com?subject=Collaborate with Bhavya Goel" class="font-mono text-xs md:text-sm text-brand-blue hover:underline font-black uppercase tracking-wider block mt-1 select-all">
+                bgoeldefender@gmail.com
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2: Agency Consultation -->
+          <div class="group bg-[#0a0a0a] border-2 border-neutral-800 border-l-4 border-l-brand-blue p-6 sm:p-8 flex flex-col justify-between items-start min-h-[265px] relative overflow-hidden text-white hover:border-brand-blue transition-all duration-300 cursor-default text-left">
+            <div class="flex justify-between items-start w-full border-b border-neutral-800 pb-4 select-none">
+              <div>
+                <span class="text-[10px] uppercase font-black tracking-wider text-brand-blue">Agency Consultation</span>
+                <h3 class="font-display font-black text-xl mt-1 uppercase italic">Bhavy Website Solutions</h3>
+              </div>
+              <i data-lucide="check-circle" class="w-5 h-5 text-brand-blue shrink-0"></i>
+            </div>
+            <div class="my-5 w-full">
+              <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-black block">Solutions pipeline</span>
+              <p class="text-xs text-white mt-1 font-bold uppercase tracking-wide">Websites, customized apps, and automated digital flows.</p>
+            </div>
+            <div class="w-full mt-auto">
+              <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-black block select-none">Email Anchor</span>
+              <a href="mailto:bhavywebsitesolutions@gmail.com?subject=Inquire about Bhavy Website Solutions" class="font-mono text-xs md:text-sm text-brand-blue hover:underline font-black uppercase tracking-wider block mt-1 select-all">
+                bhavywebsitesolutions@gmail.com
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3: BG FAME -->
+          <div class="group bg-[#0a0a0a] border-2 border-neutral-800 border-l-4 border-l-brand-blue p-6 sm:p-8 flex flex-col justify-between items-start min-h-[265px] relative overflow-hidden text-white hover:border-brand-blue transition-all duration-300 cursor-default text-left">
+            <div class="flex justify-between items-start w-full border-b border-neutral-800 pb-4 select-none">
+              <div>
+                <span class="text-[10px] uppercase font-black tracking-wider text-[#0a0a0a] bg-brand-blue px-2 py-0.5">Education & Speaking</span>
+                <h3 class="font-display font-black text-xl mt-1.5 uppercase italic">BG FAME (AI Core)</h3>
+              </div>
+              <i data-lucide="award" class="w-5 h-5 text-brand-blue shrink-0"></i>
+            </div>
+            <div class="my-5 w-full">
+              <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-black block">Masterclass Pipeline</span>
+              <p class="text-xs text-white mt-1 font-bold uppercase tracking-wide">Interactive AI seminars, tool kits, and team certifications.</p>
+            </div>
+            <div class="w-full mt-auto">
+              <span class="text-[10px] text-neutral-500 uppercase tracking-widest font-black block select-none">Email Anchor</span>
+              <a href="mailto:bgfameai7@gmail.com?subject=Inquire about BG FAME AI Workshops" class="font-mono text-xs md:text-sm text-brand-blue hover:underline font-black uppercase tracking-wider block mt-1 select-all">
+                bgfameai7@gmail.com
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="relative bg-[#050505] py-16 px-6 md:px-12 border-t-2 border-neutral-800 select-none text-center">
+      <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center gap-6">
+        <div class="font-display flex flex-col items-center gap-1.5">
+          <div class="relative w-12 h-12 rounded-none bg-brand-blue flex items-center justify-center font-black text-[#0a0a0a] text-lg border-2 border-brand-blue shadow-lg">
+            BG
+            <div class="absolute -inset-1 border border-brand-blue/30 animate-pulse pointer-events-none"></div>
+          </div>
+          <h4 class="font-black text-white text-base tracking-widest uppercase mt-4 italic">BHAVYA GOEL</h4>
+          <p class="text-[10px] uppercase font-bold text-neutral-400 select-all tracking-wider font-mono px-4 max-w-2xl text-center mx-auto mt-2">
+            AI Generalist • Founder of Bhavy Website Solutions • Founder of BG FAME • Website Builder • AI Educator • Content Creator
+          </p>
+        </div>
+
+        <div class="w-12 h-[2px] bg-neutral-800 my-2"></div>
+
+        <p class="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">
+          Built with passion, AI, and raw scientific curiosity. © 2026 Bhavya Goel.
+        </p>
+      </div>
+    </footer>
+
+
+    <script>
+      // Initialize Lucide Icons globally
+      lucide.createIcons();
+
+      // Mobile responsive navigation sidebar
+      let mobileDrawerOpen = false;
+      const drawerEl = document.getElementById('mobile-drawer');
+      const menuIconEl = document.getElementById('menu-icon');
+
+      function toggleMobileMenu() {
+        mobileDrawerOpen = !mobileDrawerOpen;
+        if (mobileDrawerOpen) {
+          drawerEl.classList.remove('translate-x-full');
+          drawerEl.classList.add('translate-x-0');
+          menuIconEl.setAttribute('data-lucide', 'x');
+        } else {
+          drawerEl.classList.remove('translate-x-0');
+          drawerEl.classList.add('translate-x-full');
+          menuIconEl.setAttribute('data-lucide', 'menu');
         }
+        lucide.createIcons();
+      }
+
+      function scrollToId(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (mobileDrawerOpen) {
+          toggleMobileMenu();
+        }
+      }
+
+      // Navbar visual trigger offsets on scrolling
+      const navbarEl = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (window.pageYOffset / totalHeight) * 100;
+        document.getElementById('scroll-progress').style.width = progress + '%';
+
+        if (window.scrollY > 50) {
+          navbarEl.classList.remove('bg-transparent', 'border-transparent');
+          navbarEl.classList.add('bg-[#0a0a0a]/95', 'border-b-2', 'border-neutral-800');
+        } else {
+          navbarEl.classList.remove('bg-[#0a0a0a]/95', 'border-b-2', 'border-neutral-800');
+          navbarEl.classList.add('bg-transparent', 'border-transparent');
+        }
+      }, { passive: true });
+
+
+      // Typewriter ticking configuration
+      const identities = [
+        'AI Generalist',
+        'Founder',
+        'AI Educator',
+        'Website Builder',
+        'Content Creator',
+        'Entrepreneur',
+        'Future Tech Creator'
+      ];
+      let identityIndex = 0;
+      let textCharIndex = 0;
+      let isDeletingText = false;
+      let typingWaitSpeed = 120;
+      const typewriterEl = document.getElementById('typewriter');
+
+      function tickTypewriter() {
+        const fullWordText = identities[identityIndex];
+
+        if (isDeletingText) {
+          typewriterEl.textContent = fullWordText.substring(0, textCharIndex - 1);
+          textCharIndex--;
+          typingWaitSpeed = 50;
+        } else {
+          typewriterEl.textContent = fullWordText.substring(0, textCharIndex + 1);
+          textCharIndex++;
+          typingWaitSpeed = 100;
+        }
+
+        if (!isDeletingText && textCharIndex === fullWordText.length) {
+          isDeletingText = true;
+          typingWaitSpeed = 1800;
+        } else if (isDeletingText && textCharIndex === 0) {
+          isDeletingText = false;
+          identityIndex = (identityIndex + 1) % identities.length;
+          typingWaitSpeed = 150;
+        }
+
+        setTimeout(tickTypewriter, typingWaitSpeed);
+      }
+      setTimeout(tickTypewriter, 1000);
+
+
+      // Count-up Statistics widgets
+      const statsElements = document.querySelectorAll('[data-val]');
+      const statsObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const targetVal = parseInt(el.getAttribute('data-val'), 10);
+            const suffix = el.getAttribute('data-suffix') || '';
+            let currentVal = 0;
+            const increment = Math.max(1, Math.floor(targetVal / 40));
+            const timer = setInterval(() => {
+              currentVal += increment;
+              if (currentVal >= targetVal) {
+                el.textContent = targetVal.toLocaleString() + suffix;
+                clearInterval(timer);
+              } else {
+                el.textContent = currentVal.toLocaleString() + suffix;
+              }
+            }, 30);
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      statsElements.forEach(el => statsObserver.observe(el));
+
+
+      // Interactive Particle physics canvas simulator
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      let pWidth = (canvas.width = window.innerWidth);
+      let pHeight = (canvas.height = window.innerHeight);
+
+      const particles = [];
+      const particleCount = Math.min(60, Math.floor((pWidth * pHeight) / 25000));
+      const mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, radius: 180 };
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * pWidth;
+          this.y = Math.random() * pHeight;
+          this.vx = (Math.random() - 0.5) * 0.4;
+          this.vy = (Math.random() - 0.5) * 0.4;
+          this.radius = Math.random() * 2 + 1;
+          this.alpha = Math.random() * 0.5 + 0.2;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < 0 || this.x > pWidth) this.vx = -this.vx;
+          if (this.y < 0 || this.y > pHeight) this.vy = -this.vy;
+
+          if (mouse.x > -1000) {
+            const dx = mouse.x - this.x;
+            const dy = mouse.y - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+              const force = (mouse.radius - dist) / mouse.radius;
+              this.x -= (dx / dist) * force * 0.6;
+              this.y -= (dy / dist) * force * 0.6;
+            }
+          }
+        }
+
+        draw(context) {
+          context.beginPath();
+          context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          context.fillStyle = `rgba(250, 204, 21, ${this.alpha})`;
+          context.fill();
+        }
+      }
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        mouse.targetX = e.clientX;
+        mouse.targetY = e.clientY;
       });
-    });
-  }).observe(document.body,{childList:true,subtree:true});
-})();
-</script>
 
+      window.addEventListener('mouseleave', () => {
+        mouse.targetX = -1000;
+        mouse.targetY = -1000;
+      });
 
-<script>
-function toggleTheme(){var t=document.body.dataset.theme==='light'?'dark':'light';document.body.dataset.theme=t;localStorage.setItem('bgTheme',t);var b=document.getElementById('theme-btn');if(b)b.textContent=t==='light'?'🌙':'☀️';}
-(function(){var t=localStorage.getItem('bgTheme')||'dark';if(t==='light')document.body.dataset.theme='light';var b=document.getElementById('theme-btn');if(b)b.textContent=t==='light'?'🌙':'☀️';})();
-</script>
-</body>
+      window.addEventListener('resize', () => {
+        pWidth = canvas.width = window.innerWidth;
+        pHeight = canvas.height = window.innerHeight;
+      });
+
+      function animateParticles() {
+        if (mouse.targetX > -1000) {
+          if (mouse.x === -1000) {
+            mouse.x = mouse.targetX;
+            mouse.y = mouse.targetY;
+          } else {
+            mouse.x += (mouse.targetX - mouse.x) * 0.1;
+            mouse.y += (mouse.targetY - mouse.y) * 0.1;
+          }
+        } else {
+          mouse.x = -1000;
+          mouse.y = -1000;
+        }
+
+        ctx.clearRect(0, 0, pWidth, pHeight);
+
+        if (mouse.x > -1000) {
+          const gradient = ctx.createRadialGradient(
+            mouse.x, mouse.y, 10,
+            mouse.x, mouse.y, mouse.radius
+          );
+          gradient.addColorStop(0, 'rgba(250, 204, 21, 0.04)');
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+          const p1 = particles[i];
+          p1.update();
+          p1.draw(ctx);
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 110) {
+              const alpha = ((110 - dist) / 110) * 0.15;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(250, 204, 21, ${alpha})`;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+
+          if (mouse.x > -1000) {
+            const dx = p1.x - mouse.x;
+            const dy = p1.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+              const alpha = ((mouse.radius - dist) / mouse.radius) * 0.25;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(mouse.x, mouse.y);
+              ctx.strokeStyle = `rgba(250, 204, 21, ${alpha})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+    </script>
+  </body>
 </html>
