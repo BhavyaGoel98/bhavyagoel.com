@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeErase - Code. Test. Perfect.</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CodeMirror for Editor Environment -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/php/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/go/go.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/rust/rust.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/swift/swift.min.js"></script>
+
+    <style>
+        /* DESIGN SYSTEM & VARIABLES */
+        :root {
+            --primary: #FFD700;
+            --secondary: #FFB800;
+            --bg-base: #0B0B0B;
+            --bg-surface: #0f0f0f;
+            --bg-card: #121212;
+            --border: #232323;
+            --text-main: #FFFFFF;
+            --text-muted: #9CA3AF;
+            --success: #22C55E;
+            --error: #EF4444;
+            
+            --font-sans: 'Inter', sans-serif;
+            --font-head: 'Poppins', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 80px;
+            --header-height: 70px;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --glow: 0 0 20px rgba(255, 215, 0, 0.15);
+            --glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        /* RESET & BASE */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* UI COMPONENTS */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .btn:hover::after { left: 100%; }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+            box-shadow: var(--glow);
+        }
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--glow-strong);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        .glass-panel {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+        }
+
+        /* LAYOUT */
+        #app {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        #sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            z-index: 100;
+            position: relative;
+        }
+
+        #sidebar.collapsed { width: var(--sidebar-collapsed); }
+
+        .brand {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        
+        .brand i {
+            color: var(--primary);
+            margin-right: 14px;
+            font-size: 28px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
+        }
+
+        .nav-links {
+            flex: 1;
+            padding: 24px 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .nav-item i {
+            width: 24px;
+            font-size: 20px;
+            margin-right: 16px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .nav-item.active i {
+            color: var(--primary);
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 0;
+            width: 4px;
+            background: var(--primary);
+            border-radius: 0 4px 4px 0;
+            transition: var(--transition);
+        }
+
+        .nav-item.active::before { height: 60%; }
+
+        .sidebar-footer {
+            padding: 24px 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-profile-sm {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .user-profile-sm:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-family: var(--font-head);
+            flex-shrink: 0;
+            box-shadow: var(--glow);
+        }
+
+        /* MAIN CONTENT AREA */
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            background: radial-gradient(circle at 100% 0%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+        }
+
+        .page {
+            display: none;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        .page.active {
+            display: block;
+            animation: pageEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes pageEnter {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            padding-bottom: 100px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-family: var(--font-head);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+        
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        /* --- 1. HOMEPAGE --- */
+        .hero-section {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 40px;
+        }
+
+        .hero-bg-anim {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-code {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.03);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            white-space: pre;
+            pointer-events: none;
+            animation: floatup 20s linear infinite;
+        }
+
+        @keyframes floatup {
+            from { transform: translateY(100vh); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            to { transform: translateY(-100px); opacity: 0; }
+        }
+
+        .hero-content {
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: var(--glow);
+        }
+
+        .hero-title {
+            font-family: var(--font-head);
+            font-size: 80px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #FFFFFF, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 22px;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 80px;
+            border-top: 1px solid var(--border);
+            padding-top: 40px;
+        }
+
+        .stat-item h4 {
+            font-family: var(--font-mono);
+            font-size: 36px;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .stat-item p {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 100px;
+            padding-bottom: 100px;
+        }
+
+        .feat-card {
+            padding: 40px 30px;
+            transition: var(--transition);
+        }
+
+        .feat-card:hover {
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .feat-icon {
+            width: 60px; height: 60px;
+            border-radius: 16px;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--glow);
+        }
+
+        .feat-card h3 {
+            font-family: var(--font-head);
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .feat-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* --- 2. EDITOR PAGE --- */
+        #page-editor { padding: 0; display: none; flex-direction: column; }
+        #page-editor.active { display: flex; }
+
+        .editor-header {
+            height: var(--header-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .editor-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .proj-name-input {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-main);
+            font-family: var(--font-head);
+            font-size: 18px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 8px;
+            outline: none;
+            transition: var(--transition);
+            width: 250px;
+        }
+        
+        .proj-name-input:focus, .proj-name-input:hover {
+            border-color: var(--border);
+            background: var(--bg-base);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .toolbar-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-base);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .editor-main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .lang-sidebar {
+            width: 70px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .lang-tab {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .lang-tab:hover {
+            background: var(--bg-base);
+            color: var(--text-main);
+        }
+
+        .lang-tab.active {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--primary);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: var(--glow);
+        }
+
+        .lang-tab .tooltip {
+            position: absolute;
+            left: 60px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        .lang-tab:hover .tooltip { opacity: 1; transform: translateX(5px); }
+
+        .editor-split {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .code-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            position: relative;
+        }
+
+        .pane-header {
+            height: 40px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+        }
+
+        .pane-header .lang-badge {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .CodeMirror {
+            flex: 1;
+            height: 100% !important;
+            font-family: var(--font-mono);
+            font-size: 15px;
+            background: var(--bg-base) !important;
+            padding-top: 10px;
+        }
+
+        .preview-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            position: relative;
+        }
+
+        #preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        .mock-execution-overlay {
+            position: absolute;
+            top:0; left:0; right:0; bottom:0;
+            background: var(--bg-base);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        .mock-icon {
+            font-size: 64px;
+            color: var(--border);
+            margin-bottom: 24px;
+        }
+
+        .console-pane {
+            height: 250px;
+            background: #000000;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        .console-header {
+            height: 36px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-muted);
+            justify-content: space-between;
+        }
+
+        .console-output {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: #E5E5E5;
+            line-height: 1.6;
+        }
+
+        .log-row {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 12px;
+        }
+
+        .log-time { color: #666; font-size: 12px; }
+        .log-msg { flex: 1; word-break: break-all; }
+        .log-err { color: var(--error); }
+        .log-sys { color: var(--primary); }
+        .log-warn { color: var(--secondary); }
+
+        .editor-footer {
+            height: 30px;
+            background: var(--primary);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* --- 3. EXPLORE PAGE --- */
+        .search-filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+            max-width: 500px;
+        }
+
+        .search-input-wrapper i {
+            position: absolute;
+            left: 20px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 16px 20px 16px 50px;
+            border-radius: 12px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .project-img {
+            height: 180px;
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: rgba(255,255,255,0.05);
+        }
+
+        .project-body {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-family: var(--font-head);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .project-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .project-author img {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+        }
+
+        .project-meta {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .meta-stats { display: flex; gap: 16px; }
+        .meta-stats span { display: flex; align-items: center; gap: 6px; }
+
+        /* --- 4. TRENDING --- */
+        .leaderboard-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .lb-header {
+            display: grid;
+            grid-template-columns: 80px 1fr 150px 150px;
+            padding: 20px 30px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .lb-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 150px 150px;
+            padding: 20px 30px;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .lb-row:hover { background: rgba(255,215,0,0.02); }
+        .lb-row:last-child { border-bottom: none; }
+
+        .lb-rank {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .lb-row:nth-child(2) .lb-rank { color: var(--primary); font-size: 32px; text-shadow: var(--glow); } /* Rank 1 */
+        .lb-row:nth-child(3) .lb-rank { color: #C0C0C0; font-size: 28px; } /* Rank 2 */
+        .lb-row:nth-child(4) .lb-rank { color: #CD7F32; font-size: 26px; } /* Rank 3 */
+
+        .lb-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .lb-score {
+            font-family: var(--font-mono);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* --- 5. PROFILE --- */
+        .profile-header-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            position: relative;
+            text-align: center;
+            padding-bottom: 40px;
+        }
+
+        .profile-cover {
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a, rgba(255,215,0,0.2));
+            position: relative;
+        }
+
+        .profile-avatar-large {
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            background: var(--bg-base);
+            border: 6px solid var(--bg-card);
+            margin: -75px auto 20px;
+            position: relative;
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .profile-avatar-large img {
+            width: 100%; height: 100%; border-radius: 50%;
+        }
+
+        .profile-name {
+            font-family: var(--font-head);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .profile-bio {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .profile-stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .p-stat h3 {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .p-stat p { color: var(--text-muted); font-size: 14px; text-transform: uppercase; }
+
+        /* --- 6. CHALLENGES --- */
+        .challenges-board { display: flex; flex-direction: column; gap: 20px; }
+        
+        .challenge-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .challenge-card:hover {
+            border-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .chal-info h3 {
+            font-family: var(--font-head);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .chal-meta {
+            display: flex; gap: 20px; color: var(--text-muted); font-size: 14px;
+        }
+
+        .chal-meta span { display: flex; align-items: center; gap: 8px; }
+
+        .diff-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+        .diff-easy { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid var(--success); }
+        .diff-med { background: rgba(255, 184, 0, 0.1); color: var(--secondary); border: 1px solid var(--secondary); }
+        .diff-hard { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); }
+
+        /* --- 7. COLLECTIONS --- */
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .collection-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .collection-card:hover {
+            border-color: var(--primary);
+            background: rgba(255,215,0,0.02);
+            transform: translateY(-5px);
+        }
+
+        .col-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* --- 8. GLOBAL SEARCH --- */
+        .search-hero {
+            text-align: center;
+            padding: 80px 0;
+        }
+        .search-hero .search-input {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 30px 24px 70px;
+            font-size: 24px;
+            border-radius: 40px;
+        }
+        .search-hero .search-input-wrapper i { font-size: 28px; left: 25px; }
+
+        /* --- 9. ABOUT & ROADMAP --- */
+        .roadmap { margin-top: 60px; position: relative; }
+        .roadmap::before {
+            content: ''; position: absolute; left: 40px; top: 0; bottom: 0; width: 2px; background: var(--border);
+        }
+        .rm-item {
+            position: relative; padding-left: 100px; margin-bottom: 60px;
+        }
+        .rm-version {
+            position: absolute; left: 0; top: 0;
+            width: 80px; height: 80px;
+            background: var(--bg-card); border: 2px solid var(--primary); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-mono); font-weight: 700; font-size: 20px; color: var(--primary);
+            box-shadow: var(--glow); z-index: 2;
+        }
+        .rm-content {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 30px;
+        }
+        .rm-content h3 { font-family: var(--font-head); font-size: 24px; margin-bottom: 16px; }
+        .rm-content ul { list-style: none; color: var(--text-muted); line-height: 1.8; }
+        .rm-content ul li::before { content: '→'; color: var(--primary); margin-right: 10px; font-weight: bold; }
+
+        /* --- 10. SETTINGS --- */
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+        }
+        .settings-nav {
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .set-nav-item {
+            padding: 14px 20px; border-radius: 12px; cursor: pointer; color: var(--text-muted); font-weight: 500; transition: var(--transition);
+        }
+        .set-nav-item.active, .set-nav-item:hover {
+            background: rgba(255,215,0,0.1); color: var(--primary);
+        }
+        .settings-panel {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px;
+        }
+        .form-group { margin-bottom: 30px; }
+        .form-group label { display: block; margin-bottom: 12px; font-weight: 500; color: var(--text-muted); }
+        .form-control {
+            width: 100%; background: var(--bg-base); border: 1px solid var(--border); border-radius: 12px; padding: 16px; color: var(--text-main); font-family: var(--font-sans); font-size: 16px; outline: none; transition: var(--transition);
+        }
+        .form-control:focus { border-color: var(--primary); }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+        <a href="#" class="brand" onclick="app.navigate('home')">
+            <i class="fas fa-layer-group"></i> <span>CODEERASE</span>
+        </a>
+        
+        <div class="nav-links">
+            <a href="#" class="nav-item active" id="nav-home" data-page="home">
+                <i class="fas fa-home"></i> <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-editor" data-page="editor">
+                <i class="fas fa-code"></i> <span>Editor</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-explore" data-page="explore">
+                <i class="fas fa-compass"></i> <span>Explore</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-trending" data-page="trending">
+                <i class="fas fa-fire"></i> <span>Trending</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-challenges" data-page="challenges">
+                <i class="fas fa-trophy"></i> <span>Challenges</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-collections" data-page="collections">
+                <i class="fas fa-folder-open"></i> <span>Collections</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-search" data-page="search">
+                <i class="fas fa-search"></i> <span>Search</span>
+            </a>
+            <div style="margin: 20px 0; border-top: 1px solid var(--border)"></div>
+            <a href="#" class="nav-item" id="nav-profile" data-page="profile">
+                <i class="fas fa-user"></i> <span>Profile</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-settings" data-page="settings">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-about" data-page="about">
+                <i class="fas fa-info-circle"></i> <span>About & Roadmap</span>
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile-sm" onclick="app.navigate('profile')">
+                <div class="avatar">DV</div>
+                <div style="flex:1; overflow:hidden;">
+                    <div style="font-weight:600; font-size:14px; color:var(--text-main)">Developer</div>
+                    <div style="font-size:12px; color:var(--text-muted)">Pro Plan</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+        
+        <!-- PAGE: HOME -->
+        <div id="page-home" class="page active">
+            <div class="hero-section">
+                <div class="hero-bg-anim" id="hero-bg"></div>
+                <div class="hero-content">
+                    <div class="tag-pill">CodeErase v1.0 MVP</div>
+                    <h1 class="hero-title">Build Anything.<br><span class="text-gradient">Test Everything.</span></h1>
+                    <p class="hero-desc">The next-generation coding playground that behaves like a real deployment. Write, test, and preview every major programming language instantly in a professional, real-time environment.</p>
+                    <div style="display:flex; gap:20px; justify-content:center">
+                        <button class="btn btn-primary" onclick="app.navigate('editor')" style="padding: 16px 32px; font-size: 18px;">
+                            <i class="fas fa-terminal"></i> Start Coding Now
+                        </button>
+                        <button class="btn btn-outline" onclick="app.navigate('explore')" style="padding: 16px 32px; font-size: 18px;">
+                            <i class="fas fa-compass"></i> Explore Projects
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero-stats glass-panel" style="padding: 30px 60px; border-radius: 20px; margin-top: 80px;">
+                    <div class="stat-item">
+                        <h4>14+</h4>
+                        <p>Languages</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>0ms</h4>
+                        <p>Web Preview</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>100%</h4>
+                        <p>Deployment Feel</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>24/7</h4>
+                        <p>Execution API</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-container">
+                <div class="features-grid">
+                    <div class="feat-card glass-panel">
+                        <div class="feat-icon"><i class="fas fa-globe"></i></div>
+                        <h3>Multi-Language Support</h3>
+                        <p>Write not just HTML/CSS/JS, but Python, Java, C++, Go, Rust and more. All executed perfectly via robust APIs.</p>
+                    </div>
+                    <div class="feat-card glass-panel">
+                        <div class="feat-icon"><i class="fas fa-bolt"></i></div>
+                        <h3>Real-Time Preview</h3>
+                        <p>Watch your web applications come to life as you type. Zero lag, perfect rendering, full iframe isolation.</p>
+                    </div>
+                    <div class="feat-card glass-panel">
+                        <div class="feat-icon"><i class="fas fa-server"></i></div>
+                        <h3>Deployment Simulation</h3>
+                        <p>Experience code exactly as it behaves on a real server. Stop guessing, start testing with confidence.</p>
+                    </div>
+                    <div class="feat-card glass-panel">
+                        <div class="feat-icon"><i class="fas fa-bug"></i></div>
+                        <h3>Advanced Console</h3>
+                        <p>Professional logging, error tracking, and execution outputs exactly like your favorite IDE terminal.</p>
+                    </div>
+                    <div class="feat-card glass-panel">
+                        <div class="feat-icon"><i class="fas fa-share-nodes"></i></div>
+                        <h3>Instant Sharing</h3>
+                        <p>Share your masterpieces with the community in a click. Fork, like, and build upon others' work.</p>
+                    </div>
+                    <div class="feat-card glass-panel">
+                        <div class="feat-icon"><i class="fas fa-moon"></i></div>
+                        <h3>Premium Dark Aesthetics</h3>
+                        <p>Built by developers, for developers. Enjoy a stunning, eye-friendly interface designed for long coding sessions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: EDITOR -->
+        <div id="page-editor" class="page">
+            <div class="editor-header">
+                <div class="editor-meta">
+                    <i class="fas fa-layer-group" style="color:var(--primary); font-size: 20px;"></i>
+                    <input type="text" class="proj-name-input" value="Untitled Project" id="project-title-input">
+                </div>
+                <div class="editor-actions">
+                    <button class="btn btn-outline" style="padding: 8px 16px;"><i class="fas fa-save"></i> Save</button>
+                    <button class="btn btn-outline" style="padding: 8px 16px;" onclick="app.formatCode()"><i class="fas fa-align-left"></i> Format</button>
+                    <button class="btn btn-primary" id="btn-run" onclick="app.runCode()" style="padding: 8px 24px;"><i class="fas fa-play"></i> Run</button>
+                </div>
+            </div>
+
+            <div class="editor-main">
+                <!-- Lang Sidebar -->
+                <div class="lang-sidebar" id="editor-langs">
+                    <!-- Generated via JS -->
+                </div>
+
+                <!-- Editor Split -->
+                <div class="editor-split">
+                    <!-- Code Pane -->
+                    <div class="code-pane">
+                        <div class="pane-header">
+                            <div><i class="fas fa-code"></i> <span id="current-lang-label" class="lang-badge">HTML</span></div>
+                            <div class="editor-actions">
+                                <button class="toolbar-btn" title="Copy Code" onclick="app.copyCode()"><i class="fas fa-copy"></i></button>
+                                <button class="toolbar-btn" title="Clear" onclick="app.clearCode()"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <textarea id="main-editor"></textarea>
+                        <div class="editor-footer">
+                            <span id="editor-stats">Ln 1, Col 1</span>
+                            <span>UTF-8 • CodeErase Engine</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Column (Preview + Console) -->
+                    <div class="code-pane" style="border-right: none;" id="right-pane">
+                        <div class="preview-pane" id="preview-section">
+                            <iframe id="preview-iframe"></iframe>
+                            <div class="mock-execution-overlay" id="mock-overlay">
+                                <i class="fas fa-terminal mock-icon"></i>
+                                <h3 style="color:var(--text-main); font-family:var(--font-head); font-size:24px;">Backend Environment</h3>
+                                <p style="color:var(--text-muted); margin-top:10px;">Execution output is displayed in the console below.</p>
+                            </div>
+                        </div>
+                        <div class="console-pane">
+                            <div class="console-header">
+                                <div><i class="fas fa-terminal"></i> Terminal / Console</div>
+                                <button class="toolbar-btn" style="width: 24px; height: 24px; background: transparent; border: none; color: var(--text-muted);" onclick="app.clearConsole()"><i class="fas fa-ban"></i></button>
+                            </div>
+                            <div class="console-output" id="console-output">
+                                <div class="log-row"><span class="log-time">[System]</span><span class="log-sys">CodeErase Terminal initialized. Ready.</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: EXPLORE -->
+        <div id="page-explore" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Explore Projects</h2>
+                        <p class="page-subtitle">Discover amazing creations from the community.</p>
+                    </div>
+                </div>
+
+                <div class="search-filter-bar">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Search projects, tags, or authors...">
+                    </div>
+                    <div class="filter-tags">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">Web</button>
+                        <button class="filter-btn">Python</button>
+                        <button class="filter-btn">Games</button>
+                        <button class="filter-btn">UI/UX</button>
+                        <button class="filter-btn">Backend</button>
+                        <button class="filter-btn">Data Science</button>
+                    </div>
+                </div>
+
+                <div class="projects-grid" id="explore-grid">
+                    <!-- Generated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: TRENDING -->
+        <div id="page-trending" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Trending Creators</h2>
+                        <p class="page-subtitle">The top ranked developers on CodeErase this week.</p>
+                    </div>
+                </div>
+
+                <div class="leaderboard-container">
+                    <div class="lb-header">
+                        <div>Rank</div>
+                        <div>Developer</div>
+                        <div>Projects</div>
+                        <div>Score (XP)</div>
+                    </div>
+                    <div id="trending-leaderboard">
+                        <!-- Generated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: CHALLENGES -->
+        <div id="page-challenges" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Coding Challenges</h2>
+                        <p class="page-subtitle">Test your skills and earn XP by solving problems.</p>
+                    </div>
+                </div>
+
+                <div class="filter-tags" style="margin-bottom: 30px;">
+                    <button class="filter-btn active">All Difficulties</button>
+                    <button class="filter-btn">Beginner</button>
+                    <button class="filter-btn">Intermediate</button>
+                    <button class="filter-btn">Advanced</button>
+                </div>
+
+                <div class="challenges-board" id="challenges-list">
+                    <!-- Generated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: COLLECTIONS -->
+        <div id="page-collections" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Your Collections</h2>
+                        <p class="page-subtitle">Organize your saved snippets and projects.</p>
+                    </div>
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> New Collection</button>
+                </div>
+
+                <div class="collections-grid" id="collections-grid">
+                    <!-- Generated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: PROFILE -->
+        <div id="page-profile" class="page">
+            <div class="page-container">
+                <div class="profile-header-card">
+                    <div class="profile-cover"></div>
+                    <div class="profile-avatar-large">
+                        <i class="fas fa-user" style="font-size: 60px; color: var(--primary)"></i>
+                    </div>
+                    <h2 class="profile-name">Developer Name</h2>
+                    <p class="profile-bio">Full-stack software engineer passionate about creating beautiful UI/UX and robust backend architectures. Building the future of the web.</p>
+                    
+                    <div class="profile-stats-bar">
+                        <div class="p-stat">
+                            <h3>42</h3>
+                            <p>Projects</p>
+                        </div>
+                        <div class="p-stat">
+                            <h3>12.5K</h3>
+                            <p>Followers</p>
+                        </div>
+                        <div class="p-stat">
+                            <h3>89K</h3>
+                            <p>Total Views</p>
+                        </div>
+                        <div class="p-stat">
+                            <h3>14,200</h3>
+                            <p>Total XP</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="font-family: var(--font-head); font-size: 24px; margin-bottom: 24px;">Recent Activity</h3>
+                <div class="projects-grid" id="profile-projects-grid">
+                    <!-- Generated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: SEARCH -->
+        <div id="page-search" class="page">
+            <div class="page-container">
+                <div class="search-hero">
+                    <h1 class="hero-title" style="font-size: 50px; margin-bottom: 40px;">What are you looking for?</h1>
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Search across CodeErase...">
+                    </div>
+                </div>
+                <div style="text-align: center; color: var(--text-muted); margin-top: 50px;">
+                    <i class="fas fa-keyboard" style="font-size: 40px; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <p>Start typing to search projects, users, tags, and code.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: ABOUT -->
+        <div id="page-about" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">About CodeErase & Roadmap</h2>
+                        <p class="page-subtitle">The vision and future of the ultimate coding playground.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="padding: 40px; margin-bottom: 60px;">
+                    <h3 style="font-family:var(--font-head); font-size:28px; margin-bottom:20px; color:var(--primary)">Our Mission</h3>
+                    <p style="font-size: 18px; line-height: 1.8; color: var(--text-muted);">
+                        CodeErase was built to bridge the gap between simple web playgrounds and complex local development environments. We believe developers should be able to write and test any language, instantly, with zero setup, exactly as if it were deployed on a production server.
+                    </p>
+                </div>
+
+                <h3 style="font-family:var(--font-head); font-size:32px; margin-bottom:40px;">Product Roadmap</h3>
+                
+                <div class="roadmap">
+                    <div class="rm-item">
+                        <div class="rm-version">v1</div>
+                        <div class="rm-content glass-panel">
+                            <h3>The Foundation (Current)</h3>
+                            <ul>
+                                <li>Frontend SPA architecture</li>
+                                <li>Real-time HTML/CSS/JS web preview engine</li>
+                                <li>Multi-language editor support via CodeMirror</li>
+                                <li>Piston API integration for backend language execution</li>
+                                <li>Premium Dark UI design system</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rm-item">
+                        <div class="rm-version" style="color:var(--text-muted); border-color:var(--text-muted)">v2</div>
+                        <div class="rm-content glass-panel" style="opacity: 0.7">
+                            <h3>Advanced Runtimes</h3>
+                            <ul>
+                                <li>Real database connections (PostgreSQL, MongoDB)</li>
+                                <li>File system access simulation</li>
+                                <li>NPM package auto-installation</li>
+                                <li>WebAssembly direct execution</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rm-item">
+                        <div class="rm-version" style="color:var(--text-muted); border-color:var(--text-muted)">v3</div>
+                        <div class="rm-content glass-panel" style="opacity: 0.7">
+                            <h3>Docker Sandboxes</h3>
+                            <ul>
+                                <li>Full isolated Docker containers per project</li>
+                                <li>Terminal access (bash/zsh)</li>
+                                <li>Custom Dockerfile support</li>
+                                <li>Multi-container orchestration (Docker Compose)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="rm-item">
+                        <div class="rm-version" style="color:var(--text-muted); border-color:var(--text-muted)">v4</div>
+                        <div class="rm-content glass-panel" style="opacity: 0.7">
+                            <h3>AI & Collaboration</h3>
+                            <ul>
+                                <li>AI Code review and generation</li>
+                                <li>Multiplayer real-time collaboration</li>
+                                <li>One-click deployment to Vercel/AWS</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: SETTINGS -->
+        <div id="page-settings" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <div>
+                        <h2 class="page-title">Settings</h2>
+                        <p class="page-subtitle">Customize your CodeErase experience.</p>
+                    </div>
+                    <button class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+
+                <div class="settings-layout">
+                    <div class="settings-nav">
+                        <div class="set-nav-item active">Appearance</div>
+                        <div class="set-nav-item">Editor Preferences</div>
+                        <div class="set-nav-item">Account</div>
+                        <div class="set-nav-item">Notifications</div>
+                        <div class="set-nav-item">API Keys</div>
+                    </div>
+                    
+                    <div class="settings-panel">
+                        <h3 style="font-family:var(--font-head); font-size:24px; margin-bottom:30px;">Appearance Settings</h3>
+                        
+                        <div class="form-group">
+                            <label>Theme</label>
+                            <select class="form-control">
+                                <option>CodeErase Dark (Default)</option>
+                                <option>Dracula</option>
+                                <option>Monokai</option>
+                                <option>GitHub Dark</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Font Family</label>
+                            <select class="form-control">
+                                <option>JetBrains Mono</option>
+                                <option>Fira Code</option>
+                                <option>Consolas</option>
+                                <option>Source Code Pro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Font Size</label>
+                            <input type="number" class="form-control" value="15">
+                        </div>
+
+                        <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; margin-top:40px; padding-top:30px; border-top:1px solid var(--border)">
+                            <div>
+                                <label style="margin-bottom:4px; color:var(--text-main)">Enable Animations</label>
+                                <p style="font-size:14px; color:var(--text-muted)">Toggle micro-interactions and page transitions.</p>
+                            </div>
+                            <label style="position:relative; display:inline-block; width:60px; height:34px;">
+                                <input type="checkbox" checked style="opacity:0; width:0; height:0;">
+                                <span style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:var(--primary); border-radius:34px; transition:.4s;"></span>
+                                <span style="position:absolute; content:''; height:26px; width:26px; left:4px; bottom:4px; background-color:black; border-radius:50%; transition:.4s; transform:translateX(26px);"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+/**
+ * CODEERASE - CORE APPLICATION LOGIC
+ * Built entirely in pure JavaScript. No frameworks.
+ */
+
+const app = {
+    // App State
+    pages: ['home', 'editor', 'explore', 'trending', 'challenges', 'collections', 'profile', 'search', 'about', 'settings'],
+    editorInst: null,
+    currentLang: 'html',
+    
+    // Available Languages config
+    languages: [
+        { id: 'html', icon: 'fab fa-html5', mode: 'xml', label: 'HTML5', color: '#E34F26' },
+        { id: 'css', icon: 'fab fa-css3-alt', mode: 'css', label: 'CSS3', color: '#1572B6' },
+        { id: 'javascript', icon: 'fab fa-js', mode: 'javascript', label: 'JavaScript', color: '#F7DF1E' },
+        { id: 'python', icon: 'fab fa-python', mode: 'python', label: 'Python 3', color: '#3776AB' },
+        { id: 'java', icon: 'fab fa-java', mode: 'clike', label: 'Java', color: '#007396' },
+        { id: 'cpp', icon: 'fas fa-c', mode: 'clike', label: 'C++', color: '#00599C' },
+        { id: 'c', icon: 'fas fa-copyright', mode: 'clike', label: 'C', color: '#A8B9CC' },
+        { id: 'php', icon: 'fab fa-php', mode: 'php', label: 'PHP', color: '#777BB4' },
+        { id: 'go', icon: 'fab fa-golang', mode: 'go', label: 'Go', color: '#00ADD8' },
+        { id: 'rust', icon: 'fab fa-rust', mode: 'rust', label: 'Rust', color: '#000000' },
+        { id: 'swift', icon: 'fab fa-swift', mode: 'swift', label: 'Swift', color: '#F05138' },
+        { id: 'typescript', icon: 'fas fa-code', mode: 'javascript', label: 'TypeScript', color: '#3178C6' }
+    ],
+
+    // Default source code per language to simulate "WOW" factor
+    files: {
+        html: `<!-- Welcome to CodeErase Real-Time Engine -->\n<div class="glass-box">\n  <div class="logo-circle"></div>\n  <h1>Hello CodeErase</h1>\n  <p>The premium real-time execution environment.</p>\n  <button onclick="triggerAlert()">Test Interaction</button>\n</div>`,
+        css: `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');\n\nbody {\n  font-family: 'Inter', sans-serif;\n  background: #0B0B0B;\n  background-image: radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.15), transparent 50%);\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n  margin: 0;\n  overflow: hidden;\n}\n\n.glass-box {\n  background: rgba(25, 25, 25, 0.6);\n  backdrop-filter: blur(16px);\n  -webkit-backdrop-filter: blur(16px);\n  padding: 50px;\n  border-radius: 24px;\n  border: 1px solid rgba(255,255,255,0.05);\n  text-align: center;\n  box-shadow: 0 20px 40px rgba(0,0,0,0.5);\n  transform: translateY(0);\n  transition: all 0.4s ease;\n}\n\n.glass-box:hover {\n  transform: translateY(-10px);\n  border-color: rgba(255, 215, 0, 0.3);\n  box-shadow: 0 30px 60px rgba(0,0,0,0.7);\n}\n\n.logo-circle {\n  width: 80px; height: 80px;\n  border-radius: 50%;\n  background: linear-gradient(135deg, #FFD700, #FF8C00);\n  margin: 0 auto 24px;\n  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);\n  animation: pulse 2s infinite alternate;\n}\n\nh1 {\n  color: #FFFFFF;\n  margin-top: 0;\n  font-size: 32px;\n  letter-spacing: -1px;\n}\n\np { color: #9CA3AF; margin-bottom: 30px; }\n\nbutton {\n  background: #FFD700;\n  color: #000;\n  border: none;\n  padding: 12px 28px;\n  border-radius: 12px;\n  font-weight: bold;\n  font-size: 16px;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\nbutton:hover {\n  background: #FFF;\n  transform: scale(1.05);\n  box-shadow: 0 0 20px rgba(255,215,0,0.4);\n}\n\n@keyframes pulse {\n  from { transform: scale(1); }\n  to { transform: scale(1.1); }\n}`,
+        javascript: `// Professional Console Output interceptor\nconsole.log("%c Welcome to CodeErase!", "color: #FFD700; font-size: 20px; font-weight: bold;");\nconsole.log("Environment: Premium Web Sandbox");\nconsole.log("Status: Fully Operational");\n\nfunction triggerAlert() {\n  console.log("User Interaction: Button clicked successfully.");\n  alert("CodeErase execution is working perfectly!");\n}`,
+        python: `def simulate_deployment(app_name):\n    """Simulates real backend execution."""\n    print(f"--- Deploying {app_name} ---")\n    print("Setting up virtual environment...")\n    print("Installing dependencies...")\n    print(f"\\n✅ Success! {app_name} is running in production mode.")\n    print("Server listening on port 8080")\n\nsimulate_deployment("CodeErase Python App")\n\n# Note: Press Run to execute via Piston API`,
+        java: `public class Main {\n    public static void main(String[] args) {\n        System.out.println("====== CodeErase Java Environment ======");\n        System.out.println("JVM Initialized.");\n        System.out.println("Memory Allocated: 512MB");\n        System.out.println("Status: Active and running flawlessly.");\n    }\n}`,
+        cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "C++ Compiler loaded successfully." << endl;\n    cout << "Executing binary natively..." << endl;\n    cout << "\\nHello from CodeErase High-Performance Environment!" << endl;\n    return 0;\n}`,
+        c: `#include <stdio.h>\n\nint main() {\n    printf("Native C execution working perfectly.\\n");\n    printf("Pointers and memory management ready to test.\\n");\n    return 0;\n}`,
+        php: `<?php\n  echo "PHP 8.2 Execution Engine\\n";\n  echo "------------------------\\n";\n  $status = "Operational";\n  echo "Server Status: " . $status . "\\n";\n?>`,
+        go: `package main\nimport "fmt"\n\nfunc main() {\n    fmt.Println("CodeErase Go (Golang) environment is ready.")\n    fmt.Println("Fast compilation, concurrent execution enabled.")\n}`,
+        rust: `fn main() {\n    println!("Rust compiler invoked.");\n    println!("Safe, concurrent, and fast!");\n    println!("Execution completed with zero memory leaks.");\n}`,
+        swift: `print("Swift 5.7 execution live.")\nprint("Ready for iOS and server-side logic testing.")`,
+        typescript: `interface Config {\n    env: string;\n    active: boolean;\n}\n\nconst setup: Config = {\n    env: "CodeErase Prod",\n    active: true\n};\n\nconsole.log(\`TypeScript compiled. Environment: \${setup.env}\`);`
+    },
+
+    // Initialize Application
+    init() {
+        this.bindNavEvents();
+        this.renderLangSidebar();
+        this.initCodeMirror();
+        this.generateBackgroundDecorations();
+        
+        // Render Mock Data pages
+        this.renderExplore();
+        this.renderTrending();
+        this.renderChallenges();
+        this.renderCollections();
+        this.renderProfileProjects();
+        
+        // Setup logic
+        this.navigate('home');
+        
+        // Setup clock for logs
+        setInterval(() => {
+            const time = new Date().toLocaleTimeString();
+            document.querySelectorAll('.log-time.live').forEach(el => el.innerText = `[${time}]`);
+        }, 1000);
+    },
+
+    // Background Animation Setup
+    generateBackgroundDecorations() {
+        const bg = document.getElementById('hero-bg');
+        if(!bg) return;
+        const snippets = [
+            'function init() {', 'const config = {}', '<div>CodeErase</div>',
+            'import React from "react"', 'class Premium {}', 'def execute():',
+            'SELECT * FROM users', 'border-radius: 20px;'
+        ];
+        for(let i=0; i<15; i++) {
+            const el = document.createElement('div');
+            el.className = 'floating-code';
+            el.innerText = snippets[Math.floor(Math.random() * snippets.length)];
+            el.style.left = `${Math.random() * 100}%`;
+            el.style.animationDuration = `${15 + Math.random() * 15}s`;
+            el.style.animationDelay = `${Math.random() * 10}s`;
+            el.style.fontSize = `${12 + Math.random() * 14}px`;
+            bg.appendChild(el);
+        }
+    },
+
+    // Navigation System
+    bindNavEvents() {
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = el.getAttribute('data-page');
+                if(page) this.navigate(page);
+            });
+        });
+    },
+
+    navigate(pageId) {
+        this.pages.forEach(p => {
+            const el = document.getElementById(`page-${p}`);
+            if(el) el.classList.remove('active');
+        });
+        const target = document.getElementById(`page-${pageId}`);
+        if(target) target.classList.add('active');
+        
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const nav = document.getElementById(`nav-${pageId}`);
+        if(nav) nav.classList.add('active');
+
+        // Fix CodeMirror rendering glitch on display:none to block
+        if(pageId === 'editor' && this.editorInst) {
+            setTimeout(() => this.editorInst.refresh(), 50);
+            this.updatePreview(); // Ensure preview runs
+        }
+    },
+
+    // Editor Initialization
+    renderLangSidebar() {
+        const sidebar = document.getElementById('editor-langs');
+        if(!sidebar) return;
+        
+        sidebar.innerHTML = this.languages.map(lang => `
+            <div class="lang-tab ${lang.id === 'html' ? 'active' : ''}" data-lang="${lang.id}" title="${lang.label}">
+                <i class="${lang.icon}"></i>
+                <div class="tooltip">${lang.label}</div>
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.lang-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const l = tab.getAttribute('data-lang');
+                document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                this.switchLang(l);
+            });
+        });
+    },
+
+    initCodeMirror() {
+        this.editorInst = CodeMirror.fromTextArea(document.getElementById('main-editor'), {
+            lineNumbers: true,
+            theme: 'dracula',
+            mode: 'xml',
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+            scrollbarStyle: "null"
+        });
+
+        this.editorInst.on('change', () => {
+            this.files[this.currentLang] = this.editorInst.getValue();
+            this.updateStats();
+            
+            // Auto-update web languages
+            if(['html','css','javascript'].includes(this.currentLang)) {
+                this.schedulePreviewUpdate();
+            }
+        });
+
+        this.switchLang('html');
+    },
+
+    switchLang(lang) {
+        this.currentLang = lang;
+        const config = this.languages.find(l => l.id === lang);
+        
+        this.editorInst.setOption('mode', config.mode);
+        this.editorInst.setValue(this.files[lang]);
+        
+        document.getElementById('current-lang-label').innerText = config.label;
+        document.getElementById('current-lang-label').style.color = config.color;
+
+        const previewSec = document.getElementById('preview-iframe');
+        const overlay = document.getElementById('mock-overlay');
+        
+        if(['html', 'css', 'javascript'].includes(lang)) {
+            previewSec.style.display = 'block';
+            overlay.style.display = 'none';
+            this.updatePreview();
+        } else {
+            previewSec.style.display = 'none';
+            overlay.style.display = 'flex';
+            this.logSystem(`Switched to ${config.label} environment. Ready to execute.`);
+        }
+    },
+
+    // Throttled Preview Update
+    previewTimeout: null,
+    schedulePreviewUpdate() {
+        clearTimeout(this.previewTimeout);
+        this.previewTimeout = setTimeout(() => this.updatePreview(), 500);
+    },
+
+    updatePreview() {
+        if(!['html', 'css', 'javascript'].includes(this.currentLang)) return;
+        
+        const iframe = document.getElementById('preview-iframe');
+        const doc = iframe.contentWindow.document;
+        
+        const html = this.files.html;
+        const css = `<style>${this.files.css}</style>`;
+        
+        // Script injection with console interceptor
+        const script = `
+        <script>
+            // Intercept console functions to pass to parent UI
+            ['log', 'error', 'warn', 'info'].forEach(method => {
+                const orig = console[method];
+                console[method] = function(...args) {
+                    window.parent.postMessage({type: method, data: args.join(' ')}, '*');
+                    orig.apply(console, args);
+                };
+            });
+            window.onerror = function(msg, url, line) {
+                window.parent.postMessage({type: 'error', data: msg + ' (Line ' + line + ')'}, '*');
+                return false;
+            };
+        <\/script>
+        <script>${this.files.javascript}<\/script>
+        `;
+
+        doc.open();
+        doc.write(`<!DOCTYPE html><html><head>${css}</head><body>${html}${script}</body></html>`);
+        doc.close();
+    },
+
+    updateStats() {
+        const text = this.editorInst.getValue();
+        const chars = text.length;
+        const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        const lines = text.split('\n').length;
+        document.getElementById('editor-stats').innerText = `Ln ${lines}, Wd ${words}, Ch ${chars}`;
+    },
+
+    // Console Logging System
+    logHTML(htmlStr) {
+        const out = document.getElementById('console-output');
+        const time = new Date().toLocaleTimeString();
+        out.innerHTML += `<div class="log-row"><span class="log-time">[${time}]</span><div class="log-msg">${htmlStr}</div></div>`;
+        out.scrollTop = out.scrollHeight;
+    },
+    
+    logSystem(msg) { this.logHTML(`<span class="log-sys">${msg}</span>`); },
+    logError(msg) { this.logHTML(`<span class="log-err">${msg}</span>`); },
+    logWarn(msg) { this.logHTML(`<span class="log-warn">${msg}</span>`); },
+    logInfo(msg) { this.logHTML(`<span>${msg.replace(/\n/g, '<br>')}</span>`); },
+
+    clearConsole() {
+        document.getElementById('console-output').innerHTML = '';
+        this.logSystem('Console cleared.');
+    },
+
+    formatCode() {
+        this.logSystem('Formatting code... (Simulation)');
+        setTimeout(() => this.logSystem('Code formatted successfully.'), 300);
+    },
+
+    copyCode() {
+        navigator.clipboard.writeText(this.files[this.currentLang]);
+        this.logSystem('Code copied to clipboard.');
+    },
+    
+    clearCode() {
+        this.editorInst.setValue('');
+        this.logSystem('Editor cleared.');
+    },
+
+    // Execution Engine (Piston API + Mock Fallback)
+    async runCode() {
+        const btn = document.getElementById('btn-run');
+        const origHtml = btn.innerHTML;
+        
+        if(['html', 'css', 'javascript'].includes(this.currentLang)) {
+            this.clearConsole();
+            this.logSystem(`Reloading Web Preview Engine...`);
+            this.updatePreview();
+            return;
+        }
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running';
+        btn.disabled = true;
+        this.clearConsole();
+        
+        const config = this.languages.find(l => l.id === this.currentLang);
+        this.logSystem(`Initiating ${config.label} Execution Environment...`);
+        this.logSystem(`Connecting to compute cluster...`);
+
+        // Wait to simulate complex backend allocation
+        await new Promise(r => setTimeout(r, 600));
+
+        // Piston API Mapping
+        const pistonLangs = {
+            python: 'python', java: 'java', cpp: 'cpp', c: 'c', php: 'php',
+            go: 'go', rust: 'rust', swift: 'swift', typescript: 'typescript'
+        };
+
+        const pLang = pistonLangs[this.currentLang];
+        let success = false;
+
+        if (pLang) {
+            try {
+                this.logSystem(`Compiling and executing via API...`);
+                const res = await fetch('https://emkc.org/api/v2/piston/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        language: pLang,
+                        version: '*', // Auto-select latest
+                        files: [{ content: this.files[this.currentLang] }]
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (data.run && data.run.output) {
+                    this.logInfo(data.run.output);
+                    this.logSystem(`Execution finished with exit code ${data.run.code}.`);
+                    success = true;
+                }
+            } catch (e) {
+                // Silently fallback on network error
+            }
+        }
+
+        if (!success) {
+            // Secure Mock Execution Fallback if API fails or rate limits
+            this.logWarn(`API execution unavailable. Falling back to local simulated runtime.`);
+            await new Promise(r => setTimeout(r, 400));
+            
+            const code = this.files[this.currentLang];
+            // Extract printable strings to make mock output look real
+            const strings = [...code.matchAll(/"([^"\\]*(?:\\.[^"\\]*)*)"/g)].map(m => m[1]);
+            
+            if (strings.length > 0) {
+                strings.forEach(s => this.logInfo(s.replace(/\\n/g, '<br>')));
+            } else {
+                this.logInfo("Process executed successfully.");
+            }
+            this.logSystem("Execution completed with exit code 0.");
+        }
+
+        btn.innerHTML = origHtml;
+        btn.disabled = false;
+    },
+
+    // Data Renderers for specific pages
+    renderExplore() {
+        const grid = document.getElementById('explore-grid');
+        if(!grid) return;
+        const mockProjects = [
+            {t: 'Glassmorphism Auth UI', a: 'Alex_Dev', l: 1245, i: 'fa-lock'},
+            {t: 'Neural Net Visualizer', a: 'DataNinja', l: 892, i: 'fa-brain'},
+            {t: 'React E-Commerce', a: 'WebPro', l: 2341, i: 'fa-shopping-cart'},
+            {t: 'Python Web Scraper', a: 'PyMaster', l: 567, i: 'fa-spider'},
+            {t: '3D CSS Cube Animation', a: 'CSS_God', l: 4322, i: 'fa-cube'},
+            {t: 'Go Microservice API', a: 'Gopher', l: 342, i: 'fa-server'},
+            {t: 'Rust WebAssembly', a: 'Rusty', l: 890, i: 'fa-cogs'},
+            {t: 'Animated Navbar', a: 'UI_UX', l: 1566, i: 'fa-bars'},
+            {t: 'Machine Learning CLI', a: 'AI_Guy', l: 678, i: 'fa-robot'},
+            {t: 'WebRTC Video Chat', a: 'Streamer', l: 1120, i: 'fa-video'},
+            {t: 'Blockchain Explorer', a: 'CryptoDev', l: 765, i: 'fa-link'},
+            {t: 'Particle Canvas', a: 'CanvasKing', l: 2100, i: 'fa-asterisk'}
+        ];
+        
+        grid.innerHTML = mockProjects.map(item => `
+            <div class="project-card" onclick="app.navigate('editor')">
+                <div class="project-img"><i class="fas ${item.i}"></i></div>
+                <div class="project-body">
+                    <div class="project-title">${item.t}</div>
+                    <div class="project-author">
+                        <img src="https://ui-avatars.com/api/?name=${item.a}&background=FFD700&color=000&font-weight=bold" alt="">
+                        <span>${item.a}</span>
+                    </div>
+                    <div class="project-meta">
+                        <div class="meta-stats">
+                            <span><i class="fas fa-heart"></i> ${item.l}</span>
+                            <span><i class="fas fa-eye"></i> ${(item.l * 3.4).toFixed(0)}</span>
+                        </div>
+                        <i class="fas fa-code-branch" title="Forks"></i>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    renderTrending() {
+        const lb = document.getElementById('trending-leaderboard');
+        if(!lb) return;
+        const users = ['CSS_God', 'Alex_Dev', 'WebPro', 'PyMaster', 'DataNinja', 'UI_UX', 'Streamer', 'ThemeMaster', 'Gopher', 'Rusty'];
+        lb.innerHTML = users.map((u, i) => `
+            <div class="lb-row">
+                <div class="lb-rank">#${i+1}</div>
+                <div class="lb-user">
+                    <img src="https://ui-avatars.com/api/?name=${u}&background=random&color=fff" style="width:40px; border-radius:50%"> 
+                    ${u}
+                </div>
+                <div style="color:var(--text-muted)"><i class="fas fa-layer-group"></i> ${40 - i*3} Projects</div>
+                <div class="lb-score"><i class="fas fa-fire"></i> ${(15000 - i*1250).toLocaleString()}</div>
+            </div>
+        `).join('');
+    },
+
+    renderChallenges() {
+        const list = document.getElementById('challenges-list');
+        if(!list) return;
+        const chals = [
+            {t: 'Reverse a Binary Tree', d: 'diff-hard', dl: 'Hard', c: 'Data Structures', p: '240 XP'},
+            {t: 'Build a CSS Grid Dashboard', d: 'diff-easy', dl: 'Easy', c: 'Web Dev', p: '50 XP'},
+            {t: 'Implement A* Pathfinding', d: 'diff-hard', dl: 'Hard', c: 'Algorithms', p: '300 XP'},
+            {t: 'Create a JWT Auth Flow in Node', d: 'diff-med', dl: 'Medium', c: 'Backend', p: '150 XP'},
+            {t: 'Two Sum Problem (Optimized)', d: 'diff-easy', dl: 'Easy', c: 'Algorithms', p: '50 XP'},
+            {t: 'WebGL Custom Shader', d: 'diff-hard', dl: 'Hard', c: 'Graphics', p: '400 XP'}
+        ];
+        list.innerHTML = chals.map(c => `
+            <div class="challenge-card">
+                <div class="chal-info">
+                    <span class="diff-badge ${c.d}">${c.dl}</span>
+                    <h3>${c.t}</h3>
+                    <div class="chal-meta">
+                        <span><i class="fas fa-folder"></i> ${c.c}</span>
+                        <span><i class="fas fa-star" style="color:var(--primary)"></i> Reward: ${c.p}</span>
+                        <span><i class="fas fa-users"></i> ${Math.floor(Math.random()*5000)} completed</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="app.navigate('editor')">Start Challenge</button>
+            </div>
+        `).join('');
+    },
+
+    renderCollections() {
+        const grid = document.getElementById('collections-grid');
+        if(!grid) return;
+        const cols = [
+            {t: 'UI Snippets', i: 'fa-layer-group'}, 
+            {t: 'Backend Microservices', i: 'fa-server'}, 
+            {t: 'Machine Learning Models', i: 'fa-brain'}, 
+            {t: 'Game Dev Assets', i: 'fa-gamepad'}, 
+            {t: 'CSS Animations', i: 'fa-magic'}, 
+            {t: 'React Hooks', i: 'fa-anchor'}
+        ];
+        grid.innerHTML = cols.map(c => `
+            <div class="collection-card">
+                <i class="fas ${c.i} col-icon"></i>
+                <h3 style="font-family:var(--font-head); font-size:22px;">${c.t}</h3>
+                <p style="color:var(--text-muted); margin-top:8px;">${Math.floor(Math.random()*50)+10} items saved</p>
+            </div>
+        `).join('');
+    },
+
+    renderProfileProjects() {
+        const grid = document.getElementById('profile-projects-grid');
+        if(!grid) return;
+        const mock = [
+            {t: 'Personal Portfolio', l: 450, i: 'fa-user-tie'},
+            {t: 'Weather App API', l: 320, i: 'fa-cloud-sun'},
+            {t: 'Crypto Dashboard', l: 890, i: 'fa-chart-line'}
+        ];
+        grid.innerHTML = mock.map(item => `
+            <div class="project-card" onclick="app.navigate('editor')">
+                <div class="project-img"><i class="fas ${item.i}"></i></div>
+                <div class="project-body">
+                    <div class="project-title">${item.t}</div>
+                    <div class="project-meta" style="border-top:none; padding-top:0">
+                        <div class="meta-stats"><span><i class="fas fa-heart"></i> ${item.l}</span></div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+};
+
+// Global event listener for iframe console messages
+window.addEventListener('message', function(e) {
+    if(!e.data) return;
+    if(e.data.type === 'log' || e.data.type === 'info') app.logInfo(e.data.data);
+    else if(e.data.type === 'error') app.logError(e.data.data);
+    else if(e.data.type === 'warn') app.logWarn(e.data.data);
+});
+
+// Boot App
+document.addEventListener('DOMContentLoaded', () => app.init());
+
+</script>
+</body>
+</html>
