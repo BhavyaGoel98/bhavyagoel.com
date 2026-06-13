@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeErase - Code. Test. Perfect.</title>
+    <title>CodeErase</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="logo.png" id="favicon">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -133,6 +136,74 @@
             display: flex;
             width: 100%;
             height: 100%;
+        }
+
+        /* WELCOME OVERLAY */
+        .welcome-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 11, 11, 0.9);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .welcome-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-modal {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 24px;
+            padding: 60px 50px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--glow-strong);
+            transform: translateY(0);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .welcome-overlay.hidden .welcome-modal {
+            transform: translateY(50px) scale(0.95);
+        }
+
+        .welcome-logo {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            margin: 0 auto 30px;
+            box-shadow: var(--glow-strong);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #000;
+        }
+
+        .welcome-input {
+            width: 100%;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 16px;
+            color: var(--text-main);
+            font-family: var(--font-head);
+            font-size: 24px;
+            text-align: center;
+            outline: none;
+            transition: var(--transition);
+            margin-bottom: 30px;
+        }
+
+        .welcome-input:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
         }
 
         /* SIDEBAR NAVIGATION */
@@ -710,205 +781,6 @@
             font-weight: 600;
         }
 
-        /* --- 3. EXPLORE PAGE --- */
-        .search-filter-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            gap: 20px;
-        }
-
-        .search-input-wrapper {
-            flex: 1;
-            position: relative;
-            max-width: 500px;
-        }
-
-        .search-input-wrapper i {
-            position: absolute;
-            left: 20px; top: 50%; transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 18px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 16px 20px 16px 50px;
-            border-radius: 12px;
-            color: var(--text-main);
-            font-family: var(--font-sans);
-            font-size: 16px;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: var(--glow);
-        }
-
-        .filter-tags {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .filter-btn {
-            padding: 10px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-            font-weight: 500;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--primary);
-            color: #000;
-            border-color: var(--primary);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .project-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
-
-        .project-img {
-            height: 180px;
-            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            color: rgba(255,255,255,0.05);
-        }
-
-        .project-body {
-            padding: 24px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-title {
-            font-family: var(--font-head);
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .project-author {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .project-author img {
-            width: 24px; height: 24px;
-            border-radius: 50%;
-        }
-
-        .project-meta {
-            margin-top: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .meta-stats { display: flex; gap: 16px; }
-        .meta-stats span { display: flex; align-items: center; gap: 6px; }
-
-        /* --- 4. TRENDING --- */
-        .leaderboard-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .lb-header {
-            display: grid;
-            grid-template-columns: 80px 1fr 150px 150px;
-            padding: 20px 30px;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid var(--border);
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .lb-row {
-            display: grid;
-            grid-template-columns: 80px 1fr 150px 150px;
-            padding: 20px 30px;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .lb-row:hover { background: rgba(255,215,0,0.02); }
-        .lb-row:last-child { border-bottom: none; }
-
-        .lb-rank {
-            font-family: var(--font-mono);
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        .lb-row:nth-child(2) .lb-rank { color: var(--primary); font-size: 32px; text-shadow: var(--glow); } /* Rank 1 */
-        .lb-row:nth-child(3) .lb-rank { color: #C0C0C0; font-size: 28px; } /* Rank 2 */
-        .lb-row:nth-child(4) .lb-rank { color: #CD7F32; font-size: 26px; } /* Rank 3 */
-
-        .lb-user {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .lb-score {
-            font-family: var(--font-mono);
-            color: var(--primary);
-            font-weight: 600;
-        }
-
         /* --- 5. PROFILE --- */
         .profile-header-card {
             background: var(--bg-card);
@@ -930,16 +802,20 @@
         .profile-avatar-large {
             width: 150px; height: 150px;
             border-radius: 50%;
-            background: var(--bg-base);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: 6px solid var(--bg-card);
             margin: -75px auto 20px;
             position: relative;
             z-index: 10;
             display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--glow);
         }
-        
-        .profile-avatar-large img {
-            width: 100%; height: 100%; border-radius: 50%;
+
+        .avatar-text {
+            font-size: 60px;
+            font-weight: 800;
+            color: #000;
+            font-family: var(--font-head);
         }
 
         .profile-name {
@@ -1055,8 +931,31 @@
             padding: 24px 30px 24px 70px;
             font-size: 24px;
             border-radius: 40px;
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            outline: none;
+            transition: var(--transition);
         }
-        .search-hero .search-input-wrapper i { font-size: 28px; left: 25px; }
+        .search-hero .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+        }
+        .search-input-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .search-hero .search-input-wrapper i { 
+            font-size: 28px; 
+            left: 25px; 
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
 
         /* --- 9. ABOUT & ROADMAP --- */
         .roadmap { margin-top: 60px; position: relative; }
@@ -1113,7 +1012,7 @@
     <!-- SIDEBAR -->
     <aside id="sidebar">
         <a href="#" class="brand" onclick="app.navigate('home')">
-            <i class="fas fa-layer-group"></i> <span>CODEERASE</span>
+            <i class="fas fa-layer-group"></i> <span>CodeErase</span>
         </a>
         
         <div class="nav-links">
@@ -1122,12 +1021,6 @@
             </a>
             <a href="#" class="nav-item" id="nav-editor" data-page="editor">
                 <i class="fas fa-code"></i> <span>Editor</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-explore" data-page="explore">
-                <i class="fas fa-compass"></i> <span>Explore</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-trending" data-page="trending">
-                <i class="fas fa-fire"></i> <span>Trending</span>
             </a>
             <a href="#" class="nav-item" id="nav-challenges" data-page="challenges">
                 <i class="fas fa-trophy"></i> <span>Challenges</span>
@@ -1152,10 +1045,10 @@
 
         <div class="sidebar-footer">
             <div class="user-profile-sm" onclick="app.navigate('profile')">
-                <div class="avatar">DV</div>
+                <div class="avatar" id="sidebar-avatar">--</div>
                 <div style="flex:1; overflow:hidden;">
-                    <div style="font-weight:600; font-size:14px; color:var(--text-main)">Developer</div>
-                    <div style="font-size:12px; color:var(--text-muted)">Pro Plan</div>
+                    <div style="font-weight:600; font-size:14px; color:var(--text-main)" id="sidebar-user-name">Guest</div>
+                    <div style="font-size:12px; color:var(--success)">Free Forever</div>
                 </div>
             </div>
         </div>
@@ -1176,8 +1069,8 @@
                         <button class="btn btn-primary" onclick="app.navigate('editor')" style="padding: 16px 32px; font-size: 18px;">
                             <i class="fas fa-terminal"></i> Start Coding Now
                         </button>
-                        <button class="btn btn-outline" onclick="app.navigate('explore')" style="padding: 16px 32px; font-size: 18px;">
-                            <i class="fas fa-compass"></i> Explore Projects
+                        <button class="btn btn-outline" onclick="app.navigate('challenges')" style="padding: 16px 32px; font-size: 18px;">
+                            <i class="fas fa-trophy"></i> View Challenges
                         </button>
                     </div>
                 </div>
@@ -1300,62 +1193,6 @@
             </div>
         </div>
 
-        <!-- PAGE: EXPLORE -->
-        <div id="page-explore" class="page">
-            <div class="page-container">
-                <div class="page-header">
-                    <div>
-                        <h2 class="page-title">Explore Projects</h2>
-                        <p class="page-subtitle">Discover amazing creations from the community.</p>
-                    </div>
-                </div>
-
-                <div class="search-filter-bar">
-                    <div class="search-input-wrapper">
-                        <i class="fas fa-search"></i>
-                        <input type="text" class="search-input" placeholder="Search projects, tags, or authors...">
-                    </div>
-                    <div class="filter-tags">
-                        <button class="filter-btn active">All</button>
-                        <button class="filter-btn">Web</button>
-                        <button class="filter-btn">Python</button>
-                        <button class="filter-btn">Games</button>
-                        <button class="filter-btn">UI/UX</button>
-                        <button class="filter-btn">Backend</button>
-                        <button class="filter-btn">Data Science</button>
-                    </div>
-                </div>
-
-                <div class="projects-grid" id="explore-grid">
-                    <!-- Generated via JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE: TRENDING -->
-        <div id="page-trending" class="page">
-            <div class="page-container">
-                <div class="page-header">
-                    <div>
-                        <h2 class="page-title">Trending Creators</h2>
-                        <p class="page-subtitle">The top ranked developers on CodeErase this week.</p>
-                    </div>
-                </div>
-
-                <div class="leaderboard-container">
-                    <div class="lb-header">
-                        <div>Rank</div>
-                        <div>Developer</div>
-                        <div>Projects</div>
-                        <div>Score (XP)</div>
-                    </div>
-                    <div id="trending-leaderboard">
-                        <!-- Generated via JS -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- PAGE: CHALLENGES -->
         <div id="page-challenges" class="page">
             <div class="page-container">
@@ -1402,33 +1239,33 @@
                 <div class="profile-header-card">
                     <div class="profile-cover"></div>
                     <div class="profile-avatar-large">
-                        <i class="fas fa-user" style="font-size: 60px; color: var(--primary)"></i>
+                        <div class="avatar-text" id="profile-page-avatar">--</div>
                     </div>
-                    <h2 class="profile-name">Developer Name</h2>
-                    <p class="profile-bio">Full-stack software engineer passionate about creating beautiful UI/UX and robust backend architectures. Building the future of the web.</p>
+                    <h2 class="profile-name" id="profile-page-name">Guest</h2>
+                    <p class="profile-bio">Welcome to my CodeErase profile! I'm ready to build the future of the web.</p>
                     
                     <div class="profile-stats-bar">
                         <div class="p-stat">
-                            <h3>42</h3>
+                            <h3>0</h3>
                             <p>Projects</p>
                         </div>
                         <div class="p-stat">
-                            <h3>12.5K</h3>
+                            <h3>0</h3>
                             <p>Followers</p>
                         </div>
                         <div class="p-stat">
-                            <h3>89K</h3>
+                            <h3>0</h3>
                             <p>Total Views</p>
                         </div>
                         <div class="p-stat">
-                            <h3>14,200</h3>
+                            <h3>0</h3>
                             <p>Total XP</p>
                         </div>
                     </div>
                 </div>
 
                 <h3 style="font-family: var(--font-head); font-size: 24px; margin-bottom: 24px;">Recent Activity</h3>
-                <div class="projects-grid" id="profile-projects-grid">
+                <div id="profile-projects-grid">
                     <!-- Generated via JS -->
                 </div>
             </div>
@@ -1588,6 +1425,17 @@
         </div>
 
     </main>
+
+    <!-- INITIAL NAME OVERLAY -->
+    <div class="welcome-overlay hidden" id="welcome-overlay">
+        <div class="welcome-modal">
+            <div class="welcome-logo"><i class="fas fa-layer-group"></i></div>
+            <h2 style="font-family: var(--font-head); font-size: 32px; margin-bottom: 12px; color: var(--text-main);">Welcome to CodeErase</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 16px;">The ultimate free coding playground. Enter your name to begin.</p>
+            <input type="text" id="user-name-input" class="welcome-input" placeholder="Your Name" autocomplete="off">
+            <button class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 18px; padding: 18px;" onclick="app.saveName()">Start Coding Now</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -1598,7 +1446,8 @@
 
 const app = {
     // App State
-    pages: ['home', 'editor', 'explore', 'trending', 'challenges', 'collections', 'profile', 'search', 'about', 'settings'],
+    userName: '',
+    pages: ['home', 'editor', 'challenges', 'collections', 'profile', 'search', 'about', 'settings'],
     editorInst: null,
     currentLang: 'html',
     
@@ -1641,12 +1490,13 @@ const app = {
         this.initCodeMirror();
         this.generateBackgroundDecorations();
         
+        // Handle User Name Login
+        this.checkUser();
+
         // Render Mock Data pages
-        this.renderExplore();
-        this.renderTrending();
         this.renderChallenges();
         this.renderCollections();
-        this.renderProfileProjects();
+        this.renderProfileProjects(); // Now empty per request
         
         // Setup logic
         this.navigate('home');
@@ -1656,6 +1506,48 @@ const app = {
             const time = new Date().toLocaleTimeString();
             document.querySelectorAll('.log-time.live').forEach(el => el.innerText = `[${time}]`);
         }, 1000);
+    },
+    
+    // User Management
+    checkUser() {
+        const savedName = localStorage.getItem('codeerase_username');
+        if (savedName) {
+            this.setUserName(savedName);
+            document.getElementById('welcome-overlay').classList.add('hidden');
+        } else {
+            document.getElementById('welcome-overlay').classList.remove('hidden');
+            setTimeout(() => document.getElementById('user-name-input').focus(), 100);
+            
+            // Allow Enter key to submit
+            document.getElementById('user-name-input').addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') this.saveName();
+            });
+        }
+    },
+    
+    saveName() {
+        const input = document.getElementById('user-name-input');
+        const name = input.value.trim() || 'Guest Developer';
+        localStorage.setItem('codeerase_username', name);
+        this.setUserName(name);
+        document.getElementById('welcome-overlay').classList.add('hidden');
+    },
+    
+    setUserName(name) {
+        this.userName = name;
+        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        
+        // Update Sidebar
+        const sidebarAvatar = document.getElementById('sidebar-avatar');
+        if(sidebarAvatar) sidebarAvatar.innerText = initials;
+        const sidebarName = document.getElementById('sidebar-user-name');
+        if(sidebarName) sidebarName.innerText = name;
+        
+        // Update Profile Page
+        const profileName = document.getElementById('profile-page-name');
+        if(profileName) profileName.innerText = name;
+        const profileAvatar = document.getElementById('profile-page-avatar');
+        if(profileAvatar) profileAvatar.innerText = initials;
     },
 
     // Background Animation Setup
@@ -1939,62 +1831,6 @@ const app = {
     },
 
     // Data Renderers for specific pages
-    renderExplore() {
-        const grid = document.getElementById('explore-grid');
-        if(!grid) return;
-        const mockProjects = [
-            {t: 'Glassmorphism Auth UI', a: 'Alex_Dev', l: 1245, i: 'fa-lock'},
-            {t: 'Neural Net Visualizer', a: 'DataNinja', l: 892, i: 'fa-brain'},
-            {t: 'React E-Commerce', a: 'WebPro', l: 2341, i: 'fa-shopping-cart'},
-            {t: 'Python Web Scraper', a: 'PyMaster', l: 567, i: 'fa-spider'},
-            {t: '3D CSS Cube Animation', a: 'CSS_God', l: 4322, i: 'fa-cube'},
-            {t: 'Go Microservice API', a: 'Gopher', l: 342, i: 'fa-server'},
-            {t: 'Rust WebAssembly', a: 'Rusty', l: 890, i: 'fa-cogs'},
-            {t: 'Animated Navbar', a: 'UI_UX', l: 1566, i: 'fa-bars'},
-            {t: 'Machine Learning CLI', a: 'AI_Guy', l: 678, i: 'fa-robot'},
-            {t: 'WebRTC Video Chat', a: 'Streamer', l: 1120, i: 'fa-video'},
-            {t: 'Blockchain Explorer', a: 'CryptoDev', l: 765, i: 'fa-link'},
-            {t: 'Particle Canvas', a: 'CanvasKing', l: 2100, i: 'fa-asterisk'}
-        ];
-        
-        grid.innerHTML = mockProjects.map(item => `
-            <div class="project-card" onclick="app.navigate('editor')">
-                <div class="project-img"><i class="fas ${item.i}"></i></div>
-                <div class="project-body">
-                    <div class="project-title">${item.t}</div>
-                    <div class="project-author">
-                        <img src="https://ui-avatars.com/api/?name=${item.a}&background=FFD700&color=000&font-weight=bold" alt="">
-                        <span>${item.a}</span>
-                    </div>
-                    <div class="project-meta">
-                        <div class="meta-stats">
-                            <span><i class="fas fa-heart"></i> ${item.l}</span>
-                            <span><i class="fas fa-eye"></i> ${(item.l * 3.4).toFixed(0)}</span>
-                        </div>
-                        <i class="fas fa-code-branch" title="Forks"></i>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    },
-
-    renderTrending() {
-        const lb = document.getElementById('trending-leaderboard');
-        if(!lb) return;
-        const users = ['CSS_God', 'Alex_Dev', 'WebPro', 'PyMaster', 'DataNinja', 'UI_UX', 'Streamer', 'ThemeMaster', 'Gopher', 'Rusty'];
-        lb.innerHTML = users.map((u, i) => `
-            <div class="lb-row">
-                <div class="lb-rank">#${i+1}</div>
-                <div class="lb-user">
-                    <img src="https://ui-avatars.com/api/?name=${u}&background=random&color=fff" style="width:40px; border-radius:50%"> 
-                    ${u}
-                </div>
-                <div style="color:var(--text-muted)"><i class="fas fa-layer-group"></i> ${40 - i*3} Projects</div>
-                <div class="lb-score"><i class="fas fa-fire"></i> ${(15000 - i*1250).toLocaleString()}</div>
-            </div>
-        `).join('');
-    },
-
     renderChallenges() {
         const list = document.getElementById('challenges-list');
         if(!list) return;
@@ -2043,24 +1879,18 @@ const app = {
     },
 
     renderProfileProjects() {
+        // As requested, no dummy profile data for the active user's profile
         const grid = document.getElementById('profile-projects-grid');
         if(!grid) return;
-        const mock = [
-            {t: 'Personal Portfolio', l: 450, i: 'fa-user-tie'},
-            {t: 'Weather App API', l: 320, i: 'fa-cloud-sun'},
-            {t: 'Crypto Dashboard', l: 890, i: 'fa-chart-line'}
-        ];
-        grid.innerHTML = mock.map(item => `
-            <div class="project-card" onclick="app.navigate('editor')">
-                <div class="project-img"><i class="fas ${item.i}"></i></div>
-                <div class="project-body">
-                    <div class="project-title">${item.t}</div>
-                    <div class="project-meta" style="border-top:none; padding-top:0">
-                        <div class="meta-stats"><span><i class="fas fa-heart"></i> ${item.l}</span></div>
-                    </div>
-                </div>
+        
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px 40px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 16px;">
+                <i class="fas fa-folder-open" style="font-size: 50px; color: var(--text-muted); margin-bottom: 20px; opacity: 0.5;"></i>
+                <h3 style="font-family: var(--font-head); font-size: 22px; margin-bottom: 10px;">No projects yet</h3>
+                <p style="color: var(--text-muted); margin-bottom: 24px;">Your workspace is clean. Go to the Editor to create your first project!</p>
+                <button class="btn btn-primary" onclick="app.navigate('editor')"><i class="fas fa-code"></i> Start Coding</button>
             </div>
-        `).join('');
+        `;
     }
 };
 
