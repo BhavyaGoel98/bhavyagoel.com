@@ -27,7 +27,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/go/go.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/rust/rust.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/swift/swift.min.js"></script>
-
     <style>
         /* DESIGN SYSTEM & VARIABLES */
         :root {
@@ -53,7 +52,6 @@
             --glow: 0 0 20px rgba(255, 215, 0, 0.15);
             --glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);
         }
-
         /* RESET & BASE */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -66,13 +64,11 @@
             display: flex;
             -webkit-font-smoothing: antialiased;
         }
-
         /* SCROLLBAR */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-base); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
         /* UI COMPONENTS */
         .btn {
             padding: 12px 24px;
@@ -100,7 +96,6 @@
         }
         
         .btn:hover::after { left: 100%; }
-
         .btn-primary {
             background: var(--primary);
             color: #000;
@@ -111,7 +106,6 @@
             transform: translateY(-2px);
             box-shadow: var(--glow-strong);
         }
-
         .btn-outline {
             background: transparent;
             border: 1px solid var(--border);
@@ -122,7 +116,6 @@
             color: var(--primary);
             box-shadow: var(--glow);
         }
-
         .glass-panel {
             background: rgba(18, 18, 18, 0.6);
             backdrop-filter: blur(20px);
@@ -130,14 +123,12 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 20px;
         }
-
         /* LAYOUT */
         #app {
             display: flex;
             width: 100%;
             height: 100%;
         }
-
         /* WELCOME OVERLAY */
         .welcome-overlay {
             position: fixed;
@@ -150,12 +141,10 @@
             z-index: 9999;
             transition: opacity 0.5s ease;
         }
-
         .welcome-overlay.hidden {
             opacity: 0;
             pointer-events: none;
         }
-
         .welcome-modal {
             background: var(--bg-card);
             border: 1px solid rgba(255, 215, 0, 0.3);
@@ -168,24 +157,20 @@
             transform: translateY(0);
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         .welcome-overlay.hidden .welcome-modal {
             transform: translateY(50px) scale(0.95);
         }
-
         .welcome-logo {
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 100px; height: 100px;
             margin: 0 auto 30px;
-            box-shadow: var(--glow-strong);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            color: #000;
         }
-
+        
+        .welcome-logo img {
+            width: 100%; height: 100%; object-fit: contain;
+        }
         .welcome-input {
             width: 100%;
             background: var(--bg-base);
@@ -200,12 +185,10 @@
             transition: var(--transition);
             margin-bottom: 30px;
         }
-
         .welcome-input:focus {
             border-color: var(--primary);
             box-shadow: var(--glow);
         }
-
         /* SIDEBAR NAVIGATION */
         #sidebar {
             width: var(--sidebar-width);
@@ -217,9 +200,7 @@
             z-index: 100;
             position: relative;
         }
-
         #sidebar.collapsed { width: var(--sidebar-collapsed); }
-
         .brand {
             height: var(--header-height);
             display: flex;
@@ -236,13 +217,6 @@
             text-decoration: none;
         }
         
-        .brand i {
-            color: var(--primary);
-            margin-right: 14px;
-            font-size: 28px;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
-        }
-
         .nav-links {
             flex: 1;
             padding: 24px 16px;
@@ -251,7 +225,6 @@
             flex-direction: column;
             gap: 8px;
         }
-
         .nav-item {
             padding: 14px 16px;
             display: flex;
@@ -272,17 +245,14 @@
             text-align: center;
             transition: var(--transition);
         }
-
         .nav-item:hover, .nav-item.active {
             color: var(--primary);
             background: rgba(255, 215, 0, 0.05);
         }
-
         .nav-item.active i {
             color: var(--primary);
             filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
         }
-
         .nav-item::before {
             content: '';
             position: absolute;
@@ -295,14 +265,11 @@
             border-radius: 0 4px 4px 0;
             transition: var(--transition);
         }
-
         .nav-item.active::before { height: 60%; }
-
         .sidebar-footer {
             padding: 24px 16px;
             border-top: 1px solid var(--border);
         }
-
         .user-profile-sm {
             display: flex;
             align-items: center;
@@ -314,9 +281,7 @@
             overflow: hidden;
             white-space: nowrap;
         }
-
         .user-profile-sm:hover { background: rgba(255, 255, 255, 0.05); }
-
         .avatar {
             width: 40px; height: 40px;
             border-radius: 50%;
@@ -327,7 +292,6 @@
             flex-shrink: 0;
             box-shadow: var(--glow);
         }
-
         /* MAIN CONTENT AREA */
         #main-content {
             flex: 1;
@@ -337,7 +301,6 @@
             position: relative;
             background: radial-gradient(circle at 100% 0%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
         }
-
         .page {
             display: none;
             height: 100%;
@@ -346,31 +309,26 @@
             position: absolute;
             top: 0; left: 0;
         }
-
         .page.active {
             display: block;
             animation: pageEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
         @keyframes pageEnter {
             from { opacity: 0; transform: translateY(20px) scale(0.98); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
         .page-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 40px;
             padding-bottom: 100px;
         }
-
         .page-header {
             margin-bottom: 40px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
         }
-
         .page-title {
             font-family: var(--font-head);
             font-size: 36px;
@@ -384,7 +342,6 @@
             font-size: 16px;
             margin-top: 8px;
         }
-
         /* --- 1. HOMEPAGE --- */
         .hero-section {
             min-height: 85vh;
@@ -396,14 +353,12 @@
             position: relative;
             padding: 40px;
         }
-
         .hero-bg-anim {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             overflow: hidden;
             z-index: 0;
         }
-
         .floating-code {
             position: absolute;
             color: rgba(255, 255, 255, 0.03);
@@ -413,19 +368,16 @@
             pointer-events: none;
             animation: floatup 20s linear infinite;
         }
-
         @keyframes floatup {
             from { transform: translateY(100vh); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
             to { transform: translateY(-100px); opacity: 0; }
         }
-
         .hero-content {
             z-index: 1;
             max-width: 900px;
         }
-
         .tag-pill {
             display: inline-block;
             padding: 8px 16px;
@@ -438,7 +390,6 @@
             border: 1px solid rgba(255, 215, 0, 0.2);
             box-shadow: var(--glow);
         }
-
         .hero-title {
             font-family: var(--font-head);
             font-size: 80px;
@@ -447,13 +398,11 @@
             margin-bottom: 24px;
             letter-spacing: -2px;
         }
-
         .text-gradient {
             background: linear-gradient(to right, #FFFFFF, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .hero-desc {
             font-size: 22px;
             color: var(--text-muted);
@@ -463,7 +412,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-
         .hero-stats {
             display: flex;
             justify-content: center;
@@ -472,21 +420,18 @@
             border-top: 1px solid var(--border);
             padding-top: 40px;
         }
-
         .stat-item h4 {
             font-family: var(--font-mono);
             font-size: 36px;
             color: var(--text-main);
             margin-bottom: 8px;
         }
-
         .stat-item p {
             color: var(--text-muted);
             font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -494,18 +439,15 @@
             margin-top: 100px;
             padding-bottom: 100px;
         }
-
         .feat-card {
             padding: 40px 30px;
             transition: var(--transition);
         }
-
         .feat-card:hover {
             border-color: rgba(255, 215, 0, 0.3);
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-
         .feat-icon {
             width: 60px; height: 60px;
             border-radius: 16px;
@@ -516,22 +458,18 @@
             margin-bottom: 24px;
             box-shadow: var(--glow);
         }
-
         .feat-card h3 {
             font-family: var(--font-head);
             font-size: 24px;
             margin-bottom: 16px;
         }
-
         .feat-card p {
             color: var(--text-muted);
             line-height: 1.7;
         }
-
         /* --- 2. EDITOR PAGE --- */
         #page-editor { padding: 0; display: none; flex-direction: column; }
         #page-editor.active { display: flex; }
-
         .editor-header {
             height: var(--header-height);
             background: var(--bg-surface);
@@ -541,13 +479,11 @@
             justify-content: space-between;
             padding: 0 24px;
         }
-
         .editor-meta {
             display: flex;
             align-items: center;
             gap: 20px;
         }
-
         .proj-name-input {
             background: transparent;
             border: 1px solid transparent;
@@ -566,13 +502,11 @@
             border-color: var(--border);
             background: var(--bg-base);
         }
-
         .editor-actions {
             display: flex;
             gap: 12px;
             align-items: center;
         }
-
         .toolbar-btn {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -583,19 +517,16 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .toolbar-btn:hover {
             background: var(--bg-base);
             border-color: var(--primary);
             color: var(--primary);
         }
-
         .editor-main {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
-
         .lang-sidebar {
             width: 70px;
             background: var(--bg-card);
@@ -607,7 +538,6 @@
             gap: 12px;
             overflow-y: auto;
         }
-
         .lang-tab {
             width: 48px; height: 48px;
             border-radius: 12px;
@@ -619,19 +549,16 @@
             position: relative;
             border: 1px solid transparent;
         }
-
         .lang-tab:hover {
             background: var(--bg-base);
             color: var(--text-main);
         }
-
         .lang-tab.active {
             background: rgba(255, 215, 0, 0.1);
             color: var(--primary);
             border-color: rgba(255, 215, 0, 0.3);
             box-shadow: var(--glow);
         }
-
         .lang-tab .tooltip {
             position: absolute;
             left: 60px;
@@ -647,15 +574,12 @@
             white-space: nowrap;
             z-index: 1000;
         }
-
         .lang-tab:hover .tooltip { opacity: 1; transform: translateX(5px); }
-
         .editor-split {
             flex: 1;
             display: flex;
             flex-direction: row;
         }
-
         .code-pane {
             flex: 1;
             display: flex;
@@ -663,7 +587,6 @@
             border-right: 1px solid var(--border);
             position: relative;
         }
-
         .pane-header {
             height: 40px;
             background: var(--bg-card);
@@ -675,12 +598,10 @@
             font-family: var(--font-mono);
             font-size: 13px;
         }
-
         .pane-header .lang-badge {
             color: var(--primary);
             font-weight: 600;
         }
-
         .CodeMirror {
             flex: 1;
             height: 100% !important;
@@ -689,7 +610,6 @@
             background: var(--bg-base) !important;
             padding-top: 10px;
         }
-
         .preview-pane {
             flex: 1;
             display: flex;
@@ -697,17 +617,29 @@
             background: #ffffff;
             position: relative;
         }
-
+        
+        .preview-header {
+            height: 36px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-muted);
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
         #preview-iframe {
             width: 100%;
-            height: 100%;
+            flex: 1;
             border: none;
             background: #fff;
         }
-
         .mock-execution-overlay {
             position: absolute;
-            top:0; left:0; right:0; bottom:0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: var(--bg-base);
             display: none;
             flex-direction: column;
@@ -721,7 +653,6 @@
             color: var(--border);
             margin-bottom: 24px;
         }
-
         .console-pane {
             height: 250px;
             background: #000000;
@@ -730,7 +661,6 @@
             flex-direction: column;
             z-index: 20;
         }
-
         .console-header {
             height: 36px;
             background: var(--bg-card);
@@ -743,7 +673,6 @@
             color: var(--text-muted);
             justify-content: space-between;
         }
-
         .console-output {
             flex: 1;
             overflow-y: auto;
@@ -753,7 +682,6 @@
             color: #E5E5E5;
             line-height: 1.6;
         }
-
         .log-row {
             margin-bottom: 8px;
             padding-bottom: 8px;
@@ -761,13 +689,11 @@
             display: flex;
             gap: 12px;
         }
-
         .log-time { color: #666; font-size: 12px; }
         .log-msg { flex: 1; word-break: break-all; }
         .log-err { color: var(--error); }
         .log-sys { color: var(--primary); }
         .log-warn { color: var(--secondary); }
-
         .editor-footer {
             height: 30px;
             background: var(--primary);
@@ -780,7 +706,6 @@
             font-size: 12px;
             font-weight: 600;
         }
-
         /* --- 5. PROFILE --- */
         .profile-header-card {
             background: var(--bg-card);
@@ -792,13 +717,11 @@
             text-align: center;
             padding-bottom: 40px;
         }
-
         .profile-cover {
             height: 200px;
             background: linear-gradient(135deg, #1a1a1a, rgba(255,215,0,0.2));
             position: relative;
         }
-
         .profile-avatar-large {
             width: 150px; height: 150px;
             border-radius: 50%;
@@ -810,34 +733,29 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: var(--glow);
         }
-
         .avatar-text {
             font-size: 60px;
             font-weight: 800;
             color: #000;
             font-family: var(--font-head);
         }
-
         .profile-name {
             font-family: var(--font-head);
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 8px;
         }
-
         .profile-bio {
             color: var(--text-muted);
             max-width: 600px;
             margin: 0 auto 30px;
             line-height: 1.6;
         }
-
         .profile-stats-bar {
             display: flex;
             justify-content: center;
             gap: 60px;
         }
-
         .p-stat h3 {
             font-family: var(--font-mono);
             font-size: 28px;
@@ -845,7 +763,6 @@
             margin-bottom: 4px;
         }
         .p-stat p { color: var(--text-muted); font-size: 14px; text-transform: uppercase; }
-
         /* --- 6. CHALLENGES --- */
         .challenges-board { display: flex; flex-direction: column; gap: 20px; }
         
@@ -859,24 +776,19 @@
             align-items: center;
             transition: var(--transition);
         }
-
         .challenge-card:hover {
             border-color: var(--primary);
             transform: translateX(10px);
         }
-
         .chal-info h3 {
             font-family: var(--font-head);
             font-size: 22px;
             margin-bottom: 12px;
         }
-
         .chal-meta {
             display: flex; gap: 20px; color: var(--text-muted); font-size: 14px;
         }
-
         .chal-meta span { display: flex; align-items: center; gap: 8px; }
-
         .diff-badge {
             padding: 6px 16px;
             border-radius: 20px;
@@ -890,14 +802,12 @@
         .diff-easy { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid var(--success); }
         .diff-med { background: rgba(255, 184, 0, 0.1); color: var(--secondary); border: 1px solid var(--secondary); }
         .diff-hard { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); }
-
         /* --- 7. COLLECTIONS --- */
         .collections-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
         }
-
         .collection-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -907,19 +817,16 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .collection-card:hover {
             border-color: var(--primary);
             background: rgba(255,215,0,0.02);
             transform: translateY(-5px);
         }
-
         .col-icon {
             font-size: 48px;
             color: var(--primary);
             margin-bottom: 20px;
         }
-
         /* --- 8. GLOBAL SEARCH --- */
         .search-hero {
             text-align: center;
@@ -956,7 +863,6 @@
             transform: translateY(-50%);
             color: var(--text-muted);
         }
-
         /* --- 9. ABOUT & ROADMAP --- */
         .roadmap { margin-top: 60px; position: relative; }
         .roadmap::before {
@@ -979,7 +885,6 @@
         .rm-content h3 { font-family: var(--font-head); font-size: 24px; margin-bottom: 16px; }
         .rm-content ul { list-style: none; color: var(--text-muted); line-height: 1.8; }
         .rm-content ul li::before { content: '→'; color: var(--primary); margin-right: 10px; font-weight: bold; }
-
         /* --- 10. SETTINGS --- */
         .settings-layout {
             display: grid;
@@ -1007,12 +912,12 @@
     </style>
 </head>
 <body>
-
 <div id="app">
     <!-- SIDEBAR -->
     <aside id="sidebar">
         <a href="#" class="brand" onclick="app.navigate('home')">
-            <i class="fas fa-layer-group"></i> <span>CodeErase</span>
+            <img src="logo.png" alt="Logo" style="width: 32px; height: 32px; margin-right: 12px; object-fit: contain;">
+            <span>CodeErase</span>
         </a>
         
         <div class="nav-links">
@@ -1042,7 +947,6 @@
                 <i class="fas fa-info-circle"></i> <span>About & Roadmap</span>
             </a>
         </div>
-
         <div class="sidebar-footer">
             <div class="user-profile-sm" onclick="app.navigate('profile')">
                 <div class="avatar" id="sidebar-avatar">--</div>
@@ -1053,7 +957,6 @@
             </div>
         </div>
     </aside>
-
     <!-- MAIN CONTENT -->
     <main id="main-content">
         
@@ -1062,7 +965,7 @@
             <div class="hero-section">
                 <div class="hero-bg-anim" id="hero-bg"></div>
                 <div class="hero-content">
-                    <div class="tag-pill">CodeErase v1.0 MVP</div>
+                    <div class="tag-pill">CodeErase Platform</div>
                     <h1 class="hero-title">Build Anything.<br><span class="text-gradient">Test Everything.</span></h1>
                     <p class="hero-desc">The next-generation coding playground that behaves like a real deployment. Write, test, and preview every major programming language instantly in a professional, real-time environment.</p>
                     <div style="display:flex; gap:20px; justify-content:center">
@@ -1094,7 +997,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="page-container">
                 <div class="features-grid">
                     <div class="feat-card glass-panel">
@@ -1130,12 +1032,11 @@
                 </div>
             </div>
         </div>
-
         <!-- PAGE: EDITOR -->
         <div id="page-editor" class="page">
             <div class="editor-header">
                 <div class="editor-meta">
-                    <i class="fas fa-layer-group" style="color:var(--primary); font-size: 20px;"></i>
+                    <img src="logo.png" alt="Logo" style="width: 24px; height: 24px; object-fit: contain;">
                     <input type="text" class="proj-name-input" value="Untitled Project" id="project-title-input">
                 </div>
                 <div class="editor-actions">
@@ -1144,13 +1045,11 @@
                     <button class="btn btn-primary" id="btn-run" onclick="app.runCode()" style="padding: 8px 24px;"><i class="fas fa-play"></i> Run</button>
                 </div>
             </div>
-
             <div class="editor-main">
                 <!-- Lang Sidebar -->
                 <div class="lang-sidebar" id="editor-langs">
                     <!-- Generated via JS -->
                 </div>
-
                 <!-- Editor Split -->
                 <div class="editor-split">
                     <!-- Code Pane -->
@@ -1168,10 +1067,15 @@
                             <span>UTF-8 • CodeErase Engine</span>
                         </div>
                     </div>
-
                     <!-- Right Column (Preview + Console) -->
                     <div class="code-pane" style="border-right: none;" id="right-pane">
                         <div class="preview-pane" id="preview-section">
+                            <div class="preview-header">
+                                <div><i class="fas fa-globe" style="color:var(--text-main)"></i> Web Preview</div>
+                                <button class="toolbar-btn" style="width: 24px; height: 24px; background: transparent; border: none; color: var(--text-muted);" title="Toggle Fullscreen" onclick="app.toggleFullscreenPreview()">
+                                    <i class="fas fa-expand" id="fullscreen-icon"></i>
+                                </button>
+                            </div>
                             <iframe id="preview-iframe"></iframe>
                             <div class="mock-execution-overlay" id="mock-overlay">
                                 <i class="fas fa-terminal mock-icon"></i>
@@ -1192,7 +1096,6 @@
                 </div>
             </div>
         </div>
-
         <!-- PAGE: CHALLENGES -->
         <div id="page-challenges" class="page">
             <div class="page-container">
@@ -1202,20 +1105,17 @@
                         <p class="page-subtitle">Test your skills and earn XP by solving problems.</p>
                     </div>
                 </div>
-
                 <div class="filter-tags" style="margin-bottom: 30px;">
                     <button class="filter-btn active">All Difficulties</button>
                     <button class="filter-btn">Beginner</button>
                     <button class="filter-btn">Intermediate</button>
                     <button class="filter-btn">Advanced</button>
                 </div>
-
                 <div class="challenges-board" id="challenges-list">
                     <!-- Generated via JS -->
                 </div>
             </div>
         </div>
-
         <!-- PAGE: COLLECTIONS -->
         <div id="page-collections" class="page">
             <div class="page-container">
@@ -1226,13 +1126,11 @@
                     </div>
                     <button class="btn btn-primary"><i class="fas fa-plus"></i> New Collection</button>
                 </div>
-
                 <div class="collections-grid" id="collections-grid">
                     <!-- Generated via JS -->
                 </div>
             </div>
         </div>
-
         <!-- PAGE: PROFILE -->
         <div id="page-profile" class="page">
             <div class="page-container">
@@ -1263,14 +1161,12 @@
                         </div>
                     </div>
                 </div>
-
                 <h3 style="font-family: var(--font-head); font-size: 24px; margin-bottom: 24px;">Recent Activity</h3>
                 <div id="profile-projects-grid">
                     <!-- Generated via JS -->
                 </div>
             </div>
         </div>
-
         <!-- PAGE: SEARCH -->
         <div id="page-search" class="page">
             <div class="page-container">
@@ -1287,7 +1183,6 @@
                 </div>
             </div>
         </div>
-
         <!-- PAGE: ABOUT -->
         <div id="page-about" class="page">
             <div class="page-container">
@@ -1297,14 +1192,12 @@
                         <p class="page-subtitle">The vision and future of the ultimate coding playground.</p>
                     </div>
                 </div>
-
                 <div class="glass-panel" style="padding: 40px; margin-bottom: 60px;">
                     <h3 style="font-family:var(--font-head); font-size:28px; margin-bottom:20px; color:var(--primary)">Our Mission</h3>
                     <p style="font-size: 18px; line-height: 1.8; color: var(--text-muted);">
                         CodeErase was built to bridge the gap between simple web playgrounds and complex local development environments. We believe developers should be able to write and test any language, instantly, with zero setup, exactly as if it were deployed on a production server.
                     </p>
                 </div>
-
                 <h3 style="font-family:var(--font-head); font-size:32px; margin-bottom:40px;">Product Roadmap</h3>
                 
                 <div class="roadmap">
@@ -1359,7 +1252,6 @@
                 </div>
             </div>
         </div>
-
         <!-- PAGE: SETTINGS -->
         <div id="page-settings" class="page">
             <div class="page-container">
@@ -1370,7 +1262,6 @@
                     </div>
                     <button class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
                 </div>
-
                 <div class="settings-layout">
                     <div class="settings-nav">
                         <div class="set-nav-item active">Appearance</div>
@@ -1407,7 +1298,6 @@
                             <label>Font Size</label>
                             <input type="number" class="form-control" value="15">
                         </div>
-
                         <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; margin-top:40px; padding-top:30px; border-top:1px solid var(--border)">
                             <div>
                                 <label style="margin-bottom:4px; color:var(--text-main)">Enable Animations</label>
@@ -1423,13 +1313,13 @@
                 </div>
             </div>
         </div>
-
     </main>
-
     <!-- INITIAL NAME OVERLAY -->
     <div class="welcome-overlay hidden" id="welcome-overlay">
         <div class="welcome-modal">
-            <div class="welcome-logo"><i class="fas fa-layer-group"></i></div>
+            <div class="welcome-logo">
+                <img src="logo.png" alt="Logo">
+            </div>
             <h2 style="font-family: var(--font-head); font-size: 32px; margin-bottom: 12px; color: var(--text-main);">Welcome to CodeErase</h2>
             <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 16px;">The ultimate free coding playground. Enter your name to begin.</p>
             <input type="text" id="user-name-input" class="welcome-input" placeholder="Your Name" autocomplete="off">
@@ -1437,13 +1327,11 @@
         </div>
     </div>
 </div>
-
 <script>
 /**
  * CODEERASE - CORE APPLICATION LOGIC
  * Built entirely in pure JavaScript. No frameworks.
  */
-
 const app = {
     // App State
     userName: '',
@@ -1466,7 +1354,6 @@ const app = {
         { id: 'swift', icon: 'fab fa-swift', mode: 'swift', label: 'Swift', color: '#F05138' },
         { id: 'typescript', icon: 'fas fa-code', mode: 'javascript', label: 'TypeScript', color: '#3178C6' }
     ],
-
     // Default source code per language to simulate "WOW" factor
     files: {
         html: `<!-- Welcome to CodeErase Real-Time Engine -->\n<div class="glass-box">\n  <div class="logo-circle"></div>\n  <h1>Hello CodeErase</h1>\n  <p>The premium real-time execution environment.</p>\n  <button onclick="triggerAlert()">Test Interaction</button>\n</div>`,
@@ -1482,7 +1369,6 @@ const app = {
         swift: `print("Swift 5.7 execution live.")\nprint("Ready for iOS and server-side logic testing.")`,
         typescript: `interface Config {\n    env: string;\n    active: boolean;\n}\n\nconst setup: Config = {\n    env: "CodeErase Prod",\n    active: true\n};\n\nconsole.log(\`TypeScript compiled. Environment: \${setup.env}\`);`
     },
-
     // Initialize Application
     init() {
         this.bindNavEvents();
@@ -1492,7 +1378,6 @@ const app = {
         
         // Handle User Name Login
         this.checkUser();
-
         // Render Mock Data pages
         this.renderChallenges();
         this.renderCollections();
@@ -1506,6 +1391,14 @@ const app = {
             const time = new Date().toLocaleTimeString();
             document.querySelectorAll('.log-time.live').forEach(el => el.innerText = `[${time}]`);
         }, 1000);
+        
+        // Listen for Fullscreen changes to update icon
+        document.addEventListener('fullscreenchange', () => {
+            const icon = document.getElementById('fullscreen-icon');
+            if (icon) {
+                icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
+            }
+        });
     },
     
     // User Management
@@ -1549,7 +1442,6 @@ const app = {
         const profileAvatar = document.getElementById('profile-page-avatar');
         if(profileAvatar) profileAvatar.innerText = initials;
     },
-
     // Background Animation Setup
     generateBackgroundDecorations() {
         const bg = document.getElementById('hero-bg');
@@ -1570,7 +1462,6 @@ const app = {
             bg.appendChild(el);
         }
     },
-
     // Navigation System
     bindNavEvents() {
         document.querySelectorAll('.nav-item').forEach(el => {
@@ -1581,7 +1472,6 @@ const app = {
             });
         });
     },
-
     navigate(pageId) {
         this.pages.forEach(p => {
             const el = document.getElementById(`page-${p}`);
@@ -1593,14 +1483,12 @@ const app = {
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         const nav = document.getElementById(`nav-${pageId}`);
         if(nav) nav.classList.add('active');
-
         // Fix CodeMirror rendering glitch on display:none to block
         if(pageId === 'editor' && this.editorInst) {
             setTimeout(() => this.editorInst.refresh(), 50);
             this.updatePreview(); // Ensure preview runs
         }
     },
-
     // Editor Initialization
     renderLangSidebar() {
         const sidebar = document.getElementById('editor-langs');
@@ -1612,7 +1500,6 @@ const app = {
                 <div class="tooltip">${lang.label}</div>
             </div>
         `).join('');
-
         document.querySelectorAll('.lang-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 const l = tab.getAttribute('data-lang');
@@ -1622,7 +1509,6 @@ const app = {
             });
         });
     },
-
     initCodeMirror() {
         this.editorInst = CodeMirror.fromTextArea(document.getElementById('main-editor'), {
             lineNumbers: true,
@@ -1633,7 +1519,6 @@ const app = {
             lineWrapping: true,
             scrollbarStyle: "null"
         });
-
         this.editorInst.on('change', () => {
             this.files[this.currentLang] = this.editorInst.getValue();
             this.updateStats();
@@ -1643,10 +1528,8 @@ const app = {
                 this.schedulePreviewUpdate();
             }
         });
-
         this.switchLang('html');
     },
-
     switchLang(lang) {
         this.currentLang = lang;
         const config = this.languages.find(l => l.id === lang);
@@ -1656,7 +1539,6 @@ const app = {
         
         document.getElementById('current-lang-label').innerText = config.label;
         document.getElementById('current-lang-label').style.color = config.color;
-
         const previewSec = document.getElementById('preview-iframe');
         const overlay = document.getElementById('mock-overlay');
         
@@ -1670,14 +1552,12 @@ const app = {
             this.logSystem(`Switched to ${config.label} environment. Ready to execute.`);
         }
     },
-
     // Throttled Preview Update
     previewTimeout: null,
     schedulePreviewUpdate() {
         clearTimeout(this.previewTimeout);
         this.previewTimeout = setTimeout(() => this.updatePreview(), 500);
     },
-
     updatePreview() {
         if(!['html', 'css', 'javascript'].includes(this.currentLang)) return;
         
@@ -1705,12 +1585,30 @@ const app = {
         <\/script>
         <script>${this.files.javascript}<\/script>
         `;
-
         doc.open();
         doc.write(`<!DOCTYPE html><html><head>${css}</head><body>${html}${script}</body></html>`);
         doc.close();
     },
-
+    toggleFullscreenPreview() {
+        const elem = document.getElementById('preview-section');
+        if (!document.fullscreenElement) {
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
+        }
+    },
     updateStats() {
         const text = this.editorInst.getValue();
         const chars = text.length;
@@ -1718,7 +1616,6 @@ const app = {
         const lines = text.split('\n').length;
         document.getElementById('editor-stats').innerText = `Ln ${lines}, Wd ${words}, Ch ${chars}`;
     },
-
     // Console Logging System
     logHTML(htmlStr) {
         const out = document.getElementById('console-output');
@@ -1731,17 +1628,14 @@ const app = {
     logError(msg) { this.logHTML(`<span class="log-err">${msg}</span>`); },
     logWarn(msg) { this.logHTML(`<span class="log-warn">${msg}</span>`); },
     logInfo(msg) { this.logHTML(`<span>${msg.replace(/\n/g, '<br>')}</span>`); },
-
     clearConsole() {
         document.getElementById('console-output').innerHTML = '';
         this.logSystem('Console cleared.');
     },
-
     formatCode() {
         this.logSystem('Formatting code... (Simulation)');
         setTimeout(() => this.logSystem('Code formatted successfully.'), 300);
     },
-
     copyCode() {
         navigator.clipboard.writeText(this.files[this.currentLang]);
         this.logSystem('Code copied to clipboard.');
@@ -1751,7 +1645,6 @@ const app = {
         this.editorInst.setValue('');
         this.logSystem('Editor cleared.');
     },
-
     // Execution Engine (Piston API + Mock Fallback)
     async runCode() {
         const btn = document.getElementById('btn-run');
@@ -1763,7 +1656,6 @@ const app = {
             this.updatePreview();
             return;
         }
-
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running';
         btn.disabled = true;
         this.clearConsole();
@@ -1771,19 +1663,15 @@ const app = {
         const config = this.languages.find(l => l.id === this.currentLang);
         this.logSystem(`Initiating ${config.label} Execution Environment...`);
         this.logSystem(`Connecting to compute cluster...`);
-
         // Wait to simulate complex backend allocation
         await new Promise(r => setTimeout(r, 600));
-
         // Piston API Mapping
         const pistonLangs = {
             python: 'python', java: 'java', cpp: 'cpp', c: 'c', php: 'php',
             go: 'go', rust: 'rust', swift: 'swift', typescript: 'typescript'
         };
-
         const pLang = pistonLangs[this.currentLang];
         let success = false;
-
         if (pLang) {
             try {
                 this.logSystem(`Compiling and executing via API...`);
@@ -1808,7 +1696,6 @@ const app = {
                 // Silently fallback on network error
             }
         }
-
         if (!success) {
             // Secure Mock Execution Fallback if API fails or rate limits
             this.logWarn(`API execution unavailable. Falling back to local simulated runtime.`);
@@ -1825,11 +1712,9 @@ const app = {
             }
             this.logSystem("Execution completed with exit code 0.");
         }
-
         btn.innerHTML = origHtml;
         btn.disabled = false;
     },
-
     // Data Renderers for specific pages
     renderChallenges() {
         const list = document.getElementById('challenges-list');
@@ -1857,7 +1742,6 @@ const app = {
             </div>
         `).join('');
     },
-
     renderCollections() {
         const grid = document.getElementById('collections-grid');
         if(!grid) return;
@@ -1877,7 +1761,6 @@ const app = {
             </div>
         `).join('');
     },
-
     renderProfileProjects() {
         // As requested, no dummy profile data for the active user's profile
         const grid = document.getElementById('profile-projects-grid');
@@ -1893,7 +1776,6 @@ const app = {
         `;
     }
 };
-
 // Global event listener for iframe console messages
 window.addEventListener('message', function(e) {
     if(!e.data) return;
@@ -1901,10 +1783,8 @@ window.addEventListener('message', function(e) {
     else if(e.data.type === 'error') app.logError(e.data.data);
     else if(e.data.type === 'warn') app.logWarn(e.data.data);
 });
-
 // Boot App
 document.addEventListener('DOMContentLoaded', () => app.init());
-
 </script>
 </body>
 </html>
