@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BG CODE TUTOR - Cybernetic Learning Assembly</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;755&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #06070a;
+      background-image: radial-gradient(rgba(16, 185, 129, 0.05) 1.2px, transparent 1.2px);
+      background-size: 20px 20px;
+    }
+    .code-font {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .sleek-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .sleek-scroll::-webkit-scrollbar-track {
+      background: #0a0c12;
+    }
+    .sleek-scroll::-webkit-scrollbar-thumb {
+      background: #1a1e27;
+      border-radius: 999px;
+    }
+    .sleek-scroll::-webkit-scrollbar-thumb:hover {
+      background: #2c3645;
+    }
+    /* Zigzag level node connection path style */
+    .path-line-draw {
+      background: repeating-linear-gradient(
+        to bottom,
+        #1e293b,
+        #1e293b 8px,
+        transparent 8px,
+        transparent 16px
+      );
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+
+  <!-- Ambient background glow elements -->
+  <div class="absolute top-10 left-10 w-96 h-96 bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
+  <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
+
+  <!-- ==========================================
+       SIDEBAR NAVIGATION / PLATFORM CONSOLE
+       ========================================== -->
+  <aside class="w-full md:w-64 bg-[#0a0c12]/90 border-b md:border-b-0 md:border-r border-slate-800/85 backdrop-blur-xl shrink-0 p-5 flex flex-col justify-between z-10 sticky top-0 md:h-screen">
+    <div class="space-y-8">
+      
+      <!-- HEADER BRAND DISPLAY WITH APPROVED BASE64 EMBEDDED LOGO -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 rounded-xl bg-black p-1.5 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.15)] group-hover:border-emerald-400 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300">
+          <!-- HARDCODED BASE64 VECTOR LOGO IMAGE TARGET -->
+          <img 
+            alt="BG CODE" 
+            class="w-full h-full object-contain" 
+            src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxmaWx0ZXIgaWQ9Im5lb24tZ2xvdy1ncmVlbiIgeD0iLTI1JSIgeT0iLTI1JSIgd2lkdGg9IjE1MCUiIGhlaWdodD0iMTUwJSI+CiAgICAgIDxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjkiIHJlc3VsdD0iYmx1cjEiIC8+CiAgICAgIDxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjQiIHJlc3VsdD0iYmx1cjIiIC8+CiAgICAgIDxmZU1lcmdlPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iYmx1cjEiIC8+CiAgICAgIDxmZU1lcmdlTm9kZSBpbj0iYmx1cjIiIC8+CiAgICAgIDxmZU1lcmdlTm9kZSBpbj0iUnNvdXJjZUdyYXBoaWMiIC8+CiAgICAgIDwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogICAgPGZpbHRlciBpZD0ibmVvbi1nbG93LWN5YW4iIHg9Ii0yMCUiIHk9Ii0yMCUiIHdpZHRoPSIxNDAlIiBoZWlnaHQ9IjE0MCUiPgogICAgICA8ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI2IiByZXN1bHQ9ImJsdXIiIC8+CiAgICAgIDxmZU1lcmdlPgogICAgICAgIDxmZU1lcmdlTm9kZSBpbj0iYmx1ciIgLz4KICAgICAgICA8ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiIC8+CiAgICAgIDwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KICA8ZyBvcGFjaXR5PSIwLjEyIj4KICAgIDxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjMwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtZGFzaGFycmF5PSI0IDgiIC8+CiAgICA8Y2lyY2xlIGN4PSIyNTAiIGN5PSIyNTAiIHI9IjI0MCIgc3Ryb2tlPSIjMDBmZmQwIiBzdHJva2Utd2lkdGg9IjAuOCIgLz4KICAgIDxsaW5lIHgxPSIyNTAiIHkxPSIxMCIgeDI9IjI1MCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjAuNiIgc3Ryb2tlLWRhc2hhcnJheT0iNSA1IiAvPgogICAgPGxpbmUgeDE9IjEwIiB5MT0iMjUwIiB4Mj0iNDkwIiB5Mj0iMjUwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMC42IiBzdHJva2UtZGFzaGFycmF5PSI1IDUiIC8+CiAgPC9nPgogIDxnIGZpbHRlcj0idXJsKCNuZW9uLWdsb3ctZ3JlZW4pIj4KICAgIDxwYXRoIGQ9Ik0gNjAgNzAgSCAxOTAgQSA0NSA0NSAwIDAgMSAyMzUgMTE1IEEgNDAgNDAgMCAwIDEgMTkwIDE1NSBIIDE4NSBBIDQ1IDQ1IDAgMCAxIDI0MCAyMDAgQSA0NSA0NSAwIDAgMSAxOTUgMjQ1IEggNjAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjEwIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC45IiAvPgogICAgPHBhdGggZD0iTSAxMDAgMTEwIEggMTU1IEEgMTUgMTUgMCAwIDEgMTcwIDEyNSBBIDE1IDE1IDAgMCAxIDE1NSAxNDAgSCAxMDAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0iIzBkMTExNyIgLz4KICAgIDxwYXRoIGQ9Ik0gMTAwIDE3NSBIIDE2MCBBIDE1IDE1IDAgMCAxIDE3NSAxOTAgQSAxNSAxNSAwIDAgMSAxNjAgMjA1IEggMTAwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9IiMwZDExMTciIC8+CiAgICA8ZyBvcGFjaXR5PSIwLjkiPgogICAgICA8bGluZSB4MT0iNzUiIHkxPSIxMDAiIHgyPSI3NSIgeTI9IjIxNSIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjMiIC8+CiAgICAgIDxsaW5lIHgxPSI4MyIgeTE9IjEwNSIgeDI9IjgzIiB5Mj0iMjEwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMS45IiBzdHJva2UtZGFzaGFycmF5PSIzIDMiIC8+CiAgICAgIDxwYXRoIGQ9Ik0gMTIwIDEyNSBIIDE0NSIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjEuNSIgLz4KICAgICAgPGNpcmNsZSBjeD0iMTQ1IiBjeT0iMTI1IiByPSIzLjUiIGZpbGw9IiMwMGRmODkiIC8+CiAgICAgIDxwYXRoIGQ9Ik0gMTIwIDE5MCBIIDE1MCIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjEuNSIgLz4KICAgICAgPGNpcmNsZSBjeD0iMTUwIiBjeT0iMTkwIiByPSIzLjUiIGZpbGw9IiMxMGI5ODEiIC8+CiAgICA8L2c+CiAgPC9nPgogIDxnIGZpbHRlcj0idXJsKCNuZW9uLWdsb3ctY3lhbikiPgogICAgPHBhdGggZD0iTSA0NDAgMTAwIEwgMzk1IDcwIEggMjg1IEwgMjU1IDEwMCBWIDIxNSBMIDI4NSAyNDUgSCAzOTUgTCA0NDAgMjE1IFYgMTYwIEggMzQ1IiBzdHJva2U9IiMwMmZmZDAiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0iIzA2MDkwYyIgZmlsbC1vcGFjaXR5PSIwLjkiIC8+CiAgICA8ZyBvcGFjaXR5PSIwLjk1Ij4KICAgICAgPGNpcmNsZSBjeD0iMzQ1IiBjeT0iMTYwIiByPSI1IiBmaWxsPSIjMDJmZmQwIiAvPgogICAgICA8cGF0aCBkPSJNIDI4NSAxMTAgSCAzMjUiIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIxLjUiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjMyNSIgY3k9IjExMCIgcj0iMyIgZmlsbD0iIzAyZmZkMCIgLz4KICAgIDxwYXRoIGQ9Ik0gMjg1IDE0MCBIIDMxNSBMIDMyNSAxNTAiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxLjUiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjMyNSIgY3k9IjE1MCIgcj0iMyIgZmlsbD0iIzEwYjk4MSIgLz4KICAgICAgPHBhdGggZD0iTSAyODUgMjAwIEggMzcwIiBzdHJva2U9IiMwMmZmZDAiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtZGFzaGFycmF5PSI0IDIiIC8+CiAgICAgIDxjaXJjbGUgY3g9IjM3MCIgY3k9IjIwMCIgcj0iMy41IiBmaWxsPSIjMDJmZmQwIiAvPgogICAgPC9nPgogIDwvZz4KICA8ZyBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMS44IiBvcGFjaXR5PSIwLjYiPgogICAgPHBhdGggZD0iTSAxOTAgOTUgTCAyMTAgMTA1IEggMjU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDMiIC8+CiAgICA8Y2lyY2xlIGN4PSIyMTAiIGN5PSIxMDUiIHI9IjIuNSIgZmlsbD0iIzEwYjk4MSIgLz4KICAgIDxwYXRoIGQ9Ik0gMTk1IDIyMCBMIDIyNSAyMTAgSCAyNjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgMiIgLz4KICAgIDxjaXJjbGUgY3g9IjIyNSIgY3k9IjIxMCIgcj0iMi41IiBmaWxsPSIjMDBmZmQwIiAvPgogIDwvZz4KICA8ZyBzdHJva2U9IiM4ZGEyYmIiIHN0cm9rZS13aWR0aD0iOC41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuODUiPgogICAgPHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiIC8+CiAgICA8cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgViA0MTAgSCAxNTUgWiIgLz4KICAgIDxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDI5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIgLz4KICAgIDxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiIC8+CiAgPC9nPgogIDxnIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuOTUiPgogICAgPHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiIC8+CiAgICA8cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgViA0MTAgSCAxNTUgWiIgLz4KICAgIDxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDI5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIgLz4KICAgIDxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiIC8+CiAgPC9nPgogIDxyZWN0IHg9IjE4MCIgeT0iNDQ1IiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE4IiByeD0iNSIgZmlsbD0iIzBjMTAxNyIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41IiAvPgogIDx0ZXh0IHg9IjI1MCIgeT0iNDU4IiBmaWxsPSIjMTBiOTgxIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjIiIG9wYWNpdHk9IjAuODUiPlNZUyBBQ1RJVkU8L3RleHQ+Cjwvc3ZnPg=="
+          />
+        </div>
+        <div class="flex flex-col text-left">
+          <span class="font-extrabold text-sm tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+            BG CODE
+          </span>
+          <span class="text-[9px] code-font text-slate-400 tracking-widest uppercase">
+            TUTOR v2.5
+          </span>
+        </div>
+      </a>
+
+      <!-- MENU TABS SELECTION -->
+      <nav class="space-y-2 flex flex-row md:flex-col overflow-x-auto md:overflow-visible gap-2 pb-2 md:pb-0">
+        <button onclick="switchTab('learn')" id="tabBtn-learn" class="tab-button w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+          <i data-lucide="compass" class="w-4 h-4 shrink-0"></i>
+          <span>Learn Path</span>
+        </button>
+        <button onclick="switchTab('challenges')" id="tabBtn-challenges" class="tab-button w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-slate-400 hover:bg-slate-900 hover:text-slate-200">
+          <i data-lucide="award" class="w-4 h-4 shrink-0"></i>
+          <span>Challenges</span>
+        </button>
+        <button onclick="switchTab('sandbox')" id="tabBtn-sandbox" class="tab-button w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-slate-400 hover:bg-slate-900 hover:text-slate-200">
+          <i data-lucide="terminal" class="w-4 h-4 shrink-0"></i>
+          <span>Code Sandbox</span>
+        </button>
+        <button onclick="switchTab('profile')" id="tabBtn-profile" class="tab-button w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-slate-400 hover:bg-slate-900 hover:text-slate-200">
+          <i data-lucide="user" class="w-4 h-4 shrink-0"></i>
+          <span>My Profile</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- SIDEBAR FOOTER DIAGNOSTICS -->
+    <div class="hidden md:block pt-6 border-t border-slate-800/60 text-center">
+      <div class="inline-flex items-center gap-1.5 text-[8px] code-font text-emerald-400/70 uppercase">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Node Terminal Connected</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       MAIN APP CONTAINER (CENTER/RIGHT SHELF)
+       ========================================== -->
+  <main class="flex-1 flex flex-col min-h-0">
+    
+    <!-- TOP STATS BAR -->
+    <header class="bg-[#0a0c12]/50 border-b border-slate-800/80 backdrop-blur pb-4 pt-4 px-6 flex items-center justify-between z-10">
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-bold text-slate-400 hidden sm:inline">Active Path:</span>
+        <select id="courseSelector" onchange="changeCourse(this.value)" class="bg-slate-900/90 border border-slate-800 text-xs text-white px-3 py-1.5 rounded-xl focus:ring-1 focus:ring-emerald-400 focus:outline-none cursor-pointer font-bold">
+          <option value="html">Web Development (HTML)</option>
+          <option value="python">Python Fundamentals</option>
+          <option value="cpp">C++ Systems Mastery</option>
+        </select>
+      </div>
+
+      <!-- COIN / SOUL STATS COUNTERS -->
+      <div class="flex items-center gap-4 text-xs font-bold">
+        <div class="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
+          <i data-lucide="flame" class="w-4 h-4 text-orange-400 animate-pulse"></i>
+          <span id="statStreak" class="text-white">1</span>
+        </div>
+        <div class="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
+          <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i>
+          <span id="statXp" class="text-white">0 XP</span>
+        </div>
+        <div class="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
+          <i data-lucide="coins" class="w-4 h-4 text-yellow-400"></i>
+          <span id="statCoins" class="text-white">100</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT DISPLAY FRAMES -->
+    <div class="flex-1 overflow-y-auto sleek-scroll p-6">
+      
+      <!--==========================================
+          TAB 1: LERN PATH & SKIP CONSOLE
+          ========================================== -->
+      <section id="pane-learn" class="pane max-w-2xl mx-auto space-y-8 block">
+        
+        <!-- MOTIVATION WELLCOME BOARD -->
+        <div class="relative overflow-hidden rounded-3xl bg-slate-900/30 border border-slate-800 p-6">
+          <div class="absolute -right-10 -top-10 w-36 h-36 bg-emerald-500/10 rounded-full blur-3xl"></div>
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-emerald-400 shrink-0">
+              <i data-lucide="target" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-base font-extrabold text-white">Your Cybernetic Training Roadmap</h2>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                Click on the network nodes below to launch modular interactive lessons. If any level is too easy, bypass the module instantly using the <strong class="text-cyan-400">"I Already Know This"</strong> skip matrix!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATH ZIGZAG DISPLAY CONTAINER -->
+        <div class="relative space-y-12 pb-16" id="learningPathAnchor">
+          <!-- Dynamically populated via renderCycle() -->
+        </div>
+
+      </section>
+
+      <!--==========================================
+          TAB 2: DAILY CHALLENGES UNIT
+          ========================================== -->
+      <section id="pane-challenges" class="pane max-w-2xl mx-auto space-y-8 hidden">
+        
+        <div class="text-center space-y-2 mb-6">
+          <span class="text-[10px] code-font font-extrabold uppercase tracking-widest text-[#00df89] bg-emerald-500/10 border border-emerald-400/20 px-3 py-1 rounded-full">
+            Daily Cybernetic Challenge
+          </span>
+          <h2 class="text-2xl font-black text-white">Solve Puzzles & Claim Royalties</h2>
+          <p class="text-xs text-slate-405 max-w-md mx-auto">
+            Test your programming logic daily. Complete the active puzzle to earn instant bonus XP, crystals, and gold tokens!
+          </p>
+        </div>
+
+        <div id="dailyChallengeContainer" class="space-y-6">
+          <!-- Populated by populateDailyChallenge() -->
+        </div>
+
+      </section>
+
+      <!--==========================================
+          TAB 3: INTERACTIVE CODE SANDBOX
+          ========================================== -->
+      <section id="pane-sandbox" class="pane max-w-4xl mx-auto space-y-6 hidden">
+        
+        <div class="bg-slate-900/40 border border-slate-800 p-6 rounded-3xl space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-805/80 pb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="terminal" class="text-cyan-450 w-5 h-5"></i>
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Cyber Sandbox Assembler</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+              <span class="text-[10px] code-font text-emerald-400 font-bold uppercase">REPL Engine online</span>
+            </div>
+          </div>
+          
+          <p class="text-xs text-slate-400">
+            Write JavaScript code inside this environment and verify immediate execution against the standard dev out consoles.
+          </p>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Left inputs editor -->
+            <div class="space-y-2">
+              <label class="text-[10px] code-font text-slate-400 font-bold uppercase">JS Source Code Input:</label>
+              <textarea id="sandboxCodeArea" class="w-full h-64 bg-black/60 border border-slate-800 rounded-2xl p-4 text-emerald-300 code-font text-xs focus:ring-1 focus:ring-emerald-400 focus:border-emerald-450 focus:outline-none leading-relaxed" placeholder="// Write javascript here...&#10;let total = 0;&#10;for(let idx=1; idx<=5; idx++) {&#10;  total += idx;&#10;}&#10;console.log('Sum output:', total);"></textarea>
+            </div>
+            <!-- Right Output logs -->
+            <div class="space-y-2">
+              <label class="text-[10px] code-font text-slate-400 font-bold uppercase">Dev Console Output logs:</label>
+              <div id="sandboxConsoleLog" class="w-full h-64 bg-slate-950/80 border border-slate-900 rounded-2xl p-4 text-slate-300 code-font text-xs overflow-y-auto leading-relaxed whitespace-pre-wrap select-text">
+<span class="text-slate-500">// Outputs will print here securely...</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-2">
+            <button onclick="clearLogs()" class="px-5 py-3.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 font-bold text-xs rounded-2xl transition">
+              Clear Console
+            </button>
+            <button onclick="runSandboxCode()" class="px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-2xl shadow-lg shadow-emerald-500/10 cursor-pointer flex items-center gap-2">
+              <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              Execute Script
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!--==========================================
+          TAB 4: MY PROFILE
+          ========================================== -->
+      <section id="pane-profile" class="pane max-w-xl mx-auto space-y-6 hidden">
+        
+        <div class="bg-slate-903/40 border border-slate-800/80 rounded-3xl p-6 relative overflow-hidden text-center space-y-6">
+          <div class="absolute -top-12 -left-12 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
+          
+          <!-- Avatar display -->
+          <div class="relative w-24 h-24 mx-auto bg-slate-900 border-2 border-emerald-500/30 rounded-3xl flex items-center justify-center shadow-xl">
+            <i data-lucide="user-cog" class="w-12 h-12 text-emerald-400"></i>
+            <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border border-slate-950 rounded-full"></span>
+          </div>
+
+          <div class="inline-block">
+            <h3 id="profileName" class="text-xl font-extrabold text-white">Guest Student</h3>
+            <span class="text-[9px] code-font font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">Active Recruit</span>
+          </div>
+
+          <!-- Quick statistics grid -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-900 space-y-1">
+              <span class="text-[9px] text-slate-500 code-font uppercase block">Global Rank Status</span>
+              <span class="text-base font-extrabold text-white">#1 Cyber Champion</span>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-900 space-y-1">
+              <span class="text-[9px] text-slate-500 code-font uppercase block">Total Experience</span>
+              <span id="profileXp" class="text-base font-extrabold text-indigo-400">0 XP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges Unlocked Showcase -->
+        <div class="bg-slate-900/10 border border-slate-800 p-6 rounded-3xl space-y-4">
+          <div class="flex items-center gap-2 border-b border-slate-800/80 pb-3">
+            <i data-lucide="shield-check" class="text-yellow-400 w-5 h-5"></i>
+            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-200">Earned Network Badges</h4>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3" id="badgeContainer">
+            <!-- Populated securely -->
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       MODAL: FULL SCREEN COGNITIVE LESSON
+       ========================================== -->
+  <dialog id="lessonModal" class="bg-transparent backdrop-blur-xl w-full max-w-2xl mx-auto h-auto focus:outline-none z-50">
+    <div class="bg-slate-950 border border-slate-800 shadow-[0_10px_50px_rgba(0,0,0,0.8)] rounded-3xl p-6 relative overflow-hidden space-y-6 m-4 text-slate-200">
+      
+      <!-- Progress Bar Tracker -->
+      <div class="flex items-center justify-between gap-4">
+        <span id="lessonModalTitle" class="text-xs font-bold text-emerald-400 uppercase tracking-wider">HTML DOM Introduction</span>
+        <button onclick="closeActiveLesson()" class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-slate-850 cursor-pointer text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Question Prompt Area -->
+      <div class="space-y-3 pt-2">
+        <div class="inline-flex items-center gap-2 text-[9px] font-bold code-font tracking-wide px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-400/20 uppercase">
+          Lesson Workspace
+        </div>
+        <p id="lessonQuestion" class="text-sm font-semibold text-slate-100 leading-relaxed"></p>
+      </div>
+
+      <!-- Code Snippet Area -->
+      <div id="lessonSnippetFrame" class="hidden relative font-mono text-xs bg-black p-4 rounded-xl border border-slate-900 select-text">
+        <span class="absolute top-2 right-2 text-[8px] tracking-wider text-slate-600 font-mono select-none uppercase">Source Snippet</span>
+        <pre id="lessonSnippet" class="text-cyan-400"></pre>
+      </div>
+
+      <!-- Live interactive input selection workspace -->
+      <div id="lessonInteractiveForm" class="py-2 space-y-3">
+        <!-- Inside here we append radio items or inputs based on payload -->
+      </div>
+
+      <!-- Interactive Verification Alert Output -->
+      <div id="lessonAlert" class="hidden p-4 rounded-2xl flex items-start gap-3 border text-xs animate-pulse">
+        <i id="lessonAlertIcon" data-lucide="alert-circle" class="w-5 h-5 shrink-0"></i>
+        <div>
+          <h5 id="lessonAlertHead" class="font-bold uppercase tracking-wide">Status Output</h5>
+          <p id="lessonAlertBody" class="mt-0.5 text-slate-300"></p>
+        </div>
+      </div>
+
+      <!-- Dialog Controls footer -->
+      <div class="flex items-center gap-3 pt-4 border-t border-slate-900">
+        <button id="lessonSubmitBtn" onclick="verifyLessonInput()" class="flex-1 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-2xl shadow-lg shadow-emerald-500/15 cursor-pointer">
+          Verify Choice
+        </button>
+        <button onclick="closeActiveLesson()" class="px-5 py-3.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:text-white font-bold text-xs rounded-2xl transition cursor-pointer">
+          Dismiss
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Notification Toast message tracker -->
+  <div id="quickToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-500 text-gray-950 px-5 py-3.5 rounded-2xl shadow-2xl border border-emerald-400 font-bold text-xs flex items-center gap-2 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <i data-lucide="check-circle" class="w-4 h-4 text-slate-950"></i>
+    <span id="quickToastMsg">State synchronized correctly.</span>
+  </div>
+
+  <!-- Audio Context synthesis controllers (For rewarding sound synthesis!) -->
+  <script>
+    const synthAudio = {
+      ctx: null,
+      playSuccess() {
+        try {
+          if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(330, this.ctx.currentTime); // Mi
+          osc.frequency.setValueAtTime(440, this.ctx.currentTime + 0.15); // La
+          osc.frequency.setValueAtTime(660, this.ctx.currentTime + 0.3); // High Mi
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.65);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.7);
+        } catch(e) {}
+      },
+      playError() {
+        try {
+          if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+          osc.frequency.setValueAtTime(110, this.ctx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.55);
+        } catch(e) {}
+      },
+      playSkip() {
+        try {
+          if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(260, this.ctx.currentTime);
+          osc.frequency.setValueAtTime(520, this.ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.45);
+        } catch(e) {}
+      }
+    };
+  </script>
+
+  <!-- ==========================================
+       DATA & BUSINESS LOGIC ENGINE
+       ========================================== -->
+  <script>
+    // 1. Data Definitions for courses and chapters
+    const COURSES_DATA = {
+      html: {
+        title: "Web Development (HTML)",
+        chapters: [
+          {
+            id: "html-intro",
+            title: "HTML Architecture Essentials",
+            nodes: [
+              {
+                id: "node-h0",
+                title: "DOM & Structuring",
+                type: "multiple-choice",
+                prompt: "Which HTML block element serves as the standard container division tool on modern sheets?",
+                options: ["<div> (Division Block)", "<span> (Inline span)", "<ol> (Ordered structure)", "<body> (Frame component)"],
+                correctIndex: 0,
+                snippet: "<!-- Structure Sample -->\n<div class=\"sleek-card\">\n  <span>Header</span>\n</div>"
+              },
+              {
+                id: "node-h1",
+                title: "Semantic Content tags",
+                type: "multiple-choice",
+                prompt: "Which semantic heading tag must be exclusively reserve-assigned for page title structures?",
+                options: ["<h6>", "<h1>", "<paragraph>", "<header-section>"],
+                correctIndex: 1,
+                snippet: "<!-- Core Page Title -->\n<h1>Cyber Assembly Base</h1>"
+              }
+            ]
+          },
+          {
+            id: "html-attributes",
+            title: "Attributes & Media elements",
+            nodes: [
+              {
+                id: "node-h2",
+                title: "Source anchor referencing",
+                type: "multiple-choice",
+                prompt: "To anchor an anchor reference element (<a href=\"\">) to open in a distinct separate window tab, which target designation code is needed?",
+                options: ["target=\"_blank\"", "target=\"_self\"", "rel=\"noreferrer\"", "window.tab=\"new\""],
+                correctIndex: 0,
+                snippet: "<a href=\"#\" target=\"_blank\">Direct Pipeline</a>"
+              }
+            ]
+          }
+        ]
+      },
+      python: {
+        title: "Python Fundamentals",
+        chapters: [
+          {
+            id: "py-basics",
+            title: "Dynamic Variable Management",
+            nodes: [
+              {
+                id: "node-p0",
+                title: "List comprehension",
+                type: "multiple-choice",
+                prompt: "What is the evaluated output of the following python list multiplication operation?",
+                options: ["['tech', 'tech', 'tech']", "['tech3']", "raise TypeError", "['tech', 3]"],
+                correctIndex: 0,
+                snippet: "tech_array = ['tech']\nmultiplied_stack = tech_array * 3\nprint(multiplied_stack)"
+              },
+              {
+                id: "node-p1",
+                title: "Slicing Operations",
+                type: "multiple-choice",
+                prompt: "Which array slicing parameters securely output elements 1 through 3 exclusively?",
+                options: ["array_items[1:4]", "array_items[0:3]", "array_items[1:3]", "array_items[:-2]"],
+                correctIndex: 0,
+                snippet: "array_items = ['A', 'B', 'C', 'D', 'E']\n# Slicing target ['B', 'C', 'D']"
+              }
+            ]
+          }
+        ]
+      },
+      cpp: {
+        title: "C++ Systems Mastery",
+        chapters: [
+          {
+            id: "cpp-pointers",
+            title: "Memory pointer allocations",
+            nodes: [
+              {
+                id: "node-c0",
+                title: "Reference assignment operators",
+                type: "multiple-choice",
+                prompt: "Which symbol operator retrieves the variable's physical hexadecimal memory allocation site address?",
+                options: ["& (Address pointer reference)", "* (Value assignment)", "-> (Arrow direction locator)", ":: (Scope resolution)"],
+                correctIndex: 0,
+                snippet: "int virtual_var = 125;\nstd::cout << &virtual_var << std::endl;"
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    // 2. Daily Challenges Data Setup
+    const DAILY_PULL_CHALLENGES = [
+      {
+        id: "dc-js-typeof",
+        type: "multiple-choice",
+        title: "The Arrays Confusion",
+        rewardXp: 35,
+        languages: "JavaScript",
+        prompt: "In JavaScript, arrays are designated as a specialized subset type of base object. What does the following statement evaluate to inside consoles?",
+        codeSnippet: "console.log(typeof []);",
+        choices: ["'array'", "'list'", "'object'", "'undefined'"],
+        correctChoiceIndex: 2
+      },
+      {
+        id: "dc-html-alignment",
+        type: "multiple-choice",
+        title: "Align layouts completely",
+        rewardXp: 50,
+        languages: "HTML / Tailwind",
+        prompt: "Which combination of layout attributes centers items completely in a Flex container parent element?",
+        codeSnippet: "<div class=\"flex justify-center items-center\">\n  <span>Cyber Center element</span>\n</div>",
+        choices: ["justify-between & items-start", "justify-center & items-center", "flex-col & items-stretch", "flex-wrap & ring-0"],
+        correctChoiceIndex: 1
+      }
+    ];
+
+    // Default Starting Application State Configuration
+    let userAppState = {
+      course: "html",
+      xp: 45,
+      coins: 120,
+      streak: 1,
+      completedNodes: [], // Arrays of completed node matching IDs
+      completedChapters: [], // Completed chapter target IDs skipped or finished
+      badges: ["daily-recruit"]
+    };
+
+    // Initialization trigger
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromStorage();
+      renderCycle();
+      populateDailyChallenge();
+      syncBadgeShowcase();
+      lucide.createIcons();
+    });
+
+    // 3. Persistent LocalStorage Synching
+    function loadStateFromStorage() {
+      const fetchedState = localStorage.getItem('bg_code_state');
+      if (fetchedState) {
+        try {
+          userAppState = JSON.parse(fetchedState);
+          // Apply fallback values if properties from older version are missing
+          if (!userAppState.completedChapters) userAppState.completedChapters = [];
+          if (!userAppState.badges) userAppState.badges = ["daily-recruit"];
+        } catch(e) {}
+      }
+      updateDomHeaderStats();
+    }
+
+    function saveStateToStorage() {
+      localStorage.setItem('bg_code_state', JSON.stringify(userAppState));
+      updateDomHeaderStats();
+    }
+
+    function updateDomHeaderStats() {
+      document.getElementById('statStreak').textContent = userAppState.streak;
+      document.getElementById('statXp').textContent = `${userAppState.xp} XP`;
+      document.getElementById('statCoins').textContent = userAppState.coins;
+    }
+
+    // 4. Learning Pathways Node Zigzag Renderer
+    function renderCycle() {
+      const activeCourseKey = userAppState.course;
+      const coursePayload = COURSES_DATA[activeCourseKey];
+      const anchorNode = document.getElementById('learningPathAnchor');
+      
+      let elementsStackMarkup = "";
+
+      coursePayload.chapters.forEach((chapter, chapterIdx) => {
+        const isChapterSkipped = userAppState.completedChapters.includes(chapter.id);
+        const allChaptersNodesFinished = chapter.nodes.every(node => userAppState.completedNodes.includes(node.id));
+        const showCompletedChapterState = isChapterSkipped || allChaptersNodesFinished;
+
+        elementsStackMarkup += `
+          <!-- CHAPTER MODULE WORKSPACE -->
+          <div class="space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+              <div>
+                <span class="text-[9px] code-font font-bold text-slate-500 uppercase tracking-widest block">Chapter Core Stage 0${chapterIdx + 1}</span>
+                <h4 class="text-sm font-extrabold text-white">${chapter.title}</h4>
+              </div>
+              
+              <!-- "I Already Know This" (Skip Level Button) -->
+              ${showCompletedChapterState ? `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-extrabold text-[10px] uppercase rounded-xl">
+                  <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+                  <span>Completed</span>
+                </div>
+              ` : `
+                <button onclick="skipActiveChapter('${chapter.id}')" class="px-3.5 py-2 bg-slate-900 border border-slate-800 hover:border-cyan-500/40 text-cyan-400 hover:text-cyan-300 font-extrabold text-[10px] uppercase rounded-xl tracking-wider select-none shrink-0 transition flex items-center gap-1.5 cursor-pointer">
+                  <i data-lucide="chevrons-right" class="w-3.5 h-3.5"></i>
+                  <span>I already know this</span>
+                </button>
+              `}
+            </div>
+
+            <!-- NODE ZIGZAG GRID -->
+            <div class="relative py-4 flex flex-col items-center gap-8">
+              <!-- Inline Vertical path connection guide -->
+              <div class="absolute top-4 bottom-4 w-1 path-line-draw opacity-40 rounded"></div>
+
+              ${chapter.nodes.map((node, nodeIdx) => {
+                const isCompleted = userAppState.completedNodes.includes(node.id) || showCompletedChapterState;
+                const offsetShiftClass = nodeIdx % 2 === 0 ? "sm:translate-x-12" : "sm:-translate-x-12";
+                
+                return `
+                  <div class="relative z-10 flex flex-col items-center ${offsetShiftClass} transition duration-500">
+                    <button 
+                      onclick="openLessonNode('${activeCourseKey}', '${chapter.id}', '${node.id}')"
+                      class="w-16 h-16 rounded-full flex items-center justify-center border-2 cursor-pointer transition-all ${
+                        isCompleted
+                          ? "bg-emerald-500/20 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.25)] text-emerald-300 hover:bg-emerald-500/30"
+                          : "bg-slate-900 border-slate-800 hover:border-slate-600 text-slate-400 hover:text-white"
+                      }"
+                    >
+                      ${isCompleted ? '<i data-lucide="check" class="w-7 h-7 stroke-[3px]"></i>' : '<i data-lucide="code-2" class="w-6 h-6 animate-pulse"></i>'}
+                    </button>
+                    <span class="text-[10px] code-font font-bold mt-2 bg-black/60 px-2.5 py-1 border border-slate-800 rounded-lg text-slate-300">
+                      ${node.title}
+                    </span>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      });
+
+      anchorNode.innerHTML = elementsStackMarkup;
+      lucide.createIcons();
+    }
+
+    // Tab switcher console navigator
+    function switchTab(tabId) {
+      document.querySelectorAll('.pane').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`pane-${tabId}`).classList.remove('hidden');
+
+      // Update Nav buttons
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('text-emerald-400', 'bg-emerald-500/10', 'border', 'border-emerald-500/20');
+        btn.classList.add('text-slate-400', 'hover:bg-slate-900', 'hover:text-slate-200');
+      });
+
+      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-900', 'hover:text-slate-200');
+        activeBtn.classList.add('text-emerald-400', 'bg-emerald-500/10', 'border', 'border-emerald-500/20');
+      }
+    }
+
+    // Selector Course modifier
+    function changeCourse(courseKey) {
+      userAppState.course = courseKey;
+      saveStateToStorage();
+      renderCycle();
+      triggerToastAlert(`Switched pathway active to: ${COURSES_DATA[courseKey].title}`);
+    }
+
+    // 5. "I Already Know This" Bypass Module logic
+    function skipActiveChapter(chapterId) {
+      synthAudio.playSkip();
+      if (!userAppState.completedChapters.includes(chapterId)) {
+        userAppState.completedChapters.push(chapterId);
+      }
+
+      // Add 25 bonus XP & sync coins
+      userAppState.xp += 30;
+      userAppState.coins += 10;
+
+      // Unlocked skip achievement badge checks
+      if (!userAppState.badges.includes("trailblazer")) {
+        userAppState.badges.push("trailblazer");
+      }
+
+      saveStateToStorage();
+      renderCycle();
+      syncBadgeShowcase();
+      triggerToastAlert("Chapter credentials evaluated successfully: Module Bypassed!");
+    }
+
+    // 6. Interactive Live lesson execution system
+    let activeLessonContext = null;
+
+    function openLessonNode(courseId, chapterId, nodeId) {
+      const course = COURSES_DATA[courseId];
+      const chapter = course.chapters.find(c => c.id === chapterId);
+      const node = chapter.nodes.find(n => n.id === nodeId);
+
+      activeLessonContext = node;
+
+      document.getElementById('lessonModalTitle').textContent = `${chapter.title} / ${node.title}`;
+      document.getElementById('lessonQuestion').textContent = node.prompt;
+      
+      // Setup HTML Snippet block
+      const snippetNode = document.getElementById('lessonSnippetFrame');
+      if (node.snippet) {
+         snippetNode.classList.remove('hidden');
+         document.getElementById('lessonSnippet').textContent = node.snippet;
+      } else {
+         snippetNode.classList.add('hidden');
+      }
+
+      // Setup choices selector layout
+      const interactiveForm = document.getElementById('lessonInteractiveForm');
+      interactiveForm.innerHTML = "";
+      
+      node.options.forEach((opt, idx) => {
+        interactiveForm.innerHTML += `
+          <button onclick="setLessonChoice(${idx})" id="lessonOpt-${idx}" class="lesson-option-choice w-full text-left p-3 rounded-xl border text-xs font-semibold bg-slate-900/60 border-slate-800 text-slate-400 hover:bg-slate-900 hover:text-white hover:border-slate-700 transition cursor-pointer flex items-center justify-between">
+            <span>${opt}</span>
+            <div class="choice-marker w-4 h-4 rounded-full border border-slate-700 flex items-center justify-center text-[10px]"></div>
+          </button>
+        `;
+      });
+
+      // Clear alert blocks
+      document.getElementById('lessonAlert').classList.add('hidden');
+
+      const modal = document.getElementById('lessonModal');
+      modal.showModal();
+    }
+
+    let activeSelectedOptionIndex = null;
+    function setLessonChoice(idx) {
+      activeSelectedOptionIndex = idx;
+      document.querySelectorAll('.lesson-option-choice').forEach(btn => {
+        btn.classList.add('bg-slate-900/60', 'border-slate-800', 'text-slate-400');
+        btn.classList.remove('bg-emerald-500/10', 'border-emerald-500/40', 'text-white');
+        btn.querySelector('.choice-marker').classList.remove('bg-emerald-400', 'border-emerald-500');
+        btn.querySelector('.choice-marker').innerHTML = "";
+      });
+
+      const selectedButton = document.getElementById(`lessonOpt-${idx}`);
+      selectedButton.classList.remove('bg-slate-900/60', 'border-slate-800', 'text-slate-400');
+      selectedButton.classList.add('bg-emerald-500/10', 'border-emerald-500/40', 'text-white');
+      selectedButton.querySelector('.choice-marker').classList.add('bg-emerald-400', 'border-emerald-500');
+      selectedButton.querySelector('.choice-marker').innerHTML = "✓";
+    }
+
+    function verifyLessonInput() {
+      if (activeSelectedOptionIndex === null) {
+        setLessonModalAlert(false, "No input evaluated. Please select an option first!");
+        return;
+      }
+
+      const isCorrect = activeSelectedOptionIndex === activeLessonContext.correctIndex;
+
+      if (isCorrect) {
+        synthAudio.playSuccess();
+        setLessonModalAlert(true, "Solution verified successfully! +15 XP rewarded");
+        
+        // Add completion states
+        if (!userAppState.completedNodes.includes(activeLessonContext.id)) {
+           userAppState.completedNodes.push(activeLessonContext.id);
+           userAppState.xp += 15;
+           userAppState.coins += 5;
+        }
+
+        saveStateToStorage();
+        renderCycle();
+        
+        setTimeout(() => {
+          closeActiveLesson();
+        }, 1800);
+
+      } else {
+        synthAudio.playError();
+        setLessonModalAlert(false, "Incorrect matching paradigm. Re-read details and retry!");
+      }
+    }
+
+    function setLessonModalAlert(isCorrect, msg) {
+      const alertDiv = document.getElementById('lessonAlert');
+      const alertHead = document.getElementById('lessonAlertHead');
+      const alertBody = document.getElementById('lessonAlertBody');
+      const alertIcon = document.getElementById('lessonAlertIcon');
+
+      alertDiv.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-red-500/10', 'border-red-500/30', 'text-red-400');
+
+      if (isCorrect) {
+        alertDiv.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+        alertHead.textContent = "Compile Pass";
+        alertIcon.setAttribute('data-lucide', 'check-circle-2');
+      } else {
+        alertDiv.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
+        alertHead.textContent = "Syntax Mismatch";
+        alertIcon.setAttribute('data-lucide', 'alert-circle');
+      }
+
+      alertBody.textContent = msg;
+      alertDiv.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeActiveLesson() {
+      document.getElementById('lessonModal').close();
+      activeLessonContext = null;
+      activeSelectedOptionIndex = null;
+    }
+
+    // 7. Dynamic Daily Challenge component builder
+    function populateDailyChallenge() {
+      const container = document.getElementById('dailyChallengeContainer');
+      const todayChallenge = DAILY_PULL_CHALLENGES[0]; // Anchor target block
+
+      container.innerHTML = `
+        <div class="sleek-card bg-[#0a0c12]/80 border border-slate-800/85 rounded-3xl p-6 relative overflow-hidden space-y-6">
+          <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-[50px] pointer-events-none"></div>
+
+          <div class="flex items-center justify-between border-b border-slate-850 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)] animate-pulse shrink-0">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <span class="text-[9px] code-font tracking-widest text-[#00df89] font-bold block uppercase">CYBERNETIC COGNITION UNIT</span>
+                <h4 class="text-xs font-extrabold text-slate-300">Topic Area: ${todayChallenge.title}</h4>
+              </div>
+            </div>
+            <span class="text-[9px] px-2 py-0.5 rounded-lg bg-orange-500/10 text-orange-400 border border-orange-400/20 uppercase font-mono font-bold">${todayChallenge.languages}</span>
+          </div>
+
+          <p class="text-xs text-slate-200 font-medium leading-relaxed">
+            ${todayChallenge.prompt}
+          </p>
+
+          <!-- Source code block -->
+          <div class="relative font-mono text-xs bg-black/50 p-4 rounded-xl border border-slate-900 select-all">
+            <span class="absolute top-2 right-2 text-[8px] text-slate-650 font-mono tracking-wider select-none uppercase">Source</span>
+            <pre class="text-[#02ffd0]">${todayChallenge.codeSnippet}</pre>
+          </div>
+
+          <!-- Multiple choices display -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="dcChoicesGrid">
+            ${todayChallenge.choices.map((choice, idx) => `
+              <button onclick="evaluateDailyChallengeSelect(${idx})" id="dcChoice-${idx}" class="dc-selector-item w-full text-left p-3 rounded-xl border text-xs font-bold transition flex items-center gap-3 cursor-pointer bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700">
+                <div class="dc-marker-box w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px] shrink-0">
+                  ${String.fromCharCode(65 + idx)}
+                </div>
+                <span class="truncate">${choice}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div id="dcFeedback" class="hidden p-4 rounded-2xl text-xs gap-3 flex items-start border animate-pulse"></div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    function evaluateDailyChallengeSelect(idx) {
+      const todayChallenge = DAILY_PULL_CHALLENGES[0];
+      const feedbackDiv = document.getElementById('dcFeedback');
+      
+      document.querySelectorAll('.dc-selector-item').forEach(btn => {
+        btn.classList.add('bg-slate-900/60', 'border-slate-800', 'text-slate-400');
+        btn.classList.remove('bg-emerald-500/10', 'border-emerald-500/40', 'text-white');
+      });
+
+      const selectedButton = document.getElementById(`dcChoice-${idx}`);
+      selectedButton.classList.remove('bg-slate-900/60', 'border-slate-800', 'text-slate-400');
+      
+      const isCorrect = idx === todayChallenge.correctChoiceIndex;
+
+      feedbackDiv.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-red-500/10', 'border-red-500/30', 'text-red-400');
+
+      if (isCorrect) {
+        synthAudio.playSuccess();
+        selectedButton.classList.add('bg-emerald-500/10', 'border-emerald-400', 'text-white');
+        
+        feedbackDiv.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+        feedbackDiv.innerHTML = `
+          <div class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">✓</div>
+          <div>
+            <h5 class="font-extrabold uppercase">Challenge Solved!</h5>
+            <p class="mt-0.5 text-slate-300">Prompt compiles correctly! +35 XP and +15 Coins added to your parameters.</p>
+          </div>
+        `;
+
+        // Reward and update
+        userAppState.xp += todayChallenge.rewardXp;
+        userAppState.coins += 15;
+        
+        // Unlock badge check for completeness
+        if (!userAppState.badges.includes("daily-challenger")) {
+          userAppState.badges.push("daily-challenger");
+        }
+
+        saveStateToStorage();
+        syncBadgeShowcase();
+
+      } else {
+        synthAudio.playError();
+        selectedButton.classList.add('bg-red-500/10', 'border-red-400', 'text-white');
+
+        feedbackDiv.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
+        feedbackDiv.innerHTML = `
+          <div class="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 shrink-0">✗</div>
+          <div>
+            <h5 class="font-extrabold uppercase">Access Denied</h5>
+            <p class="mt-0.5 text-slate-300">Incorrect option match. Check Javascript array definitions and try again.</p>
+          </div>
+        `;
+      }
+      feedbackDiv.classList.remove('hidden');
+    }
+
+    // 8. Visual Toast Alerts Generator
+    function triggerToastAlert(msg) {
+      const toast = document.getElementById('quickToast');
+      const toastMsg = document.getElementById('quickToastMsg');
+      
+      toastMsg.textContent = msg;
+      
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2400);
+    }
+
+    // 9. REPL Script Sandbox compilation
+    function runSandboxCode() {
+      const code = document.getElementById('sandboxCodeArea').value;
+      const logContainer = document.getElementById('sandboxConsoleLog');
+      
+      logContainer.innerHTML = "";
+      
+      // Override standard console logs within runtime window sandbox
+      const localLogs = [];
+      const originalConsoleLog = console.log;
+      
+      console.log = function(...args) {
+        localLogs.push(args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(" "));
+        originalConsoleLog.apply(console, args);
+      };
+
+      try {
+        // Evaluate user Javascript securely
+        const resultVal = eval(code);
+        
+        if (localLogs.length > 0) {
+           logContainer.innerHTML = localLogs.map(log => `<div class="text-emerald-400 font-medium">➡️ ${log}</div>`).join("");
+        } else {
+           logContainer.innerHTML = `<div class="text-slate-500">// Evaluated successfully (No dev console logs printed)</div>`;
+        }
+
+        if (resultVal !== undefined) {
+           logContainer.innerHTML += `<div class="text-cyan-400 mt-2 font-bold select-all border-t border-slate-900 pt-2 text-[11px] uppercase tracking-wider">Evaluation Output: ${resultVal}</div>`;
+        }
+
+        triggerToastAlert("Script compiled, check Dev Output Console logs!");
+        
+      } catch(error) {
+        logContainer.innerHTML = `<div class="text-red-400 font-bold border-l-2 border-red-500 pl-2">Error during evaluation:\n\n${error.message}</div>`;
+      }
+
+      // Restore base logging behavior
+      console.log = originalConsoleLog;
+    }
+
+    function clearLogs() {
+      document.getElementById('sandboxConsoleLog').innerHTML = `<span class="text-slate-500">// Outputs will print here securely...</span>`;
+    }
+
+    // 10. Sync Profile view and badges achievements
+    function syncBadgeShowcase() {
+      const parent = document.getElementById('badgeContainer');
+      const profileXp = document.getElementById('profileXp');
+      
+      profileXp.textContent = `${userAppState.xp} XP`;
+
+      const badgesMetadata = {
+        "daily-recruit": { title: "Daily Recruit", desc: "Initiated training roadmap securely", icon: "award", color: "text-emerald-400 bg-emerald-500/10 border-emerald-400/20" },
+        "trailblazer": { title: "Fast-Track Pass", desc: "Bypassed basic level blocks with skip module", icon: "zap", color: "text-cyan-400 bg-cyan-500/10 border-cyan-400/20" },
+        "daily-challenger": { title: "Challenge Breaker", desc: "Cracked active daily neon coding questions!", icon: "shield-check", color: "text-indigo-400 bg-indigo-500/10 border-indigo-400/20" }
+      };
+
+      let markup = "";
+      userAppState.badges.forEach(badgeId => {
+        const item = badgesMetadata[badgeId];
+        if (item) {
+          markup += `
+            <div class="flex items-start gap-3 p-3.5 bg-slate-950 rounded-2xl border border-slate-900 transition hover:border-slate-800">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${item.color}">
+                <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+              </div>
+              <div class="text-left">
+                <h5 class="text-xs font-extrabold text-white leading-normal">${item.title}</h5>
+                <p class="text-[10px] text-slate-500 leading-normal mt-0.5">${item.desc}</p>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      parent.innerHTML = markup || `<div class="col-span-2 text-center text-xs text-slate-500 py-4 font-bold">No active achievement badges documented. Complete tasks to claim rewards!</div>`;
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
