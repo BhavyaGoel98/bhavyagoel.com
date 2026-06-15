@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balaji Lifecare Clinic - Rohini Sector 22, New Delhi</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            brandBlue: '#1E40AF',
+            brandPink: '#DB2777',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Print utility */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #print-receipt-section, #print-receipt-section * {
+        visibility: visible;
+      }
+      #print-receipt-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 font-sans selection:bg-blue-100 selection:text-blue-900 antialiased overflow-x-hidden">
+
+  <!-- ================= TOP FLOATING BADGE HEADER ================= -->
+  <div class="bg-[#1E40AF] text-white text-xs py-2 px-4 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 font-sans tracking-wide">
+    <div class="flex items-center gap-4 flex-wrap justify-center font-medium">
+      <span class="flex items-center gap-1.5 min-w-max">
+        <i data-lucide="clock" class="w-3.5 h-3.5 text-[#F472B6]"></i>
+        <span class="font-semibold text-[#FDF2F8]">Timings:</span> Monday &ndash; Sunday, 9:00 AM &ndash; 9:00 PM
+      </span>
+      <span class="hidden sm:inline text-blue-300">|</span>
+      <span class="flex items-center gap-1.5 min-w-max">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-[#F472B6]"></i>
+        <span>Rohini Sector 22, New Delhi</span>
+      </span>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <span class="bg-[#DB2777] text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider animate-pulse">
+        7 Days Open
+      </span>
+      <span class="text-blue-100 hidden sm:inline">Rating: 4.9★ (184 Patients Verified)</span>
+    </div>
+  </div>
+
+  <!-- ================= CLINIC HEADER STICKY BAR ================= -->
+  <header id="sticky-header" class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100 py-3 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        <!-- Logo / Brand Identity -->
+        <a href="#home" class="flex items-center gap-2 group">
+          <div class="bg-gradient-to-tr from-[#1E40AF] to-[#3B82F6] p-2.5 rounded-xl text-white shadow-md shadow-blue-200 transition-all group-hover:scale-105">
+            <i data-lucide="stethoscope" class="w-6 h-6"></i>
+          </div>
+          <div class="text-left">
+            <h1 class="font-sans font-bold text-lg md:text-xl text-[#1E3A8A] leading-tight">
+              Balaji <span class="text-[#DB2777]">Lifecare</span>
+            </h1>
+            <p class="text-[10px] md:text-xs text-gray-500 font-medium tracking-tight">
+              Gynecology, Surgery & General Health
+            </p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Items -->
+        <nav class="hidden lg:flex items-center gap-6">
+          <a href="#home" class="nav-link text-sm font-semibold transition-all text-[#1E40AF]">Home</a>
+          <a href="#doctors" class="nav-link text-sm font-semibold transition-all text-gray-600 hover:text-[#1E40AF]">About Doctors</a>
+          <a href="#services" class="nav-link text-sm font-semibold transition-all text-gray-600 hover:text-[#1E40AF]">Our Services</a>
+          <a href="#reviews" class="nav-link text-sm font-semibold transition-all text-gray-600 hover:text-[#1E40AF]">Patient Reviews</a>
+          <a href="#contact" class="nav-link text-sm font-semibold transition-all text-gray-600 hover:text-[#1E40AF]">Contact Us</a>
+        </nav>
+
+        <!-- Desktop Support Buttons -->
+        <div class="hidden sm:flex items-center gap-4">
+          <a href="tel:+919899297702" class="flex items-center gap-1.5 text-sm font-semibold text-[#1E3A8A] hover:text-[#DB2777] transition-all">
+            <div class="bg-blue-50 p-2 rounded-full text-[#1E40AF]">
+              <i data-lucide="phone" class="w-4 h-4 animate-bounce"></i>
+            </div>
+            <div class="text-left leading-none">
+              <span class="block text-[10px] text-gray-400 font-normal">Call Clinic</span>
+              <span class="text-xs md:text-sm font-bold">+91 98992 97702</span>
+            </div>
+          </a>
+          <a href="#booking" class="bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] hover:brightness-110 text-white text-xs md:text-sm font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-blue-100 transition-all hover:scale-[1.02] active:scale-95 text-center">
+            Book Appointment
+          </a>
+        </div>
+
+        <!-- Mobile Actions Menu -->
+        <div class="flex items-center lg:hidden gap-3">
+          <a href="tel:+919899297702" class="bg-blue-50 p-2.5 rounded-xl text-[#1E40AF] sm:hidden">
+            <i data-lucide="phone" class="w-5 h-5"></i>
+          </a>
+          <button id="toggle-mobile-menu" class="text-gray-600 hover:text-gray-900 p-1.5 hover:bg-gray-50 rounded-xl" aria-label="Toggle Navigation">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-xl absolute top-full left-0 right-0 py-5 px-6 transition-all duration-350">
+      <div class="flex flex-col gap-4 text-left">
+        <a href="#home" class="mobile-nav-link text-base font-semibold text-[#1E40AF] py-2 border-b border-gray-50">Home</a>
+        <a href="#doctors" class="mobile-nav-link text-base font-semibold text-gray-700 hover:text-[#1E40AF] py-2 border-b border-gray-50">Meet Doctors</a>
+        <a href="#services" class="mobile-nav-link text-base font-semibold text-gray-700 hover:text-[#1E40AF] py-2 border-b border-gray-50">Our Services</a>
+        <a href="#reviews" class="mobile-nav-link text-base font-semibold text-gray-700 hover:text-[#1E40AF] py-2 border-b border-gray-50">Patient Reviews</a>
+        <a href="#contact" class="mobile-nav-link text-base font-semibold text-gray-700 hover:text-[#1E40AF] py-2 border-b border-gray-50">Directions & Maps</a>
+        
+        <div class="flex flex-col sm:flex-row gap-4 pt-3">
+          <a href="tel:+919899297702" class="flex items-center justify-center gap-2 bg-blue-50 text-[#1E40AF] py-3 rounded-xl font-semibold text-sm transition-all">
+            <i data-lucide="phone" class="w-4 h-4"></i>
+            <span>Call +91 98992 97702</span>
+          </a>
+          <a href="#booking" class="bg-gradient-to-r from-[#1E40AF] to-[#3B82F6] text-white py-3 rounded-xl font-bold text-sm text-center shadow-md shadow-blue-100 flex items-center justify-center">
+            Book Appointment Slot
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ================= SECTION A: HERO LANDING ================= -->
+  <section id="home" class="relative bg-white pt-8 pb-16 md:pb-24 overflow-hidden border-b border-slate-100">
+    <div class="absolute top-0 right-0 w-[50%] h-[100%] bg-gradient-to-l from-blue-50/40 via-white to-white pointer-events-none"></div>
+    <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-pink-50/20 blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Text Left Block -->
+        <div class="lg:col-span-7 space-y-6 md:space-y-8 text-left">
+          <div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full text-blue-800 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+            <span>Expert Medical Care In Rohini Sector 22, New Delhi</span>
+          </div>
+
+          <div class="space-y-4">
+            <h2 class="font-heading font-bold text-3xl sm:text-4xl md:text-5xl text-[#1E3A8A] leading-tight tracking-tight">
+              Compassionate Healthcare <br class="hidden sm:inline">
+              For Your <span class="text-[#DB2777]">Entire Family</span>
+            </h2>
+            <p class="text-sm md:text-base text-gray-600 leading-relaxed max-w-2xl">
+              Welcome to <strong>Balaji Lifecare Clinic</strong>—your verified trusted hub for high-quality Gynecology, Obstetrics, General Surgery, and family medicine consultations. Under the professional guidance of Delhi's senior specialists, we provide robust care for you.
+            </p>
+          </div>
+
+          <!-- Doctor Intro Highlights Panel -->
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-150 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-start gap-2.5">
+              <div class="bg-pink-100 p-2 rounded-xl text-[#DB2777] mt-0.5">
+                <i data-lucide="baby" class="w-4.5 h-4.5"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-extrabold text-slate-900">Dr. Deepika Aggarwal</h4>
+                <p class="text-[11px] text-gray-500">Senior Gynecologist & Obstetrician</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start gap-2.5 sm:border-l sm:border-slate-200 sm:pl-4">
+              <div class="bg-blue-100 p-2 rounded-xl text-blue-700 mt-0.5">
+                <i data-lucide="activity" class="w-4.5 h-4.5"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-extrabold text-slate-900">Dr. Nikhil Agarwal</h4>
+                <p class="text-[11px] text-gray-500">General Surgeon & Physician (MS)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Bullets -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+            <div class="flex items-center gap-2">
+              <div class="bg-emerald-50 text-emerald-700 p-2 rounded-full border border-emerald-100">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+              </div>
+              <div class="text-left">
+                <span class="block text-xs font-black text-slate-900">Open 7 Days</span>
+                <span class="text-[10px] text-gray-400">9:00 AM &ndash; 9:00 PM</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="bg-pink-50 text-[#DB2777] p-2 rounded-full border border-pink-100">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+              </div>
+              <div class="text-left">
+                <span class="block text-xs font-black text-slate-900">Multi-Specialty</span>
+                <span class="text-[10px] text-gray-400">Gynae & Surgery Clinic</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="bg-blue-50 text-blue-700 p-2 rounded-full border border-blue-100">
+                <i data-lucide="award" class="w-4 h-4"></i>
+              </div>
+              <div class="text-left">
+                <span class="block text-xs font-black text-slate-900">4.9/5 Patient Rated</span>
+                <span class="text-[10px] text-gray-400">Strictly Hygenic Clinic</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Buttons -->
+          <div class="flex flex-col sm:flex-row items-center gap-4 pt-3">
+            <a href="#booking" class="w-full sm:w-auto bg-gradient-to-r from-blue-700 to-blue-600 hover:bg-blue-800 text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-blue-100 transition-all text-center text-sm">
+              Book Appointment Now
+            </a>
+            <a href="tel:+919899297702" class="w-full sm:w-auto bg-pink-50 hover:bg-pink-100 border border-pink-200 text-[#DB2777] font-bold px-8 py-3.5 rounded-2xl transition-all text-center text-sm">
+              Call Hotline: +91 98992 97702
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Visual Showcase Widget (5 Cols) -->
+        <div class="lg:col-span-5 relative mt-8 lg:mt-0">
+          <div class="relative mx-auto max-w-sm rounded-[2.5rem] bg-gradient-to-tr from-blue-600 via-pink-400 to-pink-500 p-2 shadow-2xl">
+            <div class="bg-white rounded-[2.3rem] p-6 space-y-6 relative overflow-hidden">
+              
+              <div class="flex justify-between items-center pb-4 border-b border-gray-100">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="building-2" class="w-5 h-5 text-blue-600"></i>
+                  <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Desk Status</span>
+                </div>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+                  Open Today
+                </span>
+              </div>
+
+              <!-- Gynae Block -->
+              <div class="space-y-2 text-left">
+                <span class="text-[10px] font-bold uppercase text-pink-600 tracking-wider">Female Health Department</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 bg-pink-100 text-[#DB2777] rounded-xl flex items-center justify-center font-extrabold text-sm">
+                    DA
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-bold text-gray-900">Dr. Deepika Aggarwal</h4>
+                    <p class="text-xs text-gray-400">Obstetrician & Gynecologist</p>
+                  </div>
+                  <button onclick="selectDoctorAndScroll('Dr. Deepika Aggarwal')" class="bg-pink-50 text-pink-600 hover:bg-pink-100 border border-pink-100 p-1.5 rounded-lg">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Surgeon Block -->
+              <div class="space-y-2 text-left">
+                <span class="text-[10px] font-bold uppercase text-blue-600 tracking-wider">General Surgery & Physician</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center font-extrabold text-sm">
+                    NA
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-bold text-gray-900">Dr. Nikhil Agarwal</h4>
+                    <p class="text-xs text-gray-400 font-medium">General Surgeon & Physcian</p>
+                  </div>
+                  <button onclick="selectDoctorAndScroll('Dr. Nikhil Agarwal')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-100 p-1.5 rounded-lg">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Ratings -->
+              <div class="bg-slate-50 rounded-2xl p-4 text-left border border-slate-100 space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-gray-500 font-semibold">Hygiene Score:</span>
+                  <span class="font-extrabold text-slate-900">4.9/5 Excellent</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 font-semibold">Patient Behavior:</span>
+                  <span class="font-extrabold text-slate-900">5.0/5 Star Rated</span>
+                </div>
+              </div>
+
+              <div class="pt-2 text-center text-xs text-gray-400 border-t border-gray-100 flex items-center justify-center gap-1">
+                <i data-lucide="star" class="w-4.5 h-4.5 fill-amber-400 text-amber-400"></i>
+                <strong class="text-slate-900">4.9 / 5 Overall rating</strong>
+                <span>(184 Rohini Patients Reviewed)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom floating absolute badge -->
+          <div class="absolute -bottom-4 -left-4 bg-white border border-gray-100 p-3 rounded-2xl shadow-lg flex items-center gap-2 max-w-[210px] text-left">
+            <div class="bg-emerald-100 p-1.5 rounded-lg text-emerald-700 shrink-0">
+              <i data-lucide="shield-check" class="w-4.5 h-4.5"></i>
+            </div>
+            <div>
+              <span class="block text-[10px] font-black uppercase text-emerald-600">Local Verified</span>
+              <span class="text-[10px] text-gray-500">Government Registered clinic</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= SECTION B: ABOUT THE DOCTORS (CRITICAL SECTION) ================= -->
+  <section id="doctors" class="py-16 md:py-24 bg-gradient-to-b from-[#F8FAFC] to-white scroll-mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+        <span class="text-xs bg-pink-100 text-[#DB2777] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest">
+          Medical Specialists
+        </span>
+        <h2 class="font-heading font-black text-2xl md:text-3.5xl text-[#1E3A8A]">
+          Meet Our Senior Clinical Advisors
+        </h2>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Led by Senior Gynecologist Dr. Deepika Aggarwal and General Surgeon Dr. Nikhil Agarwal, offering compassionate medical guidance daily.
+        </p>
+
+        <!-- Tab switches to highlight doctors individually -->
+        <div class="inline-flex items-center gap-2 bg-gray-100 border border-gray-200 p-1 rounded-full mt-4">
+          <button onclick="filterDoctorSection('all')" id="doc-tab-all" class="px-5 py-1.5 rounded-full text-xs font-bold transition-all bg-white text-gray-950 shadow-sm cursor-pointer">
+            All Doctors
+          </button>
+          <button onclick="filterDoctorSection('deepika')" id="doc-tab-deepika" class="px-5 py-1.5 rounded-full text-xs font-bold transition-all text-gray-600 hover:text-[#1E40AF] cursor-pointer">
+            Gynecology Care
+          </button>
+          <button onclick="filterDoctorSection('nikhil')" id="doc-tab-nikhil" class="px-5 py-1.5 rounded-full text-xs font-bold transition-all text-gray-600 hover:text-[#1E40AF] cursor-pointer">
+            General Surgery
+          </button>
+        </div>
+      </div>
+
+      <!-- Docs Cards Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        
+        <!-- Deepika Card -->
+        <div id="card-deepika" class="doc-card bg-white rounded-3xl border border-gray-100 p-6 md:p-8 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between hover:border-pink-205 hover:border-pink-200 relative overflow-hidden text-left">
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-pink-500 opacity-5 blur-3xl pointer-events-none"></div>
+          <div>
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6 pb-6 border-b border-gray-100">
+              <div class="w-28 h-28 rounded-2xl shrink-0 flex flex-col items-center justify-center bg-gradient-to-tr from-pink-50 to-white border border-pink-200 p-2 relative shadow-sm">
+                <div class="text-center text-pink-700">
+                  <i data-lucide="baby" class="w-10 h-10 mx-auto stroke-[1.5]"></i>
+                  <span class="text-[10px] font-bold block mt-1 uppercase tracking-wider">Obstetrics</span>
+                </div>
+                <span class="absolute -bottom-2 bg-pink-600 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider text-white">
+                  Gynecologist
+                </span>
+              </div>
+
+              <div class="text-center sm:text-left flex-1 space-y-1.5">
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <h3 class="font-sans font-bold text-xl md:text-2xl text-gray-950 leading-tight">Dr. Deepika Aggarwal</h3>
+                  <span class="bg-pink-105 bg-pink-100 text-pink-700 border border-pink-200 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <i data-lucide="heart" class="w-3.5 h-3.5 fill-pink-600 text-brandPink border-none"></i> Normal Delivery Advocate
+                  </span>
+                </div>
+                <p class="text-sm font-semibold tracking-wide text-[#DB2777]">Senior Obstetrician & Gynecologist</p>
+                <p class="text-xs text-gray-500 font-medium flex items-center justify-center sm:justify-start gap-1">
+                  <i data-lucide="graduation-cap" class="w-4 h-4 text-gray-450"></i> MBBS, DGO, MS (Obstetrics & Gynecology)
+                </p>
+                <div class="flex flex-wrap justify-center sm:justify-start gap-1.5 pt-2">
+                  <span class="text-[10px] bg-gray-50 border border-gray-150 text-gray-600 px-2.5 py-0.5 rounded-full font-medium">Pregnancy Care</span>
+                  <span class="text-[10px] bg-gray-50 border border-gray-150 text-gray-600 px-2.5 py-0.5 rounded-full font-medium">PCOD / PCOS</span>
+                  <span class="text-[10px] bg-gray-50 border border-gray-150 text-gray-600 px-2.5 py-0.5 rounded-full font-medium">Infertility Specialist</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bio details -->
+            <div class="space-y-5 mb-5">
+              <p class="text-xs text-gray-600 leading-relaxed italic bg-gray-50/70 p-3.5 rounded-xl border border-gray-100">
+                "Acknowledged across Rohini for advocating normal painless deliveries and managing complicated high-risk pregnancy cases. She ensures customized, empathetic hormonal relief and adolescent gynecological welfare."
+              </p>
+              
+              <div>
+                <h4 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                  <i data-lucide="award" class="text-[#DB2777] w-4.5 h-4.5"></i> Doctor's Clinical Expertise
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700">
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-pink-500 text-white rounded-full p-0.5 shrink-0"></i> High-risk pregnancy management</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-pink-500 text-white rounded-full p-0.5 shrink-0"></i> Infertility counseling & support</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-pink-500 text-white rounded-full p-0.5 shrink-0"></i> Laparoscopic Keyhole Surgery</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-pink-500 text-white rounded-full p-0.5 shrink-0"></i> Hysteroscopy interventions</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-pink-500 text-white rounded-full p-0.5 shrink-0"></i> PCOD / PCOS complete management</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-pink-500 text-white rounded-full p-0.5 shrink-0"></i> Normal Delivery pre-birth planning</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor Booking Footer -->
+          <div class="pt-4 border-t border-gray-50 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+            <div class="text-left w-full sm:w-auto">
+              <span class="text-[10px] text-gray-400 block font-semibold uppercase tracking-wider">Visiting Hours</span>
+              <span class="text-xs text-slate-700 font-bold">Mon &ndash; Sun (9 AM &ndash; 9 PM)</span>
+            </div>
+            <button onclick="selectDoctorAndScroll('Dr. Deepika Aggarwal')" class="w-full sm:w-auto bg-[#DB2777] hover:bg-[#C2185B] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4.5 h-4.5"></i> Connect with Dr. Deepika
+            </button>
+          </div>
+        </div>
+
+        <!-- Nikhil Card -->
+        <div id="card-nikhil" class="doc-card bg-white rounded-3xl border border-gray-100 p-6 md:p-8 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between hover:border-blue-200 relative overflow-hidden text-left">
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-blue-600 opacity-5 blur-3xl pointer-events-none"></div>
+          <div>
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6 pb-6 border-b border-gray-100">
+              <div class="w-28 h-28 rounded-2xl shrink-0 flex flex-col items-center justify-center bg-gradient-to-tr from-blue-50 to-white border border-blue-200 p-2 relative shadow-sm">
+                <div class="text-center text-blue-700">
+                  <i data-lucide="shield" class="w-10 h-10 mx-auto stroke-[1.5]"></i>
+                  <span class="text-[10px] font-bold block mt-1 uppercase tracking-wider">General MS</span>
+                </div>
+                <span class="absolute -bottom-2 bg-blue-650 bg-blue-600 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider text-white">
+                  Physician
+                </span>
+              </div>
+
+              <div class="text-center sm:text-left flex-1 space-y-1.5">
+                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <h3 class="font-sans font-bold text-xl md:text-2xl text-gray-950 leading-tight">Dr. Nikhil Agarwal</h3>
+                </div>
+                <p class="text-sm font-semibold tracking-wide text-blue-700">General Surgeon, Physician & Diabetologist</p>
+                <p class="text-xs text-gray-500 font-medium flex items-center justify-center sm:justify-start gap-1">
+                  <i data-lucide="graduation-cap" class="w-4 h-4 text-gray-450"></i> MBBS, MS (General Surgery)
+                </p>
+                <div class="flex flex-wrap justify-center sm:justify-start gap-1.5 pt-2">
+                  <span class="text-[10px] bg-gray-50 border border-gray-150 text-gray-600 px-2.5 py-0.5 rounded-full font-medium">Laparoscopy</span>
+                  <span class="text-[10px] bg-gray-50 border border-gray-150 text-gray-600 px-2.5 py-0.5 rounded-full font-medium">Diabetology</span>
+                  <span class="text-[10px] bg-gray-50 border border-gray-150 text-gray-600 px-2.5 py-0.5 rounded-full font-medium">BP & Thyroid</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bio details -->
+            <div class="space-y-5 mb-5">
+              <p class="text-xs text-gray-650 text-gray-600 leading-relaxed italic bg-gray-50/70 p-3.5 rounded-xl border border-gray-100">
+                "An expert general physician specializing in Laparoscopic Surgery. Well recognized for accurate non-invasive diagnosis, supportive chronic disease management (Type 1 & 2 sugar) and thyroid screenings."
+              </p>
+              
+              <div>
+                <h4 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                  <i data-lucide="award" class="text-blue-700 w-4.5 h-4.5"></i> Doctor's Clinical Expertise
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700">
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-blue-600 text-white rounded-full p-0.5 shrink-0"></i> Diabetes management (Diabetology)</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-blue-600 text-white rounded-full p-0.5 shrink-0"></i> Laparoscopic Gallstone Stone</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-blue-600 text-white rounded-full p-0.5 shrink-0"></i> Hernia Repair advanced methods</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-blue-600 text-white rounded-full p-0.5 shrink-0"></i> Diagnostic Piles/Fistula therapy</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-blue-600 text-white rounded-full p-0.5 shrink-0"></i> Thyroid screening and BP checks</div>
+                  <div class="flex items-start gap-1.5"><i data-lucide="check" class="w-4 h-4 bg-blue-600 text-white rounded-full p-0.5 shrink-0"></i> Viral infections, Typhoid, Dengue</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor Booking Footer -->
+          <div class="pt-4 border-t border-gray-50 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+            <div class="text-left w-full sm:w-auto">
+              <span class="text-[10px] text-gray-400 block font-semibold uppercase tracking-wider">Visiting Hours</span>
+              <span class="text-xs text-slate-700 font-bold">Mon &ndash; Sun (9 AM &ndash; 9 PM)</span>
+            </div>
+            <button onclick="selectDoctorAndScroll('Dr. Nikhil Agarwal')" class="w-full sm:w-auto bg-blue-650 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4.5 h-4.5"></i> Connect with Dr. Nikhil
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= SECTION C: CLINIC SERVICES ================= -->
+  <section id="services" class="py-16 md:py-24 bg-[#F8FAFC] border-y border-slate-100 scroll-mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      
+      <div class="max-w-3xl mx-auto mb-16 space-y-3">
+        <span class="text-xs bg-blue-105 bg-blue-100 text-blue-800 font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest">
+          Medical Departments
+        </span>
+        <h2 class="font-heading font-black text-2xl md:text-3.5xl text-[#1E3A8A]">
+          Clinical Treatments & Diagnostic Facilities
+        </h2>
+        <p class="text-sm text-gray-505 text-gray-500 leading-relaxed">
+          From prenatal checkups and complex surgical care to diagnostic lab tests, our clinic ensures expert primary healthcare operations.
+        </p>
+
+        <!-- Service filter navigation tabs -->
+        <div class="flex flex-wrap justify-center gap-2 pt-4">
+          <button onclick="filterServices('all')" id="service-tab-all" class="service-tab px-4 py-2 rounded-full text-xs font-bold bg-blue-600 text-white border border-blue-600 cursor-pointer">All Services</button>
+          <button onclick="filterServices('womens-health')" id="service-tab-womens-health" class="service-tab px-4 py-2 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-200 cursor-pointer">Women’s Health</button>
+          <button onclick="filterServices('general-surgery')" id="service-tab-general-surgery" class="service-tab px-4 py-2 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-200 cursor-pointer">Surgery</button>
+          <button onclick="filterServices('general-medicine')" id="service-tab-general-medicine" class="service-tab px-4 py-2 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-200 cursor-pointer">General Medicine</button>
+          <button onclick="filterServices('chronic-care')" id="service-tab-chronic-care" class="service-tab px-4 py-2 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-200 cursor-pointer">Chronic Care</button>
+          <button onclick="filterServices('facilities')" id="service-tab-facilities" class="service-tab px-4 py-2 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-200 cursor-pointer">Facilities</button>
+        </div>
+      </div>
+
+      <!-- Services Grid Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left" id="services-grid">
+        
+        <!-- Women's health -->
+        <div class="service-card-item bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden" data-category="womens-health">
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 to-pink-300"></div>
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <div class="p-3 rounded-xl border bg-pink-50 border-pink-100 text-[#DB2777]">
+                <i data-lucide="baby" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-gray-50 border border-gray-250 text-gray-550 text-gray-500 px-2.5 py-1 rounded-full text-[9px]">Women's Health</span>
+            </div>
+            <h3 class="font-sans font-bold text-lg text-gray-900 mb-2">Women’s Health & Maternity</h3>
+            <p class="text-xs text-gray-500 leading-relaxed mb-6">Empathetic & advanced clinical care for women across all stages of life, from maternity to complex menopause support.</p>
+            <ul class="space-y-3 mb-6 text-xs text-gray-750 text-gray-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500 mt-0.5 shrink-0 animate-pulse"></i> Comprehensive Prenatal / Antenatal Care</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500 mt-0.5 shrink-0"></i> Dedicated counseling for Normal painless Delivery</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500 mt-0.5 shrink-0"></i> Specialized care for High-Risk Pregnancies</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500 mt-0.5 shrink-0"></i> PCOD / PCOS complete support models</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-500 mt-0.5 shrink-0"></i> Infertility counseling & reproductive diagnostics</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex justify-between text-[11px] text-gray-400">
+            <span><i data-lucide="clock" class="w-3.5 h-3.5 inline mr-1 text-gray-300"></i> Consult Active</span>
+            <a href="#booking" class="text-blue-600 font-bold hover:underline">Book Slot</a>
+          </div>
+        </div>
+
+        <!-- General Surgery -->
+        <div class="service-card-item bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden" data-category="general-surgery">
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 to-sky-400"></div>
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <div class="p-3 rounded-xl border bg-blue-50 border-blue-105 border-blue-100 text-blue-700">
+                <i data-lucide="activity" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-gray-50 border border-gray-250 text-gray-550 text-gray-500 px-2.5 py-1 rounded-full text-[9px]">Surgical Care</span>
+            </div>
+            <h3 class="font-sans font-bold text-lg text-gray-900 mb-2">General & Minimal Access Surgery</h3>
+            <p class="text-xs text-gray-500 leading-relaxed mb-6">Expert surgical intervention using modern techniques, maximizing ease of recovery with minor discomfort.</p>
+            <ul class="space-y-3 mb-6 text-xs text-gray-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Laparoscopic Surgery for Gallstone</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Laparoscopic Appendix removal (Appendectomy)</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Advanced Hernia repairs (Mesh repair)</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Specialized non-invasive Piles treatment</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Minor surgical cysts sebaceous abscess drain</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex justify-between text-[11px] text-gray-400">
+            <span><i data-lucide="clock" class="w-3.5 h-3.5 inline mr-1 text-gray-300"></i> Consult Active</span>
+            <a href="#booking" class="text-blue-600 font-bold hover:underline">Book Slot</a>
+          </div>
+        </div>
+
+        <!-- General Medicine -->
+        <div class="service-card-item bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden" data-category="general-medicine">
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 to-sky-400"></div>
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <div class="p-3 rounded-xl border bg-blue-50 border-blue-100 text-[#1E40AF]">
+                <i data-lucide="shield-alert" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-gray-50 border border-gray-250 text-gray-500 px-2.5 py-1 rounded-full text-[9px]">General Medicine</span>
+            </div>
+            <h3 class="font-sans font-bold text-lg text-gray-900 mb-2">General Medicine & Family Health</h3>
+            <p class="text-xs text-gray-500 leading-relaxed mb-6">Primary physician services catering to common illnesses, infectious outbreaks, and family-wellness screenings.</p>
+            <ul class="space-y-3 mb-6 text-xs text-gray-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Treatment for Viral Fever, Typhoid, Dengue</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Respiratory ailments, Asthma, Flu symptoms</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Gastric, Acid Reflux, IBS consultation</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5 shrink-0"></i> Preventive family diagnostic screenings</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex justify-between text-[11px] text-gray-400">
+            <span><i data-lucide="clock" class="w-3.5 h-3.5 inline mr-1 text-gray-300"></i> Consult Active</span>
+            <a href="#booking" class="text-blue-600 font-bold hover:underline">Book Slot</a>
+          </div>
+        </div>
+
+        <!-- Chronic Care -->
+        <div class="service-card-item bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden" data-category="chronic-care">
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-600 to-teal-400"></div>
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <div class="p-3 rounded-xl border bg-emerald-50 border-emerald-100 text-emerald-700">
+                <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-gray-50 border border-gray-250 text-gray-500 px-2.5 py-1 rounded-full text-[9px]">Chronic Care</span>
+            </div>
+            <h3 class="font-sans font-bold text-lg text-gray-900 mb-2">Chronic Care & Lifestyle Medicine</h3>
+            <p class="text-xs text-gray-500 leading-relaxed mb-6">Personalized treatment plans keeping metabolic parameters stable, controlled, and well-monitored over time.</p>
+            <ul class="space-y-3 mb-6 text-xs text-gray-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i> Diabetes Control plans (Type 1 & 2 sugar)</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i> Hypertension (BP) tracking & regulation</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i> Thyroid disorder medical management</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-600 mt-0.5 shrink-0"></i> Cardiovascular safety screenings</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex justify-between text-[11px] text-gray-400">
+            <span><i data-lucide="clock" class="w-3.5 h-3.5 inline mr-1 text-gray-300"></i> Consult Active</span>
+            <a href="#booking" class="text-blue-600 font-bold hover:underline">Book Slot</a>
+          </div>
+        </div>
+
+        <!-- Facilities -->
+        <div class="service-card-item bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative overflow-hidden" data-category="facilities">
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 to-pink-300"></div>
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <div class="p-3 rounded-xl border bg-pink-50 border-pink-100 text-[#DB2777]">
+                <i data-lucide="sparkles" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-bold tracking-wider uppercase bg-gray-50 border border-gray-205 text-gray-500 px-2.5 py-1 rounded-full text-[9px]">Facilities</span>
+            </div>
+            <h3 class="font-sans font-bold text-lg text-gray-900 mb-2">Clinic Amenities & Logistics</h3>
+            <p class="text-xs text-gray-500 leading-relaxed mb-6">Designed around patient comfort and streamlined consultations, avoiding long delay cues.</p>
+            <ul class="space-y-3 mb-6 text-xs text-gray-700">
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#DB2777] mt-0.5 shrink-0"></i> Elegant Air-conditioned in-house waiting area</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#DB2777] mt-0.5 shrink-0"></i> In-house blood specimen collection desk</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#DB2777] mt-0.5 shrink-0"></i> Verification coordination for MRI/X-Ray</li>
+              <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#DB2777] mt-0.5 shrink-0"></i> Complimentry highspeed Wi-Fi and juice bar</li>
+            </ul>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex justify-between text-[11px] text-gray-400">
+            <span><i data-lucide="clock" class="w-3.5 h-3.5 inline mr-1 text-gray-300"></i> Open Daily</span>
+            <a href="#booking" class="text-blue-600 font-bold hover:underline">Book Slot</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- In-house radiology/blood lab callout badge -->
+      <div class="bg-gradient-to-r from-blue-50 via-white to-pink-50/55 rounded-2xl p-6 border border-blue-100 flex flex-col md:flex-row items-center justify-between gap-6 text-left mt-10">
+        <div class="flex items-center gap-4">
+          <div class="bg-white p-3.5 rounded-2xl shadow-sm text-blue-600 border border-blue-50 shrink-0">
+            <i data-lucide="flask-conical" class="w-6 h-6 text-[#1E40AF]"></i>
+          </div>
+          <div>
+            <h4 class="font-sans font-bold text-sm md:text-base text-gray-900 font-bold">
+              In-House Sample Collection for MRI, Ultrasound & Blood Profiles
+            </h4>
+            <p class="text-xs text-gray-600 mt-1 max-w-xl">
+              We arrange lab collections at our clinic or directly from your home, partnering with verified laboratories in Delhi for accurate, swift diagnostics.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 w-full md:w-auto shrink-0 justify-end">
+          <a href="tel:+919899297702" class="w-full md:w-auto text-center bg-white hover:bg-gray-50 border border-gray-200 text-gray-800 text-xs font-bold px-4 py-2.5 rounded-xl transition-all">
+            Inquire Lab Fees
+          </a>
+          <a href="https://wa.me/919899297702" target="_blank" class="w-full md:w-auto text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-sm">
+            <i data-lucide="message-square" class="w-4 h-4"></i> WhatsApp Lab Help
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= SECTION D: INTERACTIVE APP BOOKING FORM ================= -->
+  <section id="booking" class="py-16 md:py-24 bg-white scroll-mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+        <span class="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest">
+          Safe Booking Slot
+        </span>
+        <h2 class="font-heading font-black text-2xl md:text-3.5xl text-[#1E3A8A]">
+          Schedule Your In-Clinic Check-in Online
+        </h2>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Select preferred doctor advisor, consultation date, and visit slot below. Booking updates locally instantly.
+        </p>
+      </div>
+
+      <!-- Grid layout for Booker -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Booking form block (7 Cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-gray-105 border-gray-100 shadow-xl overflow-hidden text-left relative">
+          <div class="bg-gradient-to-r from-blue-700 to-blue-800 p-6 text-white">
+            <h3 class="font-sans font-bold text-xl flex items-center gap-2">
+              <i data-lucide="calendar" class="w-5 h-5 text-pink-300"></i> Clinic Consultation Scheduler
+            </h3>
+            <p class="text-xs text-blue-105 text-blue-100 mt-1">
+              Book secure appointments instantly. No registration fee required online.
+            </p>
+          </div>
+
+          <!-- HTML Form -->
+          <form id="appointment-booking-form" class="p-6 sm:p-8 space-y-6">
+            
+            <!-- Error messages -->
+            <div id="booking-error-logs" class="hidden bg-rose-50 border border-rose-200 text-rose-700 rounded-xl p-3.5 text-xs font-semibold flex items-center gap-2">
+              <i data-lucide="alert-triangle" class="w-4.5 h-4.5 text-rose-600 shrink-0"></i>
+              <span id="booking-error-text">All parameters marked with * must be verified.</span>
+            </div>
+
+            <!-- Name & phone inputs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide block">Patient’s Full Name *</label>
+                <div class="relative">
+                  <i data-lucide="user" class="absolute left-3 top-3 w-4.5 h-4.5 text-gray-400"></i>
+                  <input type="text" id="input-patient-name" placeholder="e.g. Suman Sharma" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 transition-colors font-medium">
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide block">WhatsApp/Phone Number *</label>
+                <div class="relative">
+                  <i data-lucide="smartphone" class="absolute left-3 top-3 w-4.5 h-4.5 text-gray-400"></i>
+                  <input type="tel" id="input-patient-phone" placeholder="e.g. +91 98765 43210" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 transition-colors font-medium">
+                </div>
+              </div>
+            </div>
+
+            <!-- Doctor Preference and Visit Date -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide block">Doctor Preference *</label>
+                <div class="relative">
+                  <i data-lucide="stethoscope" class="absolute left-3 top-3 w-4.5 h-4.5 text-blue-600"></i>
+                  <select id="select-doctor" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-500 transition-all font-semibold text-gray-800">
+                    <option value="Dr. Deepika Aggarwal">Dr. Deepika Aggarwal (Gynecologist)</option>
+                    <option value="Dr. Nikhil Agarwal">Dr. Nikhil Agarwal (General Surgeon)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide block">Preferred Date *</label>
+                <div class="relative">
+                  <i data-lucide="calendar" class="absolute left-3 top-3 w-4.5 h-4.5 text-[#DB2777]"></i>
+                  <input type="date" id="input-date" class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-500 transition-colors font-medium text-gray-800">
+                </div>
+              </div>
+            </div>
+
+            <!-- Preselected Slot Chips -->
+            <div class="space-y-2">
+              <span class="text-xs font-bold text-gray-700 uppercase tracking-wide flex items-center gap-1">
+                <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i> Select Visit Slot Time *
+              </span>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="slot-container">
+                <!-- Javascript will inject visit slots here -->
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-gray-700 uppercase tracking-wide block">Brief symptoms / comments (Optional)</label>
+              <textarea id="input-notes" rows="2" placeholder="e.g. routine pregnancy check, high fever consultation, laparoscopic surgery follow-up" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-500 transition-colors placeholder:text-gray-400"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-[#DB2777] hover:brightness-110 text-white text-sm font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer flex items-center justify-center gap-2">
+              <span>Confirm Clinic Slot Reservation</span>
+              <i data-lucide="arrow-right" class="w-4.5 h-4.5"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Success Receipt Panel / Local Bookings (5 Cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Virtual booking receipt (hidden by default unless submitted) -->
+          <div id="print-receipt-section" class="hidden bg-white rounded-3xl border border-emerald-100 shadow-xl overflow-hidden text-left">
+            <div class="bg-emerald-650 bg-emerald-600 p-5 text-white flex items-center gap-3">
+              <i data-lucide="check-circle-2" class="w-8 h-8 text-white shrink-0"></i>
+              <div>
+                <span class="bg-emerald-800 text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full block w-max mb-1">Clinic Booking Confirmed</span>
+                <h4 class="font-sans font-bold text-sm">Balaji Lifecare Appointment Ticket</h4>
+              </div>
+            </div>
+
+            <div class="p-6 space-y-4 text-xs text-gray-800">
+              <div class="border-b border-dashed border-gray-200 pb-3 space-y-1.5">
+                <div class="flex justify-between items-center text-gray-400">
+                  <span>RECEIPT NO.</span>
+                  <span class="font-mono text-gray-800 font-bold" id="receipt-no">-</span>
+                </div>
+                <div class="flex justify-between items-center text-gray-400">
+                  <span>DATE REGISTERED</span>
+                  <span class="font-semibold text-gray-800" id="receipt-created">-</span>
+                </div>
+              </div>
+
+              <div class="space-y-2 pb-3 border-b border-dashed border-gray-200">
+                <p class="flex justify-between">
+                  <span class="text-gray-400">PATIENT FULL NAME:</span>
+                  <span class="font-bold text-gray-950" id="receipt-name">-</span>
+                </p>
+                <p class="flex justify-between">
+                  <span class="text-gray-400">MOBILE CONTACT:</span>
+                  <span class="font-bold text-gray-950" id="receipt-phone">-</span>
+                </p>
+                <p class="flex justify-between">
+                  <span class="text-gray-400">ASSIGNED SPECIALIST:</span>
+                  <span class="font-bold text-blue-800" id="receipt-doctor">-</span>
+                </p>
+              </div>
+
+              <div class="space-y-2 pb-3">
+                <p class="flex justify-between bg-blue-50/50 p-2.5 rounded-lg border border-blue-100/50">
+                  <span class="text-blue-800 font-bold">APPOINTMENT DATE:</span>
+                  <span class="font-bold text-blue-900" id="receipt-date">-</span>
+                </p>
+                <p class="flex justify-between bg-pink-50/50 p-2.5 rounded-lg border border-pink-100/50">
+                  <span class="text-[#DB2777] font-bold">APPOINTMENT TIME:</span>
+                  <span class="font-bold text-pink-900" id="receipt-time">-</span>
+                </p>
+              </div>
+
+              <div id="receipt-notes-block" class="bg-gray-50 border border-gray-150 p-3 rounded-xl hidden">
+                <span class="font-bold text-gray-500 block text-[9px] uppercase tracking-wide">Symptoms / Notes:</span>
+                <p class="text-gray-700 italic mt-0.5" id="receipt-notes"></p>
+              </div>
+
+              <!-- Printer CTA -->
+              <div class="pt-2 flex gap-3">
+                <button onclick="window.print()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold py-2.5 px-3 rounded-lg flex items-center justify-center gap-1.5 border border-gray-300">
+                  <i data-lucide="printer" class="w-4 h-4"></i> Print Ticket
+                </button>
+                <button onclick="clearCurrentReceipt()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-3 rounded-lg flex items-center justify-center gap-1">
+                  <i data-lucide="smile" class="w-4 h-4"></i> Book Another
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active bookings logged from session -->
+          <div class="bg-white rounded-3xl border border-gray-150 p-6 shadow-md text-left">
+            <h4 class="font-sans font-bold text-gray-900 text-sm mb-4 flex items-center justify-between">
+              <span>Your Browser Appointments Log</span>
+              <span class="text-[10px] bg-blue-100 text-indigo-805 text-indigo-800 px-2.5 py-0.5 rounded-full font-bold" id="booking-badge-count">0</span>
+            </h4>
+
+            <div id="session-bookings-empty" class="text-center py-8 border-2 border-dashed border-gray-100 rounded-2xl">
+              <i data-lucide="smile" class="w-8 h-8 text-gray-300 mx-auto mb-2"></i>
+              <p class="text-xs text-gray-500">No scheduled appointments on this browser session yet.</p>
+            </div>
+
+            <div id="session-bookings-list" class="max-h-72 overflow-y-auto space-y-3.5 hidden pr-1">
+              <!-- Logs appended via scripting below -->
+            </div>
+          </div>
+
+          <!-- Alert Guidelines -->
+          <div class="bg-amber-50 border border-amber-200 rounded-3xl p-5 text-left">
+            <h4 class="text-amber-800 font-bold text-xs uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i> Patient Guideline Notice
+            </h4>
+            <ul class="text-xs text-amber-800 space-y-1.5 list-disc pl-4 leading-relaxed font-medium">
+              <li><strong>Prev Medical Records</strong>: Please bring historic diagnostic check files with you.</li>
+              <li><strong>Fasting Guidelines</strong>: Complete fasting (8 hours) is advised for glucose test collections.</li>
+              <li><strong>Contact Desk</strong>: Directly request advice from our clinic desk at +91 98992 97702.</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= SECTION E: PATIENT REVIEWS ================= -->
+  <section id="reviews" class="py-16 md:py-24 bg-[#F8FAFC] border-t border-slate-100 scroll-mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
+        <span class="text-xs bg-pink-100 text-[#DB2777] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest">
+          Patient Feedback
+        </span>
+        <h2 class="font-heading font-black text-2xl md:text-3.5xl text-[#1E3A8A]">
+          Praiseworthy Patient Testimonials
+        </h2>
+        <p class="text-sm text-gray-505 text-gray-500">
+          Highly rated clinic across Rohini, known for compassionate treatments, excellent hygiene and respectful behavior.
+        </p>
+      </div>
+
+      <!-- Testimonial Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Review 1 -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between text-left relative group hover:shadow-md transition-all">
+          <span class="absolute top-4 right-4 text-3xl font-serif text-pink-200 pointer-events-none transition-all scale-95 group-hover:scale-105">“</span>
+          <div>
+            <div class="flex items-center gap-0.5 mb-3 text-amber-400">
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            </div>
+            <p class="text-xs text-gray-605 text-gray-600 leading-relaxed mb-6 italic">
+              "Dr. Deepika Aggarwal is an amazing doctor. She guided me through my high-risk pregnancy with ultimate patience and motivated me for a normal delivery. The clinic is extremely clean, and they follow strict sanitization protocols."
+            </p>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex items-center justify-between text-[11px]">
+            <div>
+              <h4 class="font-bold text-gray-950">Suman Sharma</h4>
+              <span class="text-gray-400">2 weeks ago</span>
+            </div>
+            <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded text-[9px] uppercase">Maternity Care</span>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between text-left relative group hover:shadow-md transition-all">
+          <span class="absolute top-4 right-4 text-3xl font-serif text-pink-200 pointer-events-none transition-all scale-95 group-hover:scale-105">“</span>
+          <div>
+            <div class="flex items-center gap-0.5 mb-3 text-amber-400">
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed mb-6 italic">
+              "Visited Dr. Nikhil for gallbladder stone consultation. He explained the laparoscopic procedure very clearly. He was very professional, soft-spoken, and did not suggest unnecessary tests. Truly a reliable surgeon in Rohini."
+            </p>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex items-center justify-between text-[11px]">
+            <div>
+              <h4 class="font-bold text-gray-950">Aman Gupta</h4>
+              <span class="text-gray-400">1 month ago</span>
+            </div>
+            <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded text-[9px] uppercase">Gallbladder Surgery</span>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between text-left relative group hover:shadow-md transition-all">
+          <span class="absolute top-4 right-4 text-3xl font-serif text-pink-200 pointer-events-none transition-all scale-95 group-hover:scale-105">“</span>
+          <div>
+            <div class="flex items-center gap-0.5 mb-3 text-amber-400">
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            </div>
+            <p class="text-xs text-gray-650 text-gray-600 leading-relaxed mb-6 italic">
+              "Highly recommend Balaji Lifecare. The staff are polite, and wait times are very manageable. Dr. Nikhil managed my long-term Diabetes beautifully. My sugar levels are completely under control now."
+            </p>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex items-center justify-between text-[11px]">
+            <div>
+              <h4 class="font-bold text-gray-950">Rajinder Kumar</h4>
+              <span class="text-gray-400">3 weeks ago</span>
+            </div>
+            <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded text-[9px] uppercase">Diabetes Control</span>
+          </div>
+        </div>
+
+        <!-- Review 4 -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between text-left relative group hover:shadow-md transition-all">
+          <span class="absolute top-4 right-4 text-3xl font-serif text-pink-200 pointer-events-none transition-all scale-95 group-hover:scale-105">“</span>
+          <div>
+            <div class="flex items-center gap-0.5 mb-3 text-amber-400">
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+            </div>
+            <p class="text-xs text-gray-605 text-gray-605 text-gray-600 leading-relaxed mb-6 italic">
+              "Best clinic for female hygiene and treatment in Rohini. Dr. Deepika is incredibly friendly, answers all questions with an open mind, and explains everything without rushing. The in-house blood sample collection was very convenient!"
+            </p>
+          </div>
+          <div class="pt-4 border-t border-gray-50 flex items-center justify-between text-[11px]">
+            <div>
+              <h4 class="font-bold text-gray-950">Priyanka Bansal</h4>
+              <span class="text-gray-400">1 week ago</span>
+            </div>
+            <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded text-[9px] uppercase">Women's Health</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rating metrics block bottom -->
+      <div class="mt-12 bg-white rounded-2xl border border-slate-100 p-6 max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-left">
+        <div class="flex items-center gap-4">
+          <div class="bg-gradient-to-tr from-amber-400 to-amber-500 text-white rounded-2xl p-4 text-center font-heading font-bold shrink-0">
+            <span class="block text-3xl font-black leading-none">4.9</span>
+            <span class="text-[9px] uppercase tracking-wider block mt-1 opacity-90">Google Rating</span>
+          </div>
+          <div>
+            <h4 class="font-sans font-bold text-sm text-gray-900 leading-tight">Patient feedback and Hygiene and behavior metrics</h4>
+            <p class="text-xs text-gray-505 text-gray-500 mt-1 pb-1">
+              Outstanding results based on reviews verifying neat and hygienic environments, and doctors' warm approach to patient queries.
+            </p>
+          </div>
+        </div>
+        <a href="#booking" class="bg-blue-50 border border-blue-100 text-blue-800 hover:bg-blue-100 text-xs font-bold px-4 py-2.5 rounded-xl transition-all shrink-0">
+          Book Allocation
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= SECTION F: CONTACT & MAPS ================= -->
+  <section id="contact" class="py-16 md:py-24 bg-white scroll-mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
+        <span class="text-xs bg-blue-100 text-blue-800 font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest">
+          Find Us Today
+        </span>
+        <h2 class="font-heading font-black text-2xl md:text-3.5xl text-[#1E3A8A]">
+          Our Direct Coordinates & Landmark Directions
+        </h2>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Visiting us is easy. We are located centrally in Rohini Sector 22 with street parking options. Explore details below.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        <!-- Left Side Copy Info (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+          <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100 text-left space-y-6">
+            <h4 class="font-sans font-bold text-gray-900 text-base border-b border-gray-200 pb-2 flex items-center gap-1.5">
+              <i data-lucide="building" class="w-5 h-5 text-[#1E40AF]"></i> Balaji Lifecare Address
+            </h4>
+
+            <div class="space-y-4 text-xs text-gray-700">
+              
+              <!-- Map Location -->
+              <div class="flex items-start gap-3">
+                <i data-lucide="map-pin" class="w-5 h-5 text-pink-500 shrink-0 mt-0.5"></i>
+                <div>
+                  <strong>Clinic Location:</strong>
+                  <p class="text-gray-600 mt-1 leading-normal">
+                    116, Ground Floor, Pocket 5, Sector 22, Rohini, New Delhi, Delhi, 110086.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Opening hours -->
+              <div class="flex items-start gap-3">
+                <i data-lucide="clock" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5"></i>
+                <div>
+                  <strong>Hours & Timings:</strong>
+                  <p class="text-emerald-700 font-bold mt-1">
+                    Monday &ndash; Sunday, 9:00 AM &ndash; 9:00 PM
+                  </p>
+                  <p class="text-gray-400 mt-0.5">Open on all 7 days of the week.</p>
+                </div>
+              </div>
+
+              <!-- Landmark -->
+              <div class="flex items-start gap-3">
+                <i data-lucide="help-circle" class="w-5 h-5 text-amber-500 shrink-0 mt-0.5"></i>
+                <div>
+                  <strong>Directions Landmark:</strong>
+                  <p class="text-gray-600 mt-1 leading-normal">
+                    Located near Krishna Mandir Road and Aman Vihar Police Station.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Reach CTAs -->
+            <div class="pt-2 flex flex-col sm:flex-row gap-3">
+              <a href="tel:+919899297702" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs py-3 px-4 rounded-xl text-center shadow-md flex items-center justify-center gap-1.5 transition-all">
+                <i data-lucide="phone" class="w-4 h-4"></i> Call +91 98992 97702
+              </a>
+              <a href="https://wa.me/919899297702" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3 px-4 rounded-xl text-center shadow-md flex items-center justify-center gap-1.5 transition-all">
+                <i data-lucide="message-square" class="w-4 h-4"></i> WhatsApp Us
+              </a>
+            </div>
+          </div>
+
+          <!-- Emergency banner notice -->
+          <div class="bg-[#FFF5F5] border border-red-200 rounded-3xl p-5 text-left">
+            <div class="flex items-start gap-3.5">
+              <div class="bg-red-100 text-red-700 p-2 rounded-xl shrink-0 mt-0.5">
+                <span class="block w-2.5 h-2.5 rounded-full bg-red-650 bg-red-600 animate-ping"></span>
+              </div>
+              <div class="text-xs">
+                <h4 class="text-red-950 font-bold uppercase tracking-wider mb-1">
+                  Urgent Clinical Call Notice
+                </h4>
+                <p class="text-red-800 leading-relaxed font-semibold">
+                  For urgent medical concerns, please call us directly at +91 98992 97702.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google map frame (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden flex flex-col justify-between">
+          <div class="bg-slate-50 p-4 border-b border-gray-100 flex justify-between items-center text-xs">
+            <span class="font-bold text-slate-800 uppercase tracking-widest flex items-center gap-1">
+              <i data-lucide="map" class="w-4.5 h-4.5 text-pink-500 shrink-0"></i> Google Maps Verification
+            </span>
+            <a href="https://maps.google.com/?q=Balaji+Lifecare+Clinic+Rohini+Sector+22+Delhi" target="_blank" class="text-blue-700 hover:underline font-bold">
+              Open Map App
+            </a>
+          </div>
+
+          <div class="relative w-full h-[320px] md:h-full min-h-[300px]">
+            <iframe
+              title="Balaji Lifecare Clinic Location Embed Map"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3498.412431718816!2d77.0658421!3d28.73711!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d06195fb2ffff%3A0xc47efcda1fecb7dd!2sBalaji%20Lifecare%20Clinic!5e0!3m2!1sen!2sin!4v1718360000000!5m2!1sen!2sin"
+              class="absolute inset-0 w-full h-full border-0 outline-none"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= TRUST FOOTER PLATFORM ================= -->
+  <footer class="bg-gray-900 text-gray-300 border-t border-gray-800 text-left">
+    
+    <!-- Emergency row -->
+    <div class="bg-[#1E3A8A] text-white py-5">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-semibold">
+        <div class="flex items-center gap-3">
+          <div class="bg-white/10 p-2.5 rounded-xl text-pink-300">
+            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm md:text-base">In Case of Emergency concerns?</h4>
+            <p class="text-blue-200 mt-0.5">Our consultants can be dialed instantly for urgent queries during open hours.</p>
+          </div>
+        </div>
+        <a href="tel:+919899297702" class="bg-[#DB2777] hover:bg-[#C2185B] text-white font-extrabold px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-md shrink-0">
+          <i data-lucide="phone" class="w-4 h-4"></i> Call +91 98992 97702
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Footer Columns -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+        
+        <!-- Block 1: Brand -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2">
+            <div class="bg-blue-600 p-2 rounded-lg text-white">
+              <i data-lucide="stethoscope" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-lg text-white tracking-tight">
+              Balaji <span class="text-pink-500">Lifecare</span>
+            </h3>
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed">
+            Comprehensive Care for Your Family &ndash; Gynecology, Surgery, and General Health. A registered multi-specialty healthcare platform in Rohini Sector 22, New Delhi.
+          </p>
+          <div class="pt-2">
+            <span class="text-[11px] bg-gray-800 text-gray-300 px-3 py-1.5 rounded-full font-bold border border-gray-700/50">
+              Cleanliness & behavior rated 4.9★
+            </span>
+          </div>
+        </div>
+
+        <!-- Block 2: Quick links -->
+        <div class="space-y-4 text-xs">
+          <h4 class="font-bold text-sm text-white uppercase tracking-wider">Quick Navigation</h4>
+          <ul class="space-y-2.5">
+            <li><a href="#home" class="hover:text-blue-400 text-gray-400 transition-colors">Home & Specials</a></li>
+            <li><a href="#doctors" class="hover:text-blue-400 text-gray-400 transition-colors">Meet Deepika & Nikhil Agarwal</a></li>
+            <li><a href="#services" class="hover:text-blue-400 text-gray-400 transition-colors">Clinical Diagnostic Departments</a></li>
+            <li><a href="#booking" class="hover:text-blue-400 text-gray-400 transition-colors">Register Visit Slot</a></li>
+            <li><a href="#reviews" class="hover:text-blue-400 text-gray-400 transition-colors">Patient Endorsements</a></li>
+          </ul>
+        </div>
+
+        <!-- Block 3: Timing -->
+        <div class="space-y-4 text-xs">
+          <h4 class="font-bold text-sm text-white uppercase tracking-wider">Opening Hours</h4>
+          <div class="space-y-3">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="clock" class="w-4.5 h-4.5 text-emerald-500 mt-0.5 shrink-0"></i>
+              <div>
+                <p class="font-bold text-white">Monday &ndash; Sunday</p>
+                <p class="text-gray-400 mt-0.5">9:00 AM &ndash; 9:00 PM</p>
+                <p class="text-[10px] text-emerald-500 font-bold block mt-1 tracking-wider uppercase">Open on all 7 Days</p>
+              </div>
+            </div>
+            <div class="p-3 bg-gray-800/40 rounded-xl border border-gray-800 text-gray-400">
+              Schedule visit slot online to skip long clinic check-in lines.
+            </div>
+          </div>
+        </div>
+
+        <!-- Block 4: Contact details -->
+        <div class="space-y-4 text-xs">
+          <h4 class="font-bold text-sm text-white uppercase tracking-wider">Address & Locations</h4>
+          <div class="space-y-3 text-gray-400">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="map-pin" class="w-4.5 h-4.5 text-pink-500 mt-0.5 shrink-0"></i>
+              <div>
+                <p class="font-bold text-white">Rohini Address:</p>
+                <p class="mt-0.5 leading-relaxed">
+                  116, Ground Floor, Pocket 5, Sector 22, Rohini, New Delhi, Delhi, 110086.
+                </p>
+              </div>
+            </div>
+            <p class="text-[10px] text-yellow-500 italic bg-gray-850 bg-gray-800/40 p-2 border border-gray-800 rounded">
+              Landmark: Near Krishna Mandir Road and Aman Vihar Police Station.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Lower bottom Medical Disclaimer -->
+      <div class="mt-12 pt-8 border-t border-gray-800 text-xs text-gray-500 space-y-4 text-center md:text-left">
+        <p class="leading-relaxed">
+          <strong>Medical Disclaimer Note:</strong> Profiles, services, treatments and guidelines loaded on this medical portal represent services provided under the professional registration of Balaji Lifecare Clinic. Content here must not support or substitute professional medical diagnosis, surgery protocols or emergency clinical consult prescriptions.
+        </p>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-[11px]">
+          <p>© 2026 Balaji Lifecare Clinic. All rights reserved.</p>
+          <p class="flex items-center gap-1">
+            Made with <i data-lucide="heart" class="w-3 h-3 text-pink-500 fill-pink-500"></i> for Rohini Sector 22, New Delhi.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ================= VIRTUAL INTERACTIVE PAGE LOGIC ================= -->
+  <script>
+    // In-memory / persisted state coordinates
+    const TIME_SLOTS = [
+      '09:30 AM - 10:00 AM',
+      '10:30 AM - 11:00 AM',
+      '11:30 AM - 12:00 PM',
+      '12:30 PM - 01:00 PM',
+      '04:30 PM - 05:00 PM',
+      '05:30 PM - 06:00 PM',
+      '06:30 PM - 07:00 PM',
+      '07:30 PM - 08:00 PM',
+      '08:00 PM - 08:30 PM'
+    ];
+
+    let currentSelectedSlot = TIME_SLOTS[0];
+    let appointments = [];
+
+    // Trigger on load
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Initialize Lucide Icons
+      lucide.createIcons();
+      
+      // 2. Set Default Booking Date Tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('input-date').value = tomorrow.toISOString().split('T')[0];
+      document.getElementById('input-date').min = new Date().toISOString().split('T')[0];
+
+      // 3. Render Slots Chips Dynamic
+      renderTimeSlots();
+
+      // 4. Hydrate Appointments Log
+      loadAppointmentsLog();
+
+      // 5. Mobile Navbar event listeners
+      document.getElementById('toggle-mobile-menu').addEventListener('click', toggleMMenu);
+      
+      const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          document.getElementById('mobile-menu').classList.add('hidden');
+        });
+      });
+
+      // 6. Sticky Header scroll listener
+      window.addEventListener('scroll', handleHeaderSticky);
+
+      // 7. Booking Form Handler
+      document.getElementById('appointment-booking-form').addEventListener('submit', handleFormSubmission);
+    });
+
+    // Mobile Navbar Toggler
+    function toggleMMenu() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+      } else {
+        menu.classList.add('hidden');
+      }
+    }
+
+    // Scroll header styling
+    function handleHeaderSticky() {
+      const header = document.getElementById('sticky-header');
+      if (window.scrollY > 20) {
+        header.classList.add('shadow-md', 'py-2');
+        header.classList.remove('shadow-sm', 'py-3');
+      } else {
+        header.classList.add('shadow-sm', 'py-3');
+        header.classList.remove('shadow-md', 'py-2');
+      }
+    }
+
+    // Render slots chips
+    function renderTimeSlots() {
+      const container = document.getElementById('slot-container');
+      container.innerHTML = '';
+
+      TIME_SLOTS.forEach(slot => {
+        const isSelected = slot === currentSelectedSlot;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => {
+          currentSelectedSlot = slot;
+          renderTimeSlots();
+        };
+        btn.className = `p-2 rounded-xl text-xs font-semibold text-center transition-all cursor-pointer border ${
+          isSelected
+            ? 'bg-blue-50 border-blue-600 text-blue-800 shadow-sm'
+            : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-700'
+        }`;
+        btn.innerText = slot;
+        container.appendChild(btn);
+      });
+    }
+
+    // Doctor profile select and auto scroll to bookings
+    function selectDoctorAndScroll(docName) {
+      document.getElementById('select-doctor').value = docName;
+      
+      const bookingSec = document.getElementById('booking');
+      const offset = 85;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = bookingSec.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+
+    // Filter Gynaecologist or surgeon individual profiles
+    function filterDoctorSection(docTab) {
+      const allCards = document.querySelectorAll('.doc-card');
+      const tabAll = document.getElementById('doc-tab-all');
+      const tabDeepika = document.getElementById('doc-tab-deepika');
+      const tabNikhil = document.getElementById('doc-tab-nikhil');
+
+      // Reset Tabs Styling
+      [tabAll, tabDeepika, tabNikhil].forEach(tab => {
+        tab.className = "px-5 py-1.5 rounded-full text-xs font-bold transition-all text-gray-600 hover:text-[#1E40AF] cursor-pointer";
+      });
+
+      if (docTab === 'all') {
+        tabAll.className = "px-5 py-1.5 rounded-full text-xs font-bold transition-all bg-white text-gray-950 shadow-sm cursor-pointer";
+        allCards.forEach(card => card.style.display = 'flex');
+      } else if (docTab === 'deepika') {
+        tabDeepika.className = "px-5 py-1.5 rounded-full text-xs font-bold transition-all bg-pink-600 text-white shadow-sm cursor-pointer";
+        document.getElementById('card-deepika').style.display = 'flex';
+        document.getElementById('card-nikhil').style.display = 'none';
+      } else {
+        tabNikhil.className = "px-5 py-1.5 rounded-full text-xs font-bold transition-all bg-blue-600 text-white shadow-sm cursor-pointer";
+        document.getElementById('card-deepika').style.display = 'none';
+        document.getElementById('card-nikhil').style.display = 'flex';
+      }
+    }
+
+    // Dynamic Services filters tabs click trigger
+    function filterServices(category) {
+      const allTabs = document.querySelectorAll('.service-tab');
+      allTabs.forEach(tab => {
+        tab.className = "service-tab px-4 py-2 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-200 cursor-pointer";
+      });
+
+      const clickedTab = document.getElementById(`service-tab-${category}`);
+      if (clickedTab) {
+        clickedTab.className = "service-tab px-4 py-2 rounded-full text-xs font-bold bg-blue-600 text-white border border-blue-600 cursor-pointer";
+      }
+
+      const allCards = document.querySelectorAll('.service-card-item');
+      allCards.forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Load persisted session booking logs
+    function loadAppointmentsLog() {
+      try {
+        const stored = localStorage.getItem('standalone_balaji_appointments');
+        if (stored) {
+          appointments = JSON.parse(stored);
+        }
+      } catch (err) {
+        console.error('Failed to parse storage logs', err);
+      }
+
+      const emptyBlock = document.getElementById('session-bookings-empty');
+      const listBlock = document.getElementById('session-bookings-list');
+      const badgeCount = document.getElementById('booking-badge-count');
+
+      badgeCount.innerText = appointments.length;
+
+      if (appointments.length === 0) {
+        emptyBlock.classList.remove('hidden');
+        listBlock.classList.add('hidden');
+      } else {
+        emptyBlock.classList.add('hidden');
+        listBlock.classList.remove('hidden');
+
+        listBlock.innerHTML = '';
+        appointments.forEach(app => {
+          const card = document.createElement('div');
+          card.className = "bg-gray-50 border border-gray-200 rounded-2xl p-3.5 flex flex-col justify-between gap-3 text-xs";
+          card.innerHTML = `
+            <div class="flex justify-between items-start">
+              <div class="text-left">
+                <h5 class="font-bold text-gray-950 text-sm leading-tight">${escapeHtml(app.patientName)}</h5>
+                <span class="text-[10px] text-gray-500 font-semibold">${escapeHtml(app.doctorName)}</span>
+              </div>
+              <button onclick="cancelRegisteredSlot('${app.id}')" class="p-1 text-gray-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors" title="Cancel Appointment">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center justify-between text-[11px] bg-white border border-gray-100 px-3 py-1.5 rounded-xl text-gray-700">
+              <span class="font-semibold block">${escapeHtml(app.appointmentDate)}</span>
+              <span class="text-[#DB2777] font-bold block">${escapeHtml(app.appointmentTime)}</span>
+            </div>
+          `;
+          listBlock.appendChild(card);
+        });
+
+        lucide.createIcons();
+      }
+    }
+
+    // Submit form parameters checks
+    function handleFormSubmission(e) {
+      e.preventDefault();
+      
+      const errLogs = document.getElementById('booking-error-logs');
+      const errText = document.getElementById('booking-error-text');
+      errLogs.classList.add('hidden');
+
+      const name = document.getElementById('input-patient-name').value.trim();
+      const phone = document.getElementById('input-patient-phone').value.trim();
+      const doctor = document.getElementById('select-doctor').value;
+      const date = document.getElementById('input-date').value;
+      const notes = document.getElementById('input-notes').value.trim();
+
+      if (!name) {
+        showError('Please enter the patient’s full name.');
+        return;
+      }
+      
+      const rawPhone = phone.replace(/\D/g, '');
+      if (rawPhone.length < 10) {
+        showError('Please enter a valid 10-digit phone number.');
+        return;
+      }
+
+      if (!date) {
+        showError('Please select a preferred date for visit.');
+        return;
+      }
+
+      // Create booking structure
+      const newApp = {
+        id: 'app-' + Date.now(),
+        patientName: name,
+        patientPhone: phone,
+        doctorName: doctor,
+        appointmentDate: date,
+        appointmentTime: currentSelectedSlot,
+        notes: notes,
+        createdAt: new Date().toLocaleDateString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        })
+      };
+
+      appointments.unshift(newApp);
+
+      try {
+        localStorage.setItem('standalone_balaji_appointments', JSON.stringify(appointments));
+      } catch {
+        console.error('Storage full write failed');
+      }
+
+      // Render logs
+      loadAppointmentsLog();
+
+      // Show Receipt Ticket
+      const receiptSection = document.getElementById('print-receipt-section');
+      receiptSection.classList.remove('hidden');
+
+      document.getElementById('receipt-no').innerText = newApp.id.toUpperCase();
+      document.getElementById('receipt-created').innerText = newApp.createdAt;
+      document.getElementById('receipt-name').innerText = newApp.patientName;
+      document.getElementById('receipt-phone').innerText = newApp.patientPhone;
+      document.getElementById('receipt-doctor').innerText = newApp.doctorName;
+      document.getElementById('receipt-date').innerText = newApp.appointmentDate;
+      document.getElementById('receipt-time').innerText = newApp.appointmentTime;
+
+      const notesBlock = document.getElementById('receipt-notes-block');
+      if (newApp.notes) {
+        notesBlock.classList.remove('hidden');
+        document.getElementById('receipt-notes').innerText = newApp.notes;
+      } else {
+        notesBlock.classList.add('hidden');
+      }
+
+      // Reset Inputs
+      document.getElementById('input-patient-name').value = '';
+      document.getElementById('input-patient-phone').value = '';
+      document.getElementById('input-notes').value = '';
+
+      lucide.createIcons();
+
+      // Scroll receipt to viewport context
+      receiptSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showError(msg) {
+      const errLogs = document.getElementById('booking-error-logs');
+      const errText = document.getElementById('booking-error-text');
+      errLogs.classList.remove('hidden');
+      errText.innerText = msg;
+    }
+
+    function clearCurrentReceipt() {
+      document.getElementById('print-receipt-section').classList.add('hidden');
+    }
+
+    function cancelRegisteredSlot(id) {
+      if (confirm('Are you certain you want to cancel this slotted check-in log?')) {
+        appointments = appointments.filter(app => app.id !== id);
+        try {
+          localStorage.setItem('standalone_balaji_appointments', JSON.stringify(appointments));
+        } catch {
+          console.error('Failed to rewrite logs');
+        }
+        loadAppointmentsLog();
+
+        // Hide receipt if cancelled is live
+        const liveId = document.getElementById('receipt-no').innerText.toLowerCase();
+        if (liveId === id) {
+          clearCurrentReceipt();
+        }
+      }
+    }
+
+    // Helper: Escape code elements
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
