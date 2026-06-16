@@ -1,1479 +1,955 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BG Code Tutor</title>
+  <title>BG Code Tutor — Circuit Learning Platform</title>
   
-  <!-- Hardcoded High-Fidelity Cyber Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23070a0e' stroke='%2310b981' stroke-width='4'/%3E%3Cpath d='M25 35 H45 A8 8 0 0 1 53 43 A8 8 0 0 1 45 51 H25' stroke='%2300df89' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M25 51 H47 A8 8 0 0 1 55 59 A8 8 0 0 1 47 67 H25' stroke='%2300df89' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M75 40 C73 34, 65 32, 58 32 C48 32, 42 40, 42 50 C42 60, 48 68, 58 68 H75 M60 50 H75' stroke='%2302ffd0' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" />
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons Library -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Google Fonts for Editorial Tech Typography -->
+  <!-- Font Integrations -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Alpine.js CDN for State Management -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Favicon Logo (Hardcoded Base64) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJnIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI3IiByZXN1bHQ9ImIxIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJiMiIvPjxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYjEiLz48ZmVNZXJnZU5vZGUgaW49ImIyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPjxmaWx0ZXIgaWQ9ImMiIHgPSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI1IiByZXN1bHQ9ImIiLz48ZmVNZXJnZT48ZmVNZXJnZU5vZGUgaW49ImIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2RlZmVyZ2U+PC9maWx0ZXI+PC9kZWZzPjxnIG9wYWNpdHk9IjAuMTUiPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjMwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWRhc2hhcnJheT0iMyA2Ii8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMjUwIiByPSIyNDAiIHN0cm9rZT0iIzAwZmZkMCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNSIvPjxsaW5lIHgxPSIyNTAiIHkxPSIxMCIgeDI9IjI1MCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSA1Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMjUwIiB4Mj0iNDkwIiB5Mj0iMjUwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz48L2c+PGcgZmlsdGVyPSJ1cmwoI2cpIj48cGF0aCBkPSJNIDYwIDcwIEggMTkwIEEgNDUgNDUgMCAwIDEgMjM1IDExNSBBIDQwIDQwIDAgMCAxIDE5MCAxNTUgSCAxODUgQSA0NSA0NSAwIDAgMSAyNDAgMjAwIEEgNDUgNDUgMCAwIDEgMTk1IDI0NSBIIDYwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxwYXRoIGQ9Ik0gMTAwIDExMCBIIDE1NSBBIDE1IDE1IDAgMCAxIDE3MCAxMjUgQSAxNSAxNSAwIDAgMSAxNTUgMTQwIEggMTAwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSIjMGQxMTE3Ii8+PHBhdGggZD0iTSAxMDAgMTc1IEggMTYwIEEgMTUgMTUgMCAwIDEgMTc1IDE5MCBBIDE1IDE1IDAgMCAxIDE2MCAyMDUgSCAxMDAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9IiMwZDExMTciLz48ZyBvcGFjaXR5PSIwLjg1Ij48bGluZSB4MT0iNzUiIHkxPSIxMDAiIHgyPSI3NSIgeTI9IjIxNSIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSIxMDUiIHgyPSI4MyIgeTI9IjIxMCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMyAzIi8+PHBhdGggZD0iTSAxMjAgMTI1IEggMTQ1IiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTQ1IiBjeT0iMTI1IiByPSIzIiBmaWxsPSIjMDBkZjg5Ii8+PHBhdGggZD0iTSAxMjAgMTkwIEggMTUwIiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTkwIiByPSIzIiBmaWxsPSIjMTBiOTgxIi8+PC9nPjwvZz48ZyBmaWx0ZXI9InVybCgjYykiPjxwYXRoIGQ9Ik0gNDQwIDEwMCBMIDM5NSA3MCBIIDI4NSBMIDI1NSAxMDAgVkAyMTUgTCAyODUgMjY1IEggMzk1IEwgNDQwIDE2MCBIIDM0NSIsInN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxnIG9wYWNpdHk9IjAuOSI+PGNpcmNsZSBjeD0iMzQ1IiBjeT0iMTYwIiByPSI0LjUiIGZpbGw9IiMwMmZmZDAiLz48cGF0aCBkPSJNIDI4NSAxMTAgSCAzMjUiIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMjUiIGN5PSIxMTAiIHI9IjIuNSIgZmlsbD0iIzAyZmZkMCIvPjxwYXRoIGQ9Ik0gMjg1IDE0MCBIIDMxNSBMIDMyNSAxMDUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMDUiIGN5PSIxMDUiIHI9IjIuNSIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMjg1IDIwMCBIIDM3MCIgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2U9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMiIvPjxjaXJjbGUgY3g9IjM3MCIgY3k9IjIwMCIgcj0iMyIgZmlsbD0iIzAyZmZkMCIvPjwvZz48L2c+PGcgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNIDE5MCA5NSBMIDIxMCAxMDUgSCAyNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMyIvPjxjaXJjbGUgY3g9IjIyMCIgY3k9IjEwNSIgcj0iMiIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMTk1IDIyMCBMIDIyNSAxMTAgSCAyNjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMiIvPjxjaXJjbGUgY3g9IjIyNSIgY3k9IjExMCIgcj0iMiIgZmlsbD0iIzAwZmZkMCIvPjwvZz48ZyBzdHJva2U9IiM4ZGEyYmIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiPjxwYXRoIGQ9Ik0gMTE1IDMyMCBIIDYwIFYgNDEwIEggMTE1Ii8+PHBhdGggZD0iTSAxNTUgMzA1IEggMjEwIFYgNDEwIEgxNTUgWiIvPjxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDI5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIvPjxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiLz48L2c+PGcgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSI5NSI+PHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiLz48cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgVkYgNDEwIEggMTU1ICBaIi8+PHBhdGggZD0iTSAyNTAgMzIwIEggMjkwIEMgMzE1IDMyMCwgMzE1IDQxMCwgMjkwIDQxMCBIIDI1MCBaIi8+PHBhdGggZD0iTSA0MDUgMzIwIEggMzU1IFYgNDEwIEggNDA1IE0gMzU1IDM2NSBIIDM5MCIvPjwvZz48cmVjdCB4PSIxODAiIHk9IjQ0NSIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiMwYzEwMTciIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjQiLz48dGV4dCB4PSIyNTAiIHkxPSI0NTgiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiIgb3BhY2l0eT0iMC44Ij5TWVMgQUNUSVZSPC90ZXh0Pjwvc3ZnPg==">
+
+  <!-- Theme Configurations & Custom Grid Overlays -->
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
           },
+          colors: {
+            cyber: {
+              black: '#030712',
+              dark: '#0b0f19',
+              card: '#0e1526',
+              emerald: '#10b981',
+              cyan: '#06b6d4',
+            }
+          }
         }
       }
     }
   </script>
 
-  <style>
-    /* Styling settings & custom UI alignments */
-    body {
-      background-color: #030712;
-      color: #f8fafc;
-      overflow-x: hidden;
+  <style type="text/css">
+    /* Subtle Retro CRT scanlines and hardware overlay */
+    .pcb-grid {
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+        radial-gradient(circle at 75% 60%, rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+        linear-gradient(rgba(18, 24, 38, 0.95), rgba(3, 7, 18, 0.98));
+      background-size: 40px 40px, 60px 60px, 100% 100%;
     }
-    .grid-lines {
-      background-image: radial-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px);
-      background-size: 20px 20px;
+
+    /* Glow utilities */
+    .neon-glow-emerald {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
     }
-    .custom-scrollbar::-webkit-scrollbar {
+    .neon-glow-cyan {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+    }
+    
+    ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #090d16;
+    ::-webkit-scrollbar-track {
+      background: #030712;
     }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb {
       background: #1e293b;
-      border-radius: 4px;
+      border-radius: 3px;
     }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    ::-webkit-scrollbar-thumb:hover {
       background: #10b981;
     }
   </style>
 </head>
-<body class="grid-lines min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+<body 
+  class="pcb-grid text-slate-200 min-h-screen flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-300 overflow-x-hidden"
+  x-data="bgCodeTutorApp()"
+>
 
-  <!-- GLOW DECORATORS -->
-  <div class="absolute top-10 left-10 w-96 h-96 bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none"></div>
-  <div class="absolute bottom-10 right-10 w-[450px] h-[450px] bg-cyan-500/5 rounded-full blur-[160px] pointer-events-none"></div>
-
-  <!-- ONBOARDING SECTION -->
-  <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4">
-    <div class="bg-[#070a0e] border border-emerald-500/20 max-w-md w-full rounded-3xl p-8 text-center space-y-6 shadow-[0_0_50px_rgba(16,185,129,0.1)] relative overflow-hidden">
-      <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500"></div>
-      
-      <!-- LOGO RENDER IN ONBOARDATION -->
-      <div class="flex flex-col items-center gap-3">
-        <div class="w-24 h-24 bg-[#0a0f18] border border-emerald-500/30 rounded-2xl p-2 shadow-[0_0_30px_rgba(16,185,129,0.15)] select-none">
-          <!-- Standalone raw Vector SVG inline (perfect matching logo) -->
-          <svg viewBox="0 0 500 500" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g opacity="0.15">
-              <circle cx="250" cy="250" r="230" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 8" />
-              <line x1="250" y1="10" x2="250" y2="490" stroke="#10b981" stroke-width="0.8" stroke-dasharray="5 5" />
-              <line x1="10" y1="250" x2="490" y2="250" stroke="#10b981" stroke-width="0.8" stroke-dasharray="5 5" />
-            </g>
-            <g filter="drop-shadow(0 0 15px rgba(0, 223, 137, 0.4))">
-              <path d="M 60 70 H 190 A 45 45 0 0 1 235 115 A 40 40 0 0 1 190 155 H 185 A 45 45 0 0 1 240 200 A 45 45 0 0 1 195 245 H 60 Z" stroke="#00df89" stroke-width="12" stroke-linejoin="round" stroke-linecap="round" fill="#06090c" />
-              <path d="M 100 110 H 155 A 15 15 0 0 1 170 125 A 15 15 0 0 1 155 140 H 100 Z" stroke="#00df89" stroke-width="5" fill="#0d1117" />
-              <path d="M 100 175 H 160 A 15 15 0 0 1 175 190 A 15 15 0 0 1 160 205 H 100 Z" stroke="#00df89" stroke-width="5" fill="#0d1117" />
-            </g>
-            <g filter="drop-shadow(0 0 15px rgba(2, 255, 208, 0.4))">
-              <path d="M 440 100 L 395 70 H 285 L 255 100 V 215 L 285 245 H 395 L 440 215 V 160 H 345" stroke="#02ffd0" stroke-width="12" stroke-linejoin="round" stroke-linecap="round" fill="#06090c" />
-            </g>
-            <g stroke="#02ffd0" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
-              <path d="M 115 320 H 60 V 410 H 115" />
-              <path d="M 155 320 H 210 V 410 H 155 Z" />
-              <path d="M 250 320 H 290 C 315 320, 315 410, 290 410 H 250 Z" />
-              <path d="M 405 320 H 350 V 410 H 405 M 350 365 H 390" />
-            </g>
-          </svg>
-        </div>
-        <div class="space-y-1">
-          <h2 class="text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">BG CODE</h2>
-          <p class="text-xs text-slate-500 uppercase tracking-widest font-mono">Cognition Lab Workspace</p>
-        </div>
+  <!-- ONBOARDING SESSION INITIALIZATION (LOCK SCREEN) -->
+  <div 
+    class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+    x-show="showOnboarding"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+  >
+    <div class="bg-cyber-card border-2 border-emerald-500/50 rounded-3xl max-w-lg w-full p-8 shadow-[0_0_50px_rgba(16,185,129,0.15)] relative overflow-hidden">
+      <!-- Circuit Backing Grid Lines -->
+      <div class="absolute inset-0 opacity-5 pointer-events-none">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 100 h500 M100 0 v500 M50 50 l200 200" stroke="#10b981" stroke-width="2"/>
+        </svg>
       </div>
 
-      <div class="space-y-4">
-        <div class="space-y-2">
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider text-left">Your Username:</label>
-          <input 
-            type="text" 
-            id="nameInput" 
-            placeholder="Type your name here..." 
-            class="w-full bg-[#080c14] border border-slate-800 focus:border-emerald-500 rounded-2xl py-3 px-4 outline-none text-white text-sm font-semibold transition"
-          />
+      <div class="relative z-10 text-center space-y-6">
+        <!-- Exact Hardcoded Base64 Logo -->
+        <div class="flex justify-center">
+          <img 
+            src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJnIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI3IiByZXN1bHQ9ImIxIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJiMiIvPjxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYjEiLz48ZmVNZXJnZU5vZGUgaW49ImIyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPjxmaWx0ZXIgaWQ9ImMiIHgPSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI1IiByZXN1bHQ9ImIiLz48ZmVNZXJnZT48ZmVNZXJnZU5vZGUgaW49ImIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2RlZmVyZ2U+PC9maWx0ZXI+PC9kZWZzPjxnIG9wYWNpdHk9IjAuMTUiPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjMwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWRhc2hhcnJheT0iMyA2Ii8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMjUwIiByPSIyNDAiIHN0cm9rZT0iIzAwZmZkMCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNSIvPjxsaW5lIHgxPSIyNTAiIHkxPSIxMCIgeDI9IjI1MCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSA1Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMjUwIiB4Mj0iNDkwIiB5Mj0iMjUwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz48L2c+PGcgZmlsdGVyPSJ1cmwoI2cpIj48cGF0aCBkPSJNIDYwIDcwIEggMTkwIEEgNDUgNDUgMCAwIDEgMjM1IDExNSBBIDQwIDQwIDAgMCAxIDE5MCAxNTUgSCAxODUgQSA0NSA0NSAwIDAgMSAyNDAgMjAwIEEgNDUgNDUgMCAwIDEgMTk1IDI0NSBIIDYwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxwYXRoIGQ9Ik0gMTAwIDExMCBIIDE1NSBBIDE1IDE1IDAgMCAxIDE3MCAxMjUgQSAxNSAxNSAwIDAgMSAxNTUgMTQwIEggMTAwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSIjMGQxMTE3Ii8+PHBhdGggZD0iTSAxMDAgMTc1IEggMTYwIEEgMTUgMTUgMCAwIDEgMTc1IDE5MCBBIDE1IDE1IDAgMCAxIDE2MCAyMDUgSCAxMDAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9IiMwZDExMTciLz48ZyBvcGFjaXR5PSIwLjg1Ij48bGluZSB4MT0iNzUiIHkxPSIxMDAiIHgyPSI3NSIgeTI9IjIxNSIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSIxMDUiIHgyPSI4MyIgeTI9IjIxMCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMyAzIi8+PHBhdGggZD0iTSAxMjAgMTI1IEggMTQ1IiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTQ1IiBjeT0iMTI1IiByPSIzIiBmaWxsPSIjMDBkZjg5Ii8+PHBhdGggZD0iTSAxMjAgMTkwIEggMTUwIiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTkwIiByPSIzIiBmaWxsPSIjMTBiOTgxIi8+PC9nPjwvZz48ZyBmaWx0ZXI9InVybCgjYykiPjxwYXRoIGQ9Ik0gNDQwIDEwMCBMIDM5NSA3MCBIIDI4NSBMIDI1NSAxMDAgVkAyMTUgTCAyODUgMjY1IEggMzk1IEwgNDQwIDE2MCBIIDM0NSIsInN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxnIG9wYWNpdHk9IjAuOSI+PGNpcmNsZSBjeD0iMzQ1IiBjeT0iMTYwIiByPSI0LjUiIGZpbGw9IiMwMmZmZDAiLz48cGF0aCBkPSJNIDI4NSAxMTAgSCAzMjUiIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMjUiIGN5PSIxMTAiIHI9IjIuNSIgZmlsbD0iIzAyZmZkMCIvPjxwYXRoIGQ9Ik0gMjg1IDE0MCBIIDMxNSBMIDMyNSAxMDUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMDUiIGN5PSIxMDUiIHI9IjIuNSIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMjg1IDIwMCBIIDM3MCIgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2U9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMiIvPjxjaXJjbGUgY3g9IjM3MCIgY3k9IjIwMCIgcj0iMyIgZmlsbD0iIzAyZmZkMCIvPjwvZz48L2c+PGcgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNIDE5MCA5NSBMIDIxMCAxMDUgSCAyNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMyIvPjxjaXJjbGUgY3g9IjIyMCIgY3k9IjEwNSIgcj0iMiIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMTk1IDIyMCBMIDIyNSAxMTAgSCAyNjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMiIvPjxjaXJjbGUgY3g9IjIyNSIgY3k9IjExMCIgcj0iMiIgZmlsbD0iIzAwZmZkMCIvPjwvZz48ZyBzdHJva2U9IiM4ZGEyYmIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiPjxwYXRoIGQ9Ik0gMTE1IDMyMCBIIDYwIFYgNDEwIEggMTE1Ii8+PHBhdGggZD0iTSAxNTUgMzA1IEggMjEwIFYgNDEwIEgxNTUgWiIvPjxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDk5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIvPjxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiLz48L2c+PGcgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSI5NSI+PHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiLz48cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgVkYgNDEwIEggMTU1ICBaIi8+PHBhdGggZD0iTSAyNTAgMzIwIEggMjkwIEMgMzE1IDMyMCwgMzE1IDQxMCwgMjkwIDQxMCBIIDI1MCBaIi8+PHBhdGggZD0iTSA0MDUgMzIwIEggMzU1IFYgNDEwIEggNDA1IE0gMzU1IDM2NSBIIDM5MCIvPjwvZz48cmVjdCB4PSIxODAiIHk9IjQ0NSIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiMwYzEwMTciIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjUiLz48dGV4dCB4PSIyNTAiIHkxPSI0NTgiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiIgb3BhY2l0eT0iMC44Ij5TWVMgQUNUSVZSPC90ZXh0Pjwvc3ZnPg==" 
+            alt="BG Code Tutor Logo" 
+            class="w-32 h-32 neon-glow-emerald rounded-2xl bg-cyber-black p-1"
+          >
         </div>
-        
-        <button 
-          onclick="initOnboarding()"
-          class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black py-3.5 px-6 rounded-2xl transition shadow-lg shadow-emerald-500/10 text-xs uppercase tracking-wider cursor-pointer active:scale-98"
-        >
-          Initialize Learning
-        </button>
+
+        <div class="space-y-2">
+          <h1 class="text-3xl font-extrabold tracking-tight text-white">BG CODE TUTOR</h1>
+          <p class="text-xs text-emerald-400 font-mono tracking-widest uppercase">System Initialization Protocol</p>
+          <p class="text-slate-400 text-sm max-w-sm mx-auto leading-relaxed">
+            Welcome, Developer. Establish a connection to the training pipeline by setting your custom programmer tag.
+          </p>
+        </div>
+
+        <!-- Onboarding Input Form -->
+        <div class="max-w-xs mx-auto space-y-4">
+          <div class="relative">
+            <span class="absolute left-3.5 top-3.5 text-emerald-400 font-mono text-xs font-bold font-mono">TAG://</span>
+            <input 
+              type="text" 
+              x-model="onboardingName"
+              @keydown.enter="submitOnboarding()"
+              placeholder="e.g., Ada Lovelace"
+              class="w-full pl-16 pr-4 py-3 bg-cyber-black/80 border border-slate-800 focus:border-emerald-500 rounded-xl text-xs font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500 text-emerald-300 transition-all placeholder:text-slate-600"
+            >
+          </div>
+          <button 
+            @click="submitOnboarding()"
+            class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-cyber-black font-black font-sans text-xs tracking-wider uppercase rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] outline-none"
+          >
+            Initiate Connection
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- APPLICATION HEADER BAR -->
-  <header class="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-30 px-4 py-3 sm:px-6">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-      
-      <!-- LOGO AREA WITH DECORATOR LINK -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-black border border-emerald-500/20 rounded-xl p-1 shadow-[0_0_15px_rgba(16,185,129,0.1)] flex items-center justify-center shrink-0">
-          <svg viewBox="0 0 500 500" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g stroke="#00df89" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M 60 70 H 190 A 45 45 0 0 1 235 115 A 40 40 0 0 1 190 155 H 185 A 45 45 0 0 1 240 200 A 45 45 0 0 1 195 245 H 60 Z" />
-            </g>
-            <g stroke="#02ffd0" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M 440 100 L 395 70 H 285 L 255 100 V 215 L 285 245 H 395 L 440 215 V 160 H 345" />
-            </g>
-          </svg>
-        </div>
-        <div>
-          <span class="text-sm font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 font-sans uppercase">
-            BG CODE
-          </span>
-          <span class="text-slate-400 font-bold tracking-wider text-xs font-mono pl-1 border-l border-slate-800 ml-1">TUTOR</span>
-        </div>
-      </div>
-
-      <!-- ACCOUNT STATUS METRICS -->
-      <div class="flex items-center gap-4 text-xs font-mono">
-        <div class="flex items-center gap-1 text-slate-300">
-          <span class="text-slate-500 font-bold">DEVS:</span>
-          <span id="userNameHeader" class="font-bold text-white uppercase tracking-wider text-[11px]">GUEST</span>
-        </div>
-        <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">
-          <span class="text-red-500">❤️</span>
-          <span id="heartsCount" class="font-bold text-slate-200">5</span>
-        </div>
-        <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">
-          <span class="text-yellow-500">🪙</span>
-          <span id="coinsCount" class="font-bold text-slate-200">20</span>
-        </div>
-        <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">
-          <span class="text-emerald-400">🔥</span>
-          <span id="streakCount" class="font-bold text-slate-200">1</span>
-        </div>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- WORKSPACE BODY WRAPPER -->
-  <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col md:flex-row p-4 sm:p-6 gap-6 items-stretch z-10">
+  <!-- APPLICATION CONTAINER -->
+  <div class="flex-1 flex flex-col" x-show="!showOnboarding">
     
-    <!-- LEFT NAVIGATION COLUMN (DESKTOP SIDEBAR) -->
-    <aside class="w-full md:w-64 flex-shrink-0 flex md:flex-col gap-2 nav-container bg-[#080d15]/60 hover:bg-[#080d15]/80 p-3 rounded-2xl border border-slate-900/60 transition-all">
-      <button 
-        onclick="switchTab('learn')" 
-        id="btnTab_learn"
-        class="flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition border active-tab"
-      >
-        <i data-lucide="book-open" class="w-4 h-4 text-purple-400"></i>
-        <span class="hidden sm:inline">Learn Path</span>
-      </button>
-
-      <button 
-        onclick="switchTab('projects')" 
-        id="btnTab_projects"
-        class="flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition border text-slate-400 border-transparent hover:bg-slate-900/40"
-      >
-        <i data-lucide="folder-git" class="w-4 h-4 text-emerald-400"></i>
-        <span class="hidden sm:inline">Projects Lab</span>
-      </button>
-
-      <button 
-        onclick="switchTab('sandbox')" 
-        id="btnTab_sandbox"
-        class="flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition border text-slate-400 border-transparent hover:bg-slate-900/40"
-      >
-        <i data-lucide="code" class="w-4 h-4 text-cyan-400"></i>
-        <span class="hidden sm:inline">Code Sandbox</span>
-      </button>
-
-      <button 
-        onclick="switchTab('profile')" 
-        id="btnTab_profile"
-        class="flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition border text-slate-400 border-transparent hover:bg-slate-900/40"
-      >
-        <i data-lucide="user" class="w-4 h-4 text-pink-500"></i>
-        <span class="hidden sm:inline">My Profile</span>
-      </button>
-    </aside>
-
-    <!-- RIGHT/CENTER ACTIVE FRAME -->
-    <main class="flex-1 min-w-0">
-
-      <!-- ========================================================
-           TAB 1: LEARN PATH 
-           ======================================================== -->
-      <section id="tab_learn" class="space-y-6">
+    <!-- TOP HEADER BAR -->
+    <header class="border-b border-slate-800 bg-[#070a14]/90 backdrop-blur-md sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         
-        <!-- INTRO & TRACK CHANGER -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-slate-900/40 border border-slate-900 p-5 rounded-2xl gap-4">
-          <div class="space-y-1">
-            <h2 class="text-lg font-black text-white flex items-center gap-1.5">
-              <span>Cybernetic Path Selector</span>
-            </h2>
-            <p class="text-[11px] text-slate-400">Defaulting onto structural HTML first before transitioning to robust runtime processors.</p>
+        <!-- Logo & Title Frame -->
+        <a href="/" class="flex items-center gap-3">
+          <img 
+            src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJnIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI3IiByZXN1bHQ9ImIxIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJiMiIvPjxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYjEiLz48ZmVNZXJnZU5vZGUgaW49ImIyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPjxmaWx0ZXIgaWQ9ImMiIHgPSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI1IiByZXN1bHQ9ImIiLz48ZmVNZXJnZT48ZmVNZXJnZU5vZGUgaW49ImIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2RlZmVyZ2U+PC9maWx0ZXI+PC9kZWZzPjxnIG9wYWNpdHk9IjAuMTUiPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjMwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWRhc2hhcnJheT0iMyA2Ii8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMjUwIiByPSIyNDAiIHN0cm9rZT0iIzAwZmZkMCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNSIvPjxsaW5lIHgxPSIyNTAiIHkxPSIxMCIgeDI9IjI1MCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSA1Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMjUwIiB4Mj0iNDkwIiB5Mj0iMjUwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz48L2g+PGcgZmlsdGVyPSJ1cmwoI2cpIj48cGF0aCBkPSJNIDYwIDcwIEggMTkwIEEgNDUgNDUgMCAwIDEgMjM1IDExNSBBIDQwIDQwIDAgMCAxIDE5MCAxNTUgSCAxODUgQSA0NSA0NSAwIDAgMSAyNDAgMjAwIEEgNDUgNDUgMCAwIDEgMTk1IDI0NSBIIDYwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxwYXRoIGQ9Ik0gMTAwIDExMCBIIDE1NSBBIDE1IDE1IDAgMCAxIDE3MCAxMjUgQSAxNSAxNSAwIDAgMSAxNTUgMTQwIEggMTAwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSIjMGQxMTE3Ii8+PHBhdGggZD0iTSAxMDAgMTc1IEggMTYwIEEgMTUgMTUgMCAwIDEgMTc1IDE5MCBBIDE1IDE1IDAgMCAxIDE2MCAyMDUgSCAxMDAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9IiMwZDExMTciLz48ZyBvcGFjaXR5PSIwLjg1Ij48bGluZSB4MT0iNzUiIHkxPSIxMDAiIHgyPSI3NSIgeTI9IjIxNSIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSIxMDUiIHgyPSI4MyIgeTI9IjIxMCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMyAzIi8+PHBhdGggZD0iTSAxMjAgMTI1IEggMTQ1IiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTQ1IiBjeT0iMTI1IiByPSIzIiBmaWxsPSIjMDBkZjg5Ii8+PHBhdGggZD0iTSAxMjAgMTkwIEggMTUwIiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTkwIiByPSIzIiBmaWxsPSIjMTBiOTgxIi8+PC9nPjwvZz48ZyBmaWx0ZXI9InVybCgjYykiPjxwYXRoIGQ9Ik0gNDQwIDEwMCBMIDM5NSA3MCBIIDI4NSBMIDI1NSAxMDAgVkAyMTUgTCAyODUgMjY1IEggMzk1IEwgNDQwIDE2MCBIIDM0NSIsInN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxnIG9wYWNpdHk9IjAuOSI+PGNpcmNsZSBjeD0iMzQ1IiBjeT0iMTYwIiByPSI0LjUiIGZpbGw9IiMwMmZmZDAiLz48cGF0aCBkPSJNIDI4NSAxMTAgSCAzMjUiIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMjUiIGN5PSIxMTAiIHI9IjIuNSIgZmlsbD0iIzAyZmZkMCIvPjxwYXRoIGQ9Ik0gMjg1IDE0MCBIIDMxNSBMIDMyNSAxMDUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMDUiIGN5PSIxMDUiIHI9IjIuNSIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMjg1IDIwMCBIIDM3MCIgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2U9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMiIvPjxjaXJjbGUgY3g9IjM3MCIgY3k9IjIwMCIgcj0iMyIgZmlsbD0iIzAyZmZkMCIvPjwvZz48L2c+PGcgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNIDE5MCA5NSBMIDIxMCAxMDUgSCAyNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMyIvPjxjaXJjbGUgY3g9IjIyMCIgY3k9IjEwNSIgcj0iMiIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMTk1IDIyMCBMIDIyNSAxMTAgSCAyNjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMiIvPjxjaXJjbGUgY3g9IjIyNSIgY3k9IjExMCIgcj0iMiIgZmlsbD0iIzAwZmZkMCIvPjwvZz48ZyBzdHJva2U9IiM4ZGEyYmIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiPjxwYXRoIGQ9Ik0gMTE1IDMyMCBIIDYwIFYgNDEwIEggMTE1Ii8+PHBhdGggZD0iTSAxNTUgMzA1IEggMjEwIFYgNDEwIEgxNTUgWiIvPjxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDI5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIvPjxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiLz48L2c+PGcgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSI5NSI+PHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiLz48cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgVkYgNDEwIEggMTU1ICBaIi8+PHBhdGggZD0iTSAyNTAgMzIwIEggMjkwIEMgMzE1IDMyMCwgMzE1IDQxMCwgMjkwIDQxMCBIIDI1MCBaIi8+PHBhdGggZD0iTSA0MDUgMzIwIEggMzU1IFYgNDEwIEggNDA1IE0gMzU1IDM2NSBIIDM5MCIvPjwvZz48cmVjdCB4PSIxODAiIHk9IjQ0NSIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiMwYzEwMTciIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjQiLz48dGV4dCB4PSIyNTAiIHkxPSI0NTgiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiIgb3BhY2l0eT0iMC44Ij5TWVMgQUNUSVZSPC90ZXh0Pjwvc3ZnPg==" 
+            alt="BG CODE TUTOR logo" 
+            class="w-9 h-9"
+          >
+          <div class="flex flex-col">
+            <span class="text-sm font-extrabold text-white tracking-wide">BG CODE TUTOR</span>
+            <span class="text-[8px] text-emerald-400 font-mono tracking-widest uppercase">System Core Protocol</span>
           </div>
+        </a>
 
-          <div class="flex items-center gap-2">
-            <select 
-              id="courseSelector" 
-              onchange="changeCourse()" 
-              class="bg-slate-950 border border-slate-800 text-xs font-bold font-mono py-2 px-3.5 rounded-xl outline-none focus:border-emerald-500 text-slate-200 cursor-pointer"
-            >
-              <option value="html">Web Dev (HTML) - Default</option>
-              <option value="javascript">⚡ JavaScript Frameworks</option>
-              <option value="python">🐍 Data Logic (Python)</option>
-              <option value="cpp">👾 Systems Native (C++)</option>
-            </select>
+        <!-- Stats Panel -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1.5 px-3 py-1 bg-cyber-dark border border-slate-800 rounded-lg text-xs">
+            <span class="text-[10px] text-slate-500 font-mono uppercase">User:</span>
+            <span class="text-emerald-300 font-bold font-mono" x-text="userProfile.name"></span>
+          </div>
+          <div class="flex items-center gap-1.5 px-3 py-1 bg-cyber-dark border border-slate-800 rounded-lg text-xs">
+            <span class="text-[10px] text-slate-500 font-mono">XP:</span>
+            <span class="text-cyan-400 font-bold font-mono" x-text="userProfile.xp"></span>
           </div>
         </div>
 
-        <!-- ZIGZAG CHAPTER LISTING AND SKIP LEVEL CHANNELS -->
-        <div id="courseMap" class="space-y-8">
-          <!-- Populated dynamically via JS -->
+      </div>
+    </header>
+
+    <!-- MAIN GRID DASHBOARD -->
+    <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 flex flex-col md:flex-row gap-6">
+      
+      <!-- NAVIGATION SIDEBAR -->
+      <aside class="md:w-60 shrink-0 space-y-2">
+        <button 
+          @click="activeTab = 'learn'"
+          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
+          :class="activeTab === 'learn' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
+        >
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="book-open" class="w-4 h-4"></i> Learn Path
+          </span>
+          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">01</span>
+        </button>
+
+        <button 
+          @click="activeTab = 'projects'"
+          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
+          :class="activeTab === 'projects' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
+        >
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="folder-git" class="w-4 h-4"></i> Projects Lab
+          </span>
+          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">02</span>
+        </button>
+
+        <button 
+          @click="activeTab = 'sandbox'"
+          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
+          :class="activeTab === 'sandbox' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
+        >
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="code" class="w-4 h-4"></i> Playground
+          </span>
+          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">03</span>
+        </button>
+
+        <button 
+          @click="activeTab = 'profile'"
+          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
+          :class="activeTab === 'profile' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
+        >
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="user" class="w-4 h-4"></i> My Track
+          </span>
+          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">04</span>
+        </button>
+
+        <!-- System Status Box -->
+        <div class="p-4 bg-cyber-dark/40 border border-slate-900 rounded-2xl text-[10px] text-slate-500 space-y-1.5 leading-relaxed font-mono">
+          <div class="text-xs font-bold text-slate-400 font-sans flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            SYS STATUS: ONLINE
+          </div>
+          <div>Compiler ID: GCC_v4.1</div>
+          <div>Core Frame: 100% Client</div>
+          <div>Memory Locks: ACTIVE</div>
         </div>
+      </aside>
 
-      </section>
-
-      <!-- ========================================================
-           TAB 2: PROJECTS INTERACTIVE LAB 
-           ======================================================== -->
-      <section id="tab_projects" class="hidden space-y-6">
+      <!-- TAB CONTENT VIEWPORTS -->
+      <section class="flex-1 min-w-0">
         
-        <div class="border-b border-slate-800 pb-4">
-          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
-            <i data-lucide="folder-git" class="text-emerald-400 w-6 h-6"></i>
-            <span>Interactive Projects Lab</span>
-          </h2>
-          <p class="text-xs text-slate-400">Implement real structural and procedural goals. Code successfully to gain badges and accreditation.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          
-          <!-- LEFT COL: Projects selector -->
-          <div class="lg:col-span-4 space-y-3">
-            <label class="text-[10px] uppercase font-mono font-bold tracking-widest text-slate-500">Available Pipelines</label>
-            <div id="labTracksList" class="space-y-2.5">
-              <!-- Rendered dynamically -->
-            </div>
+        <!-- ==================== TAB 1: LEARN PATH ==================== -->
+        <div x-show="activeTab === 'learn'" class="space-y-6">
+          <div class="border-b border-slate-900 pb-4">
+            <h2 class="text-xl font-extrabold tracking-tight text-white">Dynamic Learning Path</h2>
+            <p class="text-xs text-slate-400 mt-1">Unlock real software concepts by studying core syntax blocks inside interactive lesson streams.</p>
           </div>
 
-          <!-- RIGHT COL: Workspace core editor plus evaluator -->
-          <div class="lg:col-span-8 bg-[#090d16] border border-slate-800/80 rounded-2xl overflow-hidden flex flex-col justify-between shadow-2xl relative min-h-[480px]">
-            
-            <div class="px-4 py-3 bg-slate-900/60 border-b border-slate-800 flex items-center justify-between text-xs font-bold font-mono">
-              <span class="text-slate-400 flex items-center gap-2">
-                <i data-lucide="file-code" class="w-4 h-4 text-emerald-400"></i>
-                <span id="activeProjectFileName">main_script.code</span>
-              </span>
-              <button 
-                onclick="resetLabCode()"
-                class="text-slate-500 hover:text-white px-2 py-0.5 rounded border border-slate-800 text-[10px] transition flex items-center gap-1"
-              >
-                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset
-              </button>
-            </div>
-
-            <div class="flex-1 flex text-xs font-mono min-h-[220px]">
-              <div class="w-10 bg-slate-950 text-slate-700 text-right py-4 pr-3.5 border-r border-slate-950 font-bold select-none">
-                1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15
-              </div>
-              <textarea 
-                id="labEditor"
-                class="flex-1 bg-transparent p-4 outline-none resize-none leading-relaxed text-slate-350 focus:text-white"
-                spellcheck="false"
-              ></textarea>
-            </div>
-
-            <!-- DIRECTIVE PARSER CARD -->
-            <div class="p-4 bg-slate-900/40 border-t border-slate-900 space-y-3.5">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-1 bg-black/40 border border-slate-800/65 p-3 rounded-xl">
-                  <h4 class="text-xs font-black text-white flex items-center gap-1.5">
-                    <i data-lucide="help-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
-                    Directives Checklist
-                  </h4>
-                  <ul id="labDirectives" class="text-[10px] text-slate-400 space-y-1 ml-1 leading-normal">
-                    <!-- Dynamic -->
-                  </ul>
-                </div>
-
-                <div class="space-y-1 bg-black/40 border border-slate-800/65 p-3 rounded-xl">
-                  <h4 class="text-xs font-black text-white flex items-center gap-1.5">
-                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
-                    Evaluator Checks
-                  </h4>
-                  <div id="labEvalChecks" class="text-[10px] space-y-1.5 mt-1.5">
-                    <!-- Dynamic -->
-                  </div>
-                </div>
-              </div>
-
-              <!-- CONTROLLER RUN -->
-              <div class="flex items-center justify-between gap-4 pt-1">
-                <div id="labStatusText" class="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none">
-                  READY FOR EXECUTION TEST
-                </div>
-
-                <button 
-                  onclick="evaluateLabProject()"
-                  id="btnRunLab"
-                  class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition flex items-center gap-2 cursor-pointer"
-                >
-                  <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Evaluate Code
-                </button>
-              </div>
-
-              <!-- LAB TERMINAL OUTPUT -->
-              <div class="bg-black text-[10px] font-mono rounded-xl p-3 border border-slate-950 h-24 overflow-y-auto custom-scrollbar uppercase flex flex-col space-y-0.5">
-                <div class="text-slate-500 select-none">[SYSTEM PROCESS CHANNELS LOGS]</div>
-                <div id="labTerminalOutput" class="text-slate-350">
-                  Ready. Write requirements above and evaluate.
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- ========================================================
-           TAB 3: HIGH FIDELITY CODE SANDBOX 
-           ======================================================== -->
-      <section id="tab_sandbox" class="hidden space-y-6">
-        
-        <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="space-y-1">
-            <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
-              <i data-lucide="code" class="text-cyan-400 w-6 h-6"></i>
-              <span>High-Fidelity Code Sandbox</span>
-            </h2>
-            <p class="text-xs text-slate-400">Live processing compiler workspace. Select language targets to initialize code blocks.</p>
-          </div>
-
-          <div class="flex items-center gap-2 font-mono">
-            <select 
-              id="sandboxLang"
-              onchange="changeSandboxLang()"
-              class="bg-slate-900 border border-slate-800 text-xs font-bold py-1.5 px-3 rounded-lg outline-none cursor-pointer"
-            >
-              <option value="javascript">JavaScript (Evaluative Editor)</option>
-              <option value="python">Python Interpreter Mode</option>
-              <option value="cpp">C++ Pointer Diagnostic</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- CODE WORKSPACE PANELS -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          
-          <!-- LEFT EDITOR PANEL -->
-          <div class="lg:col-span-8 bg-[#070b13] border border-slate-900 rounded-2xl overflow-hidden flex flex-col justify-between shadow-2xl relative min-h-[350px]">
-            <div class="px-4 py-3 bg-slate-900/60 border-b border-slate-900 select-none flex items-center justify-between text-xs font-mono font-bold text-slate-400">
-              <span id="sandboxHeaderFileName">workspace.js</span>
-              <button 
-                onclick="resetSandboxCode()"
-                class="text-[#cf305e] font-sans text-[10px] hover:underline"
-              >
-                Clear Sandbox
-              </button>
-            </div>
-
-            <div class="flex-1 flex text-xs font-mono">
-              <div id="sandboxLineNumbers" class="w-10 bg-slate-950 text-slate-700 text-right py-4 pr-3 border-r border-[#0d1421] leading-relaxed select-none">
-                1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15
-              </div>
-              <textarea 
-                id="sandboxEditor"
-                class="flex-1 bg-transparent p-4 outline-none resize-none leading-relaxed text-slate-200 whitespace-pre overflow-x-auto"
-                spellcheck="false"
-              ></textarea>
-            </div>
-
-            <div class="p-4 bg-slate-900/40 border-t border-slate-900 flex justify-end">
-              <button 
-                onclick="compileSandbox()"
-                class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition flex items-center gap-2 cursor-pointer active:scale-97"
-              >
-                <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Run Script Block
-              </button>
-            </div>
-          </div>
-
-          <!-- RIGHT DIAGNOSTIC PANEL -->
-          <div class="lg:col-span-4 flex flex-col justify-between space-y-4">
-            
-            <div class="bg-slate-900/40 border border-slate-900 p-4.5 rounded-2xl relative overflow-hidden flex-1 flex flex-col justify-between">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- HTML/CSS Card -->
+            <div class="bg-cyber-card border border-slate-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
               <div class="space-y-2">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="terminal" class="w-4 h-4 text-cyan-400"></i>
-                  <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Terminal Diagnostics</span>
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-widest bg-cyan-950/40 border border-cyan-800/30 px-2.5 py-0.5 rounded-full">Unit 01</span>
+                  <span class="text-[10px] text-slate-500 font-mono" x-text="isLessonDone('html-structure') ? 'Passed' : 'Pending'"></span>
                 </div>
-                <p class="text-[11px] text-slate-500 leading-normal">
-                  Values printed through standard streams are computed securely and returned below in structural formats.
+                <h3 class="text-base font-extrabold text-white">🎨 HTML & CSS Skeleton</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Learn to structure pages with exact semantic nodes like headers, layouts, divs, paragraphs, and build modern interactive button trigger fields.
                 </p>
               </div>
+              <button 
+                @click="openLesson('html-structure')"
+                class="w-full py-2.5 rounded-xl border font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                :class="isLessonDone('html-structure') ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300'"
+              >
+                <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                <span x-text="isLessonDone('html-structure') ? 'Review Study Guide' : 'Enter Training'"></span>
+              </button>
+            </div>
 
-              <!-- LIVE TERMINAL CONSOLE -->
-              <div class="bg-black/80 text-[10px] font-mono rounded-xl p-4 border border-slate-950 h-56 overflow-y-auto flex flex-col space-y-1.5 custom-scrollbar uppercase mt-4">
-                <div class="text-slate-600 select-none">[CONSOLE CONFLICT SCAN STREAMS]</div>
-                <div id="sandboxTerminalOutput" class="text-cyan-400 whitespace-pre-wrap leading-relaxed">
-                  System dormant. Type script execution.
+            <!-- JavaScript Event Pipelines -->
+            <div class="bg-cyber-card border border-slate-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-widest bg-cyan-950/40 border border-cyan-800/30 px-2.5 py-0.5 rounded-full">Unit 02</span>
+                  <span class="text-[10px] text-slate-500 font-mono" x-text="isLessonDone('js-events') ? 'Passed' : 'Pending'"></span>
+                </div>
+                <h3 class="text-base font-extrabold text-white">⚡ JavaScript Event Pipelines</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Decipher reassignment mechanisms, counter variables, functional declarations, console structures, and state parameter evaluations.
+                </p>
+              </div>
+              <button 
+                @click="openLesson('js-events')"
+                class="w-full py-2.5 rounded-xl border font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                :class="isLessonDone('js-events') ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300'"
+              >
+                <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                <span x-text="isLessonDone('js-events') ? 'Review Study Guide' : 'Enter Training'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 2: PROJECTS LAB ==================== -->
+        <div x-show="activeTab === 'projects'" class="space-y-6">
+          <div class="border-b border-slate-900 pb-4">
+            <h2 class="text-xl font-extrabold tracking-tight text-white">Interactive Compile Projects</h2>
+            <p class="text-xs text-slate-400 mt-1">Implement concrete assignments. satisfy constraints, and execute the build to achieve certifications.</p>
+          </div>
+
+          <!-- Interactive Editor Bench -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            
+            <!-- Tracks Directory (Col 4) -->
+            <div class="lg:col-span-4 space-y-3">
+              <template x-for="(proj, idx) in projects" :key="proj.id">
+                <button 
+                  @click="selectedProjectIdx = idx; userCode = proj.initialCode; clearProjectEvaluation()"
+                  class="w-full text-left p-4 rounded-2xl border transition-all relative block"
+                  :class="selectedProjectIdx === idx ? 'bg-emerald-500/5 border-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.05)]' : 'bg-cyber-card border-slate-900/80 hover:bg-slate-900/40 text-slate-400'"
+                >
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-[9px] uppercase font-mono font-extrabold tracking-widest px-2 py-0.5 rounded border"
+                      :class="selectedProjectIdx === idx ? 'bg-emerald-950/60 border-emerald-800 text-emerald-300' : 'bg-slate-950 border-slate-800 text-slate-500'"
+                      x-text="proj.language"
+                    ></span>
+                    
+                    <span 
+                      class="text-[9px] tracking-tight uppercase font-extrabold px-1.5 py-0.5 rounded-md"
+                      :class="isProjectFinished(proj.id) ? 'text-emerald-400 bg-emerald-400/10' : 'text-slate-600 bg-slate-950'"
+                      x-text="isProjectFinished(proj.id) ? '✓ SECURED' : 'UNFINISHED'"
+                    ></span>
+                  </div>
+                  <h4 class="text-xs font-bold text-white mb-1" x-text="proj.name"></h4>
+                  <p class="text-[10px] text-slate-500 line-clamp-2 leading-relaxed" x-text="proj.description"></p>
+                </button>
+              </template>
+            </div>
+
+            <!-- Editor Playground (Col 8) -->
+            <div class="lg:col-span-8 space-y-4">
+              <div class="bg-cyber-dark/80 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[480px]">
+                
+                <!-- Editor Top Header -->
+                <div class="px-4 py-2 border-b border-slate-800 bg-slate-900/40 flex items-center justify-between text-xs font-mono font-bold">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="text-slate-400" x-text="'compiler_source.' + (projects[selectedProjectIdx].language === 'javascript' ? 'js' : 'html')"></span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <button 
+                      @click="userCode = projects[selectedProjectIdx].initialCode; clearProjectEvaluation()" 
+                      class="text-[10px] hover:text-white text-slate-500 px-2 py-0.5 rounded border border-slate-800 transition-all flex items-center gap-1"
+                    >
+                      <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset Core
+                    </button>
+                    <span class="text-[10px] text-emerald-400 font-mono" x-text="projects[selectedProjectIdx].language.toUpperCase()"></span>
+                  </div>
+                </div>
+
+                <!-- Split Workspace: Instructions + TextArea -->
+                <div class="flex-1 flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-slate-800 min-h-0">
+                  
+                  <!-- Left side: task checklist requirements -->
+                  <div class="md:w-64 p-4 bg-cyber-card/30 overflow-y-auto space-y-4">
+                    <div class="space-y-1">
+                      <h5 class="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none">Task Directives</h5>
+                      <p class="text-xs font-black text-white" x-text="projects[selectedProjectIdx].name"></p>
+                    </div>
+
+                    <ul class="text-[11px] text-slate-400 space-y-2 leading-relaxed">
+                      <template x-for="(inst, idx) in projects[selectedProjectIdx].instructions" :key="idx">
+                        <li class="flex gap-2">
+                          <span class="text-emerald-400 font-bold" x-text="(idx + 1) + '.'"></span>
+                          <span x-text="inst"></span>
+                        </li>
+                      </template>
+                    </ul>
+
+                    <div class="border-t border-slate-800/80 pt-4 space-y-2">
+                      <h6 class="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none">Checks Evaluator</h6>
+                      <div class="space-y-2">
+                        <template x-for="(check, idx) in projects[selectedProjectIdx].checks" :key="idx">
+                          <div class="flex items-start gap-2 text-[10px] leading-snug">
+                            <div class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-0.5"
+                              :class="evaluationChecks[idx] ? 'bg-emerald-500/20 border-emerald-400 text-emerald-400' : 'bg-slate-950 border-slate-800 text-slate-600'"
+                            >
+                              <span x-show="evaluationChecks[idx]">✓</span>
+                            </div>
+                            <span :class="evaluationChecks[idx] ? 'text-slate-300' : 'text-slate-500'" x-text="check"></span>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right side: Source Code Field Area -->
+                  <div class="flex-1 flex flex-col bg-cyber-black overflow-hidden relative">
+                    <div class="flex-1 flex overflow-hidden font-mono text-xs">
+                      <div class="w-9 text-slate-700 bg-slate-950/20 text-right py-4 pr-2.5 border-r border-slate-900/60 select-none font-bold">
+                        <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div>
+                      </div>
+                      <textarea 
+                        x-model="userCode"
+                        class="flex-1 bg-transparent p-4 focus:outline-none resize-none leading-relaxed text-slate-300 whitespace-pre overflow-x-auto select-text font-mono"
+                        spellcheck="false"
+                      ></textarea>
+                    </div>
+
+                    <!-- Bottom evaluation processor log -->
+                    <div class="h-24 bg-black/90 border-t border-slate-800 p-3 font-mono text-[9px] text-slate-500 space-y-1 overflow-y-auto select-none">
+                      <div class="text-xs text-slate-400 font-bold border-b border-slate-900 pb-1 mb-1.5 flex justify-between uppercase">
+                        <span>Compiler Console Out</span>
+                        <span class="text-emerald-500 animate-pulse">● Active</span>
+                      </div>
+                      <template x-for="log in projectLogs" :key="log">
+                        <div x-text="log" :class="{
+                          'text-emerald-400 font-bold': log.startsWith('[SUCCESS]'),
+                          'text-red-400 font-bold': log.startsWith('[ERROR]'),
+                          'text-yellow-400': log.startsWith('[TIPS]'),
+                          'text-slate-500': !log.startsWith('[SUCCESS]') && !log.startsWith('[ERROR]') && !log.startsWith('[TIPS]')
+                        }"></div>
+                      </template>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <!-- Compile Trigger Actions -->
+                <div class="px-4 py-3 border-t border-slate-800 bg-[#0c111d] flex justify-end">
+                  <button 
+                    @click="runProjectEvaluation()"
+                    class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-emerald-500/5 active:scale-[0.98]"
+                  >
+                    Build & Verify Project Code
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ==================== TAB 3: PLAYGROUND ==================== -->
+        <div x-show="activeTab === 'sandbox'" class="space-y-6">
+          <div class="border-b border-slate-900 pb-4">
+            <h2 class="text-xl font-extrabold tracking-tight text-white">Live Micro-Sandbox Environment</h2>
+            <p class="text-xs text-slate-400 mt-1">Compile custom events dynamically. Intercept system logs inside real-time digital console feeds.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Code Interface Workspace -->
+            <div class="bg-cyber-dark/80 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[400px]">
+              <div class="px-4 py-2 border-b border-slate-800 bg-slate-900/40 flex items-center justify-between text-xs font-mono font-bold">
+                <span class="text-slate-400">program_sandbox.js</span>
+                <span class="text-[10px] text-cyan-400 uppercase tracking-widest font-mono">JS Input</span>
+              </div>
+              <textarea 
+                x-model="sandboxCode"
+                class="flex-1 bg-cyber-black p-4 focus:outline-none resize-none leading-relaxed text-emerald-300 font-mono text-xs whitespace-pre overflow-x-auto select-text shadow-inner"
+                spellcheck="false"
+              ></textarea>
+              <div class="p-3 bg-cyber-card border-t border-slate-900 flex justify-end gap-2">
+                <button 
+                  @click="sandboxCode = `// write direct executions here\nlet systemScore = 95;\nif (systemScore >= 90) {\n  console.log('SUCCESS: High grade score verified.');\n} else {\n  console.log('RETRY: Re-compile scripts.');\n}`"
+                  class="px-3 py-1.5 text-[10px] bg-slate-900 text-slate-400 hover:text-white rounded-lg border border-slate-800 transition-colors"
+                >
+                  Load Mock Code
+                </button>
+                <button 
+                  @click="runSandboxCode()"
+                  class="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg active:scale-97"
+                >
+                  Run Code & Stream
+                </button>
+              </div>
+            </div>
+
+            <!-- Simulated Hardware Terminal Console Output -->
+            <div class="bg-black border border-slate-900 rounded-2xl flex flex-col h-[400px] overflow-hidden shadow-2xl relative">
+              <div class="px-4 py-2 bg-slate-950 border-b border-slate-900 font-mono text-[10px] text-slate-500 flex justify-between select-none">
+                <span>TERMINAL LOG STREAM</span>
+                <span class="text-cyan-400 animate-pulse">• STREAMING ACTIVE</span>
+              </div>
+              
+              <div class="flex-1 p-5 overflow-y-auto font-mono text-xs space-y-1.5 leading-relaxed selection:bg-cyan-500/20 text-slate-300">
+                <template x-for="log in sandboxConsoleLogs" :key="log">
+                  <div class="flex items-start gap-2">
+                    <span class="text-cyan-400 select-none shrink-0">&gt;</span>
+                    <span x-text="log" :class="{
+                      'text-red-400 font-bold': log.includes('ERROR:'),
+                      'text-emerald-400': log.includes('SUCCESS:')
+                    }"></span>
+                  </div>
+                </template>
+                <div x-show="sandboxConsoleLogs.length === 0" class="text-slate-600 text-xs italic">
+                  Terminal is quiet. Click "Run Code & Stream" to receive system prints.
                 </div>
               </div>
+
+              <!-- Terminal Clear Utility footer -->
+              <div class="p-3 border-t border-slate-900/80 bg-slate-950 flex justify-between items-center text-[10px] font-mono text-slate-600 select-none">
+                <span>BUFFER STATUS: 100% SECURE</span>
+                <button @click="sandboxConsoleLogs = []" class="hover:text-cyan-400 uppercase transition-colors">Clear Console</button>
+              </div>
             </div>
 
           </div>
-
         </div>
 
-      </section>
-
-      <!-- ========================================================
-           TAB 4: MY PROFILE & ACCREDITATION CERTIFICATES
-           ======================================================== -->
-      <section id="tab_profile" class="hidden space-y-6">
-        
-        <div class="border-b border-slate-800 pb-4">
-          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
-            <i data-lucide="user" class="text-pink-500 w-6 h-6"></i>
-            <span>Engineering Profile Profile</span>
-          </h2>
-          <p class="text-xs text-slate-400">Access badges, certifications, and progression data inside the dynamic cybernetic terminal.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          
-          <!-- STATS OVERVIEW -->
-          <div class="lg:col-span-4 bg-slate-900/30 border border-slate-900/60 rounded-2xl p-5 space-y-5">
-            <div class="flex items-center gap-4 border-b border-slate-800/60 pb-4">
-              <div class="w-14 h-14 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-full flex items-center justify-center font-black text-xl text-slate-950 shadow-lg shadow-pink-500/10">
-                👤
-              </div>
-              <div>
-                <h3 id="profileName" class="text-base font-black text-white uppercase tracking-wider">Loading...</h3>
-                <span class="text-[9px] code-font bg-pink-500/10 text-pink-400 border border-pink-500/20 px-2 py-0.5 rounded uppercase">Junior Synthesizer</span>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 text-center">
-              <div class="bg-black/40 border border-slate-900 p-3 rounded-xl">
-                <span class="text-[9px] text-slate-500 font-mono block">Progression XP</span>
-                <span id="profileXp" class="text-lg font-black text-white">0</span>
-              </div>
-              <div class="bg-black/40 border border-slate-900 p-3 rounded-xl">
-                <span class="text-[9px] text-slate-500 font-mono block">Finished Chapters</span>
-                <span id="profileChapters" class="text-lg font-black text-white">0</span>
-              </div>
-            </div>
-
-            <!-- RESET ACCOUNT PIPELINE -->
-            <button 
-              onclick="triggerResetAccount()"
-              class="w-full py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 text-red-400 font-bold text-xs uppercase tracking-wider rounded-xl transition"
-            >
-              Reset learning index data
-            </button>
+        <!-- ==================== TAB 4: MY TRAIL PROFILE ==================== -->
+        <div x-show="activeTab === 'profile'" class="space-y-6">
+          <div class="border-b border-slate-900 pb-4">
+            <h2 class="text-xl font-extrabold tracking-tight text-white">Dynamic Tracking Portal</h2>
+            <p class="text-xs text-slate-400 mt-1">Review your certifications, earned badges, and connection credentials.</p>
           </div>
 
-          <!-- DYNAMIC BADGING TRACK -->
-          <div class="lg:col-span-8 bg-slate-900/30 border border-slate-900/60 rounded-2xl p-5 space-y-4">
-            <h3 class="text-xs font-black text-white uppercase tracking-widest flex items-center gap-2">
-              <i data-lucide="award" class="text-pink-500 w-4 h-4"></i>
-              Accreditation & Badges List
-            </h3>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- User Information Panel -->
+            <div class="md:col-span-5 bg-cyber-card border border-slate-800 p-6 rounded-3xl space-y-6 flex flex-col justify-between">
+              <div class="space-y-4">
+                <div class="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-cyan-500 text-cyber-black rounded-2xl flex items-center justify-center font-black text-2xl uppercase shadow-xl tracking-tight">
+                  <span x-text="userProfile.name.slice(0, 2)"></span>
+                </div>
+                <div class="space-y-1">
+                  <h3 class="text-lg font-extrabold text-white" x-text="userProfile.name"></h3>
+                  <p class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">Active System Connection</p>
+                </div>
+              </div>
 
-            <div id="badgesGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-              <!-- Dynamically populated -->
-            </div>
+              <div class="border-t border-slate-800/80 pt-6 space-y-4">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Experience Points Secured</span>
+                  <span class="font-bold text-white text-sm" x-text="userProfile.xp + ' XP'"></span>
+                </div>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Completed Projects</span>
+                  <span class="font-bold text-emerald-300 text-sm" x-text="userProfile.completedProjects.length + ' Track'"></span>
+                </div>
+              </div>
 
-            <!-- DIGITAL LICENSES / CERTIFICATES ACCUSATION -->
-            <div class="pt-4 border-t border-slate-800">
-              <h4 class="text-[10px] uppercase font-mono font-bold text-slate-500 tracking-wider">Course Certificates Unlocked</h4>
-              <div id="certificatesContainer" class="mt-2.5 grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- Dynamically populated based on project lab achievements -->
+              <!-- Reset Connection Button -->
+              <div class="pt-4 border-t border-slate-800/80">
+                <button 
+                  @click="resetApplicationSession()"
+                  class="w-full py-2 bg-slate-905 border border-slate-800 text-slate-500 hover:text-red-400 hover:border-red-500/20 rounded-xl text-xs font-semibold tracking-wide transition-colors"
+                >
+                  Reset Active Session Tag
+                </button>
               </div>
             </div>
 
-          </div>
+            <!-- Unlocked Certificates & Badges Board -->
+            <div class="md:col-span-7 space-y-4">
+              <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest font-mono">My Credentials & Badges</h4>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Badge card HTML/CSS Cert -->
+                <div class="bg-cyber-card border border-slate-800/40 p-4.5 rounded-2xl flex items-center gap-3"
+                  :class="isProjectFinished('proj-webdev') ? 'border-emerald-500/20 bg-emerald-500/[0.02]' : 'opacity-40'"
+                >
+                  <div class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-base shrink-0">
+                    🎨
+                  </div>
+                  <div>
+                    <h5 class="text-xs font-extrabold text-white">Semantic Marketeer</h5>
+                    <p class="text-[10px] text-slate-500 mt-0.5" x-text="isProjectFinished('proj-webdev') ? '✓ Course Completed and verified' : 'Unlock by completing the HTML project'"></p>
+                  </div>
+                </div>
 
+                <!-- Badge card JS Cert -->
+                <div class="bg-cyber-card border border-slate-800/40 p-4.5 rounded-2xl flex items-center gap-3"
+                  :class="isProjectFinished('proj-js') ? 'border-emerald-500/20 bg-emerald-500/[0.02]' : 'opacity-40'"
+                >
+                  <div class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-base shrink-0">
+                    ⚡
+                  </div>
+                  <div>
+                    <h5 class="text-xs font-extrabold text-white">Pipeline Engineer</h5>
+                    <p class="text-[10px] text-slate-500 mt-0.5" x-text="isProjectFinished('proj-js') ? '✓ Course Completed and verified' : 'Unlock by completing the JS project'"></p>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Full Certification Canvas View if secured -->
+              <div class="bg-cyber-dark/40 border border-slate-800/60 p-6 rounded-2xl text-center space-y-4" x-show="userProfile.completedProjects.length > 0">
+                <div class="text-xl">🏆</div>
+                <div class="space-y-1">
+                  <h5 class="text-xs font-black text-white">STENCIL BOARD CERTIFICATE GENERATED</h5>
+                  <p class="text-[10px] text-slate-500 max-w-sm mx-auto leading-relaxed">
+                    A physical certified standard status is logged for <strong class="text-emerald-400 font-bold" x-text="userProfile.name"></strong>! Project code verified under strict compiler checks.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
         </div>
 
       </section>
 
     </main>
 
+    <!-- FOOTER LICENSE -->
+    <footer class="border-t border-slate-900 bg-cyber-black py-4 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[10px] font-mono text-slate-600">
+        <span>© 2026 BG CODE TUTOR. ALL PHYSICAL CONNECTIONS ASSURED.</span>
+        <span>LICENSED STANDARD VERSION GCC_v4.1</span>
+      </div>
+    </footer>
+
   </div>
 
-  <!-- CERTIFICATE POPUP LIGHTBOX DISPLAY -->
-  <div id="certificateLightbox" class="fixed inset-0 bg-black/98 z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border-2 border-yellow-500 max-w-lg w-full rounded-2xl p-8 space-y-6 relative text-center shadow-[0_0_80px_rgba(234,179,8,0.25)]">
-      
+  <!-- DYNAMIC LESSON STEP-MODAL COMPONENT -->
+  <div 
+    class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+    x-show="activeLessonModal !== null"
+    x-transition:enter="transition ease-out duration-250"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+  >
+    <div 
+      class="bg-cyber-card border-2 border-emerald-500/30 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 relative"
+      @click.away="closeLessonModal()"
+    >
       <button 
-        onclick="hideCertificateLightbox()"
-        class="absolute top-4 right-4 text-slate-500 hover:text-white transition"
-      >
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-
-      <div class="flex flex-col items-center gap-1.5">
-        <span class="text-2xl text-yellow-500">🏆</span>
-        <h3 class="text-[10px] tracking-widest uppercase font-mono font-bold text-yellow-500">Official BG Code Graduation Warrant</h3>
-        <div class="w-16 h-0.5 bg-yellow-500/30 rounded my-1"></div>
-      </div>
-
-      <div class="space-y-4">
-        <p class="text-xs text-slate-400 capitalize">This credential signifies that</p>
-        <h2 id="certStudentName" class="text-2xl font-black text-white uppercase tracking-wider">STUDENT NAME</h2>
-        <p class="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
-          has successfully programmed and compiled the required validation track projects for the language program:
-        </p>
-        <div id="certTrackBadge" class="bg-cyan-500/10 border border-cyan-500/25 px-5 py-2 rounded-xl text-cyan-400 font-extrabold text-xs inline-block uppercase tracking-widest font-mono">
-          JAVASCRIPT CODING TRACK
-        </div>
-      </div>
-
-      <div class="bg-slate-950 p-4 rounded-xl text-[10px] text-slate-500 font-mono text-left border border-slate-900 space-y-1">
-        <div class="flex justify-between">
-          <span>WARRANT CERTIFICATE CODE:</span>
-          <span class="text-slate-350">BG-CERT-7539-VAL</span>
-        </div>
-        <div class="flex justify-between">
-          <span>GRADUATION RECORD:</span>
-          <span class="text-slate-350">VERIFIED PIPELINE COMPILE</span>
-        </div>
-      </div>
-
-      <button 
-        onclick="hideCertificateLightbox()"
-        class="w-full py-3.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition"
-      >
-        Return to diagnostics
-      </button>
-
-    </div>
-  </div>
-
-  <!-- EVALUATION MODAL DIALOG POPUP -->
-  <div id="lessonModal" class="fixed inset-0 bg-black/95 z-40 flex items-center justify-center p-4 hidden">
-    <div class="bg-[#0b0f19] border border-slate-800 max-w-lg w-full rounded-2xl p-6 space-y-6 relative shadow-2xl">
-      
-      <button 
-        onclick="closeLessonModal()"
-        class="absolute top-4 right-4 text-slate-500 hover:text-white transition"
+        @click="closeLessonModal()"
+        class="absolute right-4 top-4 text-slate-500 hover:text-white transition-colors"
       >
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
 
-      <!-- HEAD -->
-      <div class="space-y-1 pb-3 border-b border-slate-800">
-        <span id="modalTopicTitle" class="text-[9px] uppercase font-mono bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-bold tracking-widest">HTML TAG DIRECTIVES</span>
-        <h3 id="modalLessonName" class="text-base font-extrabold text-white">Lesson Loading...</h3>
+      <div class="space-y-3" x-show="activeLessonModal !== null">
+        <span class="text-[9px] font-mono text-emerald-400 uppercase tracking-widest px-2.5 py-0.5 rounded border border-emerald-500/20" x-text="activeLessonModal === 'html-structure' ? 'HTML LESSON' : 'JS LESSON'"></span>
+        <h3 class="text-xl font-extrabold text-white" x-text="activeLessonModal === 'html-structure' ? '🎨 Building Pure Web Layout Structures' : '⚡ Deciphering Event Streams & Scope'"></h3>
       </div>
 
-      <!-- QUESTION TEXT -->
-      <div class="space-y-3">
-        <p id="modalInstruction" class="text-xs text-slate-300 leading-relaxed"></p>
-        <div class="bg-black/60 p-4 rounded-xl border border-slate-900">
-          <code id="modalCodeSnippet" class="text-[11px] text-yellow-400 font-mono whitespace-pre-wrap leading-normal block"></code>
+      <!-- Lesson Body text explanation -->
+      <div class="text-xs text-slate-400 leading-relaxed font-sans space-y-4 max-h-[300px] overflow-y-auto pr-2">
+        <template x-if="activeLessonModal === 'html-structure'">
+          <div class="space-y-3">
+            <p>
+              In core web layout blocks, we use markup components called <strong>elements</strong>. They form structural containers such as headings <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">&lt;h1&gt;</code>, description vectors <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">&lt;p&gt;</code>, navigation centers <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">&lt;header&gt;</code>, and button trigger systems.
+            </p>
+            <p>
+              By specifying a <code class="text-cyan-400 font-mono">style=""</code> attribute directly upon containers, we inject hardware constraints such as color parameters, background states, responsive flexboxes, margins, and padding offsets.
+            </p>
+            <div class="border border-slate-800 bg-cyber-black p-3.5 rounded-xl font-mono text-[10px] text-slate-500 space-y-1">
+              <div>&lt;header style="background: rgb(15, 23, 42); padding: 15px;"&gt;</div>
+              <div class="pl-4">&lt;h1&gt;Interactive Startup Banner&lt;/h1&gt;</div>
+              <div>&lt;/header&gt;</div>
+            </div>
+          </div>
+        </template>
+        
+        <template x-if="activeLessonModal === 'js-events'">
+          <div class="space-y-3">
+            <p>
+              In interactive pipelines, variables form parameters that capture values in memory registers. We use <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">let</code> or <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">var</code> to assign reassignable identifiers, and capture actions inside functions we declare as:
+            </p>
+            <div class="border border-slate-800 bg-cyber-black p-3.5 rounded-xl font-mono text-[10px] text-slate-500 space-y-1">
+              <div>let counter = 10;</div>
+              <div>function increment() {</div>
+              <div class="pl-4 font-black text-cyan-400">counter = counter + 1;</div>
+              <div>}</div>
+              <div>increment();</div>
+            </div>
+            <p>
+              Executing standard <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">console.log(...)</code> calls broadcasts the values directly to the active system trace register!
+            </p>
+          </div>
+        </template>
+      </div>
+
+      <!-- Action Verification Check in modal -->
+      <div class="bg-cyber-dark p-4 rounded-2xl border border-slate-800 space-y-3">
+        <h4 class="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none">Checkpoint Challenge</h4>
+        <div class="text-xs text-white" x-text="activeLessonModal === 'html-structure' ? 'Q: Which HTML element represents a top layout block or styling container?' : 'Q: Which keyword is declared to allocate reassignable variables in Javascript?'"></div>
+        
+        <div class="flex flex-col sm:flex-row gap-2.5 pt-1.5">
+          <input 
+            type="text" 
+            x-model="lessonChallengeInput"
+            @keydown.enter="verifyLessonCheck()"
+            placeholder="Input your response here..."
+            class="flex-1 bg-cyber-black px-4 py-2 text-xs font-mono border border-slate-850 focus:border-emerald-550 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-emerald-300 transition-all placeholder:text-slate-650"
+          >
+          <button 
+            @click="verifyLessonCheck()"
+            class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition-all"
+          >
+            Submit Answer
+          </button>
         </div>
-      </div>
-
-      <!-- INTERACTIVE USER OPTION SELECTION -->
-      <div class="space-y-2">
-        <label class="text-[10px] uppercase font-mono font-bold tracking-widest text-slate-500">Pick correct token block</label>
-        <div id="modalOptions" class="grid grid-cols-1 gap-2.5">
-          <!-- Populated -->
-        </div>
-      </div>
-
-      <!-- CONTROL BUTTONS -->
-      <div class="flex items-center justify-between border-t border-slate-800 pt-4.5 gap-4">
-        <div id="modalFeedbackMessage" class="text-xs font-mono font-bold leading-normal"></div>
-        <button 
-          onclick="evaluateLessonAnswer()"
-          id="btnSubmitAnswer"
-          class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition cursor-pointer"
-        >
-          Verify Selection
-        </button>
       </div>
 
     </div>
   </div>
 
-  <!-- APPLICATION FOOTER -->
-  <footer class="border-t border-slate-950 bg-[#04060b] py-5 px-4 text-center text-xs text-slate-600">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-1 font-mono">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>BG CODE SYSTEMS STABLE PIPELINE</span>
-      </div>
-      <div class="flex items-center gap-3">
-        <span>&middot;</span>
-        <span>Secure offline-safe compilation</span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- DYNAMIC CORE JAVASCRIPT STATE ENGINE -->
+  <!-- STENCIL APP SCRIPT LOGIC (Alpine.js integration) -->
   <script>
-    // System courses configuration structure (No mocking data - real educational milestones)
-    const COURSES_DATA = {
-      html: {
-        name: "Web Dev (HTML)",
-        chapters: [
+    function bgCodeTutorApp() {
+      return {
+        // App Core State
+        showOnboarding: true,
+        onboardingName: '',
+        activeTab: 'learn',
+        
+        userProfile: {
+          name: 'Developer',
+          xp: 20,
+          completedLessons: [],
+          completedProjects: []
+        },
+
+        // Lesson Viewport state
+        activeLessonModal: null,
+        lessonChallengeInput: '',
+
+        // Projects Directory & Live Compiler Checks
+        selectedProjectIdx: 0,
+        userCode: '',
+        projectLogs: [],
+        evaluationChecks: [],
+
+        projects: [
           {
-            id: "html-intro",
-            name: "HTML Core Tags",
-            description: "Learn structure-building directives for HTML content systems.",
-            lessons: [
-              { id: "h-l1", name: "Constructing Structural Headers", task: "Which standard tag builds largest font display headers?", explanation: "<h1> elements convey strong SEO weight.", options: ["<h1>", "<h7>", "<head>", "<header_item>"], correct: 0 },
-              { id: "h-l2", name: "Forming Paragraph Elements", task: "What HTML tags structure simple standard readable texts?", explanation: "Paragraph <p> blocks represent standard linear text alignments.", options: ["<p>", "<div>", "<text>", "<para>"], correct: 0 },
-              { id: "h-l3", name: "Implementing External Image Blocks", task: "How do you render high fidelity graphic canvases on the page?", explanation: "The <img> tag is self-closing and uses src references.", options: ["<img>", "<graphic>", "<svg_frame>", "<picture>"], correct: 0 }
-            ]
+            id: 'proj-webdev',
+            name: '🎨 HTML/CSS: Creative Startup Header',
+            description: 'Design a highly polished hero component utilizing custom background-colors and inline styles.',
+            language: 'html',
+            instructions: [
+              'Create a main navigation container utilizing standard <header> or a styled template <div>.',
+              'Add a header tag using an <h1> element.',
+              'Include descriptive wording inside a <p> element.',
+              'Construct a customized call-to-action <button> styled element.'
+            ],
+            checks: [
+              'Has header wrapper container',
+              'Contains <h1> header element',
+              'Contains <p> description element',
+              'Has call-to-action <button> element'
+            ],
+            initialCode: `<!-- DESIGN YOUR STARTUP PAGE HERE -->\n<header style="background: #0f172a; padding: 15px; border-bottom: 2px solid #10b981;">\n  <span style="color: #10b981; font-weight: bold; font-family: sans-serif;">BG VENTURES</span>\n</header>\n\n<div style="background: radial-gradient(circle, #1e1b4b 0%, #030712 100%); color: white; padding: 40px; border-radius: 16px; font-family: sans-serif; text-align: center; border: 1px solid #10b981; max-width: 450px; margin: 30px auto;">\n  <h1 style="color: #10b981; font-size: 28px; margin-bottom: 10px;">Accelerate Your Future</h1>\n  <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">\n    Stop waiting. Start learning systems engineering. Join the active vanguard of certified developers.\n  </p>\n  <button style="background: #10b981; color: #022c22; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer;">\n    Enroll Safely Now\n  </button>\n</div>`,
+            testSuite: (code) => {
+              const lower = code.toLowerCase();
+              const hasHeader = lower.includes('<header') || (lower.includes('<div') && lower.includes('background') && lower.includes('padding'));
+              const hasH1 = lower.includes('<h1');
+              const hasP = lower.includes('<p');
+              const hasButton = lower.includes('<button');
+              return {
+                passed: hasHeader && hasH1 && hasP && hasButton,
+                results: [hasHeader, hasH1, hasP, hasButton]
+              };
+            }
           },
           {
-            id: "html-styling",
-            name: "CSS Layout Positioning",
-            description: "Position vectors, specify flex axes, and align components.",
-            lessons: [
-              { id: "h-l4", name: "Flex Axes Layout Alignment", task: "Which property matches flex directions onto vertical alignments?", explanation: "flex-direction: column is standard syntax.", options: ["flex-direction: column", "axis: vertical", "align-items: height", "flex-flow: grid"], correct: 0 },
-              { id: "h-l5", name: "Glow & Margin Border Radius", task: "Which visual styling handles rounding outer boundaries of canvas borders?", explanation: "border-radius handles smoothing boundaries.", options: ["border-radius", "border-glow", "smooth-corner", "box-radius"], correct: 0 }
-            ]
-          }
-        ]
-      },
-      javascript: {
-        name: "⚡ JavaScript Frameworks",
-        chapters: [
-          {
-            id: "js-vars",
-            name: "Variables & Calculations",
-            description: "Work with variables and memory states.",
-            lessons: [
-              { id: "j-l1", name: "Reassignable Variables Declarations", task: "Which keyword instantiates values capable of being reassigned later?", explanation: "let variables bypass static locks.", options: ["let", "const", "declare", "immutable"], correct: 0 },
-              { id: "j-l2", name: "Invoking Functional States", task: "Which symbol denotes standard execution blocks containing inputs?", explanation: "Parentheses () execute defined function definitions.", options: ["()", "{}", "[]", "<>"], correct: 0 }
-            ]
-          }
-        ]
-      },
-      python: {
-        name: "🐍 Data Logic (Python)",
-        chapters: [
-          {
-            id: "py-basics",
-            name: "Variables & Structs",
-            description: "Check collections, declare array lists, and test bounds.",
-            lessons: [
-              { id: "p-l1", name: "Instantiating Lists Structures", task: "Which bracket styles define standard ordered sequences in Python?", explanation: "Square brackets are default list structures.", options: ["[]", "{}", "()", "<>"], correct: 0 }
-            ]
-          }
-        ]
-      },
-      cpp: {
-        name: "👾 Systems Native (C++)",
-        chapters: [
-          {
-            id: "cpp-basics",
-            name: "Stream Arrays & Pointers",
-            description: "Manipulate memories directly using address pointer redirection.",
-            lessons: [
-              { id: "c-l1", name: "Dereferencing Addressing Pointers", task: "Which indicator dereferences address values to access raw variables?", explanation: "The * star operator dereferences target values.", options: ["*", "&", "#", "->"], correct: 0 }
-            ]
-          }
-        ]
-      }
-    };
-
-    // Projects data matching the requested dynamic lab specifications
-    const PROJECTS_DATA = [
-      {
-        id: "proj-webdev",
-        name: "🎨 HTML/CSS: Creative Startup Header & Card",
-        description: "Design a highly polished hero component with branding and call-to-action buttons.",
-        language: "html",
-        instructions: [
-          "Create a main navigation container utilizing standard <header> tags.",
-          "Add a premium heading using an <h1> tag.",
-          "Include a short descriptive message inside a <p> paragraph tag.",
-          "Construct a customized call-to-action <button> styled with background-color and padding."
-        ],
-        testChecks: [
-          "Has a <header> or a navigation container div with style attribute.",
-          "Contains an <h1> header element.",
-          "Contains a <p> description element.",
-          "Has a Call-To-Action <button> element."
-        ],
-        initialCode: `<!-- BUILD YOUR STARTUP PAGE HERE -->\n<header style="background: #0f172a; padding: 15px; text-align: center; border-bottom: 2px solid #10b981;">\n  <span style="color: #10b981; font-weight: bold; font-family: sans-serif; letter-spacing: 2px;">BG VENTURES</span>\n</header>\n\n<div style="background: radial-gradient(circle, #1e1b4b 0%, #030712 100%); color: white; padding: 40px; border-radius: 16px; font-family: sans-serif; text-align: center; border: 1px solid #10b981; max-width: 450px; margin: 30px auto; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);">\n  <h1 style="color: #10b981; font-size: 28px; margin-bottom: 10px;">Accelerate Your Future</h1>\n  <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">\n    Stop waiting. Start learning systems engineering. Join the active vanguard of certified developers.\n  </p>\n  <button style="background: #10b981; color: #022c22; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; transition: 0.2s;">\n    Enroll Safely Now\n  </button>\n</div>`,
-        validator: (code) => {
-          const lower = code.toLowerCase();
-          const check1 = lower.includes('<header') || (lower.includes('<div') && lower.includes('background') && lower.includes('padding'));
-          const check2 = lower.includes('<h1');
-          const check3 = lower.includes('<p');
-          const check4 = lower.includes('<button');
-          return [check1, check2, check3, check4];
-        }
-      },
-      {
-        id: "proj-js",
-        name: "⚡ JAVASCRIPT: Event-Driven Digital Incrementer",
-        description: "Establish state parameters, declare incrementers, and capture totals inside the terminal.",
-        language: "javascript",
-        instructions: [
-          "Declare counter variable using 'let counter = 10;'",
-          "Write increment function 'function increment() { ... }' or const increment",
-          "Invoke increment twice to reach 12",
-          "Log output target: 'console.log(\"Counter Value: \" + counter)'"
-        ],
-        testChecks: [
-          "Declares reassignable variable counter.",
-          "Implements functional increment() scope.",
-          "Performs operations reaching evaluation score of 12.",
-          "Prints Counter Value correctly."
-        ],
-        initialCode: `// DIGITAL INCREMENT ENGINE\n// Step 1: Declare your counter variable\nlet counter = 10;\n\n// Step 2: Write your increment function\nfunction increment() {\n    counter = counter + 1;\n}\n\n// Step 3: Run counts\nincrement();\nincrement();\n\n// Step 4: Output to system console\nconsole.log("Counter Value: " + counter);\n`,
-        validator: (code) => {
-          const check1 = /\b(let|var)\s+counter\b/.test(code) || /counter\s*=/.test(code);
-          const check2 = /function\s+increment\b/.test(code) || /const\s+increment\s*=/.test(code);
-          const check3 = /increment\s*\(\s*\)/.test(code);
-          const check4 = /console\.log\s*\(.*Counter Value:.*?\)/.test(code);
-          return [check1, check2, check3, check4];
-        }
-      },
-      {
-        id: "proj-python",
-        name: "🐍 PYTHON: High-Precision Expense Summer",
-        description: "Verify standard Python square-bracket lists, sum cost parameters, and print formatting.",
-        language: "python",
-        instructions: [
-          "Declare list variable 'costs = [...]' using elements.",
-          "Identify summation using variable 'total_bill'.",
-          "Direct stdout output 'print(f\"Total bill is: {total_bill}\")'"
-        ],
-        testChecks: [
-          "Utilizes costs square bracket array syntax.",
-          "Declares total_bill variable.",
-          "Formats string inside print statements."
-        ],
-        initialCode: `# python monthly budget allocator\n# Step 1: Create a list of costs\ncosts = [12.50, 45.00, 120.90]\n\n# Step 2: Sum results\ntotal_bill = sum(costs)\n\n# Step 3: Print result out using formatting f''\nprint(f"Total bill is: {total_bill}")\n`,
-        validator: (code) => {
-          const check1 = /costs\s*=\s*\[/.test(code);
-          const check2 = /total_bill\s*=/.test(code);
-          const check3 = /print\s*\(/.test(code);
-          return [check1, check2, check3];
-        }
-      },
-      {
-        id: "proj-cpp",
-        name: "👾 C++: Advanced Academic Threshold Monitor",
-        description: "Verify integer assignments, threshold evaluation logic, and standard iostream outputs.",
-        language: "cpp",
-        instructions: [
-          "Build studentScore variable matching threshold numbers (e.g., 82).",
-          "Assess condition parameters: check score in standard 'if (studentScore >= 50)'.",
-          "Stream outcome using cout to display Passed results."
-        ],
-        testChecks: [
-          "Configures integer studentScore.",
-          "Performs logical assessment constraints.",
-          "Uses print cout system streaming successfully."
-        ],
-        initialCode: `#include <iostream>\nusing namespace std;\n\nint main() {\n    // Step 1: Declare student score variable\n    int studentScore = 82;\n    \n    // Step 2: Check standard test limits\n    if (studentScore >= 50) {\n        cout << "Final Academic Status: Passed" << endl;\n    } else {\n        cout << "Final Academic Status: Failed" << endl;\n    }\n    \n    return 0;\n}\n`,
-        validator: (code) => {
-          const check1 = /int\s+studentScore\b/.test(code);
-          const check2 = /if\s*\(studentScore\s*(>=|>)/.test(code);
-          const check3 = /cout\s*<<\s*/.test(code);
-          return [check1, check2, check3];
-        }
-      }
-    ];
-
-    // Local account configurations & storage parameters
-    let state = {
-      name: "",
-      hearts: 5,
-      coins: 20,
-      streak: 1,
-      xp: 0,
-      completedLessons: [],
-      skippedChapters: [],
-      completedProjects: [],
-      sandboxProjects: {}
-    };
-
-    // ACTIVE VIEW SETTING
-    let currentTab = "learn";
-    let activeCourse = "html";
-    let activeLabProjectIdx = 0;
-    let activeSandboxLanguage = "javascript";
-
-    // LESSON POPUP WORKING STATE
-    let currentLessonObj = null;
-
-    // Load states on load
-    window.onload = () => {
-      const stored = localStorage.getItem("bg_code_tutor_state");
-      if (stored) {
-        try {
-          state = JSON.parse(stored);
-          if (state.name) {
-            document.getElementById("onboardingScreen").classList.add("hidden");
-          }
-        } catch (e) {
-          console.error("Local persistence initialization reset.", e);
-        }
-      }
-      syncStateAndRender();
-      lucide.createIcons();
-    };
-
-    function saveState() {
-      localStorage.setItem("bg_code_tutor_state", JSON.stringify(state));
-    }
-
-    // ONBOARDING INITIALIZER
-    function initOnboarding() {
-      const input = document.getElementById("nameInput");
-      const trimmed = input.value.trim();
-      if (!trimmed) {
-        alert("Please enter a valid developer alias!");
-        return;
-      }
-      state.name = trimmed;
-      document.getElementById("onboardingScreen").classList.add("hidden");
-      saveState();
-      syncStateAndRender();
-    }
-
-    // RE-SYNC STATE AND DYNAMIC RENDER
-    function syncStateAndRender() {
-      // Sync headers metrics
-      document.getElementById("userNameHeader").textContent = state.name || "GUEST";
-      document.getElementById("heartsCount").textContent = state.hearts;
-      document.getElementById("coinsCount").textContent = state.coins;
-      document.getElementById("streakCount").textContent = state.streak;
-
-      // Sync Profile values if open
-      document.getElementById("profileName").textContent = state.name || "GUEST";
-      document.getElementById("profileXp").textContent = state.xp;
-      
-      const finishedChaptersCount = state.skippedChapters.length + 
-        (COURSES_DATA[activeCourse]?.chapters.filter(ch => isChapterCompleted(ch)).length || 0);
-      document.getElementById("profileChapters").textContent = finishedChaptersCount;
-
-      renderCourseMap();
-      renderLabTracks();
-      renderActiveLabDetails();
-      renderProfileBadges();
-      renderProfileCertificates();
-      
-      // Select correct Sandbox template if blank
-      if (!state.sandboxProjects[activeSandboxLanguage]) {
-        setDefaultSandboxCode(activeSandboxLanguage);
-      }
-    }
-
-    // TAB SWITCHER
-    function switchTab(tabId) {
-      currentTab = tabId;
-      document.querySelectorAll("aside button").forEach(btn => {
-        btn.classList.add("text-slate-400", "border-transparent");
-        btn.classList.remove("text-emerald-400", "bg-emerald-500/10", "border-emerald-500/50");
-      });
-
-      const activeBtn = document.getElementById(`btnTab_${tabId}`);
-      activeBtn.classList.remove("text-slate-400", "border-transparent");
-      activeBtn.classList.add("text-emerald-400", "bg-emerald-500/10", "border-emerald-500/50");
-
-      document.getElementById("tab_learn").classList.add("hidden");
-      document.getElementById("tab_projects").classList.add("hidden");
-      document.getElementById("tab_sandbox").classList.add("hidden");
-      document.getElementById("tab_profile").classList.add("hidden");
-
-      document.getElementById(`tab_${tabId}`).classList.remove("hidden");
-      syncStateAndRender();
-    }
-
-    // CHANGE SELECTED COURSE
-    function changeCourse() {
-      activeCourse = document.getElementById("courseSelector").value;
-      syncStateAndRender();
-    }
-
-    // DETERMINE IF LESSON / CHAPTER STATE COMPLETE
-    function isLessonCompleted(lessonId) {
-      return state.completedLessons.includes(lessonId);
-    }
-    
-    function isChapterCompleted(chapter) {
-      if (state.skippedChapters.includes(chapter.id)) return true;
-      return chapter.lessons.every(les => isLessonCompleted(les.id));
-    }
-
-    // RENDER ZIGZAG NODES AND LEVEL SKIP ACTIONS
-    function renderCourseMap() {
-      const container = document.getElementById("courseMap");
-      container.innerHTML = "";
-
-      const course = COURSES_DATA[activeCourse];
-      if (!course) return;
-
-      course.chapters.forEach((chapter, chapIdx) => {
-        const isSkipped = state.skippedChapters.includes(chapter.id);
-        const isComplete = isChapterCompleted(chapter);
-
-        // Generate chapter segment Wrapper
-        const chapDiv = document.createElement("div");
-        chapDiv.className = "bg-slate-900/30 border border-slate-900 rounded-3xl p-6 space-y-6 relative overflow-hidden";
-        
-        chapDiv.innerHTML = `
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/60 pb-4">
-            <div class="space-y-1">
-              <span class="text-[9px] uppercase font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold tracking-widest">CHAPTER LEVEL ${chapIdx + 1}</span>
-              <h3 class="text-base font-black text-white">${chapter.name}</h3>
-              <p class="text-xs text-slate-400">${chapter.description}</p>
-            </div>
-
-            <!-- LEVEL SKIP BUTTONS -->
-            <div>
-              ${isComplete 
-                ? `<span class="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-400/10 border border-emerald-400/25 px-3.5 py-1.5 rounded-xl block text-center">Chapter Cleared</span>`
-                : `<button 
-                    onclick="skipChapterLevel('${chapter.id}')"
-                    class="px-4 py-2 bg-slate-950 hover:bg-slate-900 duration-200 text-slate-300 font-bold text-xs rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer flex items-center justify-center gap-1.5"
-                   >
-                     <span>I already know this</span>
-                     <i data-lucide="arrow-right" class="w-3 h-3 text-emerald-400"></i>
-                   </button>`
-              }
-            </div>
-          </div>
-
-          <!-- Zigzag structural pathway nodes -->
-          <div class="flex flex-wrap justify-around items-center py-6 gap-6 max-w-xl mx-auto">
-            ${chapter.lessons.map((lesson, lesIdx) => {
-              const comp = isLessonCompleted(lesson.id);
-              const active = lesIdx === 0 || isLessonCompleted(chapter.lessons[lesIdx - 1]?.id);
-              return `
-                <button 
-                  onclick="openLessonModal('${activeCourse}', ${chapIdx}, ${lesIdx})"
-                  class="relative group transition cursor-pointer"
-                  ${!comp && !active ? 'disabled' : ''}
-                >
-                  <!-- Outer path ring -->
-                  <div class="w-16 h-16 rounded-full flex items-center justify-center border-2 transition duration-200 ${
-                    comp 
-                      ? 'bg-emerald-500/15 border-emerald-400 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.15)]' 
-                      : active 
-                        ? 'bg-purple-500/15 border-purple-400 text-purple-300 animate-pulse' 
-                        : 'bg-slate-950 border-slate-850 text-slate-600 cursor-no-drop'
-                  }">
-                    ${comp ? '✓' : lesIdx + 1}
-                  </div>
-                  <div class="absolute top-18 left-1/2 -translate-x-1/2 w-32 text-center select-none pointer-events-none">
-                    <p class="text-[9px] font-bold text-slate-400 tracking-tight line-clamp-1 group-hover:text-white">${lesson.name}</p>
-                  </div>
-                </button>
-              `;
-            }).join("")}
-          </div>
-        `;
-        container.appendChild(chapDiv);
-      });
-      lucide.createIcons();
-    }
-
-    // SKIP LEVEL FUNCTIONALITY
-    function skipChapterLevel(chapterId) {
-      if (!state.skippedChapters.includes(chapterId)) {
-        state.skippedChapters.push(chapterId);
-        state.xp += 100;
-        state.coins += 15;
-        saveState();
-        syncStateAndRender();
-        alert("Level Skipped! Unlocked progression path and obtained 100 XP + 15 coins bounty.");
-      }
-    }
-
-    // OPEN LESSON MODAL WINDOW
-    function openLessonModal(courseId, chapIdx, lesIdx) {
-      const course = COURSES_DATA[courseId];
-      if (!course) return;
-      const lesson = course.chapters[chapIdx]?.lessons[lesIdx];
-      if (!lesson) return;
-
-      currentLessonObj = lesson;
-      
-      document.getElementById("modalTopicTitle").textContent = course.chapters[chapIdx].name;
-      document.getElementById("modalLessonName").textContent = lesson.name;
-      document.getElementById("modalInstruction").textContent = lesson.task;
-      document.getElementById("modalCodeSnippet").textContent = lesson.explanation;
-
-      // Render options list
-      const optContainer = document.getElementById("modalOptions");
-      optContainer.innerHTML = "";
-      
-      lesson.options.forEach((opt, idx) => {
-        const btn = document.createElement("button");
-        btn.onclick = () => selectOption(idx);
-        btn.className = "w-full text-left p-3.5 bg-slate-950 hover:bg-slate-900 text-xs font-semibold rounded-xl border border-slate-850 transition flex items-center justify-between group";
-        btn.id = `optBtn_${idx}`;
-        btn.innerHTML = `
-          <span>${opt}</span>
-          <span class="w-2.5 h-2.5 bg-slate-900 border border-slate-850 rounded-full group-hover:border-emerald-400 shrink-0"></span>
-        `;
-        optContainer.appendChild(btn);
-      });
-
-      document.getElementById("modalFeedbackMessage").className = "text-xs font-mono text-slate-500";
-      document.getElementById("modalFeedbackMessage").textContent = "Select code token to verify...";
-      document.getElementById("lessonModal").classList.remove("hidden");
-    }
-
-    let selectedAnswerIdx = null;
-
-    function selectOption(optIdx) {
-      selectedAnswerIdx = optIdx;
-      document.querySelectorAll("#modalOptions button").forEach((btn, idx) => {
-        btn.classList.add("border-slate-850");
-        btn.classList.remove("border-emerald-500", "bg-emerald-500/5");
-        
-        const pin = btn.querySelector("span:last-child");
-        pin.className = "w-2.5 h-2.5 bg-slate-900 border border-slate-850 rounded-full shrink-0";
-      });
-
-      const selBtn = document.getElementById(`optBtn_${optIdx}`);
-      selBtn.classList.remove("border-slate-850");
-      selBtn.classList.add("border-emerald-500", "bg-emerald-500/5");
-      selBtn.querySelector("span:last-child").className = "w-2.5 h-2.5 bg-emerald-500 border border-emerald-400 rounded-full shrink-0 animate-ping";
-    }
-
-    function evaluateLessonAnswer() {
-      if (selectedAnswerIdx === null) {
-        alert("Please pick an option first before conducting tests!");
-        return;
-      }
-
-      if (!currentLessonObj) return;
-
-      const fdb = document.getElementById("modalFeedbackMessage");
-      if (selectedAnswerIdx === currentLessonObj.correct) {
-        fdb.textContent = "[SUCCESS] Token matching perfect! Correct Answer.";
-        fdb.className = "text-xs font-mono font-bold text-emerald-400";
-        
-        // Reward state
-        if (!state.completedLessons.includes(currentLessonObj.id)) {
-          state.completedLessons.push(currentLessonObj.id);
-          state.xp += 15;
-          state.coins += 5;
-          saveState();
-        }
-
-        setTimeout(() => {
-          closeLessonModal();
-          syncStateAndRender();
-        }, 1200);
-
-      } else {
-        fdb.textContent = "[WARNING] Mismatch detected. Lost 1 heart.";
-        fdb.className = "text-xs font-mono font-bold text-red-500 animate-bounce";
-        
-        if (state.hearts > 1) {
-          state.hearts--;
-        } else {
-          alert("No hearts remaining! Restoring development shields back manually.");
-          state.hearts = 5;
-        }
-        saveState();
-        syncStateAndRender();
-      }
-    }
-
-    function closeLessonModal() {
-      document.getElementById("lessonModal").classList.add("hidden");
-      currentLessonObj = null;
-      selectedAnswerIdx = null;
-    }
-
-    // ========================================================
-    // PROJECTS INTERACTIVE ACTIONS
-    // ========================================================
-    function renderLabTracks() {
-      const container = document.getElementById("labTracksList");
-      container.innerHTML = "";
-
-      PROJECTS_DATA.forEach((proj, i) => {
-        const active = i === activeLabProjectIdx;
-        const complete = state.completedProjects.includes(proj.id);
-
-        const btn = document.createElement("button");
-        btn.onclick = () => selectLabProject(i);
-        btn.className = `w-full text-left p-4 rounded-2xl border transition relative select-none ${
-          active 
-            ? 'bg-emerald-500/10 border-emerald-500 text-emerald-300' 
-            : 'bg-slate-900/30 border-slate-900 hover:bg-slate-900/60 text-slate-400'
-        }`;
-
-        btn.innerHTML = `
-          <div class="flex items-center justify-between gap-2.5 mb-1">
-            <span class="text-[9px] uppercase font-mono font-bold text-slate-500 tracking-wider">${proj.language}</span>
-            ${complete 
-              ? `<span class="text-[9px] text-emerald-400 font-extrabold uppercase bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded">Passed ✓</span>`
-              : `<span class="text-[9px] text-slate-500 font-bold uppercase py-0.5">Not Done</span>`
+            id: 'proj-js',
+            name: '⚡ JAVASCRIPT: Dynamic Counter Loop',
+            description: 'Declare counters, initialize increment events, and dump results into print outputs.',
+            language: 'javascript',
+            instructions: [
+              'Declare a variable named "counter" assigning it a base value (e.g., let counter = 10).',
+              'Define a function named "increment" that modifies "counter" by adding 1.',
+              'Call your "increment" function.',
+              'Log final totals to console via: console.log("Counter Value: " + counter).'
+            ],
+            checks: [
+              'Declares counter variable',
+              'Creates increment function',
+              'Executes increment function',
+              'Calls console.log tracking value'
+            ],
+            initialCode: `// DIGITAL INCREMENT ENGINE\n// Step 1: Declare counter variable\nlet counter = 10;\n\n// Step 2: Write increment logic\nfunction increment() {\n    counter = counter + 1;\n}\n\n// Step 3: Run execution counters\nincrement();\n\n// Step 4: Output details\nconsole.log("Counter Value: " + counter);`,
+            testSuite: (code) => {
+              const cleaned = code.replace(/\s+/g, ' ');
+              const hasCounterVar = /\b(let|var)\s+counter\b/.test(code) || /counter\s*=/.test(code);
+              const hasIncrementFn = /function\s+increment\b/.test(code) || /const\s+increment\s*=/.test(code);
+              const hasCall = /increment\s*\(\s*\)/.test(code);
+              const hasConsoleLog = /console\.log\s*\(.*(counter|Value).*?\)/i.test(code);
+              return {
+                passed: hasCounterVar && hasIncrementFn && hasCall && hasConsoleLog,
+                results: [hasCounterVar, hasIncrementFn, hasCall, hasConsoleLog]
+              };
             }
-          </div>
-          <h3 class="text-xs font-black ${active ? 'text-white' : 'text-slate-300'}">${proj.name.split(':')[1] || proj.name}</h3>
-        `;
-        container.appendChild(btn);
-      });
-    }
-
-    function renderActiveLabDetails() {
-      const proj = PROJECTS_DATA[activeLabProjectIdx];
-      if (!proj) return;
-
-      document.getElementById("activeProjectFileName").textContent = `project_lab.${proj.language === 'cpp' ? 'cpp' : proj.language === 'python' ? 'py' : proj.language === 'javascript' ? 'js' : 'html'}`;
-      
-      const savedCode = state.sandboxProjects[proj.id];
-      document.getElementById("labEditor").value = savedCode || proj.initialCode;
-
-      // Directives
-      const dirU = document.getElementById("labDirectives");
-      dirU.innerHTML = "";
-      proj.instructions.forEach((inst, i) => {
-        const li = document.createElement("li");
-        li.className = "flex gap-1.5";
-        li.innerHTML = `<span class="text-emerald-400 font-bold shrink-0">${i+1}.</span><span>${inst}</span>`;
-        dirU.appendChild(li);
-      });
-
-      // Checks
-      const checkC = document.getElementById("labEvalChecks");
-      checkC.innerHTML = "";
-      proj.testChecks.forEach((check, i) => {
-        const row = document.createElement("div");
-        row.className = "flex items-start gap-2 text-slate-500 leading-normal";
-        row.innerHTML = `
-          <div class="w-3.5 h-3.5 rounded-full border border-slate-800 flex items-center justify-center shrink-0 text-slate-700 bg-black text-[8px] font-bold mt-0.5">X</div>
-          <span>${check}</span>
-        `;
-        checkC.appendChild(row);
-      });
-
-      document.getElementById("labTerminalOutput").textContent = "Awaiting deployment validation script scans...";
-    }
-
-    function selectLabProject(i) {
-      // Save current code template
-      const currentCode = document.getElementById("labEditor").value;
-      const oldProj = PROJECTS_DATA[activeLabProjectIdx];
-      state.sandboxProjects[oldProj.id] = currentCode;
-      saveState();
-
-      activeLabProjectIdx = i;
-      syncStateAndRender();
-    }
-
-    function resetLabCode() {
-      const proj = PROJECTS_DATA[activeLabProjectIdx];
-      document.getElementById("labEditor").value = proj.initialCode;
-      state.sandboxProjects[proj.id] = proj.initialCode;
-      saveState();
-    }
-
-    function evaluateLabProject() {
-      const proj = PROJECTS_DATA[activeLabProjectIdx];
-      const code = document.getElementById("labEditor").value;
-
-      document.getElementById("labStatusText").textContent = "PROCESSING COMPILATION...";
-      document.getElementById("labTerminalOutput").textContent = "Running evaluation tests...\n";
-
-      setTimeout(() => {
-        const checks = proj.validator(code);
-        const allPassed = checks.every(c => c);
-
-        // Render checks update
-        const checkC = document.getElementById("labEvalChecks");
-        checkC.innerHTML = "";
-        proj.testChecks.forEach((check, i) => {
-          const pass = checks[i];
-          const row = document.createElement("div");
-          row.className = `flex items-start gap-2 leading-normal ${pass ? 'text-emerald-400' : 'text-slate-500'}`;
-          row.innerHTML = `
-            <div class="w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 text-[8px] font-bold mt-0.5 ${
-              pass 
-                ? 'bg-emerald-500/10 border-emerald-400/30' 
-                : 'bg-black border-slate-900 text-slate-755'
-            }">${pass ? '✓' : 'X'}</div>
-            <span class="${pass ? 'text-slate-200' : 'text-slate-500'}">${check}</span>
-          `;
-          checkC.appendChild(row);
-        });
-
-        // Save Code state changes
-        state.sandboxProjects[proj.id] = code;
-
-        if (allPassed) {
-          const already = state.completedProjects.includes(proj.id);
-          if (!already) {
-            state.completedProjects.push(proj.id);
-            state.xp += 100;
-            state.coins += 50;
           }
-          saveState();
-          syncStateAndRender();
+        ],
 
-          document.getElementById("labStatusText").textContent = "SUCCESS CLEARED";
-          document.getElementById("labTerminalOutput").innerHTML = `
-            [COMPILE SUCCESS] Unlocked milestone standard.<br/>
-            Unlocks Project Certificate Graduation accreditation inside Profile.<br/>
-            Bounty rewarding: ${already ? '+15 XP' : '+100 XP, +50 Coins claimed'}!
-          `;
-          alert(`Congratulations! You passed "${proj.name.split(':')[1]}" Project and compiled clean codes!`);
-        } else {
-          document.getElementById("labStatusText").textContent = "EVALUATION INCOMPLETE";
-          document.getElementById("labTerminalOutput").innerHTML = `
-            [WARNING] Parser warnings or formatting errors identified.<br/>
-            Please configure variables and loops specifically as highlighted in directives.
-          `;
-        }
+        // Live Sandbox Workspace State
+        sandboxCode: '// write direct executions here\nlet systemScore = 95;\nif (systemScore >= 90) {\n  console.log("SUCCESS: High grade score verified.");\n} else {\n  console.log("RETRY: Re-compile scripts.");\n}',
+        sandboxConsoleLogs: [],
 
-      }, 1000);
-    }
-
-    // ========================================================
-    // HIGH FIDELITY SANDBOX LIVE COMPILER CODE
-    // ========================================================
-    const SANDBOX_DEFAULTS = {
-      javascript: `// Advanced JavaScript Playground\nlet scoreVal = 75;\nfunction reviewScore() {\n    if (scoreVal >= 50) {\n        console.log("Evaluation output: Academic Passed Status");\n    } else {\n        console.log("Evaluation output: Academic Failed Status");\n    }\n}\nreviewScore();`,
-      python: `# Dynamic Python diagnostics interpreter simulation\nsecret_number = 42\nplayer_guess = 42\n\nif player_guess == secret_number:\n    print(f"🔥 BINGO! Spot on guess! Python Certification unlocked.")\nelse:\n    print("Keep searching compiler!")`,
-      cpp: `// C++ Pointer addresses dereferencing diagnostic\n#include <iostream>\nusing namespace std;\n\nint main() {\n    int goldStreak = 5;\n    int* valPointer = &goldStreak;\n    \n    *valPointer = 8;\n    cout << "Value stored in variable goldStreak: " << goldStreak << endl;\n    return 0;\n}`
-    };
-
-    function setDefaultSandboxCode(lang) {
-      state.sandboxProjects[lang] = SANDBOX_DEFAULTS[lang];
-      saveState();
-    }
-
-    function changeSandboxLang() {
-      activeSandboxLanguage = document.getElementById("sandboxLang").value;
-      document.getElementById("sandboxHeaderFileName").textContent = `workspace.${activeSandboxLanguage === 'cpp' ? 'cpp' : activeSandboxLanguage === 'python' ? 'py' : 'js'}`;
-      
-      const saved = state.sandboxProjects[activeSandboxLanguage] || SANDBOX_DEFAULTS[activeSandboxLanguage];
-      document.getElementById("sandboxEditor").value = saved;
-    }
-
-    function resetSandboxCode() {
-      setDefaultSandboxCode(activeSandboxLanguage);
-      changeSandboxLang();
-    }
-
-    function compileSandbox() {
-      const code = document.getElementById("sandboxEditor").value;
-      state.sandboxProjects[activeSandboxLanguage] = code;
-      saveState();
-
-      const out = document.getElementById("sandboxTerminalOutput");
-      out.textContent = "Processing parser compiler channels...\n";
-
-      setTimeout(() => {
-        if (activeSandboxLanguage === 'javascript') {
-          const logs = [];
-          const oldLog = console.log;
-          console.log = (...args) => {
-            logs.push(args.join(' '));
-          };
-          try {
-            const func = new Function(code);
-            func();
-            out.textContent = logs.length > 0 ? logs.join('\n') : "Script completed execution with no returned values.";
-          } catch (e) {
-            out.textContent = `[COMPILER RUNTIME PARSER ERROR]: ${e.message}`;
-          } finally {
-            console.log = oldLog;
+        init() {
+          // Check localstorage for previous login session
+          const savedSession = localStorage.getItem('bg_code_tutor_user');
+          if (savedSession) {
+            try {
+              this.userProfile = JSON.parse(savedSession);
+              this.showOnboarding = false;
+            } catch (e) {
+              localStorage.removeItem('bg_code_tutor_user');
+            }
           }
-        } 
-        else if (activeSandboxLanguage === 'python') {
-          // Custom regex parser to parse simulated python scopes realistically
-          const logs = [];
-          const lines = code.split('\n');
-          const variables = {};
+          // Initialize Lucide Icons
+          this.$nextTick(() => { lucide.createIcons(); });
+
+          // Preset checks array
+          this.clearProjectEvaluation();
+          this.userCode = this.projects[0].initialCode;
+        },
+
+        submitOnboarding() {
+          if (!this.onboardingName.trim()) return;
+          this.userProfile.name = this.onboardingName.trim();
+          this.userProfile.xp = 20;
+          this.userProfile.completedLessons = [];
+          this.userProfile.completedProjects = [];
           
-          try {
-            for (let line of lines) {
-              line = line.trim();
-              if (!line || line.startsWith('#')) continue;
-              
-              const vMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.*)$/);
-              if (vMatch) {
-                const name = vMatch[1];
-                const rawVal = vMatch[2].trim();
-                try {
-                  variables[name] = Function(`return (${rawVal})`)();
-                } catch {
-                  variables[name] = rawVal;
-                }
-              }
+          localStorage.setItem('bg_code_tutor_user', JSON.stringify(this.userProfile));
+          this.showOnboarding = false;
+          
+          this.$nextTick(() => { lucide.createIcons(); });
+        },
 
-              const pMatch = line.match(/^print\s*\((.*)\)$/);
-              if (pMatch) {
-                const inner = pMatch[1].trim();
-                if ((inner.startsWith('"') && inner.endsWith('"')) || (inner.startsWith("'") && inner.endsWith("'"))) {
-                  logs.push(inner.slice(1, -1));
-                } else if (inner.startsWith('f"') || inner.startsWith("f'")) {
-                  let fStr = inner.slice(2, -1);
-                  const matches = fStr.match(/\{([^}]+)\}/g);
-                  if (matches) {
-                    for (const m of matches) {
-                      const expr = m.slice(1, -1).trim();
-                      fStr = fStr.replace(m, variables[expr] !== undefined ? variables[expr] : expr);
-                    }
-                  }
-                  logs.push(fStr);
-                } else {
-                  logs.push(variables[inner] !== undefined ? String(variables[inner]) : inner);
-                }
-              }
+        resetApplicationSession() {
+          localStorage.removeItem('bg_code_tutor_user');
+          this.showOnboarding = true;
+          this.onboardingName = '';
+        },
+
+        isLessonDone(id) {
+          return this.userProfile.completedLessons.includes(id);
+        },
+
+        openLesson(id) {
+          this.activeLessonModal = id;
+          this.lessonChallengeInput = '';
+        },
+
+        closeLessonModal() {
+          this.activeLessonModal = null;
+        },
+
+        verifyLessonCheck() {
+          const ans = this.lessonChallengeInput.trim().toLowerCase();
+          let flagCorrect = false;
+
+          if (this.activeLessonModal === 'html-structure') {
+            // Looking for answers like header, div, section, container
+            if (ans.includes('header') || ans.includes('div') || ans.includes('section') || ans.includes('container') || ans.includes('h1')) {
+              flagCorrect = true;
             }
-
-            out.textContent = logs.length > 0 ? logs.join('\n') : "Python outputs returned 0 logs.";
-          } catch (e) {
-            out.textContent = `[PYTHON SYSTEM INTERPRETER COMPILATION WARNING]: ${e.message}`;
-          }
-        } 
-        else if (activeSandboxLanguage === 'cpp') {
-          // C++ dereferences memory allocations and references diagnostics outputs
-          let goldVal = 5;
-          const goldMatch = code.match(/goldStreak\s*=\s*(\d+)/);
-          if (goldMatch) {
-            goldVal = goldMatch[1];
+          } else if (this.activeLessonModal === 'js-events') {
+            // Looking for let, var, const
+            if (ans.includes('let') || ans.includes('var') || ans.includes('const')) {
+              flagCorrect = true;
+            }
           }
 
-          let ptrVal = 8;
-          const ptrMatch = code.match(/\*valPointer\s*=\s*(\d+)/);
-          if (ptrMatch) {
-            ptrVal = ptrMatch[1];
+          if (flagCorrect) {
+            if (!this.userProfile.completedLessons.includes(this.activeLessonModal)) {
+              this.userProfile.completedLessons.push(this.activeLessonModal);
+              this.userProfile.xp += 50;
+              localStorage.setItem('bg_code_tutor_user', JSON.stringify(this.userProfile));
+            }
+            alert(`🎉 Magnificent Job! That's the correct answer. You've been awarded +50 XP.`);
+            this.closeLessonModal();
+          } else {
+            alert(`⚠️ Checking input registers: incorrect output value. Try another tag! (Tips: read the code example boxes inside the lesson context).`);
           }
+        },
 
-          out.textContent = `
-            Value stored in variable goldStreak: ${goldVal}\n
-            Hex memory pointer address mapped: 0x7ffeefbff5ac\n
-            New referenced output: ${ptrVal}\n
-            Execution finalized with OS return code 0.
-          `.trim();
+        isProjectFinished(id) {
+          return this.userProfile.completedProjects.includes(id);
+        },
+
+        isLessonDone(id) {
+          return this.userProfile.completedLessons.includes(id);
+        },
+
+        clearProjectEvaluation() {
+          const count = this.projects[this.selectedProjectIdx].checks.length;
+          this.evaluationChecks = new Array(count).fill(false);
+          this.projectLogs = [
+            `[BG COMPILER ENGINE v4.1] Setup environment loaded.`,
+            `Instructions for "${this.projects[this.selectedProjectIdx].name}" unlocked.`,
+            `Edit code, satisfy requirements, and press "Build & Verify" to achieve certification!`
+          ];
+        },
+
+        runProjectEvaluation() {
+          const activeProj = this.projects[this.selectedProjectIdx];
+          this.projectLogs.push(`[PROCESS CHANNELS] Initiating validation scans...`);
+          this.projectLogs.push(`[PARSER] Checking structural tokens and symbols...`);
+
+          setTimeout(() => {
+            const { passed, results } = activeProj.testSuite(this.userCode);
+            this.evaluationChecks = results;
+
+            if (passed) {
+              const alreadyDone = this.userProfile.completedProjects.includes(activeProj.id);
+              if (!alreadyDone) {
+                this.userProfile.completedProjects.push(activeProj.id);
+                this.userProfile.xp += 100;
+                localStorage.setItem('bg_code_tutor_user', JSON.stringify(this.userProfile));
+              }
+              
+              this.projectLogs.push(`> Analysis matching: 100% SUCCESS.`);
+              this.projectLogs.push(`[SUCCESS] 🎉 ALL TEST CHECKS PASSED PERFECTLY!`);
+              this.projectLogs.push(`[FINISH] Project completed! Unlocked certification.`);
+              alert(`🏆 Magnificent Work, ${this.userProfile.name}! Project verified. You gained +100 XP and unlocked your completion badge inside the Track Profile tab!`);
+            } else {
+              const failedCount = results.filter(c => !c).length;
+              this.projectLogs.push(`> Compilation complete with warnings.`);
+              this.projectLogs.push(`[ERROR] Verification incomplete. ${failedCount} requirement(s) failed.`);
+              this.projectLogs.push(`[TIPS] Read requirements list. Ensure exact variable structures and closing tags are implemented!`);
+            }
+          }, 600);
+        },
+
+        runSandboxCode() {
+          // Safe client side console wrapper
+          this.sandboxConsoleLogs = [
+            `[RUNTIME INTIALIZED] Executing micro-file script block...`
+          ];
+          
+          let logs = [];
+          const customConsoleLog = (...args) => {
+            logs.push(args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' '));
+          };
+
+          const runInContext = () => {
+            // Override standard browser console
+            const originalLog = console.log;
+            console.log = customConsoleLog;
+            try {
+              const runner = new Function(this.sandboxCode);
+              runner();
+              this.sandboxConsoleLogs.push(`[SUCCESS] Compilation complete.`);
+            } catch (e) {
+              this.sandboxConsoleLogs.push(`ERROR: ${e.message}`);
+            } finally {
+              console.log = originalLog;
+            }
+          };
+
+          runInContext();
+          this.sandboxConsoleLogs = [...this.sandboxConsoleLogs, ...logs];
         }
-      }, 800);
-    }
 
-    // ========================================================
-    // PROFILE ACCREDIATION BADGES AND CERTIFICATES RENDER
-    // ========================================================
-    const REWARD_BADGES = [
-      { id: "cert-html", name: "Web Dev Standard", desc: "Unlock Level 1 HTML tags milestones.", icon: "globe", color: "text-purple-400" },
-      { id: "cert-javascript", name: "Frameworks Specialist", desc: "Instantiate JS and evaluate code loops.", icon: "code", color: "text-cyan-400" },
-      { id: "cert-python", name: "Python Systems Dev", desc: "Manage square arrays and math functions.", icon: "award", color: "text-emerald-400" },
-      { id: "cert-cpp", name: "Systems Compiler Master", desc: "Dereference pointers in continuous diagnostics.", icon: "award", color: "text-pink-500" }
-    ];
-
-    function renderProfileBadges() {
-      const bGrid = document.getElementById("badgesGrid");
-      bGrid.innerHTML = "";
-
-      REWARD_BADGES.forEach(badge => {
-        const unlocked = state.completedProjects.some(id => id.includes(badge.id.split('-')[1]));
-        const card = document.createElement("div");
-        card.className = `p-4 rounded-xl border text-center relative ${
-          unlocked 
-            ? 'bg-slate-900 border-emerald-500/25 shadow-[0_0_15px_rgba(16,185,129,0.05)]' 
-            : 'bg-slate-950 border-slate-900/60 opacity-55'
-        }`;
-
-        card.innerHTML = `
-          <div class="text-xl mb-1.5">${unlocked ? '🏅' : '🔒'}</div>
-          <h4 class="text-[11px] font-black text-white outline-none">${badge.name}</h4>
-          <p class="text-[9px] text-slate-500 leading-normal mt-1 block">${badge.desc}</p>
-        `;
-        bGrid.appendChild(card);
-      });
-    }
-
-    function renderProfileCertificates() {
-      const cont = document.getElementById("certificatesContainer");
-      cont.innerHTML = "";
-
-      const certsCompleted = PROJECTS_DATA.filter(p => state.completedProjects.includes(p.id));
-
-      if (certsCompleted.length === 0) {
-        cont.innerHTML = `<p class="text-[10px] text-slate-500 font-mono">No certification documents passed yet. Complete tasks under the "Projects Lab" tab to earn credentials!</p>`;
-        return;
-      }
-
-      certsCompleted.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "p-3.5 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-between gap-3";
-        div.innerHTML = `
-          <div class="space-y-0.5">
-            <h5 class="text-xs font-black text-white uppercase">${p.language.toUpperCase()} Track Graduate License</h5>
-            <span class="text-[9px] text-slate-500 font-mono tracking-wider">CODE: BG-${p.language.toUpperCase()}-7539</span>
-          </div>
-          <button 
-            onclick="viewCertificate('${p.name.split(':')[1] || p.name}')"
-            class="px-3.5 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-black text-[10px] uppercase rounded-lg transition"
-          >
-            Launch Display
-          </button>
-        `;
-        cont.appendChild(div);
-      });
-    }
-
-    function viewCertificate(trackTitle) {
-      document.getElementById("certStudentName").textContent = state.name || "GUEST";
-      document.getElementById("certTrackBadge").textContent = trackTitle;
-      document.getElementById("certificateLightbox").classList.remove("hidden");
-    }
-
-    function hideCertificateLightbox() {
-      document.getElementById("certificateLightbox").classList.add("hidden");
-    }
-
-    function triggerResetAccount() {
-      if (confirm("Are you absolutely sure you want to clean development diagnostic metrics? All certifications will be lock-out.")) {
-        state = {
-          name: "",
-          hearts: 5,
-          coins: 20,
-          streak: 1,
-          xp: 0,
-          completedLessons: [],
-          skippedChapters: [],
-          completedProjects: [],
-          sandboxProjects: {}
-        };
-        localStorage.removeItem("bg_code_tutor_state");
-        document.getElementById("onboardingScreen").classList.remove("hidden");
-        document.getElementById("nameInput").value = "";
-        syncStateAndRender();
       }
     }
   </script>
-
 </body>
 </html>
