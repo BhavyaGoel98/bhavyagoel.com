@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INTERVIEWER BG</title>
+  <style>
+    :root {
+      --bg-gradient-start: #0B1A38;
+      --bg-gradient-end: #040914;
+      --surface: rgba(30, 41, 59, 0.6);
+      --surface-border: rgba(255, 255, 255, 0.1);
+      --primary: #3B82F6;
+      --primary-hover: #2563EB;
+      --primary-glow: rgba(59, 130, 246, 0.4);
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --strong: #10B981;
+      --okay: #F59E0B;
+      --weak: #EF4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0; padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top center, var(--bg-gradient-start), var(--bg-gradient-end) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hidden { display: none !important; }
+
+    .glass-panel {
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .centered-screen {
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Navbar */
+    #navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      margin: 1rem 2rem;
+      border-radius: 12px;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    /* Logo Styles */
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .logo-text-container { text-align: center; margin-top: 12px; }
+    .logo-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .logo-title span { color: var(--primary); }
+    .logo-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .header-logo { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
+    .header-logo svg { width: 28px; height: 38px; }
+    .header-logo .logo-title { font-size: 18px; margin-top:0; }
+
+    /* Forms and Cards */
+    .auth-card {
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 450px;
+    }
+    .auth-card h2 { text-align: center; margin-top: 0; margin-bottom: 2rem; font-size: 1.8rem; }
+    .setup-card { padding: 2.5rem; width: 100%; max-width: 500px; }
+    .setup-card h2 { text-align: center; margin-top: 0; margin-bottom: 2rem; font-size: 1.5rem; }
+    
+    .form-group { margin-bottom: 1.5rem; width: 100%; }
+    .form-group label {
+      display: block; margin-bottom: 0.5rem;
+      font-weight: 600; color: var(--text-muted); font-size: 0.9rem;
+    }
+    select, input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    select { appearance: none; }
+    select option { background: #0F172A; }
+    select:focus, input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+    
+    .checkbox-group {
+      display: flex; align-items: center; gap: 0.75rem;
+      cursor: pointer; user-select: none;
+    }
+    .checkbox-group input { width: 1.2rem; height: 1.2rem; cursor: pointer; accent-color: var(--primary); }
+    .checkbox-group label { margin-bottom: 0; cursor: pointer; color: var(--text); }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: white;
+      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--primary-glow); }
+    .btn:active { transform: scale(0.98); }
+    
+    .btn-secondary { background: transparent; border: 1px solid var(--surface-border); box-shadow: none; }
+    .btn-secondary:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); box-shadow: none; }
+
+    a { color: var(--primary); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+    a:hover { color: #60A5FA; text-decoration: underline; }
+
+    .error-msg { color: var(--weak); font-size: 0.9rem; text-align: center; min-height: 20px; margin-bottom: 1rem; }
+    .success-msg { color: var(--strong); font-size: 0.9rem; text-align: center; min-height: 20px; margin-bottom: 1rem; }
+
+    /* Interview Screen */
+    .interview-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--surface-border);
+    }
+    
+    .progress-badge {
+      background: rgba(15, 23, 42, 0.6); padding: 0.5rem 1rem;
+      border-radius: 999px; font-weight: 600; font-size: 0.875rem;
+      border: 1px solid var(--surface-border); color: var(--primary);
+    }
+    .timer {
+      font-family: monospace; font-size: 1.5rem; font-weight: bold;
+      color: var(--text); transition: color 0.3s;
+    }
+    .timer.warning { color: var(--weak); animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.5; } }
+
+    .interview-content {
+      display: flex; flex-direction: column; align-items: center;
+      max-width: 800px; margin: 0 auto; width: 100%; flex: 1;
+    }
+    
+    .avatar-container {
+      position: relative; width: 80px; height: 80px; margin-bottom: 2rem;
+    }
+    .avatar {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg-gradient-start); border: 2px solid var(--primary);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: bold; color: var(--text); z-index: 2;
+    }
+    .avatar-pulse {
+      position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+      background: rgba(59, 130, 246, 0.3); border-radius: 50%; z-index: 1;
+      animation: pulse 2s infinite ease-out;
+    }
+
+    .question-text {
+      font-size: 1.8rem; font-weight: 700; text-align: center;
+      margin-bottom: 2rem; line-height: 1.4; color: var(--text);
+    }
+    
+    textarea {
+      width: 100%; height: 160px;
+      background: rgba(15, 23, 42, 0.5); border: 1px solid var(--surface-border);
+      border-radius: 12px; padding: 1.5rem; color: var(--text);
+      font-size: 1.1rem; resize: vertical; outline: none;
+      font-family: inherit; line-height: 1.6; margin-bottom: 1.5rem;
+      transition: all 0.2s; box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+    }
+    textarea:focus {
+      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), inset 0 2px 10px rgba(0,0,0,0.2);
+    }
+    textarea:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    /* Feedback Area */
+    .feedback-box {
+      width: 100%; padding: 2rem; margin-bottom: 2rem;
+      border-left: 4px solid var(--primary);
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feedback-box h3 { margin-top: 0; color: var(--primary); font-size: 1.2rem; margin-bottom: 1rem; }
+    .model-answer { margin-bottom: 1.5rem; font-size: 1.1rem; line-height: 1.6; color: #E2E8F0; }
+    .tips {
+      background: rgba(59, 130, 246, 0.1); padding: 1.25rem;
+      border-radius: 8px; color: #BFDBFE; font-size: 1rem; border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .self-rate { text-align: center; margin-top: 2.5rem; }
+    .self-rate p { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .rate-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .rate-btn {
+      flex: 1; min-width: 120px; max-width: 180px; padding: 1rem; border: none; border-radius: 8px;
+      font-weight: bold; font-size: 1.1rem; cursor: pointer; color: white;
+      transition: all 0.2s;
+    }
+    .rate-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .rate-btn:active { transform: scale(0.95); }
+    .btn-strong { background: linear-gradient(135deg, #059669, #10B981); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+    .btn-okay { background: linear-gradient(135deg, #D97706, #F59E0B); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+    .btn-weak { background: linear-gradient(135deg, #DC2626, #EF4444); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+
+    /* Report Screen */
+    .report-header { text-align: center; margin-bottom: 3rem; }
+    .report-header h2 { font-size: 2.5rem; margin-bottom: 0.5rem; background: linear-gradient(to right, #fff, #94A3B8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .stats-grid { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 3rem; flex-wrap: wrap; }
+    .stat-card {
+      padding: 1.5rem 2rem; border-radius: 12px; text-align: center; min-width: 140px;
+    }
+    .stat-value { font-size: 3rem; font-weight: 900; margin-bottom: 0.5rem; }
+    .stat-card.strong .stat-value { color: var(--strong); }
+    .stat-card.okay .stat-value { color: var(--okay); }
+    .stat-card.weak .stat-value { color: var(--weak); }
+    .stat-label { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+
+    .report-section { margin-bottom: 3rem; }
+    .report-section h3 { font-size: 1.5rem; border-bottom: 1px solid var(--surface-border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+    
+    .focus-areas ul { list-style-type: none; padding: 0; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .focus-areas li { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #FCA5A5; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 600; }
+
+    .weak-answers-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .weak-card { padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--weak); }
+    .weak-card.okay-card { border-left-color: var(--okay); }
+    .weak-q { font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem; }
+    .weak-a { color: var(--text-muted); margin-bottom: 1rem; font-style: italic; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; }
+    .weak-m { color: #BFDBFE; background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 8px; }
+    .weak-rating { margin-top: 1rem; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    .report-actions { display: flex; gap: 1rem; justify-content: center; margin-bottom: 4rem; }
+  </style>
+</head>
+<body>
+
+  <!-- GLOBAL NAVBAR (Hidden on Homepage and Auth screens) -->
+  <nav id="navbar" class="glass-panel hidden">
+    <div class="header-logo" onclick="navigate('dashboard-screen')">
+      <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 10 V 46" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 10 H 32 C 40 10 44 14 44 19 C 44 24 40 28 32 28 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 28 H 34 C 43 28 47 33 47 37 C 47 42 43 46 34 46 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M12 36 V 46 C 12 58 22 64 30 64 C 38 64 48 58 48 46 V 36" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M30 64 V 74" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M20 74 H 40" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-title">INT. <span>BG</span></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:1.5rem;">
+      <span id="nav-user-name" style="font-weight:600; color:var(--text-muted);"></span>
+      <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size:0.9rem; border-radius:6px;" onclick="handleLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- HOME SCREEN -->
+  <div id="home-screen" class="screen centered-screen">
+    <div class="logo">
+      <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 10 V 46" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+        <path d="M22 10 H 32 C 40 10 44 14 44 19 C 44 24 40 28 32 28 H 22" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+        <path d="M22 28 H 34 C 43 28 47 33 47 37 C 47 42 43 46 34 46 H 22" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+        <path d="M12 36 V 46 C 12 58 22 64 30 64 C 38 64 48 58 48 46 V 36" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+        <path d="M30 64 V 74" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+        <path d="M20 74 H 40" stroke="#F8FAFC" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-text-container">
+        <div class="logo-title" style="font-size:32px;">INTERVIEWER <span>BG</span></div>
+        <div class="logo-subtitle" style="font-size:14px;">Practice. Improve. Get Hired.</div>
+      </div>
+    </div>
+    <h1 style="text-align:center; font-size:3.5rem; margin-bottom:1rem; line-height:1.2;">Master Your Next<br><span style="color:var(--primary);">Interview</span></h1>
+    <p style="text-align:center; font-size:1.2rem; color:var(--text-muted); margin-bottom: 3rem; max-width:600px;">Practice with a library of 200+ role-specific questions, evaluate your responses with model answers, and generate personalized improvement reports.</p>
+    <div style="display:flex; gap: 1.5rem; justify-content:center; flex-wrap:wrap; width:100%; max-width:500px;">
+      <button class="btn" onclick="checkAuthAndGo('signup-screen')">Get Started</button>
+      <button class="btn btn-secondary" onclick="checkAuthAndGo('login-screen')">Log In</button>
+    </div>
+  </div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="screen centered-screen hidden">
+    <div class="header-logo" style="margin-bottom:2rem;" onclick="navigate('home-screen')">
+      <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 10 V 46" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 10 H 32 C 40 10 44 14 44 19 C 44 24 40 28 32 28 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 28 H 34 C 43 28 47 33 47 37 C 47 42 43 46 34 46 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M12 36 V 46 C 12 58 22 64 30 64 C 38 64 48 58 48 46 V 36" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M30 64 V 74" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M20 74 H 40" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-title">INT. <span>BG</span></div>
+    </div>
+    <div class="glass-panel auth-card">
+      <h2>Welcome Back</h2>
+      <div id="login-error" class="error-msg"></div>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn" style="margin-top:0.5rem;">Sign In</button>
+      </form>
+      <div style="margin-top: 1.5rem; text-align:center;">
+        <a href="#" onclick="navigate('forgot-screen')">Forgot Password?</a>
+        <p style="margin-top:1.5rem; color:var(--text-muted);">Don't have an account? <a href="#" onclick="navigate('signup-screen')">Sign Up</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNUP SCREEN -->
+  <div id="signup-screen" class="screen centered-screen hidden">
+    <div class="header-logo" style="margin-bottom:2rem;" onclick="navigate('home-screen')">
+      <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 10 V 46" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 10 H 32 C 40 10 44 14 44 19 C 44 24 40 28 32 28 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 28 H 34 C 43 28 47 33 47 37 C 47 42 43 46 34 46 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M12 36 V 46 C 12 58 22 64 30 64 C 38 64 48 58 48 46 V 36" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M30 64 V 74" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M20 74 H 40" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-title">INT. <span>BG</span></div>
+    </div>
+    <div class="glass-panel auth-card">
+      <h2>Create Account</h2>
+      <div id="signup-error" class="error-msg"></div>
+      <form onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn" style="margin-top:0.5rem;">Create Account</button>
+      </form>
+      <div style="margin-top: 1.5rem; text-align:center;">
+        <p style="color:var(--text-muted);">Already have an account? <a href="#" onclick="navigate('login-screen')">Log In</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORGOT PASSWORD SCREEN -->
+  <div id="forgot-screen" class="screen centered-screen hidden">
+    <div class="header-logo" style="margin-bottom:2rem;" onclick="navigate('home-screen')">
+      <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 10 V 46" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 10 H 32 C 40 10 44 14 44 19 C 44 24 40 28 32 28 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M22 28 H 34 C 43 28 47 33 47 37 C 47 42 43 46 34 46 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M12 36 V 46 C 12 58 22 64 30 64 C 38 64 48 58 48 46 V 36" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M30 64 V 74" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        <path d="M20 74 H 40" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-title">INT. <span>BG</span></div>
+    </div>
+    <div class="glass-panel auth-card">
+      <h2>Reset Password</h2>
+      <p style="text-align:center; color:var(--text-muted); margin-bottom:1.5rem; font-size:0.95rem;">Enter your email and we'll send you a link to reset your password.</p>
+      <div id="forgot-msg" class="success-msg" style="color:var(--primary);"></div>
+      <form onsubmit="handleForgot(event)">
+        <div class="form-group">
+          <label for="forgot-email">Email</label>
+          <input type="email" id="forgot-email" required placeholder="you@example.com">
+        </div>
+        <button type="submit" class="btn" style="margin-top:0.5rem;">Send Reset Link</button>
+      </form>
+      <div style="margin-top: 1.5rem; text-align:center;">
+        <a href="#" onclick="navigate('login-screen')">Back to Login</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD / SETUP SCREEN -->
+  <div id="dashboard-screen" class="screen centered-screen hidden">
+    <div class="glass-panel setup-card">
+      <h2>Interview Setup</h2>
+      <div class="form-group">
+        <label for="role">Job Role</label>
+        <select id="role">
+          <option value="Frontend Dev">Frontend Dev</option>
+          <option value="Backend Dev">Backend Dev</option>
+          <option value="Product Manager">Product Manager</option>
+          <option value="Marketing">Marketing</option>
+          <option value="HR">HR Professional</option>
+          <option value="Sales">Sales</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="General">General</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="type">Interview Type</label>
+        <select id="type">
+          <option value="Mixed">Mixed (All Types)</option>
+          <option value="Technical">Technical</option>
+          <option value="HR">HR / Screening</option>
+          <option value="Behavioral">Behavioral</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="Easy">Easy</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="numQuestions">Number of Questions</label>
+        <select id="numQuestions">
+          <option value="5" selected>5 Questions</option>
+          <option value="10">10 Questions</option>
+          <option value="15">15 Questions</option>
+        </select>
+      </div>
+      <div class="form-group checkbox-group" style="margin-bottom: 2rem;">
+        <input type="checkbox" id="useTimer" checked>
+        <label for="useTimer">Enable 2-minute timer per question</label>
+      </div>
+      <button class="btn" onclick="startInterview()">Start Interview</button>
+    </div>
+  </div>
+
+  <!-- INTERVIEW SCREEN -->
+  <div id="interview-screen" class="screen hidden">
+    <div class="interview-header">
+      <div class="header-logo" style="cursor:default;">
+        <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 10 V 46" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+          <path d="M22 10 H 32 C 40 10 44 14 44 19 C 44 24 40 28 32 28 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+          <path d="M22 28 H 34 C 43 28 47 33 47 37 C 47 42 43 46 34 46 H 22" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+          <path d="M12 36 V 46 C 12 58 22 64 30 64 C 38 64 48 58 48 46 V 36" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+          <path d="M30 64 V 74" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+          <path d="M20 74 H 40" stroke="#3B82F6" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div class="logo-title" style="font-weight:900;">INT. <span>BG</span></div>
+      </div>
+      <div class="progress-badge" id="progress">Q1 of 5</div>
+      <div class="timer" id="timer">02:00</div>
+    </div>
+
+    <div class="interview-content">
+      <div class="avatar-container">
+        <div class="avatar-pulse"></div>
+        <div class="avatar" id="avatar-initials">FD</div>
+      </div>
+
+      <div class="question-text" id="question-text">Loading question...</div>
+      
+      <textarea id="answer-input" placeholder="Type your answer here out loud or as notes..."></textarea>
+      <button class="btn" id="submit-btn" onclick="submitAnswer()" style="max-width: 300px;">Submit Answer</button>
+
+      <div id="feedback-area" class="glass-panel feedback-box hidden">
+        <h3>Evaluation Guide</h3>
+        <div class="model-answer" id="model-answer">...</div>
+        <div class="tips" id="tips">...</div>
+        
+        <div class="self-rate">
+          <p>How would you rate your response?</p>
+          <div class="rate-btns">
+            <button class="rate-btn btn-strong" onclick="rateAnswer('Strong')">Strong</button>
+            <button class="rate-btn btn-okay" onclick="rateAnswer('Okay')">Okay</button>
+            <button class="rate-btn btn-weak" onclick="rateAnswer('Weak')">Weak</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT SCREEN -->
+  <div id="report-screen" class="screen hidden">
+    <div class="report-header">
+      <h2>Interview Complete</h2>
+      <p style="color: var(--text-muted); font-size: 1.1rem;">Here is a summary of your performance.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="glass-panel stat-card strong">
+        <div class="stat-value" id="stat-strong">0</div>
+        <div class="stat-label">Strong</div>
+      </div>
+      <div class="glass-panel stat-card okay">
+        <div class="stat-value" id="stat-okay">0</div>
+        <div class="stat-label">Okay</div>
+      </div>
+      <div class="glass-panel stat-card weak">
+        <div class="stat-value" id="stat-weak">0</div>
+        <div class="stat-label">Weak</div>
+      </div>
+    </div>
+
+    <div class="report-section focus-areas">
+      <h3>Recommended Focus Areas</h3>
+      <div id="focus-areas-list"></div>
+    </div>
+
+    <div class="report-section">
+      <h3>Areas for Improvement</h3>
+      <div class="weak-answers-list" id="weak-answers-list"></div>
+    </div>
+
+    <div class="report-actions">
+      <button class="btn" style="max-width: 250px;" onclick="downloadReport()">Download Report (.txt)</button>
+      <button class="btn btn-secondary" style="max-width: 200px;" onclick="navigate('dashboard-screen')">Start Over</button>
+    </div>
+  </div>
+
+  <script>
+    // --- ROUTING & AUTH LOGIC ---
+    let currentUser = null;
+
+    function initApp() {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        currentUser = JSON.parse(storedUser);
+        navigate('dashboard-screen');
+      } else {
+        navigate('home-screen');
+      }
+    }
+
+    function navigate(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.getElementById(screenId).classList.remove('hidden');
+      
+      const navbar = document.getElementById('navbar');
+      if (currentUser && (screenId === 'dashboard-screen' || screenId === 'report-screen')) {
+        navbar.classList.remove('hidden');
+        document.getElementById('nav-user-name').textContent = currentUser.name;
+      } else {
+        navbar.classList.add('hidden');
+      }
+      
+      // Clear forms and messages
+      document.querySelectorAll('.error-msg, .success-msg').forEach(e => e.textContent = '');
+      document.querySelectorAll('form').forEach(f => f.reset());
+    }
+
+    function checkAuthAndGo(screenId) {
+      if (currentUser) {
+        navigate('dashboard-screen');
+      } else {
+        navigate(screenId);
+      }
+    }
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const errorDiv = document.getElementById('signup-error');
+      
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      if (users.find(u => u.email === email)) {
+        errorDiv.textContent = 'Account with this email already exists.';
+        return;
+      }
+      
+      const newUser = { name, email, password }; // In a real app, hash password!
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+      
+      currentUser = newUser;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      navigate('dashboard-screen');
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('login-error');
+      
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        navigate('dashboard-screen');
+      } else {
+        errorDiv.textContent = 'Invalid email or password.';
+      }
+    }
+
+    function handleForgot(e) {
+      e.preventDefault();
+      const email = document.getElementById('forgot-email').value;
+      document.getElementById('forgot-msg').textContent = 'If an account exists, a reset link has been sent to ' + email;
+      document.getElementById('forgot-email').value = '';
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      navigate('home-screen');
+    }
+
+    // --- QUESTION BANK GENERATOR (216 unique categorized questions) ---
+    const rawData = [];
+    const roles = ['Frontend Dev', 'Backend Dev', 'Product Manager', 'Marketing', 'HR', 'General', 'Sales', 'Data Analyst'];
+    
+    const techQ = {
+      'Frontend Dev': [
+        ['Easy', 'What is HTML?', 'It is the standard markup language for documents designed to be displayed in a web browser.', 'Mention structure.'],
+        ['Easy', 'What is CSS?', 'Cascading Style Sheets used for styling HTML elements.', 'Mention presentation and layout.'],
+        ['Easy', 'What is JS?', 'A programming language that enables interactive web pages.', 'Mention interactivity.'],
+        ['Medium', 'Explain Closures.', 'A closure gives access to an outer function’s scope from an inner function.', 'Mention lexical scoping.'],
+        ['Medium', 'Explain Event Bubbling.', 'When an event happens on an element, it first runs handlers on it, then upwards.', 'Mention DOM tree propagation.'],
+        ['Medium', 'What is Virtual DOM?', 'An ideal, or "virtual", representation of a UI kept in memory.', 'Mention React and performance.'],
+        ['Hard', 'Explain SSR vs CSR.', 'Server-Side Rendering delivers a fully populated HTML page, Client-Side Rendering builds it in the browser.', 'Mention SEO tradeoffs.'],
+        ['Hard', 'How does the Event Loop work?', 'It constantly checks the call stack and the callback queue.', 'Mention concurrency model.'],
+        ['Hard', 'Explain Webpack.', 'A static module bundler for modern JavaScript applications.', 'Mention dependency graph.']
+      ],
+      'Backend Dev': [
+        ['Easy', 'What is a REST API?', 'An architectural style for an application program interface that uses HTTP requests.', 'Mention HTTP methods.'],
+        ['Easy', 'What is SQL?', 'Structured Query Language used for managing relational databases.', 'Mention relational data.'],
+        ['Easy', 'What is Node.js?', 'An open-source, cross-platform JavaScript runtime environment.', 'Mention V8 engine.'],
+        ['Medium', 'Explain Database Indexing.', 'A data structure technique to quickly locate and access data.', 'Mention read vs write speed trade-offs.'],
+        ['Medium', 'What are Microservices?', 'An architectural style that structures an application as a collection of services.', 'Mention independent deployability.'],
+        ['Medium', 'Explain JWT.', 'JSON Web Token is a standard used to create access tokens.', 'Mention stateless authentication.'],
+        ['Hard', 'How to scale a backend?', 'Using load balancers, caching, database sharding, and horizontal scaling.', 'Mention bottlenecks.'],
+        ['Hard', 'Explain ACID properties.', 'Atomicity, Consistency, Isolation, Durability.', 'Mention transaction reliability.'],
+        ['Hard', 'What is a Message Queue?', 'A form of asynchronous service-to-service communication.', 'Mention decoupling and tools like RabbitMQ/Kafka.']
+      ],
+      'Product Manager': [
+        ['Easy', 'What is Agile?', 'An iterative approach to project management and software development.', 'Mention sprints and flexibility.'],
+        ['Easy', 'What is a User Story?', 'An informal, general explanation of a software feature written from the end user perspective.', 'Mention "As a... I want to...".'],
+        ['Easy', 'Define MVP.', 'Minimum Viable Product is a product with enough features to attract early-adopter customers.', 'Mention validated learning.'],
+        ['Medium', 'How do you prioritize features?', 'Using frameworks like RICE, MoSCoW, or Kano model.', 'Mention balancing value and effort.'],
+        ['Medium', 'What is A/B Testing?', 'A randomized experimentation process wherein two versions are compared.', 'Mention statistical significance.'],
+        ['Medium', 'How to handle stakeholder requests?', 'Evaluate against the product vision and roadmap before committing.', 'Mention saying "no" nicely.'],
+        ['Hard', 'Design a product roadmap.', 'It should align with company OKRs, have clear themes, and be flexible.', 'Mention outcomes over outputs.'],
+        ['Hard', 'How to measure product success?', 'Using KPIs like retention rate, NPS, churn, and MAU.', 'Mention actionable metrics.'],
+        ['Hard', 'What if a product launch fails?', 'Conduct a blameless post-mortem, analyze data, and pivot or iterate.', 'Mention root cause analysis.']
+      ],
+      'Marketing': [
+        ['Easy', 'What is SEO?', 'Search Engine Optimization is the process of improving site visibility on search engines.', 'Mention keywords and backlinks.'],
+        ['Easy', 'What is a Target Audience?', 'A specific group of consumers most likely to want your product or service.', 'Mention demographics.'],
+        ['Easy', 'Define Content Marketing.', 'Creating and distributing valuable, relevant content to attract an audience.', 'Mention brand awareness.'],
+        ['Medium', 'What is CTR?', 'Click-Through Rate is the ratio of users who click a link to total viewers.', 'Mention formula.'],
+        ['Medium', 'How do you use Social Media?', 'To build brand awareness, engage with customers, and drive traffic.', 'Mention platform-specific strategies.'],
+        ['Medium', 'Explain Inbound vs Outbound.', 'Inbound pulls customers in with content; Outbound pushes messaging out (ads).', 'Mention ROI differences.'],
+        ['Hard', 'How to calculate CAC?', 'Customer Acquisition Cost is total marketing spend divided by new customers acquired.', 'Mention LTV/CAC ratio.'],
+        ['Hard', 'Design a GTM strategy.', 'Identify target market, define messaging, select channels, and set KPIs.', 'Mention product-market fit.'],
+        ['Hard', 'How to recover from a PR crisis?', 'Acknowledge the issue quickly, be transparent, and outline steps to fix it.', 'Mention accountability.']
+      ],
+      'HR': [
+        ['Easy', 'What is Onboarding?', 'The process of integrating a new employee into the organization.', 'Mention culture and tools.'],
+        ['Easy', 'Define Employee Engagement.', 'The emotional commitment the employee has to the organization and its goals.', 'Mention productivity.'],
+        ['Easy', 'What is an ATS?', 'Applicant Tracking System used to manage the recruiting process.', 'Mention resume parsing.'],
+        ['Medium', 'How to handle workplace conflict?', 'Mediate by listening to both sides objectively and finding a mutually agreeable solution.', 'Mention active listening.'],
+        ['Medium', 'What are behavioral interviews?', 'Interviewing based on the premise that past behavior predicts future behavior.', 'Mention STAR method.'],
+        ['Medium', 'How to improve diversity?', 'Remove bias from job descriptions and foster inclusive culture.', 'Mention unconscious bias.'],
+        ['Hard', 'How to conduct a termination?', 'Be direct, respectful, have documentation ready, and involve legal if needed.', 'Mention empathy and compliance.'],
+        ['Hard', 'Design a performance review process.', 'Set clear OKRs, conduct 360-degree feedback, and have regular 1-on-1s.', 'Mention continuous feedback.'],
+        ['Hard', 'How to manage remote culture?', 'Use asynchronous communication and measure output over hours.', 'Mention trust and tools.']
+      ],
+      'General': [
+        ['Easy', 'What are your daily tools?', 'I use email, slack, project management tools, and specific software for my role.', 'Mention organization.'],
+        ['Easy', 'How do you stay organized?', 'I use to-do lists, calendars, and prioritize tasks every morning.', 'Mention time management.'],
+        ['Easy', 'Do you prefer solo or team work?', 'I enjoy both, depending on the task requirements.', 'Show adaptability.'],
+        ['Medium', 'How do you learn new skills?', 'I read articles, take online courses, and build small projects.', 'Mention continuous learning.'],
+        ['Medium', 'Describe a typical workday.', 'I start by checking emails, planning my tasks, and executing them with breaks.', 'Show routine and discipline.'],
+        ['Medium', 'How do you handle feedback?', 'I receive it objectively, ask clarifying questions, and apply it.', 'Show growth mindset.'],
+        ['Hard', 'Manage cross-functional projects?', 'By setting clear expectations, communicating regularly, and tracking milestones.', 'Mention alignment.'],
+        ['Hard', 'How do you handle ambiguity?', 'I break the problem down, gather information, and propose a structured plan.', 'Show problem-solving.'],
+        ['Hard', 'What is your communication style?', 'I aim to be clear, concise, and adjust my style to my audience.', 'Mention active listening.']
+      ],
+      'Sales': [
+        ['Easy', 'What is a Sales Funnel?', 'The buying process that companies lead customers through when purchasing.', 'Mention awareness to action.'],
+        ['Easy', 'Define Cold Calling.', 'Making unsolicited phone calls to potential customers.', 'Mention resilience.'],
+        ['Easy', 'What is a CRM?', 'Customer Relationship Management software used to manage interactions.', 'Mention Salesforce/Hubspot.'],
+        ['Medium', 'How do you handle objections?', 'Acknowledge the concern, ask clarifying questions, and provide a tailored solution.', 'Mention empathy.'],
+        ['Medium', 'What is B2B vs B2C sales?', 'B2B involves longer cycles and logic; B2C is shorter and emotion-driven.', 'Mention cycle length.'],
+        ['Medium', 'How do you qualify a lead?', 'Using frameworks like BANT (Budget, Authority, Need, Timeline).', 'Mention avoiding time waste.'],
+        ['Hard', 'How do you close a difficult deal?', 'Create urgency, summarize the value proposition, and negotiate mutually beneficial terms.', 'Mention confidence.'],
+        ['Hard', 'What is your strategy for upselling?', 'Identify the client’s growing needs and pitch how an upgrade solves them.', 'Mention adding value.'],
+        ['Hard', 'How do you bounce back from a loss?', 'I analyze what went wrong, ask for feedback, and move on to the next prospect.', 'Mention growth mindset.']
+      ],
+      'Data Analyst': [
+        ['Easy', 'What is Data Cleaning?', 'The process of detecting and correcting inaccurate records from a dataset.', 'Mention handling nulls.'],
+        ['Easy', 'What is SQL JOIN?', 'A clause used to combine rows from two or more tables.', 'Mention Inner/Outer joins.'],
+        ['Easy', 'Name a visualization tool.', 'Tableau, PowerBI, or Python libraries like Matplotlib.', 'Mention communicating insights.'],
+        ['Medium', 'Explain Variance vs Bias.', 'Bias is error from erroneous assumptions; Variance is error from sensitivity.', 'Mention tradeoff.'],
+        ['Medium', 'What is a Normal Distribution?', 'A probability distribution that is symmetric about the mean (bell curve).', 'Mention standard deviations.'],
+        ['Medium', 'How to handle missing data?', 'Imputation (mean/median), deletion, or using algorithms that support missing values.', 'Mention context importance.'],
+        ['Hard', 'Explain P-value.', 'The probability of obtaining test results at least as extreme as the observed results.', 'Mention statistical significance.'],
+        ['Hard', 'Explain tech results to non-techies?', 'Use analogies, focus on the business impact, and use clear visualizations.', 'Mention avoiding jargon.'],
+        ['Hard', 'What is a Window Function in SQL?', 'A function that performs a calculation across a set of table rows related to the current row.', 'Mention OVER clause.']
+      ]
+    };
+
+    const hrBehQ = [
+      ['HR', 'Easy', 'Why do you want to work here?', 'I admire the company culture and the innovative products.', 'Align with company values.'],
+      ['HR', 'Easy', 'Where do you see yourself in 5 years?', 'I see myself taking on more leadership responsibilities.', 'Show ambition and commitment.'],
+      ['HR', 'Easy', 'What are your salary expectations?', 'I am open to negotiation based on the full compensation package.', 'Avoid giving a strict number.'],
+      ['HR', 'Medium', 'Why did you leave your last job?', 'I am looking for new challenges and growth opportunities.', 'Never badmouth previous employers.'],
+      ['HR', 'Medium', 'What is your greatest weakness?', 'I sometimes focus too much on details, but I use timers to manage it.', 'Provide a real weakness with a mitigation strategy.'],
+      ['HR', 'Medium', 'How do you handle stress?', 'I break tasks down and prioritize them, taking short breaks.', 'Mention specific coping mechanisms.'],
+      ['HR', 'Hard', 'Tell me about a conflict with a coworker.', 'We disagreed on an approach, so we met to discuss and found a compromise.', 'Focus on resolution and professionalism.'],
+      ['HR', 'Hard', 'How do you prioritize multiple deadlines?', 'I use an Eisenhower matrix and communicate with stakeholders.', 'Mention tools and communication.'],
+      ['HR', 'Hard', 'Describe a time you failed.', 'I missed a deadline due to poor estimation. I learned to buffer my estimates.', 'Focus on the learning outcome.'],
+      
+      ['Behavioral', 'Easy', 'Tell me about yourself.', 'I am a professional with X years of experience specializing in Y.', 'Keep it relevant to the role.'],
+      ['Behavioral', 'Easy', 'What motivates you?', 'I am driven by solving complex problems and collaborating.', 'Align with the job requirements.'],
+      ['Behavioral', 'Easy', 'Describe your ideal work environment.', 'A collaborative and transparent environment that values continuous learning.', 'Be honest but adaptable.'],
+      ['Behavioral', 'Medium', 'Tell me about a time you showed leadership.', 'I took charge of a project when the lead was out and delivered it on time.', 'Use the STAR method.'],
+      ['Behavioral', 'Medium', 'How do you adapt to change?', 'I stay flexible, ask questions, and focus on the new goals.', 'Show resilience.'],
+      ['Behavioral', 'Medium', 'Describe a successful team project.', 'We communicated daily and leveraged each others strengths to win.', 'Highlight your specific contribution.'],
+      ['Behavioral', 'Hard', 'Tell me about a time you persuaded someone.', 'I used data to show the benefits of my proposed solution.', 'Mention evidence-based persuasion.'],
+      ['Behavioral', 'Hard', 'How do you handle vague tasks?', 'I ask clarifying questions and propose a draft plan for alignment.', 'Show proactive problem solving.'],
+      ['Behavioral', 'Hard', 'Describe a difficult decision you made.', 'I had to cut a feature to meet launch. I communicated the trade-offs.', 'Focus on logic and impact.']
+    ];
+
+    roles.forEach(role => {
+      if (techQ[role]) {
+        techQ[role].forEach(q => rawData.push({ role, type: 'Technical', diff: q[0], text: q[1], model: q[2], tips: q[3] }));
+      }
+      hrBehQ.forEach(q => rawData.push({ role, type: q[0], diff: q[1], text: q[2], model: q[3], tips: q[4] }));
+    });
+
+    // --- INTERVIEW LOGIC ---
+    let currentQIndex = 0;
+    let selectedQuestions = [];
+    let userAnswers = [];
+    let timerInterval = null;
+    let secondsRemaining = 0;
+
+    function startInterview() {
+      const role = document.getElementById('role').value;
+      const type = document.getElementById('type').value;
+      const diff = document.getElementById('difficulty').value;
+      const count = parseInt(document.getElementById('numQuestions').value);
+      
+      // Filter logic
+      let pool = rawData.filter(q => q.diff === diff);
+      if (type !== 'Mixed') {
+        pool = pool.filter(q => q.type === type);
+      }
+      let rolePool = pool.filter(q => q.role === role || q.role === 'General');
+      
+      // Fallback if not enough exact matches
+      if (rolePool.length < count) {
+         const other = pool.filter(q => q.role !== role && q.role !== 'General');
+         rolePool = rolePool.concat(other);
+      }
+      
+      // Shuffle and pick
+      rolePool.sort(() => 0.5 - Math.random());
+      selectedQuestions = rolePool.slice(0, count);
+      
+      userAnswers = [];
+      currentQIndex = 0;
+      
+      navigate('interview-screen');
+      
+      // Set Avatar (e.g. "Frontend Dev" -> "FD")
+      const initials = role.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('avatar-initials').textContent = initials;
+      
+      showNextQuestion();
+    }
+
+    function showNextQuestion() {
+      if (currentQIndex >= selectedQuestions.length) {
+        showReport();
+        return;
+      }
+      
+      const q = selectedQuestions[currentQIndex];
+      document.getElementById('question-text').textContent = q.text;
+      document.getElementById('progress').textContent = `Q${currentQIndex + 1} of ${selectedQuestions.length}`;
+      
+      const answerInput = document.getElementById('answer-input');
+      answerInput.value = '';
+      answerInput.disabled = false;
+      
+      document.getElementById('submit-btn').classList.remove('hidden');
+      document.getElementById('feedback-area').classList.add('hidden');
+      
+      // Handle timer
+      clearInterval(timerInterval);
+      const timerEl = document.getElementById('timer');
+      const useTimer = document.getElementById('useTimer').checked;
+      
+      if (useTimer) {
+         timerEl.style.display = 'block';
+         secondsRemaining = 120; // 2 minutes
+         updateTimerDisplay();
+         timerInterval = setInterval(() => {
+           secondsRemaining--;
+           updateTimerDisplay();
+           if (secondsRemaining <= 0) {
+             clearInterval(timerInterval);
+             submitAnswer(); // Auto submit
+           }
+         }, 1000);
+      } else {
+         timerEl.style.display = 'none';
+      }
+      
+      answerInput.focus();
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(secondsRemaining / 60).toString().padStart(2, '0');
+      const s = (secondsRemaining % 60).toString().padStart(2, '0');
+      const timerEl = document.getElementById('timer');
+      timerEl.textContent = `${m}:${s}`;
+      
+      if (secondsRemaining <= 15) {
+        timerEl.classList.add('warning');
+      } else {
+        timerEl.classList.remove('warning');
+      }
+    }
+
+    function submitAnswer() {
+      clearInterval(timerInterval);
+      document.getElementById('answer-input').disabled = true;
+      document.getElementById('submit-btn').classList.add('hidden');
+      
+      const q = selectedQuestions[currentQIndex];
+      document.getElementById('model-answer').innerHTML = `<strong>Model Answer:</strong> <br/> ${q.model}`;
+      document.getElementById('tips').innerHTML = `<strong>💡 Tip:</strong> ${q.tips}`;
+      
+      document.getElementById('feedback-area').classList.remove('hidden');
+    }
+
+    function rateAnswer(rating) {
+      const q = selectedQuestions[currentQIndex];
+      const ans = document.getElementById('answer-input').value.trim();
+      
+      userAnswers.push({
+        question: q.text,
+        type: q.type,
+        userAnswer: ans,
+        modelAnswer: q.model,
+        rating: rating
+      });
+      
+      currentQIndex++;
+      showNextQuestion();
+    }
+
+    function showReport() {
+      navigate('report-screen');
+      
+      const strongs = userAnswers.filter(a => a.rating === 'Strong').length;
+      const okays = userAnswers.filter(a => a.rating === 'Okay').length;
+      const weaks = userAnswers.filter(a => a.rating === 'Weak').length;
+      
+      document.getElementById('stat-strong').textContent = strongs;
+      document.getElementById('stat-okay').textContent = okays;
+      document.getElementById('stat-weak').textContent = weaks;
+      
+      // Focus Areas
+      const weakAndOkay = userAnswers.filter(a => a.rating === 'Weak' || a.rating === 'Okay');
+      let focusAreas = new Set();
+      weakAndOkay.forEach(item => focusAreas.add(`${item.type} Concepts`));
+      
+      const focusList = document.getElementById('focus-areas-list');
+      if (focusAreas.size > 0) {
+        focusList.innerHTML = '<ul>' + Array.from(focusAreas).map(a => `<li>${a}</li>`).join('') + '</ul>';
+      } else {
+        focusList.innerHTML = '<p style="color: var(--strong); font-weight: bold;">None! You did fantastic across the board.</p>';
+      }
+
+      // Weak Answers List
+      const weakList = document.getElementById('weak-answers-list');
+      weakList.innerHTML = '';
+      
+      if (weakAndOkay.length === 0) {
+        weakList.innerHTML = '<p style="text-align:center; color: var(--strong); font-size: 1.1rem;">Great job! You had no weak or okay answers.</p>';
+      } else {
+        weakAndOkay.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = `glass-panel weak-card ${item.rating === 'Okay' ? 'okay-card' : ''}`;
+          div.innerHTML = `
+            <div class="weak-q">Q${index + 1}: ${item.question}</div>
+            <div class="weak-a">Your Answer:<br/> ${item.userAnswer || '<em>(No written answer provided)</em>'}</div>
+            <div class="weak-m"><strong>Model Answer:</strong><br/> ${item.modelAnswer}</div>
+            <div class="weak-rating" style="color: var(--${item.rating.toLowerCase()})">Self-Rating: ${item.rating}</div>
+          `;
+          weakList.appendChild(div);
+        });
+      }
+    }
+
+    function downloadReport() {
+      let content = "INTERVIEWER BG - FINAL REPORT\n";
+      content += "================================\n\n";
+      content += `User: ${currentUser ? currentUser.name : 'Guest'}\n`;
+      content += `Role: ${document.getElementById('role').value}\n`;
+      content += `Type: ${document.getElementById('type').value}\n`;
+      content += `Difficulty: ${document.getElementById('difficulty').value}\n`;
+      content += `Date: ${new Date().toLocaleDateString()}\n\n`;
+      
+      const strongs = userAnswers.filter(a => a.rating === 'Strong').length;
+      const okays = userAnswers.filter(a => a.rating === 'Okay').length;
+      const weaks = userAnswers.filter(a => a.rating === 'Weak').length;
+      content += `RESULTS: Strong (${strongs}) | Okay (${okays}) | Weak (${weaks})\n\n`;
+      
+      content += "DETAILED REVIEW:\n";
+      content += "--------------------------------\n";
+      userAnswers.forEach((a, i) => {
+        content += `Q${i+1}: ${a.question}\n`;
+        content += `Type: ${a.type}\n`;
+        content += `Your Answer: ${a.userAnswer || 'N/A'}\n`;
+        content += `Model Answer: ${a.modelAnswer}\n`;
+        content += `Self-Rating: ${a.rating}\n\n`;
+      });
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `InterviewerBG_Report_${new Date().getTime()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Init App on load
+    window.onload = initApp;
+
+  </script>
+</body>
+</html>
