@@ -1,955 +1,1793 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BG Code Tutor — Circuit Learning Platform</title>
-  
-  <!-- Font Integrations -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Alpine.js CDN for State Management -->
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BG Code Tutor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1F3EE;
+    --bg-elev:#FFFFFF;
+    --ink:#15191E;
+    --ink-soft:#57636C;
+    --ink-faint:#8A9298;
+    --accent:#1F8A70;
+    --accent-deep:#0E5A47;
+    --accent-soft:#E3F1EC;
+    --warm:#F2A93B;
+    --warm-deep:#8A5B12;
+    --warm-soft:#FBEDD3;
+    --code-bg:#11151C;
+    --code-text:#E7ECEF;
+    --code-accent:#7FD9C4;
+    --success:#2FBF71;
+    --success-soft:#E5F8EE;
+    --error:#E2574C;
+    --error-soft:#FBE9E7;
+    --border:#DCE2DC;
+    --radius:14px;
+    --radius-sm:8px;
+    --shadow:0 2px 10px rgba(20,25,30,.06);
+    --shadow-lg:0 12px 32px rgba(20,25,30,.14);
+    --font-display:'Space Grotesk',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --font-mono:'JetBrains Mono',ui-monospace,'Courier New',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  #app{max-width:720px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
+  button{font-family:inherit;cursor:pointer;}
+  input,textarea{font-family:inherit;}
+  h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.01em;}
+  p{margin:0;line-height:1.5;}
+  a{color:var(--accent-deep);}
+  ::selection{background:var(--warm-soft);}
 
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
 
-  <!-- Favicon Logo (Hardcoded Base64) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJnIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI3IiByZXN1bHQ9ImIxIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJiMiIvPjxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYjEiLz48ZmVNZXJnZU5vZGUgaW49ImIyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPjxmaWx0ZXIgaWQ9ImMiIHgPSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI1IiByZXN1bHQ9ImIiLz48ZmVNZXJnZT48ZmVNZXJnZU5vZGUgaW49ImIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2RlZmVyZ2U+PC9maWx0ZXI+PC9kZWZzPjxnIG9wYWNpdHk9IjAuMTUiPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjMwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWRhc2hhcnJheT0iMyA2Ii8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMjUwIiByPSIyNDAiIHN0cm9rZT0iIzAwZmZkMCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNSIvPjxsaW5lIHgxPSIyNTAiIHkxPSIxMCIgeDI9IjI1MCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSA1Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMjUwIiB4Mj0iNDkwIiB5Mj0iMjUwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz48L2c+PGcgZmlsdGVyPSJ1cmwoI2cpIj48cGF0aCBkPSJNIDYwIDcwIEggMTkwIEEgNDUgNDUgMCAwIDEgMjM1IDExNSBBIDQwIDQwIDAgMCAxIDE5MCAxNTUgSCAxODUgQSA0NSA0NSAwIDAgMSAyNDAgMjAwIEEgNDUgNDUgMCAwIDEgMTk1IDI0NSBIIDYwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxwYXRoIGQ9Ik0gMTAwIDExMCBIIDE1NSBBIDE1IDE1IDAgMCAxIDE3MCAxMjUgQSAxNSAxNSAwIDAgMSAxNTUgMTQwIEggMTAwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSIjMGQxMTE3Ii8+PHBhdGggZD0iTSAxMDAgMTc1IEggMTYwIEEgMTUgMTUgMCAwIDEgMTc1IDE5MCBBIDE1IDE1IDAgMCAxIDE2MCAyMDUgSCAxMDAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9IiMwZDExMTciLz48ZyBvcGFjaXR5PSIwLjg1Ij48bGluZSB4MT0iNzUiIHkxPSIxMDAiIHgyPSI3NSIgeTI9IjIxNSIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSIxMDUiIHgyPSI4MyIgeTI9IjIxMCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMyAzIi8+PHBhdGggZD0iTSAxMjAgMTI1IEggMTQ1IiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTQ1IiBjeT0iMTI1IiByPSIzIiBmaWxsPSIjMDBkZjg5Ii8+PHBhdGggZD0iTSAxMjAgMTkwIEggMTUwIiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTkwIiByPSIzIiBmaWxsPSIjMTBiOTgxIi8+PC9nPjwvZz48ZyBmaWx0ZXI9InVybCgjYykiPjxwYXRoIGQ9Ik0gNDQwIDEwMCBMIDM5NSA3MCBIIDI4NSBMIDI1NSAxMDAgVkAyMTUgTCAyODUgMjY1IEggMzk1IEwgNDQwIDE2MCBIIDM0NSIsInN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxnIG9wYWNpdHk9IjAuOSI+PGNpcmNsZSBjeD0iMzQ1IiBjeT0iMTYwIiByPSI0LjUiIGZpbGw9IiMwMmZmZDAiLz48cGF0aCBkPSJNIDI4NSAxMTAgSCAzMjUiIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMjUiIGN5PSIxMTAiIHI9IjIuNSIgZmlsbD0iIzAyZmZkMCIvPjxwYXRoIGQ9Ik0gMjg1IDE0MCBIIDMxNSBMIDMyNSAxMDUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMDUiIGN5PSIxMDUiIHI9IjIuNSIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMjg1IDIwMCBIIDM3MCIgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2U9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMiIvPjxjaXJjbGUgY3g9IjM3MCIgY3k9IjIwMCIgcj0iMyIgZmlsbD0iIzAyZmZkMCIvPjwvZz48L2c+PGcgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNIDE5MCA5NSBMIDIxMCAxMDUgSCAyNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMyIvPjxjaXJjbGUgY3g9IjIyMCIgY3k9IjEwNSIgcj0iMiIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMTk1IDIyMCBMIDIyNSAxMTAgSCAyNjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMiIvPjxjaXJjbGUgY3g9IjIyNSIgY3k9IjExMCIgcj0iMiIgZmlsbD0iIzAwZmZkMCIvPjwvZz48ZyBzdHJva2U9IiM4ZGEyYmIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiPjxwYXRoIGQ9Ik0gMTE1IDMyMCBIIDYwIFYgNDEwIEggMTE1Ii8+PHBhdGggZD0iTSAxNTUgMzA1IEggMjEwIFYgNDEwIEgxNTUgWiIvPjxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDI5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIvPjxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiLz48L2c+PGcgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSI5NSI+PHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiLz48cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgVkYgNDEwIEggMTU1ICBaIi8+PHBhdGggZD0iTSAyNTAgMzIwIEggMjkwIEMgMzE1IDMyMCwgMzE1IDQxMCwgMjkwIDQxMCBIIDI1MCBaIi8+PHBhdGggZD0iTSA0MDUgMzIwIEggMzU1IFYgNDEwIEggNDA1IE0gMzU1IDM2NSBIIDM5MCIvPjwvZz48cmVjdCB4PSIxODAiIHk9IjQ0NSIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiMwYzEwMTciIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjQiLz48dGV4dCB4PSIyNTAiIHkxPSI0NTgiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiIgb3BhY2l0eT0iMC44Ij5TWVMgQUNUSVZSPC90ZXh0Pjwvc3ZnPg==">
+  /* ---------- Topbar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    display:flex;align-items:center;gap:10px;
+    padding:14px 20px;background:rgba(241,243,238,.92);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar .back{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
+    background:var(--bg-elev);display:flex;align-items:center;justify-content:center;
+    font-size:16px;flex:none;
+  }
+  .topbar .wordmark{font-family:var(--font-display);font-weight:700;font-size:16px;flex:1;}
+  .topbar .wordmark .dot{color:var(--accent);}
+  .free-badge{
+    font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--accent-deep);
+    background:var(--accent-soft);border-radius:999px;padding:5px 10px;white-space:nowrap;
+  }
+  .icon-btn{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
+    background:var(--bg-elev);display:flex;align-items:center;justify-content:center;font-size:15px;
+  }
 
-  <!-- Theme Configurations & Custom Grid Overlays -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-            cyber: {
-              black: '#030712',
-              dark: '#0b0f19',
-              card: '#0e1526',
-              emerald: '#10b981',
-              cyan: '#06b6d4',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  /* ---------- Layout ---------- */
+  .screen{padding:20px 20px 48px;flex:1;}
+  .stack{display:flex;flex-direction:column;gap:14px;}
+  .row{display:flex;align-items:center;gap:10px;}
+  .between{justify-content:space-between;}
 
-  <style type="text/css">
-    /* Subtle Retro CRT scanlines and hardware overlay */
-    .pcb-grid {
-      background-image: 
-        radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
-        radial-gradient(circle at 75% 60%, rgba(6, 182, 212, 0.04) 1px, transparent 1px),
-        linear-gradient(rgba(18, 24, 38, 0.95), rgba(3, 7, 18, 0.98));
-      background-size: 40px 40px, 60px 60px, 100% 100%;
-    }
+  /* ---------- Buttons ---------- */
+  .btn{
+    border:none;border-radius:999px;padding:13px 22px;font-weight:600;font-size:14.5px;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn-primary:disabled{background:#C7CCC8;color:#fff;cursor:not-allowed;}
+  .btn-accent{background:var(--accent);color:#fff;}
+  .btn-warm{background:var(--warm);color:#3A2705;}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--border);}
+  .btn-soft{background:var(--bg-elev);color:var(--ink);border:1px solid var(--border);}
+  .btn-danger{background:var(--error-soft);color:var(--error);}
+  .btn-block{width:100%;}
+  .btn-sm{padding:8px 14px;font-size:13px;}
 
-    /* Glow utilities */
-    .neon-glow-emerald {
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
-    }
-    .neon-glow-cyan {
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
-    }
-    
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #030712;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #1e293b;
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #10b981;
-    }
-  </style>
+  /* ---------- Cards ---------- */
+  .card{
+    background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;box-shadow:var(--shadow);
+  }
+  .card-tap{cursor:pointer;transition:transform .12s ease;}
+  .card-tap:active{transform:scale(.985);}
+  .card.locked{opacity:.55;}
+
+  /* ---------- Welcome ---------- */
+  .hero-term{
+    background:var(--code-bg);color:var(--code-text);border-radius:var(--radius);
+    padding:18px 18px 20px;font-family:var(--font-mono);font-size:13px;line-height:1.7;
+    box-shadow:var(--shadow-lg);
+  }
+  .term-dots{display:flex;gap:6px;margin-bottom:12px;}
+  .term-dots span{width:9px;height:9px;border-radius:50%;display:inline-block;background:#3a4150;}
+  .term-dots span:nth-child(1){background:#E2574C;}
+  .term-dots span:nth-child(2){background:#F2A93B;}
+  .term-dots span:nth-child(3){background:#2FBF71;}
+  .cursor-blink{display:inline-block;width:7px;height:14px;background:var(--code-accent);margin-left:2px;animation:blink 1s steps(1) infinite;vertical-align:middle;}
+  @keyframes blink{50%{opacity:0;}}
+  .name-input{
+    width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;
+    font-size:16px;background:var(--bg-elev);color:var(--ink);
+  }
+  .name-input:focus{border-color:var(--accent);}
+
+  /* ---------- Progress bar ---------- */
+  .progress-track{height:8px;border-radius:999px;background:var(--border);overflow:hidden;}
+  .progress-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .4s ease;}
+
+  /* ---------- Language grid ---------- */
+  .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .lang-card{padding:16px;}
+  .lang-emoji{font-size:26px;}
+  .soon-tag{
+    font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--ink-faint);
+    background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:2px 6px;
+  }
+
+  /* ---------- Streak grid (signature element) ---------- */
+  .streak-card{padding:18px;}
+  .streak-grid{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;margin-top:12px;}
+  .streak-cell{width:100%;aspect-ratio:1;border-radius:3px;background:var(--border);}
+  .streak-legend{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:var(--ink-faint);font-family:var(--font-mono);}
+  .legend-chip{width:9px;height:9px;border-radius:2px;display:inline-block;}
+
+  /* ---------- Lesson list ---------- */
+  .unit-lesson-row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elev);}
+  .lesson-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex:none;border:2px solid var(--border);color:var(--ink-faint);font-weight:700;}
+  .lesson-dot.done{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .lesson-dot.current{border-color:var(--ink);color:var(--ink);}
+  .unit-lesson-row.locked{opacity:.55;cursor:default;}
+
+  /* ---------- Lesson player ---------- */
+  .lesson-goal{font-size:13px;color:var(--accent-deep);font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-family:var(--font-mono);}
+  .lesson-explain{font-size:15.5px;color:var(--ink);}
+  .example-box{background:var(--code-bg);border-radius:var(--radius-sm);overflow:hidden;}
+  .example-code{color:var(--code-text);font-family:var(--font-mono);font-size:13px;padding:14px;white-space:pre-wrap;margin:0;}
+  .example-out{border-top:1px solid #232a35;padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--code-accent);}
+  .example-out .label{color:#5b6573;text-transform:uppercase;letter-spacing:.05em;font-size:10px;display:block;margin-bottom:3px;}
+
+  .editor-label{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;}
+  .code-editor{
+    width:100%;min-height:140px;background:var(--code-bg);color:var(--code-text);
+    border:none;border-radius:var(--radius-sm);padding:14px;font-family:var(--font-mono);font-size:13.5px;
+    line-height:1.6;resize:vertical;
+  }
+  .code-editor:focus{outline:2px solid var(--accent);}
+  .output-panel{
+    background:#0B0E13;color:var(--code-text);border-radius:var(--radius-sm);
+    font-family:var(--font-mono);font-size:13px;padding:14px;min-height:48px;white-space:pre-wrap;
+    border:1px solid #1d242e;
+  }
+  .output-panel.empty{color:#4b5563;}
+  .output-panel .ok{color:var(--code-accent);}
+  .output-panel .err{color:#ff8a80;}
+  .html-frame{width:100%;min-height:160px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;}
+  .sql-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:12.5px;}
+  .sql-table th,.sql-table td{border:1px solid #232a35;padding:6px 8px;text-align:left;}
+  .sql-table th{color:var(--code-accent);background:#161c25;}
+
+  .hint-list{display:flex;flex-direction:column;gap:8px;}
+  .hint-item{background:var(--warm-soft);border:1px solid #f0d8a3;border-radius:var(--radius-sm);padding:10px 12px;font-size:13.5px;color:var(--warm-deep);}
+
+  .feedback-banner{border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;}
+  .feedback-banner.success{background:var(--success-soft);color:var(--accent-deep);}
+  .feedback-banner.error{background:var(--error-soft);color:var(--error);}
+
+  .recap-box{background:var(--accent-soft);border-radius:var(--radius-sm);padding:14px;font-size:14px;color:var(--accent-deep);}
+
+  /* ---------- Quiz ---------- */
+  .quiz-dots{display:flex;gap:6px;}
+  .quiz-dots span{width:8px;height:8px;border-radius:50%;background:var(--border);}
+  .quiz-dots span.active{background:var(--ink);}
+  .quiz-dots span.answered{background:var(--accent);}
+  .option-btn{
+    display:block;width:100%;text-align:left;padding:14px 16px;border-radius:var(--radius-sm);
+    border:1.5px solid var(--border);background:var(--bg-elev);font-size:14.5px;font-weight:500;
+  }
+  .option-btn.selected{border-color:var(--ink);}
+  .option-btn.correct{border-color:var(--success);background:var(--success-soft);}
+  .option-btn.incorrect{border-color:var(--error);background:var(--error-soft);}
+  .fill-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;font-size:15px;font-family:var(--font-mono);}
+
+  /* ---------- Toast ---------- */
+  #toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font-size:13.5px;
+    font-weight:500;box-shadow:var(--shadow-lg);opacity:0;transition:all .25s ease;pointer-events:none;
+    z-index:50;max-width:90%;text-align:center;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .badge{font-family:var(--font-mono);font-size:11px;font-weight:600;border-radius:6px;padding:3px 8px;display:inline-block;}
+  .badge-locked{background:var(--bg);color:var(--ink-faint);border:1px solid var(--border);}
+
+  .empty-state{text-align:center;padding:30px 10px;color:var(--ink-soft);font-size:14px;}
+
+  /* ---------- Loading ---------- */
+  .loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:14px;}
+  .spinner{width:28px;height:28px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  @media (min-width:560px){
+    .lesson-grid-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
 </head>
-<body 
-  class="pcb-grid text-slate-200 min-h-screen flex flex-col font-sans selection:bg-emerald-500/20 selection:text-emerald-300 overflow-x-hidden"
-  x-data="bgCodeTutorApp()"
->
-
-  <!-- ONBOARDING SESSION INITIALIZATION (LOCK SCREEN) -->
-  <div 
-    class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md"
-    x-show="showOnboarding"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 scale-95"
-    x-transition:enter-end="opacity-100 scale-100"
-  >
-    <div class="bg-cyber-card border-2 border-emerald-500/50 rounded-3xl max-w-lg w-full p-8 shadow-[0_0_50px_rgba(16,185,129,0.15)] relative overflow-hidden">
-      <!-- Circuit Backing Grid Lines -->
-      <div class="absolute inset-0 opacity-5 pointer-events-none">
-        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 100 h500 M100 0 v500 M50 50 l200 200" stroke="#10b981" stroke-width="2"/>
-        </svg>
-      </div>
-
-      <div class="relative z-10 text-center space-y-6">
-        <!-- Exact Hardcoded Base64 Logo -->
-        <div class="flex justify-center">
-          <img 
-            src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJnIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI3IiByZXN1bHQ9ImIxIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJiMiIvPjxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYjEiLz48ZmVNZXJnZU5vZGUgaW49ImIyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPjxmaWx0ZXIgaWQ9ImMiIHgPSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI1IiByZXN1bHQ9ImIiLz48ZmVNZXJnZT48ZmVNZXJnZU5vZGUgaW49ImIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2RlZmVyZ2U+PC9maWx0ZXI+PC9kZWZzPjxnIG9wYWNpdHk9IjAuMTUiPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjMwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWRhc2hhcnJheT0iMyA2Ii8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMjUwIiByPSIyNDAiIHN0cm9rZT0iIzAwZmZkMCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNSIvPjxsaW5lIHgxPSIyNTAiIHkxPSIxMCIgeDI9IjI1MCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSA1Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMjUwIiB4Mj0iNDkwIiB5Mj0iMjUwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz48L2c+PGcgZmlsdGVyPSJ1cmwoI2cpIj48cGF0aCBkPSJNIDYwIDcwIEggMTkwIEEgNDUgNDUgMCAwIDEgMjM1IDExNSBBIDQwIDQwIDAgMCAxIDE5MCAxNTUgSCAxODUgQSA0NSA0NSAwIDAgMSAyNDAgMjAwIEEgNDUgNDUgMCAwIDEgMTk1IDI0NSBIIDYwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxwYXRoIGQ9Ik0gMTAwIDExMCBIIDE1NSBBIDE1IDE1IDAgMCAxIDE3MCAxMjUgQSAxNSAxNSAwIDAgMSAxNTUgMTQwIEggMTAwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSIjMGQxMTE3Ii8+PHBhdGggZD0iTSAxMDAgMTc1IEggMTYwIEEgMTUgMTUgMCAwIDEgMTc1IDE5MCBBIDE1IDE1IDAgMCAxIDE2MCAyMDUgSCAxMDAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9IiMwZDExMTciLz48ZyBvcGFjaXR5PSIwLjg1Ij48bGluZSB4MT0iNzUiIHkxPSIxMDAiIHgyPSI3NSIgeTI9IjIxNSIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSIxMDUiIHgyPSI4MyIgeTI9IjIxMCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMyAzIi8+PHBhdGggZD0iTSAxMjAgMTI1IEggMTQ1IiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTQ1IiBjeT0iMTI1IiByPSIzIiBmaWxsPSIjMDBkZjg5Ii8+PHBhdGggZD0iTSAxMjAgMTkwIEggMTUwIiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTkwIiByPSIzIiBmaWxsPSIjMTBiOTgxIi8+PC9nPjwvZz48ZyBmaWx0ZXI9InVybCgjYykiPjxwYXRoIGQ9Ik0gNDQwIDEwMCBMIDM5NSA3MCBIIDI4NSBMIDI1NSAxMDAgVkAyMTUgTCAyODUgMjY1IEggMzk1IEwgNDQwIDE2MCBIIDM0NSIsInN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxnIG9wYWNpdHk9IjAuOSI+PGNpcmNsZSBjeD0iMzQ1IiBjeT0iMTYwIiByPSI0LjUiIGZpbGw9IiMwMmZmZDAiLz48cGF0aCBkPSJNIDI4NSAxMTAgSCAzMjUiIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMjUiIGN5PSIxMTAiIHI9IjIuNSIgZmlsbD0iIzAyZmZkMCIvPjxwYXRoIGQ9Ik0gMjg1IDE0MCBIIDMxNSBMIDMyNSAxMDUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMDUiIGN5PSIxMDUiIHI9IjIuNSIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMjg1IDIwMCBIIDM3MCIgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2U9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMiIvPjxjaXJjbGUgY3g9IjM3MCIgY3k9IjIwMCIgcj0iMyIgZmlsbD0iIzAyZmZkMCIvPjwvZz48L2c+PGcgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNIDE5MCA5NSBMIDIxMCAxMDUgSCAyNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMyIvPjxjaXJjbGUgY3g9IjIyMCIgY3k9IjEwNSIgcj0iMiIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMTk1IDIyMCBMIDIyNSAxMTAgSCAyNjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMiIvPjxjaXJjbGUgY3g9IjIyNSIgY3k9IjExMCIgcj0iMiIgZmlsbD0iIzAwZmZkMCIvPjwvZz48ZyBzdHJva2U9IiM4ZGEyYmIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiPjxwYXRoIGQ9Ik0gMTE1IDMyMCBIIDYwIFYgNDEwIEggMTE1Ii8+PHBhdGggZD0iTSAxNTUgMzA1IEggMjEwIFYgNDEwIEgxNTUgWiIvPjxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDk5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIvPjxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiLz48L2c+PGcgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSI5NSI+PHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiLz48cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgVkYgNDEwIEggMTU1ICBaIi8+PHBhdGggZD0iTSAyNTAgMzIwIEggMjkwIEMgMzE1IDMyMCwgMzE1IDQxMCwgMjkwIDQxMCBIIDI1MCBaIi8+PHBhdGggZD0iTSA0MDUgMzIwIEggMzU1IFYgNDEwIEggNDA1IE0gMzU1IDM2NSBIIDM5MCIvPjwvZz48cmVjdCB4PSIxODAiIHk9IjQ0NSIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiMwYzEwMTciIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjUiLz48dGV4dCB4PSIyNTAiIHkxPSI0NTgiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiIgb3BhY2l0eT0iMC44Ij5TWVMgQUNUSVZSPC90ZXh0Pjwvc3ZnPg==" 
-            alt="BG Code Tutor Logo" 
-            class="w-32 h-32 neon-glow-emerald rounded-2xl bg-cyber-black p-1"
-          >
-        </div>
-
-        <div class="space-y-2">
-          <h1 class="text-3xl font-extrabold tracking-tight text-white">BG CODE TUTOR</h1>
-          <p class="text-xs text-emerald-400 font-mono tracking-widest uppercase">System Initialization Protocol</p>
-          <p class="text-slate-400 text-sm max-w-sm mx-auto leading-relaxed">
-            Welcome, Developer. Establish a connection to the training pipeline by setting your custom programmer tag.
-          </p>
-        </div>
-
-        <!-- Onboarding Input Form -->
-        <div class="max-w-xs mx-auto space-y-4">
-          <div class="relative">
-            <span class="absolute left-3.5 top-3.5 text-emerald-400 font-mono text-xs font-bold font-mono">TAG://</span>
-            <input 
-              type="text" 
-              x-model="onboardingName"
-              @keydown.enter="submitOnboarding()"
-              placeholder="e.g., Ada Lovelace"
-              class="w-full pl-16 pr-4 py-3 bg-cyber-black/80 border border-slate-800 focus:border-emerald-500 rounded-xl text-xs font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500 text-emerald-300 transition-all placeholder:text-slate-600"
-            >
-          </div>
-          <button 
-            @click="submitOnboarding()"
-            class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-cyber-black font-black font-sans text-xs tracking-wider uppercase rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] outline-none"
-          >
-            Initiate Connection
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- APPLICATION CONTAINER -->
-  <div class="flex-1 flex flex-col" x-show="!showOnboarding">
-    
-    <!-- TOP HEADER BAR -->
-    <header class="border-b border-slate-800 bg-[#070a14]/90 backdrop-blur-md sticky top-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        
-        <!-- Logo & Title Frame -->
-        <a href="/" class="flex items-center gap-3">
-          <img 
-            src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJnIiB4PSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI3IiByZXN1bHQ9ImIxIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJiMiIvPjxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYjEiLz48ZmVNZXJnZU5vZGUgaW49ImIyIi8+PGZlTWVyZ2VOb2RlIGluPSJTb3VyY2VHcmFwaGljIi8+PC9mZU1lcmdlPjwvZmlsdGVyPjxmaWx0ZXIgaWQ9ImMiIHgPSItMjAlIiB5PSItMjAlIiB3aWR0aD0iMTQwJSIgaGVpZ2h0PSIxNDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI1IiByZXN1bHQ9ImIiLz48ZmVNZXJnZT48ZmVNZXJnZU5vZGUgaW49ImIiLz48ZmVNZXJnZU5vZGUgaW49IlNvdXJjZUdyYXBoaWMiLz48L2RlZmVyZ2U+PC9maWx0ZXI+PC9kZWZzPjxnIG9wYWNpdHk9IjAuMTUiPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjI1MCIgcj0iMjMwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWRhc2hhcnJheT0iMyA2Ii8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMjUwIiByPSIyNDAiIHN0cm9rZT0iIzAwZmZkMCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNSIvPjxsaW5lIHgxPSIyNTAiIHkxPSIxMCIgeDI9IjI1MCIgeTI9IjQ5MCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSA1Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMjUwIiB4Mj0iNDkwIiB5Mj0iMjUwIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtZGFzaGFycmF5PSI1IDUiLz48L2g+PGcgZmlsdGVyPSJ1cmwoI2cpIj48cGF0aCBkPSJNIDYwIDcwIEggMTkwIEEgNDUgNDUgMCAwIDEgMjM1IDExNSBBIDQwIDQwIDAgMCAxIDE5MCAxNTUgSCAxODUgQSA0NSA0NSAwIDAgMSAyNDAgMjAwIEEgNDUgNDUgMCAwIDEgMTk1IDI0NSBIIDYwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxwYXRoIGQ9Ik0gMTAwIDExMCBIIDE1NSBBIDE1IDE1IDAgMCAxIDE3MCAxMjUgQSAxNSAxNSAwIDAgMSAxNTUgMTQwIEggMTAwIFoiIHN0cm9rZT0iIzAwZGY4OSIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSIjMGQxMTE3Ii8+PHBhdGggZD0iTSAxMDAgMTc1IEggMTYwIEEgMTUgMTUgMCAwIDEgMTc1IDE5MCBBIDE1IDE1IDAgMCAxIDE2MCAyMDUgSCAxMDAgWiIgc3Ryb2tlPSIjMDBkZjg5IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9IiMwZDExMTciLz48ZyBvcGFjaXR5PSIwLjg1Ij48bGluZSB4MT0iNzUiIHkxPSIxMDAiIHgyPSI3NSIgeTI9IjIxNSIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjMiLz48bGluZSB4MT0iODMiIHkxPSIxMDUiIHgyPSI4MyIgeTI9IjIxMCIgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iMyAzIi8+PHBhdGggZD0iTSAxMjAgMTI1IEggMTQ1IiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTQ1IiBjeT0iMTI1IiByPSIzIiBmaWxsPSIjMDBkZjg5Ii8+PHBhdGggZD0iTSAxMjAgMTkwIEggMTUwIiBzdHJva2U9IiMwMGRmODkiIHN0cm9rZS13aWR0aD0iMS41Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTkwIiByPSIzIiBmaWxsPSIjMTBiOTgxIi8+PC9nPjwvZz48ZyBmaWx0ZXI9InVybCgjYykiPjxwYXRoIGQ9Ik0gNDQwIDEwMCBMIDM5NSA3MCBIIDI4NSBMIDI1NSAxMDAgVkAyMTUgTCAyODUgMjY1IEggMzk1IEwgNDQwIDE2MCBIIDM0NSIsInN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSI5IiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9IiMwNjA5MGMiIGZpbGwtb3BhY2l0eT0iMC44NSIvPjxnIG9wYWNpdHk9IjAuOSI+PGNpcmNsZSBjeD0iMzQ1IiBjeT0iMTYwIiByPSI0LjUiIGZpbGw9IiMwMmZmZDAiLz48cGF0aCBkPSJNIDI4NSAxMTAgSCAzMjUiIHN0cm9rZT0iIzAyZmZkMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMjUiIGN5PSIxMTAiIHI9IjIuNSIgZmlsbD0iIzAyZmZkMCIvPjxwYXRoIGQ9Ik0gMjg1IDE0MCBIIDMxNSBMIDMyNSAxMDUiIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSIzMDUiIGN5PSIxMDUiIHI9IjIuNSIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMjg1IDIwMCBIIDM3MCIgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2U9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMiIvPjxjaXJjbGUgY3g9IjM3MCIgY3k9IjIwMCIgcj0iMyIgZmlsbD0iIzAyZmZkMCIvPjwvZz48L2c+PGcgc3Ryb2tlPSIjMTBiOTgxIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC42Ij48cGF0aCBkPSJNIDE5MCA5NSBMIDIxMCAxMDUgSCAyNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMyIvPjxjaXJjbGUgY3g9IjIyMCIgY3k9IjEwNSIgcj0iMiIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik0gMTk1IDIyMCBMIDIyNSAxMTAgSCAyNjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIlMiIvPjxjaXJjbGUgY3g9IjIyNSIgY3k9IjExMCIgcj0iMiIgZmlsbD0iIzAwZmZkMCIvPjwvZz48ZyBzdHJva2U9IiM4ZGEyYmIiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjkiPjxwYXRoIGQ9Ik0gMTE1IDMyMCBIIDYwIFYgNDEwIEggMTE1Ii8+PHBhdGggZD0iTSAxNTUgMzA1IEggMjEwIFYgNDEwIEgxNTUgWiIvPjxwYXRoIGQ9Ik0gMjUwIDMyMCBIIDI5MCBDIDMxNSAzMjAsIDMxNSA0MTAsIDI5MCA0MTAgSCAyNTAgWiIvPjxwYXRoIGQ9Ik0gNDA1IDMyMCBIIDM1MCBWIDQxMCBIIDQwNSBNIDM1MCAzNjUgSCAzOTAiLz48L2c+PGcgc3Ryb2tlPSIjMDJmZmQwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSI5NSI+PHBhdGggZD0iTSAxMTUgMzIwIEggNjAgViA0MTAgSCAxMTUiLz48cGF0aCBkPSJNIDE1NSAzMjAgSCAyMTAgVkYgNDEwIEggMTU1ICBaIi8+PHBhdGggZD0iTSAyNTAgMzIwIEggMjkwIEMgMzE1IDMyMCwgMzE1IDQxMCwgMjkwIDQxMCBIIDI1MCBaIi8+PHBhdGggZD0iTSA0MDUgMzIwIEggMzU1IFYgNDEwIEggNDA1IE0gMzU1IDM2NSBIIDM5MCIvPjwvZz48cmVjdCB4PSIxODAiIHk9IjQ0NSIgd2lkdGg9IjE0MCIgaGVpZ2h0PSIxOCIgcng9IjUiIGZpbGw9IiMwYzEwMTciIHN0cm9rZT0iIzEwYjk4MSIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjQiLz48dGV4dCB4PSIyNTAiIHkxPSI0NTgiIGZpbGw9IiMxMGI5ODEiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiIgb3BhY2l0eT0iMC44Ij5TWVMgQUNUSVZSPC90ZXh0Pjwvc3ZnPg==" 
-            alt="BG CODE TUTOR logo" 
-            class="w-9 h-9"
-          >
-          <div class="flex flex-col">
-            <span class="text-sm font-extrabold text-white tracking-wide">BG CODE TUTOR</span>
-            <span class="text-[8px] text-emerald-400 font-mono tracking-widest uppercase">System Core Protocol</span>
-          </div>
-        </a>
-
-        <!-- Stats Panel -->
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-1.5 px-3 py-1 bg-cyber-dark border border-slate-800 rounded-lg text-xs">
-            <span class="text-[10px] text-slate-500 font-mono uppercase">User:</span>
-            <span class="text-emerald-300 font-bold font-mono" x-text="userProfile.name"></span>
-          </div>
-          <div class="flex items-center gap-1.5 px-3 py-1 bg-cyber-dark border border-slate-800 rounded-lg text-xs">
-            <span class="text-[10px] text-slate-500 font-mono">XP:</span>
-            <span class="text-cyan-400 font-bold font-mono" x-text="userProfile.xp"></span>
-          </div>
-        </div>
-
-      </div>
-    </header>
-
-    <!-- MAIN GRID DASHBOARD -->
-    <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 flex flex-col md:flex-row gap-6">
-      
-      <!-- NAVIGATION SIDEBAR -->
-      <aside class="md:w-60 shrink-0 space-y-2">
-        <button 
-          @click="activeTab = 'learn'"
-          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
-          :class="activeTab === 'learn' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
-        >
-          <span class="flex items-center gap-2.5">
-            <i data-lucide="book-open" class="w-4 h-4"></i> Learn Path
-          </span>
-          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">01</span>
-        </button>
-
-        <button 
-          @click="activeTab = 'projects'"
-          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
-          :class="activeTab === 'projects' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
-        >
-          <span class="flex items-center gap-2.5">
-            <i data-lucide="folder-git" class="w-4 h-4"></i> Projects Lab
-          </span>
-          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">02</span>
-        </button>
-
-        <button 
-          @click="activeTab = 'sandbox'"
-          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
-          :class="activeTab === 'sandbox' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
-        >
-          <span class="flex items-center gap-2.5">
-            <i data-lucide="code" class="w-4 h-4"></i> Playground
-          </span>
-          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">03</span>
-        </button>
-
-        <button 
-          @click="activeTab = 'profile'"
-          class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between text-xs font-bold"
-          :class="activeTab === 'profile' ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 font-extrabold' : 'border border-transparent hover:bg-slate-900/60 text-slate-400'"
-        >
-          <span class="flex items-center gap-2.5">
-            <i data-lucide="user" class="w-4 h-4"></i> My Track
-          </span>
-          <span class="text-[9px] bg-slate-950 font-mono text-slate-600 px-1.5 py-0.5 rounded border border-slate-900">04</span>
-        </button>
-
-        <!-- System Status Box -->
-        <div class="p-4 bg-cyber-dark/40 border border-slate-900 rounded-2xl text-[10px] text-slate-500 space-y-1.5 leading-relaxed font-mono">
-          <div class="text-xs font-bold text-slate-400 font-sans flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            SYS STATUS: ONLINE
-          </div>
-          <div>Compiler ID: GCC_v4.1</div>
-          <div>Core Frame: 100% Client</div>
-          <div>Memory Locks: ACTIVE</div>
-        </div>
-      </aside>
-
-      <!-- TAB CONTENT VIEWPORTS -->
-      <section class="flex-1 min-w-0">
-        
-        <!-- ==================== TAB 1: LEARN PATH ==================== -->
-        <div x-show="activeTab === 'learn'" class="space-y-6">
-          <div class="border-b border-slate-900 pb-4">
-            <h2 class="text-xl font-extrabold tracking-tight text-white">Dynamic Learning Path</h2>
-            <p class="text-xs text-slate-400 mt-1">Unlock real software concepts by studying core syntax blocks inside interactive lesson streams.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <!-- HTML/CSS Card -->
-            <div class="bg-cyber-card border border-slate-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
-              <div class="space-y-2">
-                <div class="flex items-center justify-between">
-                  <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-widest bg-cyan-950/40 border border-cyan-800/30 px-2.5 py-0.5 rounded-full">Unit 01</span>
-                  <span class="text-[10px] text-slate-500 font-mono" x-text="isLessonDone('html-structure') ? 'Passed' : 'Pending'"></span>
-                </div>
-                <h3 class="text-base font-extrabold text-white">🎨 HTML & CSS Skeleton</h3>
-                <p class="text-xs text-slate-400 leading-relaxed">
-                  Learn to structure pages with exact semantic nodes like headers, layouts, divs, paragraphs, and build modern interactive button trigger fields.
-                </p>
-              </div>
-              <button 
-                @click="openLesson('html-structure')"
-                class="w-full py-2.5 rounded-xl border font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
-                :class="isLessonDone('html-structure') ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300'"
-              >
-                <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-                <span x-text="isLessonDone('html-structure') ? 'Review Study Guide' : 'Enter Training'"></span>
-              </button>
-            </div>
-
-            <!-- JavaScript Event Pipelines -->
-            <div class="bg-cyber-card border border-slate-800 p-6 rounded-2xl space-y-4 flex flex-col justify-between">
-              <div class="space-y-2">
-                <div class="flex items-center justify-between">
-                  <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-widest bg-cyan-950/40 border border-cyan-800/30 px-2.5 py-0.5 rounded-full">Unit 02</span>
-                  <span class="text-[10px] text-slate-500 font-mono" x-text="isLessonDone('js-events') ? 'Passed' : 'Pending'"></span>
-                </div>
-                <h3 class="text-base font-extrabold text-white">⚡ JavaScript Event Pipelines</h3>
-                <p class="text-xs text-slate-400 leading-relaxed">
-                  Decipher reassignment mechanisms, counter variables, functional declarations, console structures, and state parameter evaluations.
-                </p>
-              </div>
-              <button 
-                @click="openLesson('js-events')"
-                class="w-full py-2.5 rounded-xl border font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
-                :class="isLessonDone('js-events') ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300'"
-              >
-                <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-                <span x-text="isLessonDone('js-events') ? 'Review Study Guide' : 'Enter Training'"></span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ==================== TAB 2: PROJECTS LAB ==================== -->
-        <div x-show="activeTab === 'projects'" class="space-y-6">
-          <div class="border-b border-slate-900 pb-4">
-            <h2 class="text-xl font-extrabold tracking-tight text-white">Interactive Compile Projects</h2>
-            <p class="text-xs text-slate-400 mt-1">Implement concrete assignments. satisfy constraints, and execute the build to achieve certifications.</p>
-          </div>
-
-          <!-- Interactive Editor Bench -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            
-            <!-- Tracks Directory (Col 4) -->
-            <div class="lg:col-span-4 space-y-3">
-              <template x-for="(proj, idx) in projects" :key="proj.id">
-                <button 
-                  @click="selectedProjectIdx = idx; userCode = proj.initialCode; clearProjectEvaluation()"
-                  class="w-full text-left p-4 rounded-2xl border transition-all relative block"
-                  :class="selectedProjectIdx === idx ? 'bg-emerald-500/5 border-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.05)]' : 'bg-cyber-card border-slate-900/80 hover:bg-slate-900/40 text-slate-400'"
-                >
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="text-[9px] uppercase font-mono font-extrabold tracking-widest px-2 py-0.5 rounded border"
-                      :class="selectedProjectIdx === idx ? 'bg-emerald-950/60 border-emerald-800 text-emerald-300' : 'bg-slate-950 border-slate-800 text-slate-500'"
-                      x-text="proj.language"
-                    ></span>
-                    
-                    <span 
-                      class="text-[9px] tracking-tight uppercase font-extrabold px-1.5 py-0.5 rounded-md"
-                      :class="isProjectFinished(proj.id) ? 'text-emerald-400 bg-emerald-400/10' : 'text-slate-600 bg-slate-950'"
-                      x-text="isProjectFinished(proj.id) ? '✓ SECURED' : 'UNFINISHED'"
-                    ></span>
-                  </div>
-                  <h4 class="text-xs font-bold text-white mb-1" x-text="proj.name"></h4>
-                  <p class="text-[10px] text-slate-500 line-clamp-2 leading-relaxed" x-text="proj.description"></p>
-                </button>
-              </template>
-            </div>
-
-            <!-- Editor Playground (Col 8) -->
-            <div class="lg:col-span-8 space-y-4">
-              <div class="bg-cyber-dark/80 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[480px]">
-                
-                <!-- Editor Top Header -->
-                <div class="px-4 py-2 border-b border-slate-800 bg-slate-900/40 flex items-center justify-between text-xs font-mono font-bold">
-                  <div class="flex items-center gap-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span class="text-slate-400" x-text="'compiler_source.' + (projects[selectedProjectIdx].language === 'javascript' ? 'js' : 'html')"></span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <button 
-                      @click="userCode = projects[selectedProjectIdx].initialCode; clearProjectEvaluation()" 
-                      class="text-[10px] hover:text-white text-slate-500 px-2 py-0.5 rounded border border-slate-800 transition-all flex items-center gap-1"
-                    >
-                      <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset Core
-                    </button>
-                    <span class="text-[10px] text-emerald-400 font-mono" x-text="projects[selectedProjectIdx].language.toUpperCase()"></span>
-                  </div>
-                </div>
-
-                <!-- Split Workspace: Instructions + TextArea -->
-                <div class="flex-1 flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-slate-800 min-h-0">
-                  
-                  <!-- Left side: task checklist requirements -->
-                  <div class="md:w-64 p-4 bg-cyber-card/30 overflow-y-auto space-y-4">
-                    <div class="space-y-1">
-                      <h5 class="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none">Task Directives</h5>
-                      <p class="text-xs font-black text-white" x-text="projects[selectedProjectIdx].name"></p>
-                    </div>
-
-                    <ul class="text-[11px] text-slate-400 space-y-2 leading-relaxed">
-                      <template x-for="(inst, idx) in projects[selectedProjectIdx].instructions" :key="idx">
-                        <li class="flex gap-2">
-                          <span class="text-emerald-400 font-bold" x-text="(idx + 1) + '.'"></span>
-                          <span x-text="inst"></span>
-                        </li>
-                      </template>
-                    </ul>
-
-                    <div class="border-t border-slate-800/80 pt-4 space-y-2">
-                      <h6 class="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none">Checks Evaluator</h6>
-                      <div class="space-y-2">
-                        <template x-for="(check, idx) in projects[selectedProjectIdx].checks" :key="idx">
-                          <div class="flex items-start gap-2 text-[10px] leading-snug">
-                            <div class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0 mt-0.5"
-                              :class="evaluationChecks[idx] ? 'bg-emerald-500/20 border-emerald-400 text-emerald-400' : 'bg-slate-950 border-slate-800 text-slate-600'"
-                            >
-                              <span x-show="evaluationChecks[idx]">✓</span>
-                            </div>
-                            <span :class="evaluationChecks[idx] ? 'text-slate-300' : 'text-slate-500'" x-text="check"></span>
-                          </div>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Right side: Source Code Field Area -->
-                  <div class="flex-1 flex flex-col bg-cyber-black overflow-hidden relative">
-                    <div class="flex-1 flex overflow-hidden font-mono text-xs">
-                      <div class="w-9 text-slate-700 bg-slate-950/20 text-right py-4 pr-2.5 border-r border-slate-900/60 select-none font-bold">
-                        <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div>
-                      </div>
-                      <textarea 
-                        x-model="userCode"
-                        class="flex-1 bg-transparent p-4 focus:outline-none resize-none leading-relaxed text-slate-300 whitespace-pre overflow-x-auto select-text font-mono"
-                        spellcheck="false"
-                      ></textarea>
-                    </div>
-
-                    <!-- Bottom evaluation processor log -->
-                    <div class="h-24 bg-black/90 border-t border-slate-800 p-3 font-mono text-[9px] text-slate-500 space-y-1 overflow-y-auto select-none">
-                      <div class="text-xs text-slate-400 font-bold border-b border-slate-900 pb-1 mb-1.5 flex justify-between uppercase">
-                        <span>Compiler Console Out</span>
-                        <span class="text-emerald-500 animate-pulse">● Active</span>
-                      </div>
-                      <template x-for="log in projectLogs" :key="log">
-                        <div x-text="log" :class="{
-                          'text-emerald-400 font-bold': log.startsWith('[SUCCESS]'),
-                          'text-red-400 font-bold': log.startsWith('[ERROR]'),
-                          'text-yellow-400': log.startsWith('[TIPS]'),
-                          'text-slate-500': !log.startsWith('[SUCCESS]') && !log.startsWith('[ERROR]') && !log.startsWith('[TIPS]')
-                        }"></div>
-                      </template>
-                    </div>
-
-                  </div>
-
-                </div>
-
-                <!-- Compile Trigger Actions -->
-                <div class="px-4 py-3 border-t border-slate-800 bg-[#0c111d] flex justify-end">
-                  <button 
-                    @click="runProjectEvaluation()"
-                    class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-emerald-500/5 active:scale-[0.98]"
-                  >
-                    Build & Verify Project Code
-                  </button>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ==================== TAB 3: PLAYGROUND ==================== -->
-        <div x-show="activeTab === 'sandbox'" class="space-y-6">
-          <div class="border-b border-slate-900 pb-4">
-            <h2 class="text-xl font-extrabold tracking-tight text-white">Live Micro-Sandbox Environment</h2>
-            <p class="text-xs text-slate-400 mt-1">Compile custom events dynamically. Intercept system logs inside real-time digital console feeds.</p>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            <!-- Code Interface Workspace -->
-            <div class="bg-cyber-dark/80 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[400px]">
-              <div class="px-4 py-2 border-b border-slate-800 bg-slate-900/40 flex items-center justify-between text-xs font-mono font-bold">
-                <span class="text-slate-400">program_sandbox.js</span>
-                <span class="text-[10px] text-cyan-400 uppercase tracking-widest font-mono">JS Input</span>
-              </div>
-              <textarea 
-                x-model="sandboxCode"
-                class="flex-1 bg-cyber-black p-4 focus:outline-none resize-none leading-relaxed text-emerald-300 font-mono text-xs whitespace-pre overflow-x-auto select-text shadow-inner"
-                spellcheck="false"
-              ></textarea>
-              <div class="p-3 bg-cyber-card border-t border-slate-900 flex justify-end gap-2">
-                <button 
-                  @click="sandboxCode = `// write direct executions here\nlet systemScore = 95;\nif (systemScore >= 90) {\n  console.log('SUCCESS: High grade score verified.');\n} else {\n  console.log('RETRY: Re-compile scripts.');\n}`"
-                  class="px-3 py-1.5 text-[10px] bg-slate-900 text-slate-400 hover:text-white rounded-lg border border-slate-800 transition-colors"
-                >
-                  Load Mock Code
-                </button>
-                <button 
-                  @click="runSandboxCode()"
-                  class="px-5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg active:scale-97"
-                >
-                  Run Code & Stream
-                </button>
-              </div>
-            </div>
-
-            <!-- Simulated Hardware Terminal Console Output -->
-            <div class="bg-black border border-slate-900 rounded-2xl flex flex-col h-[400px] overflow-hidden shadow-2xl relative">
-              <div class="px-4 py-2 bg-slate-950 border-b border-slate-900 font-mono text-[10px] text-slate-500 flex justify-between select-none">
-                <span>TERMINAL LOG STREAM</span>
-                <span class="text-cyan-400 animate-pulse">• STREAMING ACTIVE</span>
-              </div>
-              
-              <div class="flex-1 p-5 overflow-y-auto font-mono text-xs space-y-1.5 leading-relaxed selection:bg-cyan-500/20 text-slate-300">
-                <template x-for="log in sandboxConsoleLogs" :key="log">
-                  <div class="flex items-start gap-2">
-                    <span class="text-cyan-400 select-none shrink-0">&gt;</span>
-                    <span x-text="log" :class="{
-                      'text-red-400 font-bold': log.includes('ERROR:'),
-                      'text-emerald-400': log.includes('SUCCESS:')
-                    }"></span>
-                  </div>
-                </template>
-                <div x-show="sandboxConsoleLogs.length === 0" class="text-slate-600 text-xs italic">
-                  Terminal is quiet. Click "Run Code & Stream" to receive system prints.
-                </div>
-              </div>
-
-              <!-- Terminal Clear Utility footer -->
-              <div class="p-3 border-t border-slate-900/80 bg-slate-950 flex justify-between items-center text-[10px] font-mono text-slate-600 select-none">
-                <span>BUFFER STATUS: 100% SECURE</span>
-                <button @click="sandboxConsoleLogs = []" class="hover:text-cyan-400 uppercase transition-colors">Clear Console</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ==================== TAB 4: MY TRAIL PROFILE ==================== -->
-        <div x-show="activeTab === 'profile'" class="space-y-6">
-          <div class="border-b border-slate-900 pb-4">
-            <h2 class="text-xl font-extrabold tracking-tight text-white">Dynamic Tracking Portal</h2>
-            <p class="text-xs text-slate-400 mt-1">Review your certifications, earned badges, and connection credentials.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-            
-            <!-- User Information Panel -->
-            <div class="md:col-span-5 bg-cyber-card border border-slate-800 p-6 rounded-3xl space-y-6 flex flex-col justify-between">
-              <div class="space-y-4">
-                <div class="w-16 h-16 bg-gradient-to-tr from-emerald-500 to-cyan-500 text-cyber-black rounded-2xl flex items-center justify-center font-black text-2xl uppercase shadow-xl tracking-tight">
-                  <span x-text="userProfile.name.slice(0, 2)"></span>
-                </div>
-                <div class="space-y-1">
-                  <h3 class="text-lg font-extrabold text-white" x-text="userProfile.name"></h3>
-                  <p class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">Active System Connection</p>
-                </div>
-              </div>
-
-              <div class="border-t border-slate-800/80 pt-6 space-y-4">
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-slate-400">Experience Points Secured</span>
-                  <span class="font-bold text-white text-sm" x-text="userProfile.xp + ' XP'"></span>
-                </div>
-                <div class="flex justify-between items-center text-xs">
-                  <span class="text-slate-400">Completed Projects</span>
-                  <span class="font-bold text-emerald-300 text-sm" x-text="userProfile.completedProjects.length + ' Track'"></span>
-                </div>
-              </div>
-
-              <!-- Reset Connection Button -->
-              <div class="pt-4 border-t border-slate-800/80">
-                <button 
-                  @click="resetApplicationSession()"
-                  class="w-full py-2 bg-slate-905 border border-slate-800 text-slate-500 hover:text-red-400 hover:border-red-500/20 rounded-xl text-xs font-semibold tracking-wide transition-colors"
-                >
-                  Reset Active Session Tag
-                </button>
-              </div>
-            </div>
-
-            <!-- Unlocked Certificates & Badges Board -->
-            <div class="md:col-span-7 space-y-4">
-              <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest font-mono">My Credentials & Badges</h4>
-              
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <!-- Badge card HTML/CSS Cert -->
-                <div class="bg-cyber-card border border-slate-800/40 p-4.5 rounded-2xl flex items-center gap-3"
-                  :class="isProjectFinished('proj-webdev') ? 'border-emerald-500/20 bg-emerald-500/[0.02]' : 'opacity-40'"
-                >
-                  <div class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-base shrink-0">
-                    🎨
-                  </div>
-                  <div>
-                    <h5 class="text-xs font-extrabold text-white">Semantic Marketeer</h5>
-                    <p class="text-[10px] text-slate-500 mt-0.5" x-text="isProjectFinished('proj-webdev') ? '✓ Course Completed and verified' : 'Unlock by completing the HTML project'"></p>
-                  </div>
-                </div>
-
-                <!-- Badge card JS Cert -->
-                <div class="bg-cyber-card border border-slate-800/40 p-4.5 rounded-2xl flex items-center gap-3"
-                  :class="isProjectFinished('proj-js') ? 'border-emerald-500/20 bg-emerald-500/[0.02]' : 'opacity-40'"
-                >
-                  <div class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-base shrink-0">
-                    ⚡
-                  </div>
-                  <div>
-                    <h5 class="text-xs font-extrabold text-white">Pipeline Engineer</h5>
-                    <p class="text-[10px] text-slate-500 mt-0.5" x-text="isProjectFinished('proj-js') ? '✓ Course Completed and verified' : 'Unlock by completing the JS project'"></p>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Full Certification Canvas View if secured -->
-              <div class="bg-cyber-dark/40 border border-slate-800/60 p-6 rounded-2xl text-center space-y-4" x-show="userProfile.completedProjects.length > 0">
-                <div class="text-xl">🏆</div>
-                <div class="space-y-1">
-                  <h5 class="text-xs font-black text-white">STENCIL BOARD CERTIFICATE GENERATED</h5>
-                  <p class="text-[10px] text-slate-500 max-w-sm mx-auto leading-relaxed">
-                    A physical certified standard status is logged for <strong class="text-emerald-400 font-bold" x-text="userProfile.name"></strong>! Project code verified under strict compiler checks.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-
-      </section>
-
-    </main>
-
-    <!-- FOOTER LICENSE -->
-    <footer class="border-t border-slate-900 bg-cyber-black py-4 mt-auto">
-      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[10px] font-mono text-slate-600">
-        <span>© 2026 BG CODE TUTOR. ALL PHYSICAL CONNECTIONS ASSURED.</span>
-        <span>LICENSED STANDARD VERSION GCC_v4.1</span>
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- DYNAMIC LESSON STEP-MODAL COMPONENT -->
-  <div 
-    class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md"
-    x-show="activeLessonModal !== null"
-    x-transition:enter="transition ease-out duration-250"
-    x-transition:enter-start="opacity-0 scale-95"
-    x-transition:enter-end="opacity-100 scale-100"
-  >
-    <div 
-      class="bg-cyber-card border-2 border-emerald-500/30 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-6 relative"
-      @click.away="closeLessonModal()"
-    >
-      <button 
-        @click="closeLessonModal()"
-        class="absolute right-4 top-4 text-slate-500 hover:text-white transition-colors"
-      >
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-
-      <div class="space-y-3" x-show="activeLessonModal !== null">
-        <span class="text-[9px] font-mono text-emerald-400 uppercase tracking-widest px-2.5 py-0.5 rounded border border-emerald-500/20" x-text="activeLessonModal === 'html-structure' ? 'HTML LESSON' : 'JS LESSON'"></span>
-        <h3 class="text-xl font-extrabold text-white" x-text="activeLessonModal === 'html-structure' ? '🎨 Building Pure Web Layout Structures' : '⚡ Deciphering Event Streams & Scope'"></h3>
-      </div>
-
-      <!-- Lesson Body text explanation -->
-      <div class="text-xs text-slate-400 leading-relaxed font-sans space-y-4 max-h-[300px] overflow-y-auto pr-2">
-        <template x-if="activeLessonModal === 'html-structure'">
-          <div class="space-y-3">
-            <p>
-              In core web layout blocks, we use markup components called <strong>elements</strong>. They form structural containers such as headings <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">&lt;h1&gt;</code>, description vectors <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">&lt;p&gt;</code>, navigation centers <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">&lt;header&gt;</code>, and button trigger systems.
-            </p>
-            <p>
-              By specifying a <code class="text-cyan-400 font-mono">style=""</code> attribute directly upon containers, we inject hardware constraints such as color parameters, background states, responsive flexboxes, margins, and padding offsets.
-            </p>
-            <div class="border border-slate-800 bg-cyber-black p-3.5 rounded-xl font-mono text-[10px] text-slate-500 space-y-1">
-              <div>&lt;header style="background: rgb(15, 23, 42); padding: 15px;"&gt;</div>
-              <div class="pl-4">&lt;h1&gt;Interactive Startup Banner&lt;/h1&gt;</div>
-              <div>&lt;/header&gt;</div>
-            </div>
-          </div>
-        </template>
-        
-        <template x-if="activeLessonModal === 'js-events'">
-          <div class="space-y-3">
-            <p>
-              In interactive pipelines, variables form parameters that capture values in memory registers. We use <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">let</code> or <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">var</code> to assign reassignable identifiers, and capture actions inside functions we declare as:
-            </p>
-            <div class="border border-slate-800 bg-cyber-black p-3.5 rounded-xl font-mono text-[10px] text-slate-500 space-y-1">
-              <div>let counter = 10;</div>
-              <div>function increment() {</div>
-              <div class="pl-4 font-black text-cyan-400">counter = counter + 1;</div>
-              <div>}</div>
-              <div>increment();</div>
-            </div>
-            <p>
-              Executing standard <code class="text-emerald-300 font-mono font-bold bg-slate-900 px-1 py-0.5 rounded">console.log(...)</code> calls broadcasts the values directly to the active system trace register!
-            </p>
-          </div>
-        </template>
-      </div>
-
-      <!-- Action Verification Check in modal -->
-      <div class="bg-cyber-dark p-4 rounded-2xl border border-slate-800 space-y-3">
-        <h4 class="text-[10px] font-mono text-slate-500 uppercase tracking-widest leading-none">Checkpoint Challenge</h4>
-        <div class="text-xs text-white" x-text="activeLessonModal === 'html-structure' ? 'Q: Which HTML element represents a top layout block or styling container?' : 'Q: Which keyword is declared to allocate reassignable variables in Javascript?'"></div>
-        
-        <div class="flex flex-col sm:flex-row gap-2.5 pt-1.5">
-          <input 
-            type="text" 
-            x-model="lessonChallengeInput"
-            @keydown.enter="verifyLessonCheck()"
-            placeholder="Input your response here..."
-            class="flex-1 bg-cyber-black px-4 py-2 text-xs font-mono border border-slate-850 focus:border-emerald-550 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-emerald-300 transition-all placeholder:text-slate-650"
-          >
-          <button 
-            @click="verifyLessonCheck()"
-            class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition-all"
-          >
-            Submit Answer
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- STENCIL APP SCRIPT LOGIC (Alpine.js integration) -->
-  <script>
-    function bgCodeTutorApp() {
-      return {
-        // App Core State
-        showOnboarding: true,
-        onboardingName: '',
-        activeTab: 'learn',
-        
-        userProfile: {
-          name: 'Developer',
-          xp: 20,
-          completedLessons: [],
-          completedProjects: []
-        },
-
-        // Lesson Viewport state
-        activeLessonModal: null,
-        lessonChallengeInput: '',
-
-        // Projects Directory & Live Compiler Checks
-        selectedProjectIdx: 0,
-        userCode: '',
-        projectLogs: [],
-        evaluationChecks: [],
-
-        projects: [
-          {
-            id: 'proj-webdev',
-            name: '🎨 HTML/CSS: Creative Startup Header',
-            description: 'Design a highly polished hero component utilizing custom background-colors and inline styles.',
-            language: 'html',
-            instructions: [
-              'Create a main navigation container utilizing standard <header> or a styled template <div>.',
-              'Add a header tag using an <h1> element.',
-              'Include descriptive wording inside a <p> element.',
-              'Construct a customized call-to-action <button> styled element.'
-            ],
-            checks: [
-              'Has header wrapper container',
-              'Contains <h1> header element',
-              'Contains <p> description element',
-              'Has call-to-action <button> element'
-            ],
-            initialCode: `<!-- DESIGN YOUR STARTUP PAGE HERE -->\n<header style="background: #0f172a; padding: 15px; border-bottom: 2px solid #10b981;">\n  <span style="color: #10b981; font-weight: bold; font-family: sans-serif;">BG VENTURES</span>\n</header>\n\n<div style="background: radial-gradient(circle, #1e1b4b 0%, #030712 100%); color: white; padding: 40px; border-radius: 16px; font-family: sans-serif; text-align: center; border: 1px solid #10b981; max-width: 450px; margin: 30px auto;">\n  <h1 style="color: #10b981; font-size: 28px; margin-bottom: 10px;">Accelerate Your Future</h1>\n  <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">\n    Stop waiting. Start learning systems engineering. Join the active vanguard of certified developers.\n  </p>\n  <button style="background: #10b981; color: #022c22; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 800; cursor: pointer;">\n    Enroll Safely Now\n  </button>\n</div>`,
-            testSuite: (code) => {
-              const lower = code.toLowerCase();
-              const hasHeader = lower.includes('<header') || (lower.includes('<div') && lower.includes('background') && lower.includes('padding'));
-              const hasH1 = lower.includes('<h1');
-              const hasP = lower.includes('<p');
-              const hasButton = lower.includes('<button');
-              return {
-                passed: hasHeader && hasH1 && hasP && hasButton,
-                results: [hasHeader, hasH1, hasP, hasButton]
-              };
-            }
-          },
-          {
-            id: 'proj-js',
-            name: '⚡ JAVASCRIPT: Dynamic Counter Loop',
-            description: 'Declare counters, initialize increment events, and dump results into print outputs.',
-            language: 'javascript',
-            instructions: [
-              'Declare a variable named "counter" assigning it a base value (e.g., let counter = 10).',
-              'Define a function named "increment" that modifies "counter" by adding 1.',
-              'Call your "increment" function.',
-              'Log final totals to console via: console.log("Counter Value: " + counter).'
-            ],
-            checks: [
-              'Declares counter variable',
-              'Creates increment function',
-              'Executes increment function',
-              'Calls console.log tracking value'
-            ],
-            initialCode: `// DIGITAL INCREMENT ENGINE\n// Step 1: Declare counter variable\nlet counter = 10;\n\n// Step 2: Write increment logic\nfunction increment() {\n    counter = counter + 1;\n}\n\n// Step 3: Run execution counters\nincrement();\n\n// Step 4: Output details\nconsole.log("Counter Value: " + counter);`,
-            testSuite: (code) => {
-              const cleaned = code.replace(/\s+/g, ' ');
-              const hasCounterVar = /\b(let|var)\s+counter\b/.test(code) || /counter\s*=/.test(code);
-              const hasIncrementFn = /function\s+increment\b/.test(code) || /const\s+increment\s*=/.test(code);
-              const hasCall = /increment\s*\(\s*\)/.test(code);
-              const hasConsoleLog = /console\.log\s*\(.*(counter|Value).*?\)/i.test(code);
-              return {
-                passed: hasCounterVar && hasIncrementFn && hasCall && hasConsoleLog,
-                results: [hasCounterVar, hasIncrementFn, hasCall, hasConsoleLog]
-              };
-            }
-          }
-        ],
-
-        // Live Sandbox Workspace State
-        sandboxCode: '// write direct executions here\nlet systemScore = 95;\nif (systemScore >= 90) {\n  console.log("SUCCESS: High grade score verified.");\n} else {\n  console.log("RETRY: Re-compile scripts.");\n}',
-        sandboxConsoleLogs: [],
-
-        init() {
-          // Check localstorage for previous login session
-          const savedSession = localStorage.getItem('bg_code_tutor_user');
-          if (savedSession) {
-            try {
-              this.userProfile = JSON.parse(savedSession);
-              this.showOnboarding = false;
-            } catch (e) {
-              localStorage.removeItem('bg_code_tutor_user');
-            }
-          }
-          // Initialize Lucide Icons
-          this.$nextTick(() => { lucide.createIcons(); });
-
-          // Preset checks array
-          this.clearProjectEvaluation();
-          this.userCode = this.projects[0].initialCode;
-        },
-
-        submitOnboarding() {
-          if (!this.onboardingName.trim()) return;
-          this.userProfile.name = this.onboardingName.trim();
-          this.userProfile.xp = 20;
-          this.userProfile.completedLessons = [];
-          this.userProfile.completedProjects = [];
-          
-          localStorage.setItem('bg_code_tutor_user', JSON.stringify(this.userProfile));
-          this.showOnboarding = false;
-          
-          this.$nextTick(() => { lucide.createIcons(); });
-        },
-
-        resetApplicationSession() {
-          localStorage.removeItem('bg_code_tutor_user');
-          this.showOnboarding = true;
-          this.onboardingName = '';
-        },
-
-        isLessonDone(id) {
-          return this.userProfile.completedLessons.includes(id);
-        },
-
-        openLesson(id) {
-          this.activeLessonModal = id;
-          this.lessonChallengeInput = '';
-        },
-
-        closeLessonModal() {
-          this.activeLessonModal = null;
-        },
-
-        verifyLessonCheck() {
-          const ans = this.lessonChallengeInput.trim().toLowerCase();
-          let flagCorrect = false;
-
-          if (this.activeLessonModal === 'html-structure') {
-            // Looking for answers like header, div, section, container
-            if (ans.includes('header') || ans.includes('div') || ans.includes('section') || ans.includes('container') || ans.includes('h1')) {
-              flagCorrect = true;
-            }
-          } else if (this.activeLessonModal === 'js-events') {
-            // Looking for let, var, const
-            if (ans.includes('let') || ans.includes('var') || ans.includes('const')) {
-              flagCorrect = true;
-            }
-          }
-
-          if (flagCorrect) {
-            if (!this.userProfile.completedLessons.includes(this.activeLessonModal)) {
-              this.userProfile.completedLessons.push(this.activeLessonModal);
-              this.userProfile.xp += 50;
-              localStorage.setItem('bg_code_tutor_user', JSON.stringify(this.userProfile));
-            }
-            alert(`🎉 Magnificent Job! That's the correct answer. You've been awarded +50 XP.`);
-            this.closeLessonModal();
-          } else {
-            alert(`⚠️ Checking input registers: incorrect output value. Try another tag! (Tips: read the code example boxes inside the lesson context).`);
-          }
-        },
-
-        isProjectFinished(id) {
-          return this.userProfile.completedProjects.includes(id);
-        },
-
-        isLessonDone(id) {
-          return this.userProfile.completedLessons.includes(id);
-        },
-
-        clearProjectEvaluation() {
-          const count = this.projects[this.selectedProjectIdx].checks.length;
-          this.evaluationChecks = new Array(count).fill(false);
-          this.projectLogs = [
-            `[BG COMPILER ENGINE v4.1] Setup environment loaded.`,
-            `Instructions for "${this.projects[this.selectedProjectIdx].name}" unlocked.`,
-            `Edit code, satisfy requirements, and press "Build & Verify" to achieve certification!`
-          ];
-        },
-
-        runProjectEvaluation() {
-          const activeProj = this.projects[this.selectedProjectIdx];
-          this.projectLogs.push(`[PROCESS CHANNELS] Initiating validation scans...`);
-          this.projectLogs.push(`[PARSER] Checking structural tokens and symbols...`);
-
-          setTimeout(() => {
-            const { passed, results } = activeProj.testSuite(this.userCode);
-            this.evaluationChecks = results;
-
-            if (passed) {
-              const alreadyDone = this.userProfile.completedProjects.includes(activeProj.id);
-              if (!alreadyDone) {
-                this.userProfile.completedProjects.push(activeProj.id);
-                this.userProfile.xp += 100;
-                localStorage.setItem('bg_code_tutor_user', JSON.stringify(this.userProfile));
-              }
-              
-              this.projectLogs.push(`> Analysis matching: 100% SUCCESS.`);
-              this.projectLogs.push(`[SUCCESS] 🎉 ALL TEST CHECKS PASSED PERFECTLY!`);
-              this.projectLogs.push(`[FINISH] Project completed! Unlocked certification.`);
-              alert(`🏆 Magnificent Work, ${this.userProfile.name}! Project verified. You gained +100 XP and unlocked your completion badge inside the Track Profile tab!`);
-            } else {
-              const failedCount = results.filter(c => !c).length;
-              this.projectLogs.push(`> Compilation complete with warnings.`);
-              this.projectLogs.push(`[ERROR] Verification incomplete. ${failedCount} requirement(s) failed.`);
-              this.projectLogs.push(`[TIPS] Read requirements list. Ensure exact variable structures and closing tags are implemented!`);
-            }
-          }, 600);
-        },
-
-        runSandboxCode() {
-          // Safe client side console wrapper
-          this.sandboxConsoleLogs = [
-            `[RUNTIME INTIALIZED] Executing micro-file script block...`
-          ];
-          
-          let logs = [];
-          const customConsoleLog = (...args) => {
-            logs.push(args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' '));
-          };
-
-          const runInContext = () => {
-            // Override standard browser console
-            const originalLog = console.log;
-            console.log = customConsoleLog;
-            try {
-              const runner = new Function(this.sandboxCode);
-              runner();
-              this.sandboxConsoleLogs.push(`[SUCCESS] Compilation complete.`);
-            } catch (e) {
-              this.sandboxConsoleLogs.push(`ERROR: ${e.message}`);
-            } finally {
-              console.log = originalLog;
-            }
-          };
-
-          runInContext();
-          this.sandboxConsoleLogs = [...this.sandboxConsoleLogs, ...logs];
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   BG CODE TUTOR — single-file prototype
+   Storage: window.storage (artifact-persistent, personal/private)
+   ========================================================= */
+
+/* ---------------- Utilities ---------------- */
+function escapeHtml(str){
+  return String(str)
+    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+    .replaceAll('"','&quot;').replaceAll("'",'&#39;');
+}
+function uidFromDate(){ return new Date().toISOString().slice(0,10); }
+function showToast(msg, ms=2400){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=> t.classList.remove('show'), ms);
+}
+
+/* ---------------- SQL demo dataset ---------------- */
+const SONGS_TABLE = [
+  {id:1, title:'Loop De Loop',      artist:'The Iterators', genre:'electronic', year:2019, plays:154},
+  {id:2, title:'Recursive Love',    artist:'Call Stack',    genre:'pop',        year:2021, plays:320},
+  {id:3, title:'Boolean Heart',     artist:'True Colors',   genre:'pop',        year:2018, plays:210},
+  {id:4, title:'Stack Overflow',    artist:'The Iterators', genre:'rock',       year:2022, plays:410},
+  {id:5, title:'Null Pointer Blues',artist:'Deep Debug',    genre:'jazz',       year:2017, plays:95},
+  {id:6, title:'Array of Sunshine', artist:'True Colors',   genre:'pop',        year:2020, plays:275},
+  {id:7, title:'Binary Sunset',     artist:'Deep Debug',    genre:'electronic', year:2023, plays:500},
+  {id:8, title:'Hash It Out',       artist:'Call Stack',    genre:'hiphop',     year:2022, plays:188},
+];
+
+/* ---------------- Code execution engines ---------------- */
+
+// JavaScript: real execution in a sandboxed Function, console.log captured.
+function runJS(code){
+  const logs = [];
+  const fakeConsole = {
+    log:(...args)=> logs.push(args.map(a=> typeof a==='object'? JSON.stringify(a) : String(a)).join(' ')),
+  };
+  try{
+    const fn = new Function('console', code);
+    fn(fakeConsole);
+    return {ok:true, output: logs.join('\n')};
+  }catch(e){
+    return {ok:false, error: e.message, output: logs.join('\n')};
+  }
+}
+
+// Python-lite: tiny interpreter for the beginner subset used in lessons
+// (assignment, +-*/, string/number literals, f-strings, print()).
+function pyTokenize(s){
+  const tokens=[]; let i=0;
+  while(i<s.length){
+    const c=s[i];
+    if(/\s/.test(c)){ i++; continue; }
+    if(c==='"'||c==="'"){
+      const quote=c; let j=i+1, str='';
+      while(j<s.length && s[j]!==quote){ str+=s[j]; j++; }
+      tokens.push({type:'str', value:str}); i=j+1; continue;
+    }
+    if(/[0-9]/.test(c)){
+      let j=i, num='';
+      while(j<s.length && /[0-9.]/.test(s[j])){ num+=s[j]; j++; }
+      tokens.push({type:'num', value:parseFloat(num)}); i=j; continue;
+    }
+    if(/[+\-*/]/.test(c)){ tokens.push({type:'op', value:c}); i++; continue; }
+    if(/[a-zA-Z_]/.test(c)){
+      let j=i, id='';
+      while(j<s.length && /[a-zA-Z0-9_]/.test(s[j])){ id+=s[j]; j++; }
+      if(id==='f' && (s[j]==='"'||s[j]==="'")){
+        const quote=s[j]; let k=j+1, str='';
+        while(k<s.length && s[k]!==quote){ str+=s[k]; k++; }
+        tokens.push({type:'fstr', value:str}); i=k+1; continue;
+      }
+      tokens.push({type:'id', value:id}); i=j; continue;
+    }
+    i++; // skip unknown char
+  }
+  return tokens;
+}
+function pyResolve(tok, vars){
+  if(!tok) return '';
+  if(tok.type==='str') return tok.value;
+  if(tok.type==='num') return tok.value;
+  if(tok.type==='id'){
+    if(!(tok.value in vars)) throw new Error(`name '${tok.value}' is not defined`);
+    return vars[tok.value];
+  }
+  if(tok.type==='fstr'){
+    return tok.value.replace(/\{([^}]+)\}/g, (m,name)=>{
+      const t = pyTokenize(name.trim())[0];
+      return String(pyResolve(t, vars));
+    });
+  }
+  return '';
+}
+function pyEvalTokens(tokens, vars){
+  if(tokens.length===0) return '';
+  let result = pyResolve(tokens[0], vars);
+  let i=1;
+  while(i<tokens.length-1 || (i<tokens.length && tokens[i].type==='op')){
+    const op = tokens[i] && tokens[i].value;
+    const rhs = pyResolve(tokens[i+1], vars);
+    if(op==='+'){
+      if(typeof result==='number' && typeof rhs==='number') result = result+rhs;
+      else result = String(result)+String(rhs);
+    } else if(op==='-'){ result = Number(result)-Number(rhs); }
+    else if(op==='*'){ result = Number(result)*Number(rhs); }
+    else if(op==='/'){ result = Number(result)/Number(rhs); }
+    else break;
+    i+=2;
+  }
+  return result;
+}
+function pySplitTopCommas(s){
+  const parts=[]; let cur=''; let inQuote=null;
+  for(const ch of s){
+    if(inQuote){ cur+=ch; if(ch===inQuote) inQuote=null; continue; }
+    if(ch==='"'||ch==="'"){ inQuote=ch; cur+=ch; continue; }
+    if(ch===','){ parts.push(cur); cur=''; continue; }
+    cur+=ch;
+  }
+  if(cur.trim()!=='') parts.push(cur);
+  return parts;
+}
+function runPythonLite(code){
+  const vars = {}; const logs = [];
+  try{
+    const lines = code.split('\n');
+    for(const raw of lines){
+      const line = raw.trim();
+      if(!line || line.startsWith('#')) continue;
+      const printMatch = line.match(/^print\((.*)\)$/);
+      if(printMatch){
+        const parts = pySplitTopCommas(printMatch[1]);
+        const outs = parts.map(p=> pyEvalTokens(pyTokenize(p), vars));
+        logs.push(outs.map(String).join(' '));
+        continue;
+      }
+      const assignMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.+)$/);
+      if(assignMatch){
+        vars[assignMatch[1]] = pyEvalTokens(pyTokenize(assignMatch[2]), vars);
+        continue;
+      }
+      throw new Error('This mini-Python runner only understands variable assignments and print(). Try simplifying that line.');
+    }
+    return {ok:true, output: logs.join('\n'), vars};
+  }catch(e){
+    return {ok:false, error: e.message, output: logs.join('\n')};
+  }
+}
+
+// SQL-lite: minimal SELECT engine over the in-memory songs table.
+function runSQLLite(query, table){
+  try{
+    const q = query.trim().replace(/;\s*$/,'');
+    const m = q.match(/^SELECT\s+(.+?)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+?))?(?:\s+ORDER BY\s+(.+?))?(?:\s+LIMIT\s+(\d+))?$/is);
+    if(!m) throw new Error('Could not parse that. Check the SELECT ... FROM ... shape of your query.');
+    let [, colsRaw, tableName, whereRaw, orderRaw, limitRaw] = m;
+    if(tableName.toLowerCase()!=='songs') throw new Error(`Unknown table "${tableName}". This database only has "songs".`);
+    let rows = table.slice();
+    if(whereRaw){
+      const conds = whereRaw.split(/\s+AND\s+/i).map(c=>{
+        const cm = c.match(/^(\w+)\s*(=|!=|>=|<=|>|<)\s*(.+)$/);
+        if(!cm) throw new Error('Could not parse the WHERE clause.');
+        let [, col, op, valRaw] = cm;
+        valRaw = valRaw.trim();
+        let val;
+        if(/^'.*'$/.test(valRaw) || /^".*"$/.test(valRaw)) val = valRaw.slice(1,-1);
+        else val = parseFloat(valRaw);
+        return {col, op, val};
+      });
+      rows = rows.filter(r=> conds.every(c=>{
+        const rv = r[c.col];
+        if(rv===undefined) throw new Error(`Unknown column "${c.col}".`);
+        switch(c.op){
+          case '=': return rv==c.val;
+          case '!=': return rv!=c.val;
+          case '>': return rv>c.val;
+          case '<': return rv<c.val;
+          case '>=': return rv>=c.val;
+          case '<=': return rv<=c.val;
         }
+      }));
+    }
+    if(orderRaw){
+      const om = orderRaw.match(/^(\w+)\s*(ASC|DESC)?$/i);
+      if(!om) throw new Error('Could not parse the ORDER BY clause.');
+      const [, col, dir] = om;
+      const d = (dir||'ASC').toUpperCase();
+      rows = rows.slice().sort((a,b)=> a[col]>b[col]?1:a[col]<b[col]?-1:0);
+      if(d==='DESC') rows.reverse();
+    }
+    if(limitRaw) rows = rows.slice(0, parseInt(limitRaw,10));
+    let cols;
+    if(colsRaw.trim()==='*') cols = Object.keys(table[0]);
+    else cols = colsRaw.split(',').map(c=>c.trim());
+    const result = rows.map(r=>{
+      const o={}; cols.forEach(c=> o[c]=r[c]); return o;
+    });
+    return {ok:true, rows:result, columns:cols};
+  }catch(e){
+    return {ok:false, error:e.message};
+  }
+}
 
+/* ---------------- Curriculum data ---------------- */
+const LANGUAGES = [
+  {
+    id:'python', name:'Python', emoji:'🐍', engine:'python',
+    levels:{
+      beginner:{
+        units:[{
+          id:'py-u1', title:'Python Basics',
+          lessons:[
+            {
+              id:'py-l1', title:'Say hello with print()',
+              goal:'Use print() to display a message',
+              explanation:'print() shows whatever text you put inside the parentheses, as long as it is wrapped in quotes.',
+              example:{code:'print("Hi there!")', output:'Hi there!'},
+              starterCode:'print("Hello, world!")',
+              task:'Change the message so it greets the world from BG Code Tutor.',
+              hints:[
+                'print() displays whatever is inside its parentheses.',
+                'Text must be wrapped in quotes, like "this".',
+                'Try: print("Hello from BG Code Tutor!")'
+              ],
+              recap:'print() is how Python shows output to the screen — you will use it constantly.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/print\(/.test(code)) return {success:false, message:'Use print() somewhere in your code.'};
+                if(!/hello/i.test(run.output)) return {success:false, message:'Your message should say hello to someone.'};
+                return {success:true, message:'Nicely printed!'};
+              }
+            },
+            {
+              id:'py-l2', title:'Store data in a variable',
+              goal:'Create a variable and print its value',
+              explanation:'A variable stores a value using =. You can print it later just by using its name (no quotes needed).',
+              example:{code:'name = "Ada"\nprint(name)', output:'Ada'},
+              starterCode:'name = "Ada"\nprint(name)',
+              task:'Change the value stored in name, then print it.',
+              hints:[
+                'The = sign assigns a value to a variable.',
+                'When printing a variable, do not put it in quotes — print(name), not print("name").',
+                'Try: name = "Grace"\\nprint(name)'
+              ],
+              recap:'Variables let you store a value once and reuse it anywhere in your code.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/=/.test(code) || !/print\(/.test(code)) return {success:false, message:'Create a variable with = and print it.'};
+                if(!run.output.trim()) return {success:false, message:'Your code ran but printed nothing.'};
+                return {success:true, message:'That variable is doing its job!'};
+              }
+            },
+            {
+              id:'py-l3', title:'Combine text with +',
+              goal:'Join two strings together',
+              explanation:'You can stick strings together with +. Add a space " " between words so they do not run together.',
+              example:{code:'a = "Code"\nb = "Tutor"\nprint(a + " " + b)', output:'Code Tutor'},
+              starterCode:'first = "Code"\nsecond = "Tutor"\nprint(first + second)',
+              task:'Add a space between the two words so it reads naturally.',
+              hints:[
+                'Use + to join strings end-to-end.',
+                'Join in a space too: first + " " + second.',
+                'Try: print(first + " " + second)'
+              ],
+              recap:'+ joins strings together exactly as written — Python will not add spaces for you.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/\+/.test(code)) return {success:false, message:'Use + to join the two strings.'};
+                if(!/\s/.test(run.output.trim())) return {success:false, message:'There should be a space between the two joined words.'};
+                return {success:true, message:'Joined perfectly, with room to breathe.'};
+              }
+            },
+            {
+              id:'py-l4', title:'Do math with numbers',
+              goal:'Use +, -, *, / on numbers',
+              explanation:'Numbers do not need quotes. You can add, subtract, multiply or divide them directly.',
+              example:{code:'a = 3\nb = 4\nprint(a + b)', output:'7'},
+              starterCode:'apples = 3\noranges = 4\ntotal = apples + oranges\nprint(total)',
+              task:'Change the numbers and confirm the total updates correctly.',
+              hints:[
+                'Numbers are written without quotes.',
+                'total = apples + oranges adds the two values.',
+                'Make sure you print(total) at the end.'
+              ],
+              recap:'Python treats numbers as numbers — no quotes — so it can do real arithmetic on them.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/^-?\d+(\.\d+)?$/.test(run.output.trim())) return {success:false, message:'Your output should be a single number.'};
+                return {success:true, message:'The math checks out.'};
+              }
+            },
+            {
+              id:'py-l5', title:'Mix text and numbers with f-strings',
+              goal:'Build a sentence with an f-string',
+              explanation:'An f-string lets you drop a variable straight into a sentence using {curly braces}. Start the string with f.',
+              example:{code:'streak = 5\nprint(f"You\'re on a {streak}-day streak!")', output:"You're on a 5-day streak!"},
+              starterCode:'streak = 5\nprint(f"You are on a {streak}-day streak!")',
+              task:'Change the streak number and watch the sentence update.',
+              hints:[
+                'f-strings start with f right before the quote: f"...".',
+                'Put any variable inside curly braces: {streak}.',
+                'Try changing streak to a different number, like 12.'
+              ],
+              recap:'f-strings are the cleanest way to weave variables into readable sentences.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/f["\']/.test(code)) return {success:false, message:'Use an f-string (starts with f").'};
+                if(!/\d/.test(run.output)) return {success:false, message:'Your sentence should include a number.'};
+                return {success:true, message:'That reads beautifully.'};
+              }
+            },
+          ],
+          quiz:{
+            id:'py-u1-quiz', title:'Python Basics Quiz',
+            questions:[
+              {type:'mcq', prompt:'Which keyword displays text on the screen in Python?', options:['print','echo','show','write'], correctIndex:0},
+              {type:'fill', prompt:'Fill in the missing symbol: first __ second joins two strings together.', accept:['+']},
+              {type:'code', prompt:'Write code that prints the sum of 6 and 9.', engine:'python', starterCode:'# write your code here\n',
+                validate:(code, run)=>{
+                  if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                  return {success: run.output.trim()==='15', message: run.output.trim()==='15' ? 'Correct!' : 'Expected output: 15'};
+                }}
+            ]
+          }
+        }],
+        moreComing:5
       }
     }
-  </script>
+  },
+  {
+    id:'javascript', name:'JavaScript', emoji:'⚡', engine:'js',
+    levels:{
+      beginner:{
+        units:[{
+          id:'js-u1', title:'JS Foundations',
+          lessons:[
+            {
+              id:'js-l1', title:'Print to the console',
+              goal:'Use console.log() to show output',
+              explanation:'console.log() prints whatever you give it. Text needs quotes.',
+              example:{code:'console.log("Hi there!");', output:'Hi there!'},
+              starterCode:'console.log("Hello, world!");',
+              task:'Change the message to greet BG Code Tutor.',
+              hints:[
+                'console.log() prints its argument.',
+                'Text goes inside quotes.',
+                'Try: console.log("Hello from BG Code Tutor!");'
+              ],
+              recap:'console.log() is your main window into what your JavaScript code is doing.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/console\.log/.test(code)) return {success:false, message:'Use console.log() in your code.'};
+                if(!/hello/i.test(run.output)) return {success:false, message:'Your message should say hello to someone.'};
+                return {success:true, message:'Logged like a pro!'};
+              }
+            },
+            {
+              id:'js-l2', title:'Declare a variable with let',
+              goal:'Store and print a value',
+              explanation:'let creates a variable you can change later. Use it to store a value, then log it.',
+              example:{code:'let city = "Delhi";\nconsole.log(city);', output:'Delhi'},
+              starterCode:'let city = "Delhi";\nconsole.log(city);',
+              task:'Change the city and confirm the output updates.',
+              hints:[
+                'let name = value; creates a variable.',
+                'console.log(city) prints the variable\'s current value.',
+                'Do not wrap the variable name in quotes when logging it.'
+              ],
+              recap:'let is the standard way to declare a variable that may change later.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/let\s+\w+/.test(code)) return {success:false, message:'Declare a variable using let.'};
+                if(!run.output.trim()) return {success:false, message:'Your code ran but printed nothing.'};
+                return {success:true, message:'Variable declared and delivered.'};
+              }
+            },
+            {
+              id:'js-l3', title:'Combine strings with +',
+              goal:'Join two strings together',
+              explanation:'+ joins strings end-to-end. Add a space " " so words do not collide.',
+              example:{code:'console.log("Code" + " " + "Tutor");', output:'Code Tutor'},
+              starterCode:'let first = "Code";\nlet second = "Tutor";\nconsole.log(first + second);',
+              task:'Add a space between the two joined words.',
+              hints:[
+                '+ concatenates strings in JavaScript.',
+                'Join in a space too: first + " " + second.',
+                'Try: console.log(first + " " + second);'
+              ],
+              recap:'+ in JavaScript concatenates strings exactly as written.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/\+/.test(code)) return {success:false, message:'Use + to join the strings.'};
+                if(!/\s/.test(run.output.trim())) return {success:false, message:'There should be a space between the joined words.'};
+                return {success:true, message:'Joined cleanly.'};
+              }
+            },
+            {
+              id:'js-l4', title:'Do math with numbers',
+              goal:'Use +, -, *, / on numbers',
+              explanation:'JavaScript numbers do not need quotes, so you can do arithmetic directly.',
+              example:{code:'console.log(3 + 4);', output:'7'},
+              starterCode:'let price = 250;\nlet discount = 50;\nlet total = price - discount;\nconsole.log(total);',
+              task:'Change the numbers and confirm the total updates.',
+              hints:[
+                'Numbers are written without quotes.',
+                'total = price - discount subtracts the two values.',
+                'Make sure you console.log(total) at the end.'
+              ],
+              recap:'JavaScript handles arithmetic the way you would expect from a calculator.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/^-?\d+(\.\d+)?$/.test(run.output.trim())) return {success:false, message:'Your output should be a single number.'};
+                return {success:true, message:'The numbers add up.'};
+              }
+            },
+            {
+              id:'js-l5', title:'Make decisions with if / else',
+              goal:'Print different messages based on a condition',
+              explanation:'if (condition) { ... } else { ... } runs one block or the other, depending on whether the condition is true.',
+              example:{code:'let hour = 20;\nif (hour < 12) {\n  console.log("Good morning!");\n} else {\n  console.log("Good evening!");\n}', output:'Good evening!'},
+              starterCode:'let hour = 9;\nif (hour < 12) {\n  console.log("Good morning!");\n} else {\n  console.log("Good day!");\n}',
+              task:'Change the hour and check that the right message prints both above and below 12.',
+              hints:[
+                'if checks a condition; else runs when that condition is false.',
+                'Try setting hour above and below 12 to see both branches.',
+                'Make sure both branches use console.log().'
+              ],
+              recap:'if / else is how your program chooses between two paths.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                if(!/\bif\s*\(/.test(code) || !/\belse\b/.test(code)) return {success:false, message:'Use both if and else.'};
+                if(!/(good morning|good day|good evening)/i.test(run.output)) return {success:false, message:'Your branches should print a greeting message.'};
+                return {success:true, message:'Good call — literally.'};
+              }
+            },
+          ],
+          quiz:{
+            id:'js-u1-quiz', title:'JS Foundations Quiz',
+            questions:[
+              {type:'mcq', prompt:'Which keyword declares a variable that can change later?', options:['let','print','def','class'], correctIndex:0},
+              {type:'fill', prompt:'Fill in the missing operator: 7 __ 8 adds two numbers.', accept:['+']},
+              {type:'code', prompt:'Write code that logs the sum of 7 and 8.', engine:'js', starterCode:'// write your code here\n',
+                validate:(code, run)=>{
+                  if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
+                  return {success: run.output.trim()==='15', message: run.output.trim()==='15' ? 'Correct!' : 'Expected output: 15'};
+                }}
+            ]
+          }
+        }],
+        moreComing:5
+      }
+    }
+  },
+  {
+    id:'webdev', name:'HTML & CSS', emoji:'🌐', engine:'html',
+    levels:{
+      beginner:{
+        units:[{
+          id:'web-u1', title:'Build Your First Page',
+          lessons:[
+            {
+              id:'web-l1', title:'Structure a page with HTML',
+              goal:'Use heading and paragraph tags',
+              explanation:'<h1> makes a big heading. <p> makes a paragraph of text. Tags usually come in opening/closing pairs.',
+              example:{code:'<h1>Hello</h1>\n<p>This is a paragraph.</p>', output:'(renders a heading and a paragraph)'},
+              starterCode:'<h1>My First Page</h1>\n<p>Welcome to BG Code Tutor.</p>',
+              task:'Add a second paragraph below the first one.',
+              hints:[
+                'Wrap paragraph text in <p> and </p>.',
+                'You can add as many <p> tags as you like.',
+                'Try adding: <p>I am learning to code!</p>'
+              ],
+              recap:'HTML tags describe the structure of a page — headings, paragraphs, and more.',
+              validate:(code)=>{
+                const pCount = (code.match(/<p[\s>]/gi)||[]).length;
+                const hasH1 = /<h1[\s>]/i.test(code);
+                if(!hasH1) return {success:false, message:'Keep the <h1> heading.'};
+                if(pCount<2) return {success:false, message:'Add a second <p> paragraph.'};
+                return {success:true, message:'Page structure looking solid.'};
+              }
+            },
+            {
+              id:'web-l2', title:'Add links and images',
+              goal:'Use <a> and <img> tags',
+              explanation:'<a href="...">text</a> creates a clickable link. <img src="..."> embeds an image (no closing tag needed).',
+              example:{code:'<a href="#">Click me</a>', output:'(renders a link)'},
+              starterCode:'<p>Check out our course catalog:</p>\n<a href="#">View courses</a>',
+              task:'Add an <img> tag below the link (any src is fine — it is just practice).',
+              hints:[
+                '<img> tags do not need a closing tag.',
+                'Give it a src attribute, like src="logo.png".',
+                'Try: <img src="logo.png" alt="logo">'
+              ],
+              recap:'Links and images are what make the web feel like the web.',
+              validate:(code)=>{
+                if(!/<a\s+[^>]*href/i.test(code)) return {success:false, message:'Keep an <a href="..."> link in your code.'};
+                if(!/<img\s+[^>]*src/i.test(code)) return {success:false, message:'Add an <img src="..."> tag.'};
+                return {success:true, message:'Now your page can link out and show pictures.'};
+              }
+            },
+            {
+              id:'web-l3', title:'Style text with CSS',
+              goal:'Use a <style> block to change color',
+              explanation:'A <style> block lets you write CSS rules. color: teal; changes text color.',
+              example:{code:'<style>h1 { color: teal; }</style>\n<h1>Styled!</h1>', output:'(renders a teal heading)'},
+              starterCode:'<style>\n  h1 { color: teal; }\n</style>\n<h1>Styled Heading</h1>',
+              task:'Change the heading color to something else, like "crimson" or "#1F8A70".',
+              hints:[
+                'CSS rules go inside <style>...</style>.',
+                'The property for text color is color: value;.',
+                'Try color: crimson; or any valid color name.'
+              ],
+              recap:'CSS controls how your HTML looks — color is one of dozens of properties you can set.',
+              validate:(code)=>{
+                if(!/<style/i.test(code)) return {success:false, message:'Keep the <style> block.'};
+                if(!/color\s*:/i.test(code)) return {success:false, message:'Set a color: value; rule on the heading.'};
+                if(!/<h1/i.test(code)) return {success:false, message:'Keep the <h1> heading to style.'};
+                return {success:true, message:'Looking sharp.'};
+              }
+            },
+            {
+              id:'web-l4', title:'Space things out with padding & margin',
+              goal:'Control spacing with the box model',
+              explanation:'padding adds space inside an element. margin adds space outside it. Both can be set in pixels.',
+              example:{code:'<style>div { padding: 16px; margin: 12px; background: #eee; }</style>\n<div>Boxed in</div>', output:'(renders a spaced box)'},
+              starterCode:'<style>\n  .card { padding: 10px; margin: 10px; background: #eee; }\n</style>\n<div class="card">Hello box</div>',
+              task:'Increase the padding and margin so the box has noticeably more breathing room.',
+              hints:[
+                'padding is space inside the border; margin is space outside it.',
+                'Both accept pixel values, like 24px.',
+                'Try padding: 24px; margin: 20px;'
+              ],
+              recap:'padding and margin are the two core tools for spacing in CSS.',
+              validate:(code)=>{
+                if(!/padding\s*:/i.test(code) || !/margin\s*:/i.test(code)) return {success:false, message:'Set both padding and margin.'};
+                return {success:true, message:'That box has room to breathe now.'};
+              }
+            },
+            {
+              id:'web-l5', title:'Center content with flexbox',
+              goal:'Use display: flex to center an element',
+              explanation:'display: flex turns on flexbox layout. justify-content: center and align-items: center center children horizontally and vertically.',
+              example:{code:'<style>.wrap{display:flex;justify-content:center;}</style>\n<div class="wrap"><p>Centered</p></div>', output:'(renders centered text)'},
+              starterCode:'<style>\n  .wrap { display: block; height: 120px; background: #eee; }\n</style>\n<div class="wrap"><p>Center me</p></div>',
+              task:'Change display: block to display: flex, then add justify-content: center.',
+              hints:[
+                'display: flex turns an element into a flex container.',
+                'justify-content: center centers children horizontally.',
+                'You can also add align-items: center to center vertically.'
+              ],
+              recap:'Flexbox is the modern, reliable way to center and align content.',
+              validate:(code)=>{
+                if(!/display\s*:\s*flex/i.test(code)) return {success:false, message:'Set display: flex; on the wrapper.'};
+                if(!/justify-content\s*:\s*center/i.test(code)) return {success:false, message:'Add justify-content: center;.'};
+                return {success:true, message:'Perfectly centered.'};
+              }
+            },
+          ],
+          quiz:{
+            id:'web-u1-quiz', title:'HTML & CSS Quiz',
+            questions:[
+              {type:'mcq', prompt:'Which tag makes the largest heading?', options:['<h1>','<p>','<big>','<head>'], correctIndex:0},
+              {type:'fill', prompt:'Fill in the missing attribute: <img __="logo.png"> sets the image source.', accept:['src']},
+              {type:'code', prompt:'Write an <h1> tag containing the text "Hi".', engine:'html', starterCode:'<!-- write your code here -->\n',
+                validate:(code)=>{
+                  const ok = /<h1[^>]*>\s*Hi\s*<\/h1>/i.test(code);
+                  return {success: ok, message: ok ? 'Correct!' : 'Expected something like <h1>Hi</h1>'};
+                }}
+            ]
+          }
+        }],
+        moreComing:5
+      }
+    }
+  },
+  {
+    id:'sql', name:'SQL', emoji:'🗄️', engine:'sql',
+    levels:{
+      beginner:{
+        units:[{
+          id:'sql-u1', title:'Query Basics',
+          lessons:[
+            {
+              id:'sql-l1', title:'Select everything with SELECT *',
+              goal:'Retrieve every row and column from a table',
+              explanation:'SELECT * FROM songs; returns every column for every row in the songs table.',
+              example:{code:'SELECT * FROM songs;', output:'(returns all 8 rows)'},
+              starterCode:'SELECT * FROM songs;',
+              task:'Run the query as-is to see every song in the table.',
+              hints:[
+                '* means "all columns".',
+                'Every SQL query needs FROM followed by a table name.',
+                'This table is called songs.'
+              ],
+              recap:'SELECT * is the fastest way to peek at everything in a table.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Query error: '+run.error};
+                if(run.rows.length !== SONGS_TABLE.length) return {success:false, message:'Expected all '+SONGS_TABLE.length+' rows back.'};
+                return {success:true, message:'There they all are.'};
+              }
+            },
+            {
+              id:'sql-l2', title:'Pick specific columns',
+              goal:'Select only the columns you need',
+              explanation:'List column names separated by commas instead of using * to get only what you want.',
+              example:{code:'SELECT title FROM songs;', output:'(returns just the title column)'},
+              starterCode:'SELECT title, artist FROM songs;',
+              task:'Run the query, then try changing it to also include genre.',
+              hints:[
+                'Separate column names with commas.',
+                'Column order in your query controls the column order in the result.',
+                'Try: SELECT title, artist, genre FROM songs;'
+              ],
+              recap:'Selecting specific columns keeps results focused on what you actually need.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Query error: '+run.error};
+                if(run.columns.length<2) return {success:false, message:'Select at least two columns.'};
+                return {success:true, message:'Nicely narrowed down.'};
+              }
+            },
+            {
+              id:'sql-l3', title:'Filter rows with WHERE',
+              goal:'Return only rows that match a condition',
+              explanation:'WHERE filters rows. SELECT * FROM songs WHERE genre = \'pop\'; returns only pop songs.',
+              example:{code:"SELECT * FROM songs WHERE genre = 'pop';", output:'(returns only pop songs)'},
+              starterCode:"SELECT * FROM songs WHERE genre = 'pop';",
+              task:'Try changing \'pop\' to another genre, like \'rock\' or \'jazz\'.',
+              hints:[
+                'Text values in WHERE need single quotes, like \'pop\'.',
+                'WHERE column = value keeps only matching rows.',
+                'You can also use >, <, or != for numbers.'
+              ],
+              recap:'WHERE is how you narrow a result down to the rows that matter.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Query error: '+run.error};
+                if(!/WHERE/i.test(code)) return {success:false, message:'Add a WHERE clause.'};
+                if(run.rows.length===0) return {success:false, message:'That filter matched zero rows — try a different value.'};
+                if(run.rows.length===SONGS_TABLE.length) return {success:false, message:'That did not actually filter anything — check your WHERE value.'};
+                return {success:true, message:'Filtered down nicely.'};
+              }
+            },
+            {
+              id:'sql-l4', title:'Sort results with ORDER BY',
+              goal:'Sort rows by a column',
+              explanation:'ORDER BY column sorts ascending by default. Add DESC to sort from highest to lowest.',
+              example:{code:'SELECT title, year FROM songs ORDER BY year DESC;', output:'(newest songs first)'},
+              starterCode:'SELECT title, year FROM songs ORDER BY year DESC;',
+              task:'Run it, then try switching DESC to ASC and see the order flip.',
+              hints:[
+                'ORDER BY column ASC sorts smallest/earliest first.',
+                'ORDER BY column DESC sorts largest/latest first.',
+                'You can sort by any column, including text ones.'
+              ],
+              recap:'ORDER BY controls the sequence your results come back in.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Query error: '+run.error};
+                if(!/ORDER BY/i.test(code)) return {success:false, message:'Add an ORDER BY clause.'};
+                return {success:true, message:'Sorted just right.'};
+              }
+            },
+            {
+              id:'sql-l5', title:'Limit your results',
+              goal:'Return only the top few rows',
+              explanation:'LIMIT n caps the number of rows returned — handy after sorting, to get a "top N" list.',
+              example:{code:'SELECT title FROM songs ORDER BY plays DESC LIMIT 3;', output:'(top 3 most-played songs)'},
+              starterCode:'SELECT title FROM songs ORDER BY plays DESC LIMIT 3;',
+              task:'Run it, then change LIMIT 3 to LIMIT 1 to find the single most-played song.',
+              hints:[
+                'LIMIT goes at the very end of the query.',
+                'Combine ORDER BY ... DESC with LIMIT to get a "top N" list.',
+                'LIMIT 1 returns just the single best match.'
+              ],
+              recap:'LIMIT keeps big result sets manageable — especially paired with sorting.',
+              validate:(code, run)=>{
+                if(!run.ok) return {success:false, message:'Query error: '+run.error};
+                if(!/LIMIT/i.test(code)) return {success:false, message:'Add a LIMIT clause.'};
+                if(run.rows.length>3) return {success:false, message:'Your LIMIT should return 3 or fewer rows.'};
+                return {success:true, message:'Trimmed to the top results.'};
+              }
+            },
+          ],
+          quiz:{
+            id:'sql-u1-quiz', title:'Query Basics Quiz',
+            questions:[
+              {type:'mcq', prompt:'Which clause filters rows based on a condition?', options:['WHERE','ORDER BY','LIMIT','FROM'], correctIndex:0},
+              {type:'fill', prompt:'Fill in the missing clause: __ BY year DESC sorts newest first.', accept:['ORDER']},
+              {type:'code', prompt:'Write a query that returns the title of the song with the most plays (one row only).', engine:'sql',
+                starterCode:'SELECT title FROM songs\n-- finish this query\n',
+                validate:(code, run)=>{
+                  if(!run.ok) return {success:false, message:'Query error: '+run.error};
+                  const top = SONGS_TABLE.slice().sort((a,b)=>b.plays-a.plays)[0];
+                  const ok = run.rows.length===1 && run.rows[0].title===top.title;
+                  return {success: ok, message: ok ? 'Correct!' : `Expected exactly one row: "${top.title}"`};
+                }}
+            ]
+          }
+        }],
+        moreComing:5
+      }
+    }
+  },
+];
+
+const COMING_SOON_LANGUAGES = [
+  {id:'java', name:'Java', emoji:'☕'},
+  {id:'c', name:'C', emoji:'🔧'},
+  {id:'cpp', name:'C++', emoji:'➕'},
+  {id:'csharp', name:'C#', emoji:'🎯'},
+  {id:'php', name:'PHP', emoji:'🐘'},
+  {id:'go', name:'Go', emoji:'🐹'},
+  {id:'rust', name:'Rust', emoji:'⚙️'},
+  {id:'kotlin', name:'Kotlin', emoji:'🟣'},
+  {id:'swift', name:'Swift', emoji:'🐦'},
+];
+
+function findLanguage(id){ return LANGUAGES.find(l=>l.id===id); }
+function findUnit(lang){ return lang.levels.beginner.units[0]; }
+function findLesson(lang, lessonId){ return findUnit(lang).lessons.find(l=>l.id===lessonId); }
+function allLessonsOf(lang){ return findUnit(lang).lessons; }
+
+/* ---------------- State + persistence ---------------- */
+const STORAGE_KEY = 'bgct:state';
+
+function defaultState(){
+  return {
+    user:null,                 // {name}
+    currentLanguageId:null,
+    progress:{},               // lessonId -> {status:'done', completedAt}
+    quizProgress:{},           // quizId -> {status:'done', score, completedAt}
+  };
+}
+let persisted = defaultState();
+let ui = {
+  screen:'loading',
+  currentLanguageId:null,
+  currentLessonId:null,
+  currentQuizId:null,
+  hintIndex:0,
+  codeDraft:{},          // lessonId/quizQid -> code string
+  lastResult:{},         // lessonId/quizQid -> {success, message}
+  quizIndex:0,
+  quizAnswers:{},         // qid -> selected answer
+  quizFeedback:{},
+  confirmingReset:false,
+};
+
+async function loadState(){
+  try{
+    const res = await window.storage.get(STORAGE_KEY, false);
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      persisted = Object.assign(defaultState(), parsed);
+    }
+  }catch(e){
+    persisted = defaultState();
+  }
+}
+async function saveState(){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(persisted), false);
+  }catch(e){
+    showToast("Couldn't save progress — it will still work for this session.");
+  }
+}
+
+/* ---------------- Derived helpers ---------------- */
+function lessonStatus(lessonId){
+  return (persisted.progress[lessonId] && persisted.progress[lessonId].status) || 'todo';
+}
+function markLessonDone(lessonId){
+  persisted.progress[lessonId] = {status:'done', completedAt: Date.now()};
+  saveState();
+}
+function quizStatus(quizId){
+  return (persisted.quizProgress[quizId] && persisted.quizProgress[quizId].status) || 'todo';
+}
+function markQuizDone(quizId, score){
+  persisted.quizProgress[quizId] = {status:'done', score, completedAt: Date.now()};
+  saveState();
+}
+function langCompletion(lang){
+  const lessons = allLessonsOf(lang);
+  const done = lessons.filter(l=> lessonStatus(l.id)==='done').length;
+  const quiz = findUnit(lang).quiz;
+  const quizDone = quizStatus(quiz.id)==='done';
+  const total = lessons.length + 1;
+  const doneCount = done + (quizDone?1:0);
+  return {done:doneCount, total, pct: Math.round((doneCount/total)*100)};
+}
+function findContinueTarget(){
+  const preferred = ui.currentLanguageId || persisted.currentLanguageId;
+  const order = preferred ? [findLanguage(preferred), ...LANGUAGES.filter(l=>l.id!==preferred)] : LANGUAGES;
+  for(const lang of order){
+    if(!lang) continue;
+    const lessons = allLessonsOf(lang);
+    const next = lessons.find(l=> lessonStatus(l.id)!=='done');
+    if(next) return {langId:lang.id, lessonId:next.id};
+    const quiz = findUnit(lang).quiz;
+    if(quizStatus(quiz.id)!=='done') return {langId:lang.id, quizId:quiz.id};
+  }
+  return null;
+}
+function activityHeatmap(){
+  const counts = {};
+  Object.values(persisted.progress).forEach(p=>{
+    const d = new Date(p.completedAt).toISOString().slice(0,10);
+    counts[d] = (counts[d]||0)+1;
+  });
+  Object.values(persisted.quizProgress).forEach(p=>{
+    const d = new Date(p.completedAt).toISOString().slice(0,10);
+    counts[d] = (counts[d]||0)+1;
+  });
+  return counts;
+}
+function currentStreakDays(){
+  const counts = activityHeatmap();
+  let streak = 0;
+  let d = new Date();
+  while(true){
+    const key = d.toISOString().slice(0,10);
+    if(counts[key]){ streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return streak;
+}
+
+/* ---------------- Navigation ---------------- */
+function goto(screen, extra={}){
+  ui.screen = screen;
+  Object.assign(ui, extra);
+  render();
+}
+
+/* ---------------- Rendering ---------------- */
+function topbar({back=null, title='', showFree=true}={}){
+  return `
+    <div class="topbar">
+      ${back ? `<button class="back" data-action="${back}" aria-label="Back">←</button>` : `<span style="width:34px"></span>`}
+      <div class="wordmark">${title || `BG CODE<span class="dot">.</span>TUTOR`}</div>
+      ${showFree ? `<span class="free-badge">100% FREE</span>` : ''}
+    </div>`;
+}
+
+function render(){
+  const root = document.getElementById('app');
+  let html = '';
+  switch(ui.screen){
+    case 'loading': html = renderLoading(); break;
+    case 'welcome': html = renderWelcome(); break;
+    case 'dashboard': html = renderDashboard(); break;
+    case 'languages': html = renderLanguages(); break;
+    case 'units': html = renderUnits(); break;
+    case 'lesson': html = renderLessonScreen(); break;
+    case 'quiz': html = renderQuizScreen(); break;
+    case 'settings': html = renderSettings(); break;
+    default: html = renderDashboard();
+  }
+  root.innerHTML = html;
+  mountScreen();
+  window.scrollTo(0,0);
+}
+
+function renderLoading(){
+  return `<div class="loading-screen"><div class="spinner"></div><p style="color:var(--ink-soft);font-size:13px;">Loading BG Code Tutor…</p></div>`;
+}
+
+function renderWelcome(){
+  return `
+    <div class="screen stack" style="padding-top:48px;">
+      <div class="hero-term">
+        <div class="term-dots"><span></span><span></span><span></span></div>
+        <div>$ whoami</div>
+        <div style="color:var(--code-accent)">future_developer<span class="cursor-blink"></span></div>
+      </div>
+      <div style="text-align:center;margin-top:6px;">
+        <h1 style="font-size:26px;">BG CODE TUTOR</h1>
+        <p style="color:var(--ink-soft);margin-top:6px;">Learn coding for free — any language, any level.</p>
+        <span class="free-badge" style="margin-top:10px;display:inline-block;">100% FREE · NO SIGN-UP · NO PAYWALLS</span>
+      </div>
+      <div class="card stack" style="margin-top:10px;">
+        <label for="name-field" class="editor-label">Your name</label>
+        <input id="name-field" class="name-input" placeholder="e.g. Priya" autocomplete="off" maxlength="40">
+        <button class="btn btn-primary btn-block" id="start-btn" disabled data-action="start-learning">Start learning</button>
+        <p style="font-size:12px;color:var(--ink-faint);text-align:center;">No account needed — your name just personalizes the app.</p>
+      </div>
+    </div>`;
+}
+
+function renderDashboard(){
+  const name = persisted.user ? persisted.user.name : 'there';
+  const cont = findContinueTarget();
+  let continueCard;
+  if(cont){
+    const lang = findLanguage(cont.langId);
+    if(cont.lessonId){
+      const lesson = findLesson(lang, cont.lessonId);
+      continueCard = `
+        <div class="card card-tap" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${lesson.id}">
+          <p class="editor-label">Continue learning</p>
+          <h3 style="margin-top:6px;">${lang.emoji} ${escapeHtml(lesson.title)}</h3>
+          <p style="color:var(--ink-soft);font-size:13.5px;margin-top:4px;">${escapeHtml(lang.name)} · Beginner</p>
+          <button class="btn btn-accent btn-sm" style="margin-top:12px;" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${lesson.id}">Resume →</button>
+        </div>`;
+    } else {
+      continueCard = `
+        <div class="card card-tap" data-action="open-quiz" data-lang="${lang.id}" data-quiz="${cont.quizId}">
+          <p class="editor-label">Continue learning</p>
+          <h3 style="margin-top:6px;">${lang.emoji} Unit quiz</h3>
+          <p style="color:var(--ink-soft);font-size:13.5px;margin-top:4px;">${escapeHtml(lang.name)} · Beginner</p>
+          <button class="btn btn-accent btn-sm" style="margin-top:12px;" data-action="open-quiz" data-lang="${lang.id}" data-quiz="${cont.quizId}">Take the quiz →</button>
+        </div>`;
+    }
+  } else {
+    continueCard = `<div class="card"><p>🎉 You have completed every lesson here. New units are on the way!</p></div>`;
+  }
+
+  const langRows = LANGUAGES.map(lang=>{
+    const c = langCompletion(lang);
+    return `
+      <div class="card card-tap row between" data-action="open-language" data-lang="${lang.id}" style="padding:14px 16px;">
+        <div class="row" style="gap:12px;">
+          <span style="font-size:22px;">${lang.emoji}</span>
+          <div>
+            <div style="font-weight:600;font-size:14.5px;">${escapeHtml(lang.name)}</div>
+            <div style="font-size:12px;color:var(--ink-faint);">${c.done}/${c.total} complete</div>
+          </div>
+        </div>
+        <div style="width:60px;">
+          <div class="progress-track"><div class="progress-fill" style="width:${c.pct}%"></div></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const streak = currentStreakDays();
+  const heat = activityHeatmap();
+  const cells = [];
+  for(let i=59;i>=0;i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    const count = heat[key]||0;
+    let bg = 'var(--border)';
+    if(count===1) bg='var(--accent-soft)';
+    else if(count>=2 && count<4) bg='var(--accent)';
+    else if(count>=4) bg='var(--accent-deep)';
+    cells.push(`<div class="streak-cell" style="background:${bg}" title="${key}: ${count} done"></div>`);
+  }
+
+  return `
+    ${topbar({title:'BG CODE<span class="dot">.</span>TUTOR'})}
+    <div class="screen stack">
+      <div>
+        <h2 style="font-size:21px;">Welcome back, ${escapeHtml(name)} 👋</h2>
+        <p style="color:var(--ink-soft);font-size:13.5px;margin-top:2px;">${streak>0 ? `🔥 ${streak}-day streak — keep it going.` : `Start a lesson today to begin your streak.`}</p>
+      </div>
+      ${continueCard}
+      <div>
+        <p class="editor-label" style="margin-bottom:8px;">Your languages</p>
+        <div class="stack" style="gap:10px;">${langRows}</div>
+        <button class="btn btn-soft btn-block" style="margin-top:10px;" data-action="goto-languages">See all languages →</button>
+      </div>
+      <div class="card streak-card">
+        <p class="editor-label">Your activity</p>
+        <div class="streak-grid">${cells.join('')}</div>
+        <div class="streak-legend">
+          <span class="legend-chip" style="background:var(--border)"></span> none
+          <span class="legend-chip" style="background:var(--accent-soft)"></span> 1
+          <span class="legend-chip" style="background:var(--accent)"></span> 2-3
+          <span class="legend-chip" style="background:var(--accent-deep)"></span> 4+
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-block" data-action="goto-settings">⚙️ Settings</button>
+    </div>`;
+}
+
+function renderLanguages(){
+  const built = LANGUAGES.map(lang=>{
+    const c = langCompletion(lang);
+    return `
+      <div class="card card-tap lang-card" data-action="open-language" data-lang="${lang.id}">
+        <div class="lang-emoji">${lang.emoji}</div>
+        <div style="font-weight:600;margin-top:8px;">${escapeHtml(lang.name)}</div>
+        <div style="font-size:12px;color:var(--ink-faint);margin-top:2px;">${c.done}/${c.total} done</div>
+        <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" style="width:${c.pct}%"></div></div>
+      </div>`;
+  }).join('');
+  const soon = COMING_SOON_LANGUAGES.map(l=>`
+      <div class="card lang-card locked">
+        <div class="lang-emoji">${l.emoji}</div>
+        <div style="font-weight:600;margin-top:8px;">${escapeHtml(l.name)}</div>
+        <span class="soon-tag">COMING SOON</span>
+      </div>`).join('');
+  return `
+    ${topbar({back:'goto-dashboard', title:'Languages'})}
+    <div class="screen stack">
+      <p style="color:var(--ink-soft);font-size:13.5px;">Pick a language to start or continue learning. Every course here is, and always will be, free.</p>
+      <div class="lang-grid">${built}</div>
+      <p class="editor-label" style="margin-top:6px;">More on the way</p>
+      <div class="lang-grid">${soon}</div>
+    </div>`;
+}
+
+function renderUnits(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const unit = findUnit(lang);
+  const lessons = unit.lessons;
+  const quiz = unit.quiz;
+  const allDone = lessons.every(l=> lessonStatus(l.id)==='done');
+  const rows = lessons.map((l,idx)=>{
+    const status = lessonStatus(l.id);
+    const dotClass = status==='done' ? 'done' : 'current';
+    const dotContent = status==='done' ? '✓' : (idx+1);
+    return `
+      <div class="unit-lesson-row card-tap" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${l.id}">
+        <div class="lesson-dot ${dotClass}">${dotContent}</div>
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:14.5px;">${escapeHtml(l.title)}</div>
+          <div style="font-size:12px;color:var(--ink-faint);">${escapeHtml(l.goal)}</div>
+        </div>
+        <div style="color:var(--ink-faint);">›</div>
+      </div>`;
+  }).join('');
+
+  const quizDone = quizStatus(quiz.id)==='done';
+  const quizRow = `
+    <div class="unit-lesson-row card-tap ${!allDone?'locked':''}" ${allDone ? `data-action="open-quiz" data-lang="${lang.id}" data-quiz="${quiz.id}"` : ''}>
+      <div class="lesson-dot ${quizDone?'done':''}">${quizDone?'✓':'★'}</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:14.5px;">${escapeHtml(quiz.title)}</div>
+        <div style="font-size:12px;color:var(--ink-faint);">${allDone ? 'Mixed questions — finish the unit' : 'Unlocks after all lessons are complete'}</div>
+      </div>
+      <div style="color:var(--ink-faint);">${allDone ? '›' : '🔒'}</div>
+    </div>`;
+
+  return `
+    ${topbar({back:'goto-languages', title:lang.name})}
+    <div class="screen stack">
+      <div>
+        <p class="editor-label">${escapeHtml(lang.name)} · Beginner</p>
+        <h2 style="margin-top:4px;">${escapeHtml(unit.title)}</h2>
+      </div>
+      <div class="stack" style="gap:10px;">${rows}${quizRow}</div>
+      <div class="card" style="text-align:center;color:var(--ink-soft);font-size:13px;">
+        More units for ${escapeHtml(lang.name)} are coming soon — completely free, as always.
+      </div>
+    </div>`;
+}
+
+function lessonEngineMarkup(lesson, lang){
+  if(lang.engine==='html'){
+    return `<iframe id="html-frame" class="html-frame" title="Live preview" sandbox=""></iframe>`;
+  }
+  return `<div id="output-panel" class="output-panel empty">Run your code to see what happens.</div>`;
+}
+
+function renderLessonScreen(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const lesson = findLesson(lang, ui.currentLessonId);
+  const result = ui.lastResult[lesson.id];
+  const hintsShown = lesson.hints.slice(0, ui.hintIndex);
+  const lessons = allLessonsOf(lang);
+  const idx = lessons.findIndex(l=>l.id===lesson.id);
+  const next = lessons[idx+1];
+  const success = result && result.success;
+
+  return `
+    ${topbar({back:'goto-units', title:lang.name})}
+    <div class="screen stack">
+      <div>
+        <p class="lesson-goal">${escapeHtml(lesson.goal)}</p>
+        <h2 style="margin-top:6px;">${escapeHtml(lesson.title)}</h2>
+      </div>
+      <p class="lesson-explain">${escapeHtml(lesson.explanation)}</p>
+      <div class="example-box">
+        <pre class="example-code">${escapeHtml(lesson.example.code)}</pre>
+        <div class="example-out"><span class="label">Output</span>${escapeHtml(lesson.example.output)}</div>
+      </div>
+      <div class="card" style="background:var(--warm-soft);border-color:#f0d8a3;">
+        <p style="font-size:13.5px;color:var(--warm-deep);"><strong>Your task:</strong> ${escapeHtml(lesson.task)}</p>
+      </div>
+
+      <div class="lesson-grid-cols">
+        <div class="stack" style="gap:8px;">
+          <p class="editor-label">Your code</p>
+          <textarea id="lesson-editor" class="code-editor" spellcheck="false"></textarea>
+        </div>
+        <div class="stack" style="gap:8px;">
+          <p class="editor-label">${lang.engine==='html' ? 'Preview' : 'Output'}</p>
+          ${lessonEngineMarkup(lesson, lang)}
+        </div>
+      </div>
+
+      <div class="row" style="gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-soft" data-action="run-lesson">▶ Run</button>
+        <button class="btn btn-accent" data-action="check-lesson">Check answer</button>
+        <button class="btn btn-ghost" data-action="show-hint" ${ui.hintIndex>=lesson.hints.length ? 'disabled':''}>💡 Hint (${ui.hintIndex}/${lesson.hints.length})</button>
+      </div>
+
+      ${hintsShown.length ? `<div class="hint-list">${hintsShown.map(h=>`<div class="hint-item">${escapeHtml(h)}</div>`).join('')}</div>` : ''}
+
+      ${result ? `<div class="feedback-banner ${result.success?'success':'error'}">${result.success?'✅':'⚠️'} ${escapeHtml(result.message)}</div>` : ''}
+
+      ${success ? `<div class="recap-box"><strong>Recap:</strong> ${escapeHtml(lesson.recap)}</div>` : ''}
+
+      ${success ? (next
+        ? `<button class="btn btn-primary btn-block" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${next.id}">Next lesson →</button>`
+        : `<button class="btn btn-primary btn-block" data-action="goto-units">Back to unit →</button>`)
+        : ''}
+    </div>`;
+}
+
+function renderQuestionMarkup(q, idx, lang){
+  const qid = idx;
+  const answer = ui.quizAnswers[qid];
+  const feedback = ui.quizFeedback[qid];
+  if(q.type==='mcq'){
+    const opts = q.options.map((opt,i)=>{
+      let cls='option-btn';
+      if(feedback){
+        if(i===q.correctIndex) cls+=' correct';
+        else if(answer===i) cls+=' incorrect';
+      } else if(answer===i) cls+=' selected';
+      return `<button class="${cls}" data-action="quiz-select-mcq" data-idx="${i}" ${feedback?'disabled':''}>${escapeHtml(opt)}</button>`;
+    }).join('');
+    return `<div class="stack" style="gap:10px;">${opts}</div>`;
+  }
+  if(q.type==='fill'){
+    return `
+      <input id="quiz-fill-input" class="fill-input" placeholder="Type your answer" ${feedback?'disabled':''}>
+      ${!feedback ? `<button class="btn btn-accent" style="margin-top:10px;" data-action="quiz-submit-fill">Submit</button>` : ''}`;
+  }
+  if(q.type==='code'){
+    const engine = q.engine;
+    return `
+      <div class="stack" style="gap:8px;">
+        <textarea id="quiz-code-editor" class="code-editor" spellcheck="false"></textarea>
+        <div id="quiz-output-panel" class="output-panel empty">Run your code to see what happens.</div>
+        <div class="row" style="gap:10px;">
+          <button class="btn btn-soft" data-action="quiz-run-code">▶ Run</button>
+          ${!feedback ? `<button class="btn btn-accent" data-action="quiz-submit-code">Check answer</button>` : ''}
+        </div>
+      </div>`;
+  }
+  return '';
+}
+
+function renderQuizScreen(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const unit = findUnit(lang);
+  const quiz = unit.quiz;
+  const total = quiz.questions.length;
+  const idx = ui.quizIndex;
+
+  if(idx>=total){
+    const correctCount = Object.values(ui.quizFeedback).filter(f=>f.success).length;
+    const pct = Math.round((correctCount/total)*100);
+    const passed = pct>=60;
+    return `
+      ${topbar({back:'goto-units', title:lang.name})}
+      <div class="screen stack" style="text-align:center;padding-top:30px;">
+        <div style="font-size:42px;">${passed?'🎉':'📘'}</div>
+        <h2>${passed ? 'Unit complete!' : 'Almost there'}</h2>
+        <p style="color:var(--ink-soft);">You scored ${correctCount}/${total} (${pct}%).</p>
+        <div class="card">
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${passed?'var(--accent)':'var(--warm)'}"></div></div>
+        </div>
+        ${passed
+          ? `<button class="btn btn-primary btn-block" data-action="finish-quiz" data-pass="1">Back to ${escapeHtml(lang.name)} →</button>`
+          : `<button class="btn btn-primary btn-block" data-action="retry-quiz">Retry quiz</button>
+             <button class="btn btn-ghost btn-block" data-action="goto-units">Back to lessons</button>`}
+      </div>`;
+  }
+
+  const q = quiz.questions[idx];
+  const feedback = ui.quizFeedback[idx];
+  const dots = quiz.questions.map((_,i)=>{
+    let cls='';
+    if(i===idx) cls='active';
+    else if(ui.quizFeedback[i]) cls='answered';
+    return `<span class="${cls}"></span>`;
+  }).join('');
+
+  return `
+    ${topbar({back:'goto-units', title:quiz.title})}
+    <div class="screen stack">
+      <div class="quiz-dots">${dots}</div>
+      <p style="font-size:16px;font-weight:600;">${escapeHtml(q.prompt)}</p>
+      ${renderQuestionMarkup(q, idx, lang)}
+      ${feedback ? `<div class="feedback-banner ${feedback.success?'success':'error'}">${feedback.success?'✅':'⚠️'} ${escapeHtml(feedback.message)}</div>` : ''}
+      ${feedback ? `<button class="btn btn-primary btn-block" data-action="quiz-next">${idx+1<total?'Next question →':'See results →'}</button>` : ''}
+    </div>`;
+}
+
+function renderSettings(){
+  return `
+    ${topbar({back:'goto-dashboard', title:'Settings'})}
+    <div class="screen stack">
+      <div class="card stack">
+        <p class="editor-label">Your name</p>
+        <input id="settings-name" class="name-input" value="${escapeHtml(persisted.user ? persisted.user.name : '')}">
+        <button class="btn btn-soft" data-action="save-name">Save name</button>
+      </div>
+      <div class="card stack">
+        <p class="editor-label">Your data</p>
+        <p style="font-size:13px;color:var(--ink-soft);">Progress is saved automatically. You can back it up or move it to another device.</p>
+        <button class="btn btn-soft" data-action="export-progress">⬇ Export progress (.json)</button>
+        <label class="btn btn-soft" style="text-align:center;">
+          ⬆ Import progress (.json)
+          <input id="import-input" type="file" accept="application/json" style="display:none;">
+        </label>
+      </div>
+      <div class="card stack">
+        <p class="editor-label">Reset</p>
+        ${ui.confirmingReset
+          ? `<p style="font-size:13.5px;color:var(--error);">This clears all progress and cannot be undone. Are you sure?</p>
+             <div class="row" style="gap:10px;">
+               <button class="btn btn-danger" data-action="confirm-reset">Yes, reset everything</button>
+               <button class="btn btn-ghost" data-action="cancel-reset">Cancel</button>
+             </div>`
+          : `<button class="btn btn-danger" data-action="ask-reset">Reset all progress</button>`}
+      </div>
+      <p style="text-align:center;font-size:12px;color:var(--ink-faint);">BG Code Tutor is completely free — no paywalls, ever.</p>
+    </div>`;
+}
+
+/* ---------------- Mounting / post-render binding ---------------- */
+function mountScreen(){
+  bindGlobalActions();
+  if(ui.screen==='welcome') mountWelcome();
+  if(ui.screen==='lesson') mountLesson();
+  if(ui.screen==='quiz') mountQuiz();
+  if(ui.screen==='settings') mountSettings();
+}
+
+function bindGlobalActions(){
+  document.querySelectorAll('[data-action]').forEach(el=>{
+    el.addEventListener('click', onAction);
+  });
+}
+
+function onAction(e){
+  const el = e.currentTarget;
+  const action = el.getAttribute('data-action');
+  switch(action){
+    case 'start-learning': return handleStartLearning();
+    case 'goto-dashboard': return goto('dashboard');
+    case 'goto-languages': return goto('languages');
+    case 'goto-units': return goto('units', {currentLessonId:null});
+    case 'goto-settings': return goto('settings');
+    case 'open-language': ui.currentLanguageId = el.getAttribute('data-lang'); persisted.currentLanguageId = ui.currentLanguageId; saveState(); return goto('units');
+    case 'open-lesson':
+      ui.currentLanguageId = el.getAttribute('data-lang');
+      ui.currentLessonId = el.getAttribute('data-lesson');
+      ui.hintIndex = 0;
+      return goto('lesson');
+    case 'open-quiz':
+      ui.currentLanguageId = el.getAttribute('data-lang');
+      ui.currentQuizId = el.getAttribute('data-quiz');
+      ui.quizIndex = 0; ui.quizAnswers = {}; ui.quizFeedback = {};
+      return goto('quiz');
+    case 'run-lesson': return handleRunLesson();
+    case 'check-lesson': return handleCheckLesson();
+    case 'show-hint': return handleShowHint();
+    case 'quiz-select-mcq': return handleQuizSelectMcq(el);
+    case 'quiz-submit-fill': return handleQuizSubmitFill();
+    case 'quiz-run-code': return handleQuizRunCode();
+    case 'quiz-submit-code': return handleQuizSubmitCode();
+    case 'quiz-next': return handleQuizNext();
+    case 'retry-quiz': ui.quizIndex=0; ui.quizAnswers={}; ui.quizFeedback={}; return render();
+    case 'finish-quiz': return handleFinishQuiz();
+    case 'save-name': return handleSaveName();
+    case 'export-progress': return handleExportProgress();
+    case 'ask-reset': ui.confirmingReset=true; return render();
+    case 'cancel-reset': ui.confirmingReset=false; return render();
+    case 'confirm-reset': return handleConfirmReset();
+  }
+}
+
+function mountWelcome(){
+  const input = document.getElementById('name-field');
+  const btn = document.getElementById('start-btn');
+  input.focus();
+  input.addEventListener('input', ()=>{
+    btn.disabled = input.value.trim().length===0;
+  });
+  input.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter' && input.value.trim().length>0) handleStartLearning();
+  });
+}
+
+function mountLesson(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const lesson = findLesson(lang, ui.currentLessonId);
+  const editor = document.getElementById('lesson-editor');
+  const draft = ui.codeDraft[lesson.id];
+  editor.value = draft!==undefined ? draft : lesson.starterCode;
+  editor.addEventListener('input', ()=>{ ui.codeDraft[lesson.id] = editor.value; });
+  // Replay last run output if present, otherwise auto-run once so the panel isn't empty
+  let lastRun = ui.codeDraft['__lastrun_'+lesson.id];
+  if(!lastRun){
+    lastRun = executeForLanguage(lang, editor.value);
+    ui.codeDraft['__lastrun_'+lesson.id] = lastRun;
+  }
+  paintLessonOutput(lang, lastRun);
+}
+
+function mountQuiz(){
+  const q = currentQuizQuestion();
+  if(!q) return;
+  if(q.type==='code'){
+    const editor = document.getElementById('quiz-code-editor');
+    if(editor){
+      const key = '__quizcode_'+ui.quizIndex;
+      editor.value = ui.codeDraft[key] !== undefined ? ui.codeDraft[key] : q.starterCode;
+      editor.addEventListener('input', ()=>{ ui.codeDraft[key] = editor.value; });
+      const lastRun = ui.codeDraft['__quizlastrun_'+ui.quizIndex];
+      if(lastRun) paintQuizOutput(q, lastRun);
+    }
+  }
+}
+
+function mountSettings(){
+  const fileInput = document.getElementById('import-input');
+  if(fileInput){
+    fileInput.addEventListener('change', handleImportProgress);
+  }
+}
+
+/* ---------------- Action handlers ---------------- */
+function handleStartLearning(){
+  const input = document.getElementById('name-field');
+  const name = input.value.trim();
+  if(!name) return;
+  persisted.user = {name};
+  saveState();
+  showToast(`Welcome, ${name}! Let's get coding.`);
+  goto('dashboard');
+}
+
+function getLessonOutputEl(){ return document.getElementById('output-panel'); }
+function getHtmlFrameEl(){ return document.getElementById('html-frame'); }
+
+function paintLessonOutput(lang, run){
+  if(lang.engine==='html'){
+    const frame = getHtmlFrameEl();
+    if(frame) frame.srcdoc = run.html || '';
+    return;
+  }
+  const panel = getLessonOutputEl();
+  if(!panel) return;
+  panel.classList.remove('empty');
+  if(lang.engine==='sql'){
+    if(!run.ok){ panel.innerHTML = `<span class="err">${escapeHtml(run.error)}</span>`; return; }
+    if(!run.rows.length){ panel.textContent = '(0 rows)'; return; }
+    const cols = run.columns;
+    let t = '<table class="sql-table"><tr>'+cols.map(c=>`<th>${escapeHtml(c)}</th>`).join('')+'</tr>';
+    run.rows.forEach(r=>{ t += '<tr>'+cols.map(c=>`<td>${escapeHtml(String(r[c]))}</td>`).join('')+'</tr>'; });
+    t += '</table>';
+    panel.innerHTML = t;
+    return;
+  }
+  // js / python
+  if(!run.ok){
+    panel.innerHTML = (run.output ? escapeHtml(run.output)+'\n' : '') + `<span class="err">${escapeHtml(run.error)}</span>`;
+  } else {
+    panel.innerHTML = `<span class="ok">${escapeHtml(run.output) || '(no output — did you forget print/console.log?)'}</span>`;
+  }
+}
+
+function executeForLanguage(lang, code){
+  if(lang.engine==='js') return runJS(code);
+  if(lang.engine==='python') return runPythonLite(code);
+  if(lang.engine==='sql') return runSQLLite(code, SONGS_TABLE);
+  if(lang.engine==='html') return {ok:true, html:code};
+  return {ok:false, error:'Unknown engine'};
+}
+
+function handleRunLesson(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const lesson = findLesson(lang, ui.currentLessonId);
+  const editor = document.getElementById('lesson-editor');
+  const code = editor.value;
+  ui.codeDraft[lesson.id] = code;
+  const run = executeForLanguage(lang, code);
+  ui.codeDraft['__lastrun_'+lesson.id] = run;
+  paintLessonOutput(lang, run);
+}
+
+function handleCheckLesson(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const lesson = findLesson(lang, ui.currentLessonId);
+  const editor = document.getElementById('lesson-editor');
+  const code = editor.value;
+  ui.codeDraft[lesson.id] = code;
+  const run = executeForLanguage(lang, code);
+  ui.codeDraft['__lastrun_'+lesson.id] = run;
+  const result = lesson.validate(code, run);
+  ui.lastResult[lesson.id] = result;
+  if(result.success && lessonStatus(lesson.id)!=='done'){
+    markLessonDone(lesson.id);
+    showToast('Lesson complete! 🎉');
+  }
+  render();
+}
+
+function handleShowHint(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const lesson = findLesson(lang, ui.currentLessonId);
+  if(ui.hintIndex < lesson.hints.length) ui.hintIndex++;
+  render();
+}
+
+/* ---- Quiz logic ---- */
+function currentQuizQuestion(){
+  const lang = findLanguage(ui.currentLanguageId);
+  if(!lang) return null;
+  const unit = findUnit(lang);
+  const quiz = unit.quiz;
+  return quiz.questions[ui.quizIndex];
+}
+function handleQuizSelectMcq(el){
+  const q = currentQuizQuestion();
+  const idx = ui.quizIndex;
+  if(ui.quizFeedback[idx]) return;
+  const chosen = parseInt(el.getAttribute('data-idx'),10);
+  ui.quizAnswers[idx] = chosen;
+  const success = chosen === q.correctIndex;
+  ui.quizFeedback[idx] = {success, message: success ? 'Correct!' : 'Not quite — the highlighted option was correct.'};
+  render();
+}
+function handleQuizSubmitFill(){
+  const idx = ui.quizIndex;
+  const q = currentQuizQuestion();
+  const input = document.getElementById('quiz-fill-input');
+  const val = input.value.trim().toLowerCase();
+  const success = q.accept.some(a=> a.toLowerCase()===val);
+  ui.quizAnswers[idx] = val;
+  ui.quizFeedback[idx] = {success, message: success ? 'Correct!' : `Expected: ${q.accept[0]}`};
+  render();
+}
+function handleQuizRunCode(){
+  const q = currentQuizQuestion();
+  const lang = {engine:q.engine, id:'quiz-'+q.engine};
+  const editor = document.getElementById('quiz-code-editor');
+  const code = editor.value;
+  ui.codeDraft['__quizcode_'+ui.quizIndex] = code;
+  const run = executeForLanguage(lang, code);
+  ui.codeDraft['__quizlastrun_'+ui.quizIndex] = run;
+  paintQuizOutput(q, run);
+}
+function paintQuizOutput(q, run){
+  const panel = document.getElementById('quiz-output-panel');
+  if(!panel) return;
+  panel.classList.remove('empty');
+  if(q.engine==='sql'){
+    if(!run.ok){ panel.innerHTML = `<span class="err">${escapeHtml(run.error)}</span>`; return; }
+    if(!run.rows.length){ panel.textContent='(0 rows)'; return; }
+    const cols = run.columns;
+    let t = '<table class="sql-table"><tr>'+cols.map(c=>`<th>${escapeHtml(c)}</th>`).join('')+'</tr>';
+    run.rows.forEach(r=>{ t += '<tr>'+cols.map(c=>`<td>${escapeHtml(String(r[c]))}</td>`).join('')+'</tr>'; });
+    t += '</table>';
+    panel.innerHTML = t;
+    return;
+  }
+  if(q.engine==='html'){ panel.textContent = '(HTML preview not shown for quiz tasks — check answer to validate)'; return; }
+  if(!run.ok){ panel.innerHTML = (run.output?escapeHtml(run.output)+'\n':'') + `<span class="err">${escapeHtml(run.error)}</span>`; }
+  else panel.innerHTML = `<span class="ok">${escapeHtml(run.output) || '(no output)'}</span>`;
+}
+function handleQuizSubmitCode(){
+  const idx = ui.quizIndex;
+  const q = currentQuizQuestion();
+  const lang = {engine:q.engine, id:'quiz-'+q.engine};
+  const editor = document.getElementById('quiz-code-editor');
+  const code = editor.value;
+  const run = executeForLanguage(lang, code);
+  ui.codeDraft['__quizlastrun_'+ui.quizIndex] = run;
+  const result = q.validate(code, run);
+  ui.quizFeedback[idx] = result;
+  render();
+}
+function handleQuizNext(){
+  ui.quizIndex++;
+  render();
+}
+function handleFinishQuiz(){
+  const lang = findLanguage(ui.currentLanguageId);
+  const unit = findUnit(lang);
+  const quiz = unit.quiz;
+  const correctCount = Object.values(ui.quizFeedback).filter(f=>f.success).length;
+  const pct = Math.round((correctCount/quiz.questions.length)*100);
+  if(pct>=60) markQuizDone(quiz.id, pct);
+  goto('units');
+}
+
+/* ---- Settings handlers ---- */
+function handleSaveName(){
+  const input = document.getElementById('settings-name');
+  const name = input.value.trim();
+  if(!name) return showToast('Name cannot be empty.');
+  persisted.user = {name};
+  saveState();
+  showToast('Name updated.');
+}
+function handleExportProgress(){
+  const blob = new Blob([JSON.stringify(persisted, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'bg-code-tutor-progress.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Progress exported.');
+}
+function handleImportProgress(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const parsed = JSON.parse(reader.result);
+      persisted = Object.assign(defaultState(), parsed);
+      saveState();
+      showToast('Progress imported.');
+      render();
+    }catch(err){
+      showToast('That file could not be read as valid progress data.');
+    }
+  };
+  reader.readAsText(file);
+}
+function handleConfirmReset(){
+  persisted = defaultState();
+  ui.confirmingReset = false;
+  saveState();
+  showToast('Progress reset.');
+  goto('welcome');
+}
+
+/* ---------------- Init ---------------- */
+async function init(){
+  render(); // shows loading screen immediately
+  await loadState();
+  ui.screen = persisted.user ? 'dashboard' : 'welcome';
+  ui.currentLanguageId = persisted.currentLanguageId;
+  render();
+}
+init();
+</script>
 </body>
 </html>
