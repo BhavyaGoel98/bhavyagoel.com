@@ -1,1161 +1,2649 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BG Cards — Business Card Maker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<style>
-/* ── RESET & BASE ── */
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0B1120;
-  --s1:rgba(17,24,39,0.75);
-  --s2:rgba(30,41,59,0.85);
-  --border:rgba(201,161,46,0.25);
-  --border-subtle:rgba(255,255,255,0.08);
-  --gold:#c9a12e;
-  --gold-dim:rgba(201,161,46,0.15);
-  --text:#e8f4f8;
-  --muted:#94a3b8;
-  --glow-gold:0 0 24px rgba(201,161,46,0.35);
-}
-html,body{min-height:100%;background:var(--bg);color:var(--text);overflow-x:hidden;font-family:'Inter',sans-serif}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(201,161,46,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(201,161,46,0.02) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
-
-/* ── TYPOGRAPHY CLASSES ── */
-h1,h2,h3,h4,.brand,.btn,.stat-val,.label-caps,.template-name,.ctrl-label,.layout-name,.btn-dl,.back-link,.section-title{font-family:'Space Grotesk',sans-serif}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-thumb{background:rgba(201,161,46,0.25);border-radius:4px}
-
-/* ══════════════════════════════════════════════
-   HOMEPAGE SPLASH OVERLAY
-══════════════════════════════════════════════ */
-#homepage{
-  position:fixed;inset:0;z-index:99999;
-  background:#0B1120;
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-  transition:opacity .5s ease,transform .5s ease;
-}
-#homepage.hide{opacity:0;pointer-events:none;transform:scale(1.03)}
-
-/* Particle canvas sits inside homepage */
-#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-
-/* Hero section */
-.hero{
-  position:relative;z-index:1;
-  display:flex;flex-direction:column;align-items:center;
-  padding:60px 24px 40px;
-  text-align:center;
-}
-.hero-logo{
-  display:flex;align-items:center;gap:14px;margin-bottom:32px;
-  animation:fadeUp .6s ease both;
-}
-.hero-logo img{width:52px;height:52px;object-fit:contain}
-.hero-logo-text{
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:800;font-size:22px;color:var(--gold);letter-spacing:-0.5px;
-}
-.hero-logo-text span{color:rgba(232,244,248,0.55);font-size:11px;font-weight:500;display:block;letter-spacing:4px;text-transform:uppercase;margin-top:4px;font-family:'Inter',sans-serif}
-
-.hero-headline{
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:800;font-size:clamp(32px,6vw,62px);
-  line-height:1.1;letter-spacing:-1.5px;
-  margin-bottom:18px;
-  animation:fadeUp .6s .1s ease both;
-}
-.hero-headline .hl-gold{color:var(--gold)}
-.hero-sub{
-  font-size:clamp(15px,2vw,18px);color:var(--muted);
-  max-width:520px;line-height:1.7;margin-bottom:36px;
-  animation:fadeUp .6s .2s ease both;
-}
-
-/* Stats row */
-.stats-row{
-  display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center;
-  margin-bottom:48px;
-  animation:fadeUp .6s .3s ease both;
-}
-.stat-item{display:flex;align-items:center;gap:8px}
-.stat-dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
-.stat-text{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-
-/* CTA button */
-.btn-start{
-  font-family:'Space Grotesk',sans-serif;
-  background:linear-gradient(135deg,var(--gold),#8c6b15);
-  border:none;border-radius:12px;
-  padding:16px 40px;
-  color:#000;font-size:15px;font-weight:800;
-  cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;
-  box-shadow:var(--glow-gold);
-  transition:all .2s;
-  animation:fadeUp .6s .35s ease both;
-  display:inline-flex;align-items:center;gap:10px;
-  margin-bottom:60px;
-}
-.btn-start:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 0 36px rgba(201,161,46,0.5)}
-
-/* Template preview section */
-.templates-section{
-  position:relative;z-index:1;
-  padding:0 24px 80px;
-  max-width:1100px;margin:0 auto;width:100%;
-}
-.templates-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:13px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:3px;
-  text-align:center;margin-bottom:28px;
-  animation:fadeUp .6s .4s ease both;
-}
-.templates-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
-  animation:fadeUp .6s .45s ease both;
-}
-@media(max-width:860px){.templates-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:540px){.templates-grid{grid-template-columns:1fr}}
-
-.tpl-card-wrap{
-  border-radius:14px;overflow:hidden;
-  border:2px solid transparent;
-  transition:all .25s;cursor:pointer;
-  background:rgba(255,255,255,0.03);
-}
-.tpl-card-wrap:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:var(--glow-gold)}
-
-.tpl-preview{
-  width:100%;aspect-ratio:1.75;
-  position:relative;overflow:hidden;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
-.tpl-badge{
-  position:absolute;top:10px;right:10px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
-  background:rgba(0,0,0,0.5);border-radius:4px;padding:3px 8px;
-}
-.tpl-name{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:12px;font-weight:700;
-  padding:10px 14px;text-align:center;
-  background:rgba(0,0,0,0.4);
-  text-transform:uppercase;letter-spacing:1px;
-  color:var(--muted);
-  transition:color .2s;
-}
-.tpl-card-wrap:hover .tpl-name{color:var(--gold)}
-
-/* ══════════════════════════════════════════════
-   EDITOR LAYOUT
-══════════════════════════════════════════════ */
-#editor{
-  position:relative;z-index:1;
-  display:none;flex-direction:column;min-height:100vh;
-}
-#editor.visible{display:flex}
-
-/* Navbar */
-.navbar{
-  height:68px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;
-  background:rgba(11,17,32,0.9);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border-subtle);
-  position:sticky;top:0;z-index:50;
-}
-.nav-left{display:flex;align-items:center;gap:14px}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo img{width:34px;height:34px;object-fit:contain}
-.nav-brand{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px;color:var(--text)}
-.nav-brand span{color:var(--gold)}
-.nav-right{display:flex;align-items:center;gap:12px}
-
-.back-link{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:12px;font-weight:700;color:var(--muted);
-  text-decoration:none;text-transform:uppercase;letter-spacing:1px;
-  border:1px solid var(--border-subtle);border-radius:8px;
-  padding:7px 14px;transition:all .2s;display:inline-flex;align-items:center;gap:6px;
-}
-.back-link:hover{color:var(--gold);border-color:var(--border);background:rgba(201,161,46,0.06)}
-
-/* Template strip (above editor) */
-.tpl-strip{
-  background:rgba(17,24,39,0.8);
-  border-bottom:1px solid var(--border-subtle);
-  padding:14px 28px;
-  display:flex;align-items:center;gap:10px;overflow-x:auto;
-}
-.tpl-strip::-webkit-scrollbar{height:3px}
-.tpl-strip-label{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:11px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:2px;
-  white-space:nowrap;margin-right:4px;
-}
-.tpl-btn{
-  flex-shrink:0;
-  border-radius:10px;overflow:hidden;
-  border:2px solid transparent;cursor:pointer;
-  transition:all .2s;background:rgba(255,255,255,0.04);
-  display:flex;flex-direction:column;
-}
-.tpl-btn:hover{border-color:rgba(201,161,46,0.5);transform:translateY(-2px)}
-.tpl-btn.active{border-color:var(--gold);box-shadow:0 0 16px rgba(201,161,46,0.3)}
-.tpl-btn-preview{width:70px;height:40px;position:relative;overflow:hidden;flex-shrink:0}
-.tpl-btn-name{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
-  color:var(--muted);padding:3px 4px;text-align:center;white-space:nowrap;
-}
-.tpl-btn.active .tpl-btn-name{color:var(--gold)}
-
-/* Editor body: left controls + center canvas */
-.editor-body{
-  flex:1;display:grid;
-  grid-template-columns:300px 1fr;
-  gap:0;align-items:start;
-}
-@media(max-width:900px){
-  .editor-body{grid-template-columns:1fr;grid-template-rows:auto auto}
-}
-
-/* Left panel */
-.left-panel{
-  background:rgba(17,24,39,0.6);
-  border-right:1px solid var(--border-subtle);
-  padding:24px 20px;
-  display:flex;flex-direction:column;gap:20px;
-  height:calc(100vh - 68px - 69px);
-  overflow-y:auto;
-  position:sticky;
-  top:137px;
-}
-@media(max-width:900px){
-  .left-panel{height:auto;position:static;border-right:none;border-bottom:1px solid var(--border-subtle)}
-}
-
-.section-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:11px;font-weight:700;color:var(--gold);
-  text-transform:uppercase;letter-spacing:2px;
-  margin-bottom:12px;
-}
-.ctrl-group{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
-.ctrl-group:last-child{margin-bottom:0}
-.ctrl-label{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:10px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:1px;
-}
-.ctrl-input{
-  background:rgba(0,0,0,0.45);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:8px;padding:9px 12px;
-  color:var(--text);font-family:'Inter',sans-serif;font-size:13px;
-  outline:none;width:100%;resize:none;
-  transition:border-color .2s;
-}
-.ctrl-input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,161,46,0.12)}
-.ctrl-input::placeholder{color:var(--muted);opacity:0.5}
-
-/* Color row */
-.color-row{display:flex;gap:10px;align-items:center}
-.color-row label{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
-.color-row label span{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase}
-.color-swatch{width:36px;height:36px;border-radius:8px;border:2px solid rgba(255,255,255,0.12);cursor:pointer;transition:border-color .2s}
-.color-swatch:hover{border-color:var(--gold)}
-input[type=color]{opacity:0;position:absolute;width:0;height:0}
-
-/* Layout picker */
-.layout-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.layout-btn{
-  background:rgba(0,0,0,0.4);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:7px;padding:8px 4px;
-  text-align:center;cursor:pointer;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:9px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;transition:all .2s;
-}
-.layout-btn:hover:not(.active){border-color:rgba(201,161,46,0.35);color:var(--text)}
-.layout-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,161,46,0.08)}
-
-/* Logo upload */
-.btn-upload{
-  width:100%;background:rgba(0,0,0,0.4);
-  border:1.5px dashed rgba(201,161,46,0.3);
-  border-radius:8px;padding:11px;color:var(--muted);
-  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-  text-transform:uppercase;letter-spacing:.5px;transition:all .2s;
-}
-.btn-upload:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,161,46,0.04)}
-.logo-thumb{width:100%;height:60px;object-fit:contain;border-radius:8px;
-  display:none;margin-bottom:8px;background:rgba(0,0,0,0.4);padding:6px;border:1px solid var(--border)}
-
-/* Download buttons */
-.btn-dl{
-  width:100%;border-radius:10px;padding:12px;
-  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
-  text-transform:uppercase;letter-spacing:.5px;transition:all .2s;
-  border:none;
-}
-.btn-dl-primary{background:linear-gradient(135deg,var(--gold),#8c6b15);color:#000;box-shadow:var(--glow-gold)}
-.btn-dl-primary:hover{opacity:.9;transform:translateY(-1px)}
-.btn-dl-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
-.btn-dl-ghost:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,161,46,0.06);transform:translateY(-1px)}
-
-/* Center canvas area */
-.canvas-col{
-  padding:32px 24px 80px;
-  display:flex;flex-direction:column;align-items:center;gap:28px;
-}
-
-.preview-wrap{
-  background:var(--s1);
-  border:1px solid var(--border-subtle);
-  border-radius:20px;
-  padding:40px 28px;
-  display:flex;flex-direction:column;align-items:center;gap:20px;
-  width:100%;max-width:560px;
-  position:relative;overflow:hidden;
-}
-.preview-wrap::before{
-  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:180px;height:2px;
-  background:linear-gradient(to right,transparent,var(--gold),transparent);
-}
-.preview-label{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:11px;font-weight:700;color:var(--gold);
-  text-transform:uppercase;letter-spacing:3px;
-}
-.side-toggle{
-  display:flex;gap:3px;background:rgba(0,0,0,0.4);
-  border-radius:10px;padding:3px;border:1px solid var(--border-subtle);
-}
-.side-btn{
-  padding:7px 22px;border-radius:7px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:12px;font-weight:700;color:var(--muted);
-  cursor:pointer;transition:all .2s;text-transform:uppercase;border:none;background:transparent;
-}
-.side-btn.active{background:rgba(201,161,46,0.15);color:var(--gold);border:1px solid rgba(201,161,46,0.35)}
-
-/* The actual card */
-.biz-card{
-  width:350px;height:200px;
-  border-radius:10px;overflow:hidden;position:relative;
-  box-shadow:0 24px 48px rgba(0,0,0,0.7),0 0 0 1px rgba(201,161,46,0.15);
-  transition:box-shadow .3s;
-}
-.biz-card:hover{box-shadow:0 30px 60px rgba(0,0,0,0.8),var(--glow-gold)}
-
-/* Hint text under card */
-.card-hint{
-  font-family:'Inter',sans-serif;
-  font-size:11px;color:var(--muted);opacity:.6;text-align:center;
-}
-
-/* ── TOAST ── */
-#toast{
-  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
-  background:rgba(17,24,39,0.95);border:1px solid rgba(201,161,46,0.3);
-  border-radius:10px;padding:12px 22px;
-  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;
-  text-transform:uppercase;z-index:99998;opacity:0;
-  transition:all .4s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;
-}
-#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-#toast.success{border-color:#06d6a0;color:#06d6a0}
-#toast.error{border-color:#ff4d6d;color:#ff4d6d}
-#toast.info{border-color:var(--gold);color:var(--gold)}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes splashIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
-
-/* ── RESPONSIVE ── */
-@media(max-width:600px){
-  .tpl-strip{padding:10px 16px}
-  .editor-body{grid-template-columns:1fr}
-  .left-panel{height:auto;position:static}
-  .biz-card{width:300px;height:171px}
-  .navbar{padding:0 16px}
-  .hero-headline{font-size:28px}
-  .stats-row{gap:16px}
-}
-
-  /* ── LIGHT MODE ── */
-  [data-theme="light"]{
-    --bg:#faf8f0;--s1:rgba(250,248,240,0.95);--s2:rgba(245,241,230,0.9);
-    --border:rgba(201,161,46,0.3);--border-subtle:rgba(0,0,0,0.08);
-    --text:#1a1500;--muted:#5a4f20;--card:rgba(0,0,0,0.03);
-  }
-  [data-theme="light"] body{background:var(--bg);color:var(--text)}
-  [data-theme="light"] .top-nav{background:rgba(250,248,240,0.95)}
-  [data-theme="light"] .ctrl-panel,[data-theme="light"] .tpl-list-wrap{background:#f0ece0;border-color:rgba(201,161,46,0.2)}
-  [data-theme="light"] .ctrl-label{color:#3a3000}
-  [data-theme="light"] .ctrl-input,[data-theme="light"] .ctrl-sel{background:#fff;color:#1a1500;border-color:rgba(201,161,46,0.3)}
-  [data-theme="light"] #theme-btn{border-color:rgba(0,0,0,0.25);color:#1a1500}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BG Cards</title>
+  <meta name="description" content="Design, customize, and download premium business cards in minutes. Drag-and-drop Canva editor, 100% free forever.">
   
-  </style>
-</head>
-<body>
-
-<!-- ══ HOMEPAGE OVERLAY ══ -->
-<div id="homepage">
-  <canvas id="hero-canvas"></canvas>
-
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-logo">
-      <img src="bgcards-logo.png" alt="BG Cards Logo" onerror="this.style.display='none'">
-      <div class="hero-logo-text">
-        BG CARDS
-        <span>Business Card Maker</span>
-      </div>
-    </div>
-
-    <h1 class="hero-headline">
-      Design Your<br><span class="hl-gold">Business Card</span>
-    </h1>
-    <p class="hero-sub">
-      Professional business cards in seconds. Pick a template, add your info, download print-ready PNG — no login, no account, free forever.
-    </p>
-
-    <!-- Stats -->
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-dot"></div>
-        <span class="stat-text">50+ Templates</span>
-      </div>
-      <div class="stat-item">
-        <div class="stat-dot"></div>
-        <span class="stat-text">Export PNG</span>
-      </div>
-      <div class="stat-item">
-        <div class="stat-dot"></div>
-        <span class="stat-text">No Login</span>
-      </div>
-      <div class="stat-item">
-        <div class="stat-dot"></div>
-        <span class="stat-text">Free</span>
-      </div>
-    </div>
-
-    <button class="btn-start" onclick="dismissHomepage()">
-      <span>Start Creating</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-
-  <!-- Template previews -->
-  <div class="templates-section">
-    <div class="templates-title">Choose a Starting Template</div>
-    <div class="templates-grid" id="homepage-tpl-grid">
-      <!-- Populated by JS -->
-    </div>
-  </div>
-</div>
-
-<!-- ══ TOAST ══ -->
-<div id="toast"></div>
-
-<!-- ══ EDITOR ══ -->
-<div id="editor">
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <a href="https://bhavyagoel.com/bgfame.html" class="nav-logo">
-        <img src="bgcards-logo.png" alt="BG Cards" onerror="this.style.display='none'">
-      </a>
-      <span class="nav-brand">BG <span>Cards</span></span>
-    </div>
-    <div class="nav-right">
-      <a href="https://bhavyagoel.com/bgfame.html" class="back-link">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        BG FAME Suite
-      </a>
-    </div>
-  </nav>
-
-  <!-- Template strip -->
-  <div class="tpl-strip">
-    <span class="tpl-strip-label">Templates</span>
-    <div id="tpl-strip-inner" style="display:flex;gap:8px;align-items:center"></div>
-  </div>
-
-  <!-- Editor body -->
-  <div class="editor-body">
-
-    <!-- Left panel: controls -->
-    <div class="left-panel">
-
-      <!-- Info section -->
-      <div>
-        <div class="section-title">Your Info</div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Full Name</div>
-          <input class="ctrl-input" id="inp-name" type="text" placeholder="Your Name" oninput="cs.name=this.value;saveLS();drawCards()">
-        </div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Job Title</div>
-          <input class="ctrl-input" id="inp-title" type="text" placeholder="Your Title" oninput="cs.title=this.value;saveLS();drawCards()">
-        </div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Company</div>
-          <input class="ctrl-input" id="inp-company" type="text" placeholder="Company Name" oninput="cs.company=this.value;saveLS();drawCards()">
-        </div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Tagline</div>
-          <input class="ctrl-input" id="inp-tagline" type="text" placeholder="Your tagline..." oninput="cs.tagline=this.value;saveLS();drawCards()">
-        </div>
-      </div>
-
-      <!-- Contact section -->
-      <div>
-        <div class="section-title">Contact</div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Phone</div>
-          <input class="ctrl-input" id="inp-phone" type="text" placeholder="+1 (555) 000-0000" oninput="cs.phone=this.value;saveLS();drawCards()">
-        </div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Email</div>
-          <input class="ctrl-input" id="inp-email" type="text" placeholder="you@email.com" oninput="cs.email=this.value;saveLS();drawCards()">
-        </div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Website</div>
-          <input class="ctrl-input" id="inp-web" type="text" placeholder="yoursite.com" oninput="cs.web=this.value;saveLS();drawCards()">
-        </div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Address</div>
-          <input class="ctrl-input" id="inp-addr" type="text" placeholder="City, State" oninput="cs.addr=this.value;saveLS();drawCards()">
-        </div>
-      </div>
-
-      <!-- Back of card -->
-      <div>
-        <div class="section-title">Card Back</div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Back Text / Tagline</div>
-          <textarea class="ctrl-input" id="inp-btext" rows="2" placeholder="A short brand statement..." oninput="cs.btext=this.value;saveLS();drawCards()"></textarea>
-        </div>
-        <div class="ctrl-group">
-          <div class="ctrl-label">Social Handle</div>
-          <input class="ctrl-input" id="inp-bsocial" type="text" placeholder="@yourhandle" oninput="cs.bsocial=this.value;saveLS();drawCards()">
-        </div>
-      </div>
-
-      <!-- Layout -->
-      <div>
-        <div class="section-title">Layout</div>
-        <div class="layout-grid" id="layout-grid">
-          <div class="layout-btn active" data-lay="0" onclick="setLayout(0)">Classic</div>
-          <div class="layout-btn" data-lay="1" onclick="setLayout(1)">Split</div>
-          <div class="layout-btn" data-lay="2" onclick="setLayout(2)">Minimal</div>
-          <div class="layout-btn" data-lay="3" onclick="setLayout(3)">Modern</div>
-          <div class="layout-btn" data-lay="4" onclick="setLayout(4)">Center</div>
-          <div class="layout-btn" data-lay="5" onclick="setLayout(5)">Bold</div>
-        </div>
-      </div>
-
-      <!-- Logo upload -->
-      <div>
-        <div class="section-title">Logo</div>
-        <img id="logo-thumb" class="logo-thumb" alt="logo">
-        <button class="btn-upload" onclick="document.getElementById('logo-file').click()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-          Upload Logo
-        </button>
-        <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="handleLogo(this)">
-      </div>
-
-      <!-- Download -->
-      <div>
-        <div class="section-title">Export</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <button class="btn-dl btn-dl-primary" onclick="dlPNG()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Download PNG
-          </button>
-          <button class="btn-dl btn-dl-ghost" onclick="dlStd()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-            Standard 3.5 x 2"
-          </button>
-        </div>
-      </div>
-
-    </div><!-- /left-panel -->
-
-    <!-- Center canvas -->
-    <div class="canvas-col">
-      <div class="preview-wrap">
-        <div class="preview-label">Live Preview</div>
-
-        <div class="side-toggle">
-          <button class="side-btn active" data-side="front" onclick="setSide('front',this)">Front</button>
-          <button class="side-btn" data-side="back" onclick="setSide('back',this)">Back</button>
-        </div>
-
-        <div class="biz-card" id="card-front"></div>
-        <div class="biz-card" id="card-back" style="display:none"></div>
-
-        <div class="card-hint">Standard 3.5 × 2 inch business card</div>
-      </div>
-    </div>
-
-  </div><!-- /editor-body -->
-</div><!-- /editor -->
-
-<script>
-/* ══════════════════════════════════════════
-   HOMEPAGE PARTICLE CANVAS
-══════════════════════════════════════════ */
-(function(){
-  var R='201',G='161',B='46'; // Gold
-  var cv=document.getElementById('hero-canvas');
-  var ctx=cv.getContext('2d');
-  var W,H,pts=[],mouse={x:-1000,y:-1000,radius:140};
-
-  function Particle(){
-    this.x=Math.random()*W;this.y=Math.random()*H;
-    this.baseX=this.x;this.baseY=this.y;
-    this.size=Math.random()*1.4+0.6;
-    this.density=(Math.random()*25)+1;
-  }
-  Particle.prototype.draw=function(){
-    ctx.fillStyle='rgba('+R+','+G+','+B+',0.7)';
-    ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();
-  };
-  Particle.prototype.update=function(){
-    var dx=mouse.x-this.x,dy=mouse.y-this.y;
-    var dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<mouse.radius){
-      var force=(mouse.radius-dist)/mouse.radius;
-      this.x-=(dx/dist)*force*this.density;
-      this.y-=(dy/dist)*force*this.density;
-    }else{
-      if(this.x!==this.baseX)this.x-=(this.x-this.baseX)/10;
-      if(this.y!==this.baseY)this.y-=(this.y-this.baseY)/10;
-    }
-  };
-
-  function connect(){
-    var thresh=(W/6.5)*(H/6.5);
-    for(var a=0;a<pts.length;a++){
-      for(var b=a+1;b<pts.length;b++){
-        var dx=pts[a].x-pts[b].x,dy=pts[a].y-pts[b].y;
-        var d=dx*dx+dy*dy;
-        if(d<thresh){
-          var op=Math.max(0,1-(d/18000));
-          ctx.strokeStyle='rgba('+R+','+G+','+B+','+op*0.45+')';
-          ctx.lineWidth=0.5;
-          ctx.beginPath();ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);ctx.stroke();
+  <!-- CSS & Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#2563EB',
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              500: '#3B82F6',
+              600: '#2563EB',
+              700: '#1D4ED8',
+              800: '#1E40AF',
+            },
+            secondary: {
+              DEFAULT: '#0F172A',
+              50: '#F8FAFC',
+              100: '#F1F5F9',
+              800: '#1E293B',
+              900: '#0F172A',
+            },
+            accent: {
+              DEFAULT: '#F59E0B',
+              500: '#F59E0B',
+              600: '#D97706',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            mono: ['Fira Code', 'monospace'],
+            montserrat: ['Montserrat', 'sans-serif'],
+          }
         }
       }
     }
-  }
+  </script>
 
-  function init(){
-    pts=[];
-    var n=Math.min(Math.floor(W*H/9000),120);
-    for(var i=0;i<n;i++)pts.push(new Particle());
-  }
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Icon Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Export & Confetti Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 
-  function resize(){
-    W=cv.width=window.innerWidth;
-    H=cv.height=window.innerHeight;
-    init();
-  }
+  <style>
+    /* Premium Glassmorphism & Custom Elements */
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .card-shadow {
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.15);
+    }
+    .card-shadow-gold {
+      box-shadow: 0 20px 40px -15px rgba(245, 158, 11, 0.2);
+    }
+    .gradient-mesh {
+      background-color: #0f172a;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+        radial-gradient(at 90% 10%, rgba(245, 158, 11, 0.1) 0px, transparent 50%),
+        radial-gradient(at 50% 80%, rgba(147, 51, 234, 0.15) 0px, transparent 50%);
+    }
+    /* Flip Card Animation */
+    .flip-container {
+      perspective: 1000px;
+    }
+    .flip-inner {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    /* Draggable Canva-style element styles */
+    .draggable-element {
+      border: 1px dashed transparent;
+      transition: border-color 0.15s;
+    }
+    .draggable-element:hover {
+      border-color: #3b82f6;
+    }
+    .draggable-element:active {
+      border-color: #2563eb;
+      cursor: grabbing !important;
+    }
+    
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* Bleed line rendering */
+    .bleed-line {
+      border: 1px dashed rgba(239, 68, 68, 0.6);
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      pointer-events: none;
+      display: none;
+    }
+    .show-bleed-lines .bleed-line {
+      display: block;
+    }
+    .show-bleed-lines .bleed-text {
+      display: block;
+    }
+    #toast-container {
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-secondary font-sans overflow-x-hidden min-h-screen flex flex-col">
 
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    for(var i=0;i<pts.length;i++){pts[i].update();pts[i].draw();}
-    connect();
-    requestAnimationFrame(frame);
-  }
+  <!-- Floating Toast Notification System -->
+  <div id="toast-container" class="fixed bottom-5 right-5 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
 
-  window.addEventListener('resize',resize,{passive:true});
-  window.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY;},{passive:true});
-  resize();frame();
-})();
+  <!-- Header Section -->
+  <header class="sticky top-0 z-40 w-full transition-all duration-300 glass border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#home" onclick="navigateTo('home')" class="flex items-center gap-2.5 group">
+        <img src="./logo-bg.jpg" class="h-10 w-10 rounded-xl object-cover shadow-lg border border-slate-200 transition-transform group-hover:scale-105" alt="BG Cards">
+        <div>
+          <span class="font-outfit font-bold text-lg text-secondary tracking-tight">BG Cards</span>
+          <span class="block text-[10px] text-emerald-600 font-extrabold -mt-1 uppercase tracking-widest">Free Forever</span>
+        </div>
+      </a>
 
-/* ══════════════════════════════════════════
-   6 HERO TEMPLATES (for Canva-style splash)
-══════════════════════════════════════════ */
-const HERO_TEMPLATES=[
-  {
-    name:'Classic Dark',
-    label:'Classic Dark',
-    bg:'#0a0a0a',accent:'#c9a12e',text:'#ffffff',muted:'rgba(255,255,255,0.5)',
-    themeIdx:null,lay:0
-  },
-  {
-    name:'Modern Blue',
-    label:'Modern Blue',
-    bg:'#1e3a5f',accent:'#60a5fa',text:'#ffffff',muted:'rgba(255,255,255,0.5)',
-    themeIdx:null,lay:2
-  },
-  {
-    name:'Fresh Green',
-    label:'Fresh Green',
-    bg:'#052e16',accent:'#22c55e',text:'#ffffff',muted:'rgba(255,255,255,0.5)',
-    themeIdx:null,lay:4
-  },
-  {
-    name:'Bold Red',
-    label:'Bold Red',
-    bg:'#1c0a0a',accent:'#ef4444',text:'#ffffff',muted:'rgba(255,255,255,0.5)',
-    themeIdx:null,lay:3
-  },
-  {
-    name:'Purple Pro',
-    label:'Purple Pro',
-    bg:'#0f0a1a',accent:'#a855f7',text:'#ffffff',muted:'rgba(255,255,255,0.5)',
-    themeIdx:null,lay:1
-  },
-  {
-    name:'Clean White',
-    label:'Clean White',
-    bg:'#ffffff',accent:'#111111',text:'#111111',muted:'rgba(17,17,17,0.5)',
-    themeIdx:null,lay:0
-  }
-];
+      <!-- Navigation -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="#home" onclick="navigateTo('home')" class="hover:text-primary transition-colors">Home</a>
+        <a href="#templates" onclick="navigateTo('templates-showcase')" class="hover:text-primary transition-colors">Templates</a>
+        <a href="#creator" onclick="navigateTo('creator')" class="hover:text-primary transition-colors flex items-center gap-1.5"><i data-lucide="plus-circle" class="w-4 h-4"></i> Create Card</a>
+        <a id="nav-dashboard-link" href="#dashboard" onclick="navigateTo('dashboard')" class="hidden hover:text-primary transition-colors flex items-center gap-1.5"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</a>
+        <a id="nav-admin-link" href="#admin" onclick="navigateTo('admin')" class="hidden hover:text-primary transition-colors flex items-center gap-1.5 text-amber-600"><i data-lucide="shield" class="w-4 h-4"></i> Admin</a>
+      </nav>
 
-/* ══════════════════════════════════════════
-   ALL THEMES (full library)
-══════════════════════════════════════════ */
-const ALL_THEMES=[
-  {name:'Luxury Gold',bg:'#09080a',text:'#f5e6c8',accent:'#c9a84c',muted:'rgba(245,230,200,0.5)',lay:4},
-  {name:'Classic Dark',bg:'#0a0a0a',text:'#ffffff',accent:'#c9a12e',muted:'rgba(255,255,255,0.5)',lay:0},
-  {name:'Modern Blue',bg:'#1e3a5f',text:'#ffffff',accent:'#60a5fa',muted:'rgba(255,255,255,0.5)',lay:2},
-  {name:'Fresh Green',bg:'#052e16',text:'#ffffff',accent:'#22c55e',muted:'rgba(255,255,255,0.5)',lay:4},
-  {name:'Bold Red',bg:'#1c0a0a',text:'#ffffff',accent:'#ef4444',muted:'rgba(255,255,255,0.5)',lay:3},
-  {name:'Purple Pro',bg:'#0f0a1a',text:'#ffffff',accent:'#a855f7',muted:'rgba(255,255,255,0.5)',lay:1},
-  {name:'Clean White',bg:'#ffffff',text:'#111111',accent:'#111111',muted:'rgba(17,17,17,0.5)',lay:0},
-  {name:'Bold Dark',bg:'#07070f',text:'#fff',accent:'#00e5ff',muted:'rgba(255,255,255,0.5)',lay:0},
-  {name:'Clean Light',bg:'#f0f4ff',text:'#070720',accent:'#6366f1',muted:'rgba(7,7,32,0.5)',lay:1},
-  {name:'Fire Sale',bg:'#0d0100',text:'#fff',accent:'#ff4422',muted:'rgba(255,255,255,0.5)',lay:3},
-  {name:'Alien',bg:'#050f05',text:'#e0ffe0',accent:'#39ff14',muted:'rgba(224,255,224,0.5)',lay:0},
-  {name:'Ash',bg:'#f5f5f5',text:'#111111',accent:'#111111',muted:'rgba(17,17,17,0.5)',lay:2},
-  {name:'Atacama',bg:'#09000e',text:'#fdf4ff',accent:'#f472b6',muted:'rgba(253,244,255,0.5)',lay:3},
-  {name:'Atmosphere',bg:'#fff5f5',text:'#1a0a00',accent:'#f97316',muted:'rgba(26,10,0,0.5)',lay:1},
-  {name:'Aurora',bg:'linear-gradient(135deg,#0d0120,#1a0050)',text:'#f3e8ff',accent:'#e879f9',muted:'rgba(243,232,255,0.5)',lay:2},
-  {name:'Aurum',bg:'#0d0a00',text:'#fef3c7',accent:'#f5c842',muted:'rgba(254,243,199,0.5)',lay:0},
-  {name:'Basic Dark',bg:'#080818',text:'#e8eaf6',accent:'#818cf8',muted:'rgba(232,234,246,0.5)',lay:0},
-  {name:'Basic Light',bg:'#f0f6ff',text:'#0f172a',accent:'#2563eb',muted:'rgba(15,23,42,0.5)',lay:1},
-  {name:'Blueberry',bg:'#0a0518',text:'#f5f0ff',accent:'#c084fc',muted:'rgba(245,240,255,0.5)',lay:2},
-  {name:'Blues',bg:'#050a1a',text:'#e0f2fe',accent:'#3b82f6',muted:'rgba(224,242,254,0.5)',lay:4},
-  {name:'Blue Steel',bg:'#070c14',text:'#e0f2fe',accent:'#60a5fa',muted:'rgba(224,242,254,0.5)',lay:0},
-  {name:'Bonan Hale',bg:'#0a0a0a',text:'#f5f5f5',accent:'#eab308',muted:'rgba(245,245,245,0.5)',lay:3},
-  {name:'Borealis',bg:'linear-gradient(135deg,#031a12,#062820)',text:'#d1fae5',accent:'#34d399',muted:'rgba(209,250,229,0.5)',lay:0},
-  {name:'Breeze',bg:'#f0f9ff',text:'#0c4a6e',accent:'#0284c7',muted:'rgba(12,74,110,0.5)',lay:1},
-  {name:'Canaveral',bg:'#0d0500',text:'#fff7ed',accent:'#fb923c',muted:'rgba(255,247,237,0.5)',lay:3},
-  {name:'Chocolate',bg:'#1a0a05',text:'#fef3c7',accent:'#d97706',muted:'rgba(254,243,199,0.5)',lay:0},
-  {name:'Cornflower',bg:'#eff6ff',text:'#1e3a5f',accent:'#3b82f6',muted:'rgba(30,58,95,0.5)',lay:3},
-  {name:'Dawn',bg:'#0f0f14',text:'#ffe4e6',accent:'#fb7185',muted:'rgba(255,228,230,0.5)',lay:2},
-  {name:'Daydream',bg:'#f8f0ff',text:'#2e1065',accent:'#9333ea',muted:'rgba(46,16,101,0.5)',lay:1},
-  {name:'Electric',bg:'linear-gradient(135deg,#0c0415,#1a0830)',text:'#fff',accent:'#fb923c',muted:'rgba(255,255,255,0.5)',lay:2},
-  {name:'Fluo',bg:'#050505',text:'#f7fee7',accent:'#84cc16',muted:'rgba(247,254,231,0.5)',lay:0},
-  {name:'Founder',bg:'#06060f',text:'#e0e7ff',accent:'#6366f1',muted:'rgba(224,231,255,0.5)',lay:4},
-  {name:'Indigo',bg:'#080520',text:'#e0e7ff',accent:'#818cf8',muted:'rgba(224,231,255,0.5)',lay:4},
-  {name:'Iris',bg:'#f5f0ff',text:'#2e1065',accent:'#7c3aed',muted:'rgba(46,16,101,0.5)',lay:1},
-  {name:'Keepsake',bg:'#f0f4ff',text:'#1e1b4b',accent:'#4f46e5',muted:'rgba(30,27,75,0.5)',lay:3},
-  {name:'Lunaria',bg:'linear-gradient(135deg,#04041a,#0a0830)',text:'#ede9fe',accent:'#a78bfa',muted:'rgba(237,233,254,0.5)',lay:2},
-  {name:'Lux',bg:'#031a10',text:'#f0fdf4',accent:'#4ade80',muted:'rgba(240,253,244,0.5)',lay:0},
-  {name:'Marine',bg:'#030a18',text:'#e0f2fe',accent:'#60a5fa',muted:'rgba(224,242,254,0.5)',lay:4},
-  {name:'Night Sky',bg:'linear-gradient(135deg,#04041a,#0d0528)',text:'#ede9fe',accent:'#a78bfa',muted:'rgba(237,233,254,0.5)',lay:0},
-  {name:'Onyx',bg:'#0a0a0a',text:'#f5f5f5',accent:'#e5e7eb',muted:'rgba(245,245,245,0.5)',lay:4},
-  {name:'Orbit',bg:'#030818',text:'#fefce8',accent:'#facc15',muted:'rgba(254,252,232,0.5)',lay:0},
-  {name:'Prism',bg:'#faf5ff',text:'#2e1065',accent:'#9333ea',muted:'rgba(46,16,101,0.5)',lay:2},
-  {name:'Sanguine',bg:'#0d0202',text:'#fee2e2',accent:'#ef4444',muted:'rgba(254,226,226,0.5)',lay:0},
-  {name:'Seafoam',bg:'#f0fdfa',text:'#042f2e',accent:'#0d9488',muted:'rgba(4,47,46,0.5)',lay:2},
-  {name:'Slate',bg:'#1e1e1e',text:'#f1f5f9',accent:'#9ca3af',muted:'rgba(241,245,249,0.5)',lay:4},
-  {name:'Sprout',bg:'#f0fdf4',text:'#14532d',accent:'#22c55e',muted:'rgba(20,83,45,0.5)',lay:1},
-  {name:'Stratos',bg:'linear-gradient(135deg,#020815,#0a1628)',text:'#e0f2fe',accent:'#38bdf8',muted:'rgba(224,242,254,0.5)',lay:0},
-  {name:'Velvet Tides',bg:'linear-gradient(135deg,#0d0520,#1a0840)',text:'#ede9fe',accent:'#a78bfa',muted:'rgba(237,233,254,0.5)',lay:4},
-  {name:'Vortex',bg:'#050505',text:'#f5f5f5',accent:'#ffffff',muted:'rgba(245,245,245,0.5)',lay:2}
-];
+      <!-- CTA Buttons -->
+      <div class="flex items-center gap-4">
+        <div id="user-profile-nav" class="hidden flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div id="nav-user-name" class="text-xs font-bold text-slate-800">User</div>
+            <div id="nav-user-badge" class="text-[9px] font-bold text-emerald-600 tracking-wider uppercase">Free Member</div>
+          </div>
+          <button onclick="navigateTo('dashboard')" class="h-9 w-9 rounded-full bg-slate-200 border-2 border-emerald-500/20 overflow-hidden shadow-inner flex items-center justify-center">
+            <div class="h-full w-full bg-primary text-white font-extrabold flex items-center justify-center text-xs uppercase" id="nav-avatar-initials">U</div>
+          </button>
+          <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-slate-100" title="Logout">
+            <i data-lucide="log-out" class="w-5 h-5"></i>
+          </button>
+        </div>
 
-/* ══════════════════════════════════════════
-   STATE
-══════════════════════════════════════════ */
-let cs={
-  name:'',title:'',company:'',tagline:'',
-  phone:'',email:'',web:'',addr:'',
-  btext:'',bsocial:'',
-  theme:0,layout:0,logoURL:null,side:'front'
-};
-let toastTimer;
+        <div id="auth-buttons-nav" class="flex items-center gap-3">
+          <button onclick="openAuthModal()" class="bg-secondary text-white hover:bg-secondary/90 shadow-md hover:shadow-lg transition-all rounded-xl text-sm font-semibold px-5 py-2.5 flex items-center gap-2">
+            <span>Sign In / Enter Name</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-/* ══════════════════════════════════════════
-   UTILITIES
-══════════════════════════════════════════ */
-function el(id){return document.getElementById(id)}
-function toast(msg,type='info'){
-  const t=el('toast');t.textContent=msg;t.className='show '+type;
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='',3200);
-}
+  <!-- Main View Container -->
+  <main class="flex-grow">
 
-/* localStorage */
-function saveLS(){
-  try{localStorage.setItem('bgcards_v2',JSON.stringify({
-    name:cs.name,title:cs.title,company:cs.company,tagline:cs.tagline,
-    phone:cs.phone,email:cs.email,web:cs.web,addr:cs.addr,
-    btext:cs.btext,bsocial:cs.bsocial,
-    theme:cs.theme,layout:cs.layout,logoURL:cs.logoURL
-  }));}catch(e){}
-}
-function loadLS(){
-  try{
-    const d=JSON.parse(localStorage.getItem('bgcards_v2')||'{}');
-    if(d.name!==undefined){
-      Object.assign(cs,d);
-      el('inp-name').value=cs.name||'';
-      el('inp-title').value=cs.title||'';
-      el('inp-company').value=cs.company||'';
-      el('inp-tagline').value=cs.tagline||'';
-      el('inp-phone').value=cs.phone||'';
-      el('inp-email').value=cs.email||'';
-      el('inp-web').value=cs.web||'';
-      el('inp-addr').value=cs.addr||'';
-      el('inp-btext').value=cs.btext||'';
-      el('inp-bsocial').value=cs.bsocial||'';
-      if(cs.logoURL){
-        const th=el('logo-thumb');th.src=cs.logoURL;th.style.display='block';
+    <!-- 1. LANDING PAGE VIEW -->
+    <section id="view-home" class="block animate-fade-in">
+      
+      <!-- Hero Section -->
+      <div class="relative overflow-hidden gradient-mesh pt-12 pb-24 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Hero Text -->
+          <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-widest">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 100% Free Forever • No Watermarks
+            </span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-outfit font-extrabold tracking-tight text-white leading-tight">
+              Create Stunning <br class="hidden sm:inline">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-amber-500">Business Cards</span> <br>
+              in Seconds.
+            </h1>
+            <p class="text-lg text-slate-300 max-w-xl mx-auto lg:mx-0">
+              Canva-style drag-and-drop builder for premium business cards. Move text, adjust layout, customize colors, and download print-ready files instantly. Free forever.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
+              <a href="#creator" onclick="navigateTo('creator')" class="bg-primary hover:bg-primary-700 text-white shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all px-8 py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2.5">
+                <i data-lucide="pencil-line" class="w-5 h-5"></i>
+                Start Designing Now
+              </a>
+              <a href="#templates" onclick="scrollToElement('templates-section')" class="bg-white/10 hover:bg-white/20 text-white backdrop-blur border border-white/10 hover:border-white/20 transition-all px-8 py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2.5">
+                <i data-lucide="layout" class="w-5 h-5"></i>
+                Browse Templates
+              </a>
+            </div>
+            
+            <!-- Quick Features -->
+            <div class="flex flex-wrap justify-center lg:justify-start gap-6 pt-6 text-slate-400 text-xs font-semibold">
+              <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Movable Canva Canvas</span>
+              <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 100+ Free Designer Presets</span>
+              <span class="flex items-center gap-1.5"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Print-Ready PDF & PNG</span>
+            </div>
+          </div>
+
+          <!-- Hero Graphic Widget -->
+          <div class="lg:col-span-6 flex flex-col items-center justify-center relative">
+            <div class="absolute -z-10 w-72 h-72 rounded-full bg-primary/20 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+            
+            <!-- Dynamic Preview Box (Interactive Card Preview) -->
+            <div class="w-full max-w-[480px] bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 p-6 sm:p-8 rounded-3xl shadow-2xl relative">
+              <div class="absolute -top-3.5 -right-3.5 bg-amber-500 text-slate-950 font-outfit font-extrabold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1">
+                <i data-lucide="zap" class="w-3 h-3 fill-slate-950"></i> Live Interactive Preview
+              </div>
+              
+              <!-- Card Container Mock -->
+              <div class="w-full aspect-[1.75] bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/50 rounded-2xl overflow-hidden p-6 relative card-shadow-gold text-white flex flex-col justify-between select-none">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none"></div>
+                
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-outfit font-bold text-xl tracking-tight leading-none text-white">Bhavya Goel</h3>
+                    <p class="text-xs text-primary-500 font-semibold mt-1.5 uppercase tracking-wider">Founder & CEO</p>
+                  </div>
+                  <!-- Logo Element -->
+                  <img src="./logo-bg.jpg" class="h-10 w-10 object-cover rounded-lg border border-slate-700">
+                </div>
+
+                <div class="border-t border-white/5 pt-4 flex justify-between items-end text-[10px] text-slate-400">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3 h-3 text-primary-500"></i> 8810611669</div>
+                    <div class="flex items-center gap-1.5"><i data-lucide="mail" class="w-3 h-3 text-primary-500"></i> bgoeldefender@gmail.com</div>
+                  </div>
+                  <div class="bg-white p-1 rounded-md">
+                    <div class="w-12 h-12 bg-slate-900 flex items-center justify-center">
+                      <i data-lucide="qr-code" class="w-10 h-10 text-white"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick input interactive simulation -->
+              <div class="mt-6 space-y-3">
+                <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Try typing a name:</div>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
+                    <i data-lucide="user" class="w-4 h-4"></i>
+                  </span>
+                  <input type="text" oninput="updateHeroDemo(this.value)" placeholder="Bhavya Goel" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-primary placeholder-slate-500">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Section -->
+      <div class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+            <h2 class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Free Creative Suite</h2>
+            <p class="text-3xl sm:text-4xl font-outfit font-extrabold text-secondary tracking-tight">Canva-style Movable Creator. 100% Free Forever.</p>
+            <p class="text-slate-500">Arrange credentials, move icons, scale elements, generate logos and save layouts directly in your browser without paywalls.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-secondary-50 border border-slate-100 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 group">
+              <div class="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i data-lucide="move" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-secondary mb-3">Movable Canva Layout</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">Arrange blocks directly on the live card canvas. Click and drag text, logos, or QR codes to customize layout positions pixel-by-pixel.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-secondary-50 border border-slate-100 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 group">
+              <div class="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i data-lucide="palette" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-secondary mb-3 font-outfit">Brand Color Palettes</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">Single-click palette presets apply professional color rules (Midnight Royal, Forest Emerald, Sunset Gold) across your template sets immediately.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-secondary-50 border border-slate-100 rounded-3xl p-8 hover:shadow-xl transition-all duration-300 group">
+              <div class="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i data-lucide="printer" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-secondary mb-3">Print-Ready Downloads</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">Export high-resolution files (300 DPI PDF, PNG, JPG) with toggleable safety margins and bleed guides, ready for standard commercial printing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Templates Gallery Section -->
+      <div id="templates-section" class="py-20 bg-slate-900 text-white relative">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(37,99,235,0.08)_0px,transparent_45%)]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          
+          <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-amber-500 mb-4 border border-white/5 uppercase">
+                <i data-lucide="layout" class="w-3.5 h-3.5"></i> Designer Presets
+              </span>
+              <h2 class="text-3xl sm:text-4xl font-outfit font-extrabold tracking-tight">Explore 100+ Professional Templates</h2>
+              <p class="text-slate-400 mt-2">Filter by industry-aligned design styles curated by layout experts.</p>
+            </div>
+            
+            <!-- Category Tabs slider -->
+            <div class="flex gap-2.5 overflow-x-auto pb-2 no-scrollbar">
+              <button onclick="filterTemplates('all')" class="template-tab-btn active bg-primary text-white px-5 py-2.5 rounded-xl text-xs font-bold border border-primary/20 shrink-0">All Styles</button>
+              <button onclick="filterTemplates('corporate')" class="template-tab-btn bg-white/5 text-slate-300 hover:bg-white/10 px-5 py-2.5 rounded-xl text-xs font-bold border border-white/5 shrink-0">Corporate</button>
+              <button onclick="filterTemplates('minimal')" class="template-tab-btn bg-white/5 text-slate-300 hover:bg-white/10 px-5 py-2.5 rounded-xl text-xs font-bold border border-white/5 shrink-0">Minimalist</button>
+              <button onclick="filterTemplates('luxury')" class="template-tab-btn bg-white/5 text-slate-300 hover:bg-white/10 px-5 py-2.5 rounded-xl text-xs font-bold border border-white/5 shrink-0">Luxury</button>
+              <button onclick="filterTemplates('tech')" class="template-tab-btn bg-white/5 text-slate-300 hover:bg-white/10 px-5 py-2.5 rounded-xl text-xs font-bold border border-white/5 shrink-0">Tech</button>
+              <button onclick="filterTemplates('creative')" class="template-tab-btn bg-white/5 text-slate-300 hover:bg-white/10 px-5 py-2.5 rounded-xl text-xs font-bold border border-white/5 shrink-0">Creative</button>
+            </div>
+          </div>
+
+          <!-- Templates Grid Showcase -->
+          <div id="templates-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dynamically populated by JS templates list -->
+          </div>
+
+          <!-- CTA inside templates section -->
+          <div class="mt-16 text-center">
+            <a href="#creator" onclick="navigateTo('creator')" class="inline-flex items-center gap-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-8 py-4 rounded-2xl shadow-xl shadow-amber-500/10 hover:shadow-amber-500/20 transition-all">
+              <span>Start Customizing Now</span>
+              <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-16 space-y-4">
+            <h2 class="text-xs font-bold text-primary uppercase tracking-widest">Client Testimonials</h2>
+            <h3 class="text-3xl font-outfit font-extrabold text-secondary tracking-tight">Loved by Founders & Creators Worldwide</h3>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Card 1 -->
+            <div class="bg-secondary-50 border border-slate-100 rounded-3xl p-8 space-y-6">
+              <div class="flex text-amber-500 gap-1">
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              </div>
+              <p class="text-sm text-slate-600 italic">"Being able to drag elements around like Canva but completely for free has made card printing a breeze for our startup team."</p>
+              <div class="flex items-center gap-3.5">
+                <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex items-center justify-center font-bold text-xs">MT</div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">Marcus Thorne</h4>
+                  <p class="text-[10px] text-slate-500">Founder, Helix Genomics</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-secondary-50 border border-slate-100 rounded-3xl p-8 space-y-6">
+              <div class="flex text-amber-500 gap-1">
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              </div>
+              <p class="text-sm text-slate-600 italic">"The drag-and-drop layout features are incredible! You can move contact credentials anywhere and customize card colors instantly."</p>
+              <div class="flex items-center gap-3.5">
+                <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex items-center justify-center font-bold text-xs">ER</div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">Elisa Ross</h4>
+                  <p class="text-[10px] text-slate-500">Creative Director, Ross & Co.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-secondary-50 border border-slate-100 rounded-3xl p-8 space-y-6">
+              <div class="flex text-amber-500 gap-1">
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              </div>
+              <p class="text-sm text-slate-600 italic">"The high-res export was flawless. Downloaded the vector SVG, sent it straight to local printing shop. 300 DPI layout is extremely crisp. Highly recommend!"</p>
+              <div class="flex items-center gap-3.5">
+                <div class="h-10 w-10 rounded-full overflow-hidden bg-slate-200 flex items-center justify-center font-bold text-xs">JV</div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">Julian Vance</h4>
+                  <p class="text-[10px] text-slate-500">Freelance UX Architect</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </section>
+
+
+    <!-- 2. CREATOR WORKSPACE VIEW -->
+    <section id="view-creator" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex-grow flex flex-col">
+      <!-- Movable Canva Notice Banner -->
+      <div class="w-full bg-primary/10 border border-primary/20 rounded-2xl p-3.5 mb-6 text-xs text-primary flex gap-2 items-center">
+        <i data-lucide="move" class="w-4 h-4 shrink-0 animate-bounce"></i>
+        <p><strong>Canva Mode Active:</strong> You can click and drag elements (text, logo, or QR code) directly inside the card preview to place them anywhere!</p>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-8 items-stretch flex-grow">
+        
+        <!-- Left Side: Control panel -->
+        <div class="w-full lg:w-[480px] bg-white border border-slate-200 rounded-3xl shadow-sm flex flex-col max-h-[85vh] lg:max-h-[800px] overflow-hidden">
+          <!-- Workspace Title / Tabs -->
+          <div class="border-b border-slate-100 bg-slate-50/50 p-4">
+            <h2 class="font-outfit font-extrabold text-secondary flex items-center gap-2"><i data-lucide="settings" class="w-5 h-5 text-primary"></i> Workspace Editor</h2>
+            <div class="flex gap-1.5 mt-3 overflow-x-auto no-scrollbar">
+              <button onclick="switchWorkspaceTab('details')" class="ws-tab-btn active bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg shrink-0">Details</button>
+              <button onclick="switchWorkspaceTab('style')" class="ws-tab-btn bg-slate-200/60 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg shrink-0">AI Styles</button>
+              <button onclick="switchWorkspaceTab('logo')" class="ws-tab-btn bg-slate-200/60 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg shrink-0">AI Logo</button>
+              <button onclick="switchWorkspaceTab('brand')" class="ws-tab-btn bg-slate-200/60 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg shrink-0">Brand Kit</button>
+              <button onclick="switchWorkspaceTab('qr')" class="ws-tab-btn bg-slate-200/60 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg shrink-0">QR Code</button>
+            </div>
+          </div>
+
+          <!-- Tabs Body (Scrollable) -->
+          <div class="flex-grow overflow-y-auto p-5 space-y-6">
+            
+            <!-- A. DETAILS TAB -->
+            <div id="ws-tab-content-details" class="ws-tab-pane space-y-5">
+              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Contact Credentials</h3>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Full Name</label>
+                  <input type="text" id="input-name" oninput="updateCardDetails('name', this.value)" placeholder="Aashish Aggarwal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Job Title</label>
+                  <div class="relative">
+                    <input type="text" id="input-title" oninput="updateCardDetails('title', this.value)" placeholder="Strategy Lead" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3.5 pr-8 py-2.5 text-sm focus:outline-none focus:border-primary">
+                    <button onclick="suggestAITitle()" class="absolute right-2 top-2.5 text-primary-500 hover:text-primary-700" title="AI Suggestion"><i data-lucide="sparkles" class="w-4 h-4"></i></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Company Name</label>
+                  <input type="text" id="input-company" oninput="updateCardDetails('company', this.value)" placeholder="Aether Design" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Phone Number</label>
+                  <input type="text" id="input-phone" oninput="updateCardDetails('phone', this.value)" placeholder="+1 (555) 234-5678" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Email Address</label>
+                  <input type="email" id="input-email" oninput="updateCardDetails('email', this.value)" placeholder="alex@aether.design" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Website</label>
+                  <input type="text" id="input-website" oninput="updateCardDetails('website', this.value)" placeholder="www.aether.design" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-500 mb-1.5">Physical Address</label>
+                <input type="text" id="input-address" oninput="updateCardDetails('address', this.value)" placeholder="100 Silicon Valley, CA" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">LinkedIn Profile Link</label>
+                  <input type="text" id="input-linkedin" oninput="updateCardDetails('linkedin', this.value)" placeholder="linkedin.com/in/alexmorgan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Twitter / Social Handle</label>
+                  <input type="text" id="input-twitter" oninput="updateCardDetails('twitter', this.value)" placeholder="twitter.com/alexmorgan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+              </div>
+
+              <div class="border-t border-slate-100 pt-4 space-y-4">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Corporate Assets</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">Company Logo Upload</label>
+                    <div class="relative border-2 border-dashed border-slate-200 rounded-xl p-3 text-center hover:bg-slate-50 transition-colors cursor-pointer">
+                      <input type="file" accept="image/*" onchange="handleAssetUpload(this, 'logo')" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                      <div class="flex flex-col items-center">
+                        <i data-lucide="upload-cloud" class="w-5 h-5 text-slate-400 mb-1"></i>
+                        <span id="logo-filename" class="text-[10px] text-slate-500 font-semibold truncate max-w-full font-sans">Upload PNG/JPG</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">Profile Photo Upload</label>
+                    <div class="relative border-2 border-dashed border-slate-200 rounded-xl p-3 text-center hover:bg-slate-50 transition-colors cursor-pointer">
+                      <input type="file" accept="image/*" onchange="handleAssetUpload(this, 'profile')" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                      <div class="flex flex-col items-center">
+                        <i data-lucide="image" class="w-5 h-5 text-slate-400 mb-1"></i>
+                        <span id="profile-filename" class="text-[10px] text-slate-500 font-semibold truncate max-w-full font-sans">Upload Picture</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- B. AI STYLE GENERATOR TAB -->
+            <div id="ws-tab-content-style" class="ws-tab-pane hidden space-y-5">
+              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Select Theme Template Layout</h3>
+              <p class="text-xs text-slate-500 -mt-2 font-sans">Choose layout structures. Coordinates adapt automatically.</p>
+              
+              <div class="grid grid-cols-2 gap-3" id="generator-style-list">
+                <!-- Dynamically filled by templates lists in Javascript -->
+              </div>
+            </div>
+
+            <!-- C. AI LOGO GENERATOR TAB -->
+            <div id="ws-tab-content-logo" class="ws-tab-pane hidden space-y-5">
+              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Custom Badge Builder</h3>
+              <p class="text-xs text-slate-500 -mt-2">No logo on hand? Build an elegant shape-based badge with your brand initials inside.</p>
+              
+              <div class="space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-200/50">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Logo Text Initials</label>
+                  <input type="text" id="logo-builder-text" oninput="updateLogoGenerator()" maxlength="3" placeholder="AE" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-primary">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Geometry Border Shape</label>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button onclick="changeLogoShape('circle')" class="logo-shape-btn active border-2 border-primary bg-white text-primary text-xs font-semibold py-2 rounded-lg">Circle</button>
+                    <button onclick="changeLogoShape('hexagon')" class="logo-shape-btn border-2 border-transparent bg-white text-slate-600 hover:bg-slate-100 text-xs font-semibold py-2 rounded-lg">Hexagon</button>
+                    <button onclick="changeLogoShape('diamond')" class="logo-shape-btn border-2 border-transparent bg-white text-slate-600 hover:bg-slate-100 text-xs font-semibold py-2 rounded-lg">Diamond</button>
+                    <button onclick="changeLogoShape('shield')" class="logo-shape-btn border-2 border-transparent bg-white text-slate-600 hover:bg-slate-100 text-xs font-semibold py-2 rounded-lg">Shield</button>
+                    <button onclick="changeLogoShape('square')" class="logo-shape-btn border-2 border-transparent bg-white text-slate-600 hover:bg-slate-100 text-xs font-semibold py-2 rounded-lg">Square</button>
+                    <button onclick="changeLogoShape('badge')" class="logo-shape-btn border-2 border-transparent bg-white text-slate-600 hover:bg-slate-100 text-xs font-semibold py-2 rounded-lg">Badge</button>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 mb-1.5">Shape Color</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" id="logo-builder-color" oninput="updateLogoGenerator()" value="#2563EB" class="w-10 h-10 border border-slate-200 rounded-lg cursor-pointer">
+                    <span class="text-xs text-slate-500 font-semibold" id="logo-builder-color-val">#2563EB</span>
+                  </div>
+                </div>
+
+                <button onclick="applyGeneratedLogo()" class="w-full bg-secondary text-white font-bold py-3 rounded-xl text-xs hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5">
+                  <i data-lucide="check" class="w-4 h-4"></i> Apply Created Logo
+                </button>
+              </div>
+            </div>
+
+            <!-- D. BRAND KIT & FONTS TAB -->
+            <div id="ws-tab-content-brand" class="ws-tab-pane hidden space-y-6">
+              
+              <!-- Color Palettes -->
+              <div class="space-y-4">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Color Palette Presets</h3>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="applyColorPreset('#2563EB', '#0F172A', '#F8FAFC')" class="text-left p-2.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-all flex items-center gap-2">
+                    <div class="flex gap-1">
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#2563EB]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#0F172A]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#F8FAFC] border"></div>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-700 font-sans">Midnight Royal</span>
+                  </button>
+
+                  <button onclick="applyColorPreset('#059669', '#064E3B', '#F0FDF4')" class="text-left p-2.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-all flex items-center gap-2">
+                    <div class="flex gap-1">
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#059669]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#064E3B]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#F0FDF4] border"></div>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-700 font-sans">Forest Emerald</span>
+                  </button>
+
+                  <button onclick="applyColorPreset('#F59E0B', '#78350F', '#FFFBEB')" class="text-left p-2.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-all flex items-center gap-2">
+                    <div class="flex gap-1">
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#F59E0B]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#78350F]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#FFFBEB] border"></div>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-700 font-sans">Sunset Amber</span>
+                  </button>
+
+                  <button onclick="applyColorPreset('#D97706', '#E2E8F0', '#1E293B')" class="text-left p-2.5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-all flex items-center gap-2">
+                    <div class="flex gap-1">
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#D97706]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#E2E8F0]"></div>
+                      <div class="w-3.5 h-3.5 rounded-full bg-[#1E293B]"></div>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-700 font-sans">Slate Gold</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Typography -->
+              <div class="space-y-4 border-t border-slate-100 pt-4">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Typography Fonts</h3>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="changeCardFont('font-sans')" class="font-btn active border-2 border-primary bg-white text-slate-800 font-sans text-xs font-bold py-3 rounded-xl">Inter (Modern)</button>
+                  <button onclick="changeCardFont('font-outfit')" class="font-btn border-2 border-transparent bg-white text-slate-800 font-outfit text-xs font-bold py-3 rounded-xl hover:bg-slate-100 shadow-sm">Outfit (Trendy)</button>
+                  <button onclick="changeCardFont('font-serif')" class="font-btn border-2 border-transparent bg-white text-slate-800 font-serif text-xs font-bold py-3 rounded-xl hover:bg-slate-100 shadow-sm">Playfair (Elegant)</button>
+                  <button onclick="changeCardFont('font-mono')" class="font-btn border-2 border-transparent bg-white text-slate-800 font-mono text-xs font-bold py-3 rounded-xl hover:bg-slate-100 shadow-sm">Fira Code (Tech)</button>
+                </div>
+              </div>
+
+              <!-- Custom Colors -->
+              <div class="space-y-4 border-t border-slate-100 pt-4">
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Manual Colors Customization</h3>
+                
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-600">Background Color</span>
+                    <div class="flex items-center gap-2">
+                      <input type="color" id="color-bg" oninput="changeCustomColor('bgColor', this.value)" class="w-7 h-7 border border-slate-200 rounded cursor-pointer">
+                      <span class="text-xs text-slate-500 font-mono" id="color-bg-val">#F8FAFC</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-600">Primary Color Accent</span>
+                    <div class="flex items-center gap-2">
+                      <input type="color" id="color-primary" oninput="changeCustomColor('primaryColor', this.value)" class="w-7 h-7 border border-slate-200 rounded cursor-pointer">
+                      <span class="text-xs text-slate-500 font-mono" id="color-primary-val">#2563EB</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-600">Secondary Text Color</span>
+                    <div class="flex items-center gap-2">
+                      <input type="color" id="color-secondary" oninput="changeCustomColor('secondaryColor', this.value)" class="w-7 h-7 border border-slate-200 rounded cursor-pointer">
+                      <span class="text-xs text-slate-500 font-mono" id="color-secondary-val">#0F172A</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- E. QR CODE CONFIG TAB -->
+            <div id="ws-tab-content-qr" class="ws-tab-pane hidden space-y-5">
+              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Custom Digital Target</h3>
+              <p class="text-xs text-slate-500 -mt-2">Customize the target URL encoded in the QR code layout.</p>
+              
+              <div>
+                <label class="block text-xs font-bold text-slate-500 mb-1.5">Scan QR Redirect Link</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                    <i data-lucide="link" class="w-4 h-4"></i>
+                  </span>
+                  <input type="text" id="qr-input-url" oninput="updateQRCodeUrl(this.value)" placeholder="https://bgcards.app/card/alex" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-primary">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Save Actions -->
+          <div class="border-t border-slate-100 p-4 bg-slate-50/50 flex gap-3">
+            <button onclick="saveCardToDashboard()" class="flex-grow bg-primary hover:bg-primary-700 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-primary/10 transition-colors flex items-center justify-center gap-1.5">
+              <i data-lucide="save" class="w-4 h-4"></i> Save to Dashboard
+            </button>
+            <button onclick="resetBuilder()" class="border border-slate-200 hover:bg-slate-100 text-slate-500 font-bold px-4 py-3.5 rounded-2xl text-xs transition-colors" title="Reset Inputs">
+              <i data-lucide="rotate-ccw" class="w-4.5 h-4.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side: Live Card Preview -->
+        <div class="flex-grow flex flex-col items-center justify-center bg-slate-100 rounded-3xl p-6 sm:p-8 relative">
+          
+          <!-- Workspace Header controls -->
+          <div class="w-full max-w-[650px] flex items-center justify-between mb-6">
+            <div class="flex gap-2">
+              <button onclick="flipCard()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm rounded-xl px-4 py-2 text-xs font-bold flex items-center gap-1.5 transition-all">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Flip Card Side
+              </button>
+              <button onclick="toggleBleedGuides()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm rounded-xl px-4 py-2 text-xs font-bold flex items-center gap-1.5 transition-all">
+                <i data-lucide="scissors" class="w-4 h-4"></i> Bleed Lines
+              </button>
+            </div>
+            
+            <div class="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl p-1 shadow-sm text-xs font-semibold text-slate-500 select-none">
+              <button onclick="adjustZoom(-0.1)" class="hover:bg-slate-100 rounded-lg p-1.5"><i data-lucide="minus" class="w-3.5 h-3.5"></i></button>
+              <span id="zoom-value" class="px-1.5">100%</span>
+              <button onclick="adjustZoom(0.1)" class="hover:bg-slate-100 rounded-lg p-1.5"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+
+          <!-- Flip Card Container -->
+          <div class="flip-container w-full max-w-[650px] aspect-[1.75]">
+            <div id="card-inner" class="flip-inner w-full h-full relative select-none">
+              
+              <!-- FRONT FACE -->
+              <div id="card-front-face" class="card-face w-full h-full absolute inset-0 bg-white rounded-3xl overflow-hidden card-shadow border border-slate-200/50">
+                <!-- Inner rendering template populated dynamically -->
+              </div>
+
+              <!-- BACK FACE -->
+              <div id="card-back-face" class="card-face card-back w-full h-full absolute inset-0 bg-white rounded-3xl overflow-hidden card-shadow border border-slate-200/50">
+                <!-- Inner rendering template populated dynamically -->
+              </div>
+
+            </div>
+          </div>
+          
+          <div class="bleed-text hidden text-[11px] text-red-500 font-semibold tracking-wide mt-3 uppercase text-center">
+            ⚠️ Outer Red Dashed line denotes bleed area. Keep critical text inside safety area.
+          </div>
+
+          <!-- Export / Download Action Menu -->
+          <div class="mt-8 flex flex-col sm:flex-row gap-4 w-full max-w-[650px]">
+            <div class="relative flex-grow">
+              <button onclick="toggleExportMenu()" class="w-full bg-secondary hover:bg-secondary/95 text-white font-bold py-4 px-6 rounded-2xl text-xs flex items-center justify-between shadow-xl shadow-secondary/15 transition-all">
+                <span class="flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Export High-DPI Prints</span>
+                <i data-lucide="chevron-down" id="export-chevron" class="w-4 h-4 transition-transform"></i>
+              </button>
+              <!-- Export Sub-menu -->
+              <div id="export-dropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl z-20 overflow-hidden text-xs">
+                <button onclick="exportCard('png')" class="w-full text-left px-5 py-3.5 hover:bg-slate-50 flex items-center gap-3.5 border-b border-slate-100 transition-colors">
+                  <div class="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i data-lucide="image" class="w-4.5 h-4.5"></i></div>
+                  <div>
+                    <span class="block font-bold text-slate-800">Download PNG Image</span>
+                    <span class="block text-[10px] text-slate-500 font-semibold mt-0.5">High Quality 300 DPI Export</span>
+                  </div>
+                </button>
+                <button onclick="exportCard('jpg')" class="w-full text-left px-5 py-3.5 hover:bg-slate-50 flex items-center gap-3.5 border-b border-slate-100 transition-colors">
+                  <div class="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i data-lucide="file-image" class="w-4.5 h-4.5"></i></div>
+                  <div>
+                    <span class="block font-bold text-slate-800">Download JPG Image</span>
+                    <span class="block text-[10px] text-slate-500 font-semibold mt-0.5">Compressed standard format</span>
+                  </div>
+                </button>
+                <button onclick="exportCard('pdf')" class="w-full text-left px-5 py-3.5 hover:bg-slate-50 flex items-center gap-3.5 border-b border-slate-100 transition-colors">
+                  <div class="h-8 w-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-4.5 h-4.5"></i></div>
+                  <div>
+                    <span class="block font-bold text-slate-800">Download PDF Document</span>
+                    <span class="block text-[10px] text-slate-500 font-semibold mt-0.5">Print-Ready 3.5" x 2.0" Vector format</span>
+                  </div>
+                </button>
+                <button onclick="exportCard('svg')" class="w-full text-left px-5 py-3.5 hover:bg-slate-50 flex items-center gap-3.5 transition-colors">
+                  <div class="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0"><i data-lucide="code" class="w-4.5 h-4.5"></i></div>
+                  <div>
+                    <span class="block font-bold text-slate-800">Download Raw SVG Code</span>
+                    <span class="block text-[10px] text-slate-500 font-semibold mt-0.5">Vector source graphic code</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+            
+            <button onclick="orderNfcCard()" class="border border-slate-200 hover:border-primary hover:text-primary bg-white transition-all px-6 py-4 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2">
+              <i data-lucide="nfc" class="w-4 h-4 text-primary"></i> Order Physical NFC Card
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- 3. DASHBOARD VIEW -->
+    <section id="view-dashboard" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex-grow flex flex-col">
+      <!-- Welcome Header -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-outfit font-extrabold text-secondary leading-none">Your Business Dashboard</h1>
+          <p class="text-slate-500 text-sm mt-2">Manage card files, view live QR statistics, and share templates.</p>
+        </div>
+        <button onclick="navigateTo('creator')" class="bg-primary hover:bg-primary-700 text-white font-bold py-3.5 px-6 rounded-2xl text-xs flex items-center gap-2 shadow-lg shadow-primary/10 transition-colors">
+          <i data-lucide="plus" class="w-4.5 h-4.5"></i> Design New Card
+        </button>
+      </div>
+
+      <!-- Quick Metrics Counters -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex items-center gap-5">
+          <div class="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0"><i data-lucide="credit-card" class="w-6 h-6"></i></div>
+          <div>
+            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Designs Saved</span>
+            <span id="stat-cards-count" class="block font-outfit font-extrabold text-2xl text-secondary mt-0.5">0</span>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex items-center gap-5">
+          <div class="h-12 w-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0"><i data-lucide="scan" class="w-6 h-6"></i></div>
+          <div>
+            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">QR Code Scans</span>
+            <span id="stat-qr-scans" class="block font-outfit font-extrabold text-2xl text-secondary mt-0.5">142</span>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex items-center gap-5">
+          <div class="h-12 w-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0"><i data-lucide="download" class="w-6 h-6"></i></div>
+          <div>
+            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Total Downloads</span>
+            <span id="stat-downloads" class="block font-outfit font-extrabold text-2xl text-secondary mt-0.5">87</span>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex items-center gap-5">
+          <div class="h-12 w-12 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center shrink-0"><i data-lucide="globe" class="w-6 h-6"></i></div>
+          <div>
+            <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Profile Views</span>
+            <span id="stat-profile-views" class="block font-outfit font-extrabold text-2xl text-secondary mt-0.5">493</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saved Designs List -->
+      <div class="space-y-6">
+        <h2 class="font-outfit font-extrabold text-lg text-secondary">Saved Cards Directory</h2>
+        
+        <!-- Empty State -->
+        <div id="dashboard-empty-state" class="bg-white border-2 border-dashed border-slate-200 rounded-3xl p-16 text-center max-w-xl mx-auto hidden flex-col items-center">
+          <div class="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-6"><i data-lucide="credit-card" class="w-8 h-8"></i></div>
+          <h3 class="font-bold text-slate-700 text-lg">No Cards Saved Yet</h3>
+          <p class="text-sm text-slate-500 max-w-sm mt-2">Design, customize layouts and save your first professional profile directly to your browser cloud dashboard.</p>
+          <button onclick="navigateTo('creator')" class="bg-primary text-white font-bold py-3.5 px-6 rounded-2xl text-xs mt-6 shadow-lg shadow-primary/10 flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> Create First Card</button>
+        </div>
+
+        <!-- Cards grid -->
+        <div id="dashboard-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Dynamically populated by user saved cards -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 4. ADMIN PANEL VIEW -->
+    <section id="view-admin" class="hidden py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex-grow flex flex-col">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-outfit font-extrabold text-secondary leading-none">Console Administration Dashboard</h1>
+          <p class="text-slate-500 text-sm mt-2">System users control, active templates overview, and server analytics metrics.</p>
+        </div>
+        <span class="bg-amber-500/10 text-amber-600 border border-amber-500/20 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-full flex items-center gap-1.5">
+          <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> Systems Admin Access
+        </span>
+      </div>
+
+      <!-- Quick Metrics Counters -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active System Accounts</span>
+          <span class="block font-outfit font-extrabold text-2xl text-secondary mt-1">14,892</span>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Templates active</span>
+          <span class="block font-outfit font-extrabold text-2xl text-secondary mt-1">112</span>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">NFC Card Orders</span>
+          <span class="block font-outfit font-extrabold text-2xl text-secondary mt-1">1,208</span>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gross Free Accounts</span>
+          <span class="block font-outfit font-extrabold text-2xl text-secondary mt-1">100% Free</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- User table (col-8) -->
+        <div class="lg:col-span-8 bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden flex flex-col">
+          <div class="border-b border-slate-100 p-5 bg-slate-50/50">
+            <h2 class="font-outfit font-bold text-secondary text-sm sm:text-base">System User Registrations</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-100 uppercase tracking-wider">
+                  <th class="p-4">Profile Name</th>
+                  <th class="p-4">Billing Plan</th>
+                  <th class="p-4">NFC Status</th>
+                  <th class="p-4 text-center">Safety Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="admin-users-table">
+                <!-- Dynamically filled by script lists -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Template and settings (col-4) -->
+        <div class="lg:col-span-4 space-y-6">
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+            <h3 class="font-outfit font-bold text-sm sm:text-base border-b border-slate-100 pb-3">Template Visibility Management</h3>
+            <div class="space-y-3" id="admin-templates-controls">
+              <!-- Dynamically populated templates switch list -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. SHAREABLE CARD WEB PREVIEW -->
+    <section id="view-card-share" class="hidden min-h-[80vh] flex flex-col items-center justify-center p-4 bg-slate-900 text-white relative">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(37,99,235,0.12)_0px,transparent_60%)]"></div>
+      
+      <div class="relative z-10 w-full max-w-[500px] flex flex-col items-center space-y-8 text-center">
+        <!-- Floating Profile Avatar -->
+        <div class="h-20 w-20 rounded-full border-4 border-primary overflow-hidden shadow-xl" id="share-profile-wrap">
+          <img id="share-profile-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar" class="w-full h-full object-cover">
+        </div>
+        
+        <!-- Live Card Render Box -->
+        <div class="w-full aspect-[1.75] bg-white rounded-3xl overflow-hidden card-shadow border border-white/5 relative" id="share-card-container">
+          <!-- Card content here -->
+        </div>
+
+        <div class="space-y-2">
+          <h2 class="font-outfit font-extrabold text-2xl tracking-tight" id="share-user-name">Bhavya Goel</h2>
+          <p class="text-sm text-primary-500 font-semibold uppercase tracking-wider" id="share-user-title">Founder & CEO</p>
+          <p class="text-xs text-slate-400" id="share-user-company">BG FAME</p>
+        </div>
+
+        <!-- Share Actions menu -->
+        <div class="grid grid-cols-2 gap-4 w-full pt-4">
+          <button onclick="downloadContactVcf()" class="bg-primary hover:bg-primary-700 text-white font-bold py-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-primary/20 transition-all">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> Save Contact card
+          </button>
+          <button onclick="copyCurrentShareLink()" class="bg-white/10 hover:bg-white/20 text-white border border-white/10 font-bold py-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all">
+            <i data-lucide="share-2" class="w-4 h-4"></i> Copy Share Link
+          </button>
+        </div>
+        
+        <a href="#home" onclick="navigateTo('home')" class="text-xs text-slate-500 hover:text-slate-400 flex items-center gap-1.5 transition-colors pt-6">
+          Create business cards with <span class="text-primary font-bold">BG Cards</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-secondary text-white border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="space-y-4">
+        <div class="flex items-center gap-2.5">
+          <img src="./logo-bg.jpg" class="h-9 w-9 rounded-xl object-cover" alt="BG Cards">
+          <span class="font-outfit font-bold text-md tracking-tight">BG Cards</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">Create and export premium professional business cards in minutes. Drag-and-drop elements for free forever.</p>
+      </div>
+      
+      <div>
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Product</h4>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li><a href="#creator" onclick="navigateTo('creator')" class="hover:text-white transition-colors">Card Builder</a></li>
+          <li><a href="#templates" onclick="scrollToElement('templates-section')" class="hover:text-white transition-colors">Templates Gallery</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">NFC wooden cards</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">AI Logo Builder</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 font-outfit text-emerald-500">Free Forever</h4>
+        <p class="text-xs text-slate-400 leading-relaxed">High resolution, movable templates and custom logo utilities are 100% free for everyone, forever.</p>
+      </div>
+    </div>
+    <div class="border-t border-slate-800 py-6 text-center text-[10px] text-slate-500">
+      &copy; 2026 BG Cards Inc. All rights reserved. Created for professional networking.
+    </div>
+  </footer>
+
+
+  <!-- AUTHENTICATION DIALOG (Simplified: Just Name connection) -->
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl w-full max-w-[400px] border border-slate-200 p-6 sm:p-8 space-y-6 relative shadow-2xl">
+      <!-- Close button -->
+      <button onclick="closeAuthModal()" class="absolute right-5 top-5 text-slate-400 hover:text-slate-600 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center space-y-2">
+        <img src="./logo-bg.jpg" class="h-12 w-12 rounded-2xl mx-auto mb-2 object-cover shadow-md">
+        <h3 class="font-outfit font-extrabold text-secondary text-xl">Sign in to BG Cards</h3>
+        <p class="text-xs text-slate-500">Enter your name below to instantly save layouts, duplicate designs, and use dashboard widgets.</p>
+      </div>
+
+      <!-- Action fields -->
+      <div class="space-y-3.5">
+        <div class="space-y-2">
+          <input type="text" id="auth-username-input" placeholder="Your Name (e.g. Bhavya Goel)" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-primary font-bold font-sans">
+          <button onclick="simulateAuthLogin()" class="w-full bg-primary hover:bg-primary-700 text-white font-bold py-3.5 rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Connect / Save Layouts
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- NFC ORDER MODAL -->
+  <div id="nfc-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl w-full max-w-[480px] border border-slate-200 p-6 sm:p-8 space-y-6 relative shadow-2xl">
+      <button onclick="closeNfcModal()" class="absolute right-5 top-5 text-slate-400 hover:text-slate-600 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+
+      <div class="space-y-1.5">
+        <span class="inline-flex px-2.5 py-1 rounded-full text-[9px] font-extrabold bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">NFC Networking</span>
+        <h3 class="font-outfit font-extrabold text-secondary text-lg">Order Matte Metal NFC Smart Card</h3>
+        <p class="text-xs text-slate-500">Upgrade your networking with physical NFC tech linked to your dynamic card profile.</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Physical layout representation -->
+        <div class="h-44 w-full bg-gradient-to-tr from-slate-900 to-slate-800 rounded-2xl flex flex-col justify-between p-6 text-white border border-slate-700/60 relative overflow-hidden shadow-lg select-none">
+          <div class="absolute -right-16 -top-16 w-32 h-32 rounded-full bg-white/5 blur-xl"></div>
+          <div class="flex justify-between items-start">
+            <div class="text-xs text-slate-400 tracking-widest uppercase">NFC Smart Chip</div>
+            <i data-lucide="nfc" class="w-6 h-6 text-primary"></i>
+          </div>
+          <div>
+            <div class="font-outfit font-bold text-lg tracking-wider" id="nfc-card-preview-name">Bhavya Goel</div>
+            <div class="text-[10px] text-slate-400 tracking-wide mt-1" id="nfc-card-preview-company">BG FAME</div>
+          </div>
+        </div>
+
+        <!-- Inputs selection -->
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="block font-bold text-slate-500 mb-1.5">Card Material</label>
+            <select id="nfc-material" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-primary">
+              <option value="metal-black">Matte Black Metal</option>
+              <option value="wood-bamboo">Natural Bamboo Wood</option>
+              <option value="plastic-white">Clean Acrylic White</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-500 mb-1.5">Engrave Style</label>
+            <select id="nfc-laser" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-primary">
+              <option value="gold-foil">Gold Laser Engraved</option>
+              <option value="silver-foil">Silver Laser Engraved</option>
+              <option value="minimal-dark">Matte Dark Etching</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-secondary-50 border border-slate-200/60 rounded-2xl p-4 flex justify-between items-center text-xs font-semibold">
+          <span class="text-slate-500">Unit Price + Delivery:</span>
+          <span class="text-lg font-outfit font-extrabold text-secondary">$39.99</span>
+        </div>
+
+        <button onclick="submitNfcOrder()" class="w-full bg-primary hover:bg-primary-700 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-primary/10 transition-all flex items-center justify-center gap-1.5">
+          <i data-lucide="credit-card" class="w-4 h-4"></i> Place NFC Card Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MAIN JAVASCRIPT APP LOGIC -->
+  <script>
+    // State management
+    let state = {
+      user: null, 
+      activeView: 'home',
+      zoom: 1.0,
+      savedCards: [],
+      cardInputs: {
+        id: '',
+        name: 'Bhavya Goel',
+        title: 'Founder & CEO',
+        company: 'BG FAME',
+        phone: '8810611669',
+        email: 'bgoeldefender@gmail.com',
+        website: 'www.bgfame.com',
+        address: 'New Delhi, India',
+        linkedin: 'linkedin.com/in/bhavyagoel',
+        twitter: 'twitter.com/bhavyagoel',
+        logoUrl: '', 
+        profilePicUrl: '', 
+        templateId: 'minimal',
+        primaryColor: '#2563EB',
+        secondaryColor: '#0F172A',
+        textColor: '#1E293B',
+        bgColor: '#F8FAFC',
+        fontFamily: 'font-sans',
+        logoShape: 'hexagon',
+        logoColor: '#2563EB',
+        logoText: 'AE',
+        qrCodeUrl: 'https://bgcards.app/card/bhavyagoel',
+        showBleed: false,
+        // Canva element drag positions
+        positions: {
+          front: {
+            nameTitle: { x: 50, y: 50 },
+            companyLogo: { x: 500, y: 50 },
+            contacts: { x: 50, y: 240 }
+          },
+          back: {
+            logoGroup: { x: 260, y: 80 },
+            qrGroup: { x: 285, y: 220 }
+          }
+        }
+      },
+      logoBuilder: {
+        text: 'AE',
+        shape: 'circle',
+        color: '#2563EB'
+      }
+    };
+
+    // Default positions dictionary for templates
+    const defaultPositions = {
+      minimal: {
+        front: {
+          nameTitle: { x: 50, y: 50 },
+          companyLogo: { x: 500, y: 50 },
+          contacts: { x: 50, y: 240 }
+        },
+        back: {
+          logoGroup: { x: 260, y: 80 },
+          qrGroup: { x: 285, y: 220 }
+        }
+      },
+      corporate: {
+        front: {
+          nameTitle: { x: 260, y: 60 },
+          companyLogo: { x: 30, y: 50 },
+          contacts: { x: 260, y: 170 }
+        },
+        back: {
+          logoGroup: { x: 60, y: 130 },
+          qrGroup: { x: 480, y: 120 }
+        }
+      },
+      luxury: {
+        front: {
+          nameTitle: { x: 50, y: 150 },
+          companyLogo: { x: 50, y: 50 },
+          contacts: { x: 50, y: 260 }
+        },
+        back: {
+          logoGroup: { x: 220, y: 80 },
+          qrGroup: { x: 270, y: 210 }
+        }
+      },
+      tech: {
+        front: {
+          nameTitle: { x: 50, y: 50 },
+          companyLogo: { x: 520, y: 50 },
+          contacts: { x: 50, y: 220 }
+        },
+        back: {
+          logoGroup: { x: 220, y: 60 },
+          qrGroup: { x: 270, y: 190 }
+        }
+      },
+      creative: {
+        front: {
+          nameTitle: { x: 50, y: 60 },
+          companyLogo: { x: 520, y: 60 },
+          contacts: { x: 50, y: 240 }
+        },
+        back: {
+          logoGroup: { x: 220, y: 60 },
+          qrGroup: { x: 270, y: 210 }
+        }
+      },
+      startup: {
+        front: {
+          nameTitle: { x: 50, y: 60 },
+          companyLogo: { x: 480, y: 60 },
+          contacts: { x: 50, y: 230 }
+        },
+        back: {
+          logoGroup: { x: 200, y: 80 },
+          qrGroup: { x: 270, y: 220 }
+        }
+      },
+      executive: {
+        front: {
+          nameTitle: { x: 50, y: 60 },
+          companyLogo: { x: 500, y: 60 },
+          contacts: { x: 50, y: 240 }
+        },
+        back: {
+          logoGroup: { x: 200, y: 80 },
+          qrGroup: { x: 270, y: 220 }
+        }
+      },
+      health: {
+        front: {
+          nameTitle: { x: 50, y: 50 },
+          companyLogo: { x: 500, y: 50 },
+          contacts: { x: 50, y: 230 }
+        },
+        back: {
+          logoGroup: { x: 230, y: 80 },
+          qrGroup: { x: 280, y: 220 }
+        }
+      },
+      realestate: {
+        front: {
+          nameTitle: { x: 50, y: 60 },
+          companyLogo: { x: 480, y: 60 },
+          contacts: { x: 50, y: 220 }
+        },
+        back: {
+          logoGroup: { x: 240, y: 80 },
+          qrGroup: { x: 285, y: 220 }
+        }
+      },
+      personal: {
+        front: {
+          nameTitle: { x: 50, y: 170 },
+          companyLogo: { x: 50, y: 50 },
+          contacts: { x: 380, y: 90 }
+        },
+        back: {
+          logoGroup: { x: 230, y: 80 },
+          qrGroup: { x: 280, y: 225 }
+        }
+      },
+      dynamicasym: {
+        front: {
+          nameTitle: { x: 60, y: 60 },
+          companyLogo: { x: 490, y: 60 },
+          contacts: { x: 60, y: 230 }
+        },
+        back: {
+          logoGroup: { x: 240, y: 80 },
+          qrGroup: { x: 285, y: 220 }
+        }
+      },
+      lawyerfirm: {
+        front: {
+          nameTitle: { x: 60, y: 70 },
+          companyLogo: { x: 490, y: 70 },
+          contacts: { x: 60, y: 240 }
+        },
+        back: {
+          logoGroup: { x: 250, y: 80 },
+          qrGroup: { x: 285, y: 230 }
+        }
+      }
+    };
+
+    // Predefined templates list
+    const templatesList = [
+      {
+        id: 'minimal',
+        name: 'Modern Minimalist',
+        category: 'minimal',
+        desc: 'Ample whitespace, crisp typography and elegant dividers.',
+        primary: '#1E293B',
+        secondary: '#64748B',
+        bg: '#FFFFFF',
+        font: 'font-sans'
+      },
+      {
+        id: 'corporate',
+        name: 'Corporate Prestige',
+        category: 'corporate',
+        desc: 'Traditional high-trust dual column design with side header.',
+        primary: '#2563EB',
+        secondary: '#0F172A',
+        bg: '#F8FAFC',
+        font: 'font-sans'
+      },
+      {
+        id: 'luxury',
+        name: 'Luxury Gold Elite',
+        category: 'luxury',
+        desc: 'Deep royal dark palette paired with elegant serif typography.',
+        primary: '#F59E0B',
+        secondary: '#FFFFFF',
+        bg: '#0F172A',
+        font: 'font-serif'
+      },
+      {
+        id: 'tech',
+        name: 'Neon Monospace',
+        category: 'tech',
+        desc: 'Cool futuristic terminal style with neon cyan glows.',
+        primary: '#06B6D4',
+        secondary: '#94A3B8',
+        bg: '#0B0F19',
+        font: 'font-mono'
+      },
+      {
+        id: 'creative',
+        name: 'Mesh Gradient',
+        category: 'creative',
+        desc: 'Asymmetric organic layouts featuring colourful backgrounds.',
+        primary: '#EC4899',
+        secondary: '#FFFFFF',
+        bg: 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%)',
+        font: 'font-outfit'
+      },
+      {
+        id: 'startup',
+        name: 'Vibrant Tech Founder',
+        category: 'corporate',
+        desc: 'A modern aesthetic using high-contrast bold fonts and border grids.',
+        primary: '#6366F1',
+        secondary: '#1E293B',
+        bg: '#FFFFFF',
+        font: 'font-outfit'
+      },
+      {
+        id: 'executive',
+        name: 'Charcoal Line',
+        category: 'corporate',
+        desc: 'Sleek financial design using thin gold separator lines.',
+        primary: '#F59E0B',
+        secondary: '#E2E8F0',
+        bg: '#1E293B',
+        font: 'font-montserrat'
+      },
+      {
+        id: 'health',
+        name: 'Clean Mint Healthcare',
+        category: 'creative',
+        desc: 'Soft palette focused on health, doctors, and medical consultants.',
+        primary: '#10B981',
+        secondary: '#1E293B',
+        bg: '#F0FDF4',
+        font: 'font-sans'
+      },
+      {
+        id: 'realestate',
+        name: 'Bold Teracotta',
+        category: 'corporate',
+        desc: 'Solid structures suited for real estate brokers and agents.',
+        primary: '#EA580C',
+        secondary: '#0F172A',
+        bg: '#FFF7ED',
+        font: 'font-montserrat'
+      },
+      {
+        id: 'personal',
+        name: 'Signature Profile',
+        category: 'minimal',
+        desc: 'Front page showcases an circular team photo or portrait.',
+        primary: '#3B82F6',
+        secondary: '#1E293B',
+        bg: '#FFFFFF',
+        font: 'font-outfit'
+      },
+      {
+        id: 'dynamicasym',
+        name: 'Asymmetric Teal-Coral',
+        category: 'creative',
+        desc: 'Bold modernist creative palette with coral highlights.',
+        primary: '#0D9488',
+        secondary: '#E11D48',
+        bg: '#FDF2F8',
+        font: 'font-outfit'
+      },
+      {
+        id: 'lawyerfirm',
+        name: 'Traditional Firm Badge',
+        category: 'corporate',
+        desc: 'Sober classic layout using dark navy, sepia tones, and golden rule lines.',
+        primary: '#854D0E',
+        secondary: '#1E3A8A',
+        bg: '#F8FAFC',
+        font: 'font-serif'
+      }
+    ];
+
+    // Mock register database for admin panel demo
+    let mockUsersDB = [
+      { id: 1, name: 'Bhavya Goel', email: 'bgoeldefender@gmail.com', plan: 'Free Forever', orders: 'Shipped', status: 'Active' },
+      { id: 2, name: 'Julian Vance', email: 'j.vance@uxarch.io', plan: 'Free Forever', orders: 'None', status: 'Active' },
+      { id: 3, name: 'Marcus Thorne', email: 'marcus@helixgen.com', plan: 'Free Forever', orders: 'Processing', status: 'Active' }
+    ];
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTemplatesShowcase();
+      loadSavedCards();
+      handleRouting();
+      window.addEventListener('hashchange', handleRouting);
+      bindInputsToState();
+      renderCardPreview();
+      lucide.createIcons();
+    });
+
+    // Hash Router
+    function handleRouting() {
+      const hash = window.location.hash || '#home';
+      
+      if (hash.startsWith('#card/')) {
+        const username = hash.split('#card/')[1];
+        showPublicShareCard(username);
+        return;
+      }
+
+      switch (hash) {
+        case '#home':
+          navigateTo('home');
+          break;
+        case '#creator':
+          navigateTo('creator');
+          break;
+        case '#dashboard':
+          if (!state.user) {
+            showToast('Sign in required', 'Please enter your name to connect.', 'warning');
+            window.location.hash = '#home';
+          } else {
+            navigateTo('dashboard');
+          }
+          break;
+        case '#admin':
+          if (!state.user || state.user.email !== 'admin@bgcards.app') {
+            showToast('Access denied', 'Only administrators can inspect system stats.', 'error');
+            window.location.hash = '#home';
+          } else {
+            navigateTo('admin');
+          }
+          break;
+        default:
+          navigateTo('home');
       }
     }
-  }catch(e){}
-}
 
-/* ══════════════════════════════════════════
-   HOMEPAGE TEMPLATE PREVIEW RENDERER
-══════════════════════════════════════════ */
-function renderHeroTplCard(tpl){
-  const bg=tpl.bg;
-  const ac=tpl.accent;
-  const tx=tpl.text;
-  const mu=tpl.muted;
-  // Mini preview HTML for the splash cards
-  const isLight=bg==='#ffffff'||bg.startsWith('#f');
-  const glowEl=`<div style="position:absolute;top:0;right:0;width:80px;height:80px;background:${ac};opacity:.07;border-radius:50%;transform:translate(30%,-30%)"></div>`;
-  const barEl=`<div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,${ac},transparent)"></div>`;
-  return `
-    <div style="width:100%;height:100%;background:${bg};padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
-      ${glowEl}${barEl}
-      <div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:15px;color:${tx};letter-spacing:-0.5px;text-transform:uppercase">Your Name</div>
-        <div style="font-size:9px;color:${ac};font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:2px;font-family:'Space Grotesk',sans-serif">Your Title</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:2px">
-        <div style="font-size:8px;color:${mu};font-family:'Inter',sans-serif">📞 +1 555 000 0000</div>
-        <div style="font-size:8px;color:${mu};font-family:'Inter',sans-serif">✉️ you@email.com</div>
-      </div>
-    </div>`;
-}
+    function navigateTo(viewId) {
+      document.getElementById('view-home').classList.add('hidden');
+      document.getElementById('view-creator').classList.add('hidden');
+      document.getElementById('view-dashboard').classList.add('hidden');
+      document.getElementById('view-admin').classList.add('hidden');
+      document.getElementById('view-card-share').classList.add('hidden');
 
-function buildHomepageGrid(){
-  const grid=el('homepage-tpl-grid');
-  grid.innerHTML=HERO_TEMPLATES.map((tpl,i)=>`
-    <div class="tpl-card-wrap" onclick="loadHeroTemplate(${i})">
-      <div class="tpl-preview">${renderHeroTplCard(tpl)}<span class="tpl-badge" style="color:${tpl.accent}">${tpl.label}</span></div>
-      <div class="tpl-name">${tpl.name}</div>
-    </div>
-  `).join('');
-}
+      if (viewId === 'home') {
+        document.getElementById('view-home').classList.remove('hidden');
+        state.activeView = 'home';
+      } else if (viewId === 'creator') {
+        document.getElementById('view-creator').classList.remove('hidden');
+        state.activeView = 'creator';
+        renderCardPreview();
+      } else if (viewId === 'dashboard') {
+        document.getElementById('view-dashboard').classList.remove('hidden');
+        state.activeView = 'dashboard';
+        renderDashboardList();
+      } else if (viewId === 'admin') {
+        document.getElementById('view-admin').classList.remove('hidden');
+        state.activeView = 'admin';
+        renderAdminPanel();
+      } else if (viewId === 'share') {
+        document.getElementById('view-card-share').classList.remove('hidden');
+        state.activeView = 'share';
+      }
 
-function loadHeroTemplate(i){
-  const tpl=HERO_TEMPLATES[i];
-  // Find matching ALL_THEMES entry or inject custom
-  let thIdx=ALL_THEMES.findIndex(t=>t.name===tpl.name);
-  if(thIdx<0){
-    ALL_THEMES.unshift({name:tpl.name,bg:tpl.bg,text:tpl.text,accent:tpl.accent,muted:tpl.muted,lay:tpl.lay});
-    thIdx=0;
-  }
-  cs.theme=thIdx;
-  cs.layout=tpl.lay;
-  dismissHomepage();
-}
+      setTimeout(() => { lucide.createIcons(); }, 50);
+      window.scrollTo(0, 0);
+    }
 
-/* ══════════════════════════════════════════
-   DISMISS HOMEPAGE
-══════════════════════════════════════════ */
-function dismissHomepage(){
-  el('homepage').classList.add('hide');
-  setTimeout(()=>{el('homepage').style.display='none';},550);
-  el('editor').classList.add('visible');
-  loadLS();
-  buildTplStrip();
-  updateLayoutBtns();
-  drawCards();
-}
+    function scrollToElement(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
 
-/* ══════════════════════════════════════════
-   TEMPLATE STRIP (in editor)
-══════════════════════════════════════════ */
-function buildTplStrip(){
-  const strip=el('tpl-strip-inner');
-  // Show first 6 featured templates
-  const featured=ALL_THEMES.slice(0,6);
-  strip.innerHTML=featured.map((t,i)=>`
-    <div class="tpl-btn ${i===cs.theme?'active':''}" data-ti="${i}" onclick="applyTheme(${i})">
-      <div class="tpl-btn-preview" style="background:${t.bg}">
-        <div style="position:absolute;inset:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:space-between">
+    // FAQ Accordion
+    function toggleFAQ(button) {
+      const content = button.nextElementSibling;
+      const icon = button.querySelector('i');
+      
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        content.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // Render templates showcase grid
+    function renderTemplatesShowcase() {
+      const container = document.getElementById('templates-grid');
+      container.innerHTML = '';
+
+      templatesList.forEach(tpl => {
+        const cardMockHtml = renderTplThumbnail(tpl);
+        
+        const cardEl = document.createElement('div');
+        cardEl.className = "bg-slate-800/50 border border-slate-700/60 rounded-3xl p-5 hover:border-primary transition-all duration-300 flex flex-col justify-between gap-5 group template-card-item";
+        cardEl.dataset.category = tpl.category;
+        
+        cardEl.innerHTML = `
           <div>
-            <div style="height:2px;border-radius:2px;background:${t.accent};width:65%;margin-bottom:2px"></div>
-            <div style="height:1.5px;border-radius:2px;background:${t.accent};opacity:.4;width:80%"></div>
+            <div class="w-full aspect-[1.75] rounded-2xl overflow-hidden border border-slate-700 relative flex items-center justify-center select-none shadow-lg">
+              ${cardMockHtml}
+            </div>
+            <div class="mt-4">
+              <h4 class="font-outfit font-bold text-sm text-white group-hover:text-primary transition-colors">${tpl.name}</h4>
+              <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">${tpl.desc}</p>
+            </div>
           </div>
-          <div style="height:1.5px;background:linear-gradient(to right,${t.accent},transparent)"></div>
+          <button onclick="applyTplToCreator('${tpl.id}')" class="w-full bg-white/10 hover:bg-primary hover:text-white border border-white/5 hover:border-transparent transition-all py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
+            <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Customize Design
+          </button>
+        `;
+        container.appendChild(cardEl);
+      });
+    }
+
+    function filterTemplates(cat) {
+      document.querySelectorAll('.template-tab-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-primary', 'text-white');
+        btn.classList.add('bg-white/5', 'text-slate-300');
+      });
+      event.target.classList.add('active', 'bg-primary', 'text-white');
+      event.target.classList.remove('bg-white/5', 'text-slate-300');
+
+      document.querySelectorAll('.template-card-item').forEach(card => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // Helper functions for template mini mockup rendering
+    function renderTplThumbnail(tpl) {
+      let cssFont = 'font-sans';
+      if (tpl.font === 'font-serif') cssFont = 'font-serif';
+      if (tpl.font === 'font-mono') cssFont = 'font-mono';
+      if (tpl.font === 'font-outfit') cssFont = 'font-outfit';
+
+      const isDark = tpl.bg === '#0F172A' || tpl.bg === '#0B0F19' || tpl.bg.includes('gradient');
+      const textCol = isDark ? 'text-white' : 'text-slate-900';
+      const textSubCol = isDark ? 'text-slate-400' : 'text-slate-500';
+
+      return `
+        <div class="w-full h-full p-4 flex flex-col justify-between" style="background: ${tpl.bg}; font-family: ${tpl.font};">
+          <div class="flex justify-between items-start">
+            <div class="${cssFont}">
+              <div class="text-[10px] font-bold ${textCol} leading-none">Strategy Specialist</div>
+              <div class="text-[7px] ${textSubCol} mt-0.5">Aether Innovations</div>
+            </div>
+            <img src="./logo-bg.jpg" class="h-6 w-6 object-cover rounded border border-slate-700">
+          </div>
+          <div class="flex justify-between items-end border-t border-slate-200/5 pt-2">
+            <span class="text-[8px] font-extrabold ${textCol}">Bhavya Goel</span>
+            <span class="text-[6px] ${textSubCol}">bgoeldefender@gmail.com</span>
+          </div>
         </div>
-      </div>
-      <div class="tpl-btn-name" style="background:${t.bg};color:${t.accent}">${t.name}</div>
-    </div>
-  `).join('');
-  // More button
-  strip.innerHTML+=`<div class="tpl-btn" style="border-color:rgba(201,161,46,0.2)" onclick="openThemeModal()">
-    <div class="tpl-btn-preview" style="background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a12e" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-    </div>
-    <div class="tpl-btn-name" style="color:#c9a12e;background:rgba(0,0,0,0.3)">More</div>
-  </div>`;
-}
+      `;
+    }
 
-function applyTheme(i){
-  cs.theme=i;
-  saveLS();
-  // Update strip active state
-  document.querySelectorAll('.tpl-btn[data-ti]').forEach(b=>{
-    b.classList.toggle('active',+b.dataset.ti===i);
-  });
-  drawCards();
-}
+    function applyTplToCreator(tplId) {
+      const tpl = templatesList.find(t => t.id === tplId);
+      if (!tpl) return;
 
-function openThemeModal(){
-  toast('Use the full theme library below!','info');
-}
+      state.cardInputs.templateId = tplId;
+      state.cardInputs.primaryColor = tpl.primary;
+      state.cardInputs.secondaryColor = tpl.secondary;
+      state.cardInputs.fontFamily = tpl.font;
+      state.cardInputs.bgColor = tpl.bg;
 
-/* ══════════════════════════════════════════
-   LAYOUT
-══════════════════════════════════════════ */
-function setLayout(lay){
-  cs.layout=lay;saveLS();updateLayoutBtns();drawCards();
-}
-function updateLayoutBtns(){
-  document.querySelectorAll('.layout-btn').forEach(b=>{
-    b.classList.toggle('active',+b.dataset.lay===cs.layout);
-  });
-}
+      // Copy default Canva positions for elements
+      state.cardInputs.positions = JSON.parse(JSON.stringify(defaultPositions[tplId] || defaultPositions.minimal));
 
-/* ══════════════════════════════════════════
-   SIDE TOGGLE
-══════════════════════════════════════════ */
-function setSide(side,btn){
-  cs.side=side;
-  document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  el('card-front').style.display=side==='front'?'block':'none';
-  el('card-back').style.display=side==='back'?'block':'none';
-}
+      // Update DOM inputs to match colors
+      document.getElementById('color-bg').value = tpl.bg.startsWith('linear') ? '#FFFFFF' : tpl.bg;
+      document.getElementById('color-primary').value = tpl.primary;
+      document.getElementById('color-secondary').value = tpl.secondary;
+      
+      // Update fonts
+      document.querySelectorAll('.font-btn').forEach(btn => {
+        btn.classList.remove('active', 'border-primary');
+        btn.classList.add('border-transparent');
+        if (btn.getAttribute('onclick').includes(tpl.font)) {
+          btn.classList.add('active', 'border-primary');
+          btn.classList.remove('border-transparent');
+        }
+      });
 
-/* ══════════════════════════════════════════
-   LOGO UPLOAD
-══════════════════════════════════════════ */
-function handleLogo(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    cs.logoURL=e.target.result;
-    const th=el('logo-thumb');th.src=cs.logoURL;th.style.display='block';
-    saveLS();drawCards();
-    toast('Logo uploaded!','success');
-  };
-  reader.readAsDataURL(file);
-}
+      renderCardPreview();
+      showToast('Template Applied', `Successfully switched card layout style to "${tpl.name}".`, 'success');
+      window.location.hash = '#creator';
+    }
 
-/* ══════════════════════════════════════════
-   CARD RENDERING
-══════════════════════════════════════════ */
-function drawFront(){
-  const t=ALL_THEMES[cs.theme]||ALL_THEMES[0];
-  const lay=cs.layout;
-  const c=el('card-front');
-  const w=c.offsetWidth||350;
-  const fs=n=>Math.max(6,n*(w/340))+'px';
-  const logoEl=cs.logoURL?`<img src="${cs.logoURL}" style="width:${fs(32)};height:${fs(32)};object-fit:contain;border-radius:5px;flex-shrink:0">`:'';
-  const contactItems=[
-    cs.phone?`📞 ${cs.phone}`:'',
-    cs.email?`✉️ ${cs.email}`:'',
-    cs.web?`🌐 ${cs.web}`:'',
-    cs.addr?`🏢 ${cs.addr}`:''
-  ].filter(Boolean);
-  const contactLine=contactItems.map(i=>`<div style="font-size:${fs(8)};color:${t.muted};line-height:1.5;font-family:'Inter',sans-serif;">${i}</div>`).join('');
 
-  let html='';
+    // Creator controls logic
+    function bindInputsToState() {
+      const fields = ['name', 'title', 'company', 'phone', 'email', 'website', 'address', 'linkedin', 'twitter'];
+      fields.forEach(field => {
+        const input = document.getElementById(`input-${field}`);
+        if (input) {
+          input.value = state.cardInputs[field];
+        }
+      });
 
-  if(lay===0){
-    // Classic: name top-left, contact bottom
-    html=`<div style="width:100%;height:100%;background:${t.bg};padding:${fs(18)} ${fs(22)};display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;right:0;width:${fs(90)};height:${fs(90)};background:${t.accent};opacity:.07;border-radius:50%;transform:translate(30%,-30%)"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,${t.accent},transparent)"></div>
-      <div style="display:flex;align-items:center;gap:${fs(9)}">${logoEl}<div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:${fs(16)};color:${t.text};line-height:1.1;text-transform:uppercase;letter-spacing:-0.5px;">${cs.name||'Your Name'}</div>
-        <div style="font-size:${fs(9)};color:${t.accent};font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:2px;font-family:'Space Grotesk',sans-serif;">${cs.title||'Your Title'}</div>
-      </div></div>
-      <div>${cs.company?`<div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(9)};font-weight:700;color:${t.accent};margin-bottom:${fs(4)};text-transform:uppercase;">${cs.company}</div>`:''}<div style="display:flex;flex-direction:column;gap:0">${contactLine}</div></div>
-    </div>`;
+      // Style panel templates
+      const styleListEl = document.getElementById('generator-style-list');
+      styleListEl.innerHTML = '';
+      templatesList.forEach(tpl => {
+        const activeClass = state.cardInputs.templateId === tpl.id ? 'border-primary' : 'border-transparent';
+        styleListEl.innerHTML += `
+          <button onclick="applyTplToCreator('${tpl.id}')" class="flex flex-col text-left p-3.5 bg-slate-50 border-2 ${activeClass} rounded-2xl hover:bg-slate-100/80 hover:border-slate-300 transition-all select-none">
+            <span class="block font-bold text-xs text-slate-800">${tpl.name}</span>
+            <span class="block text-[9px] text-slate-400 mt-1 capitalize">${tpl.category} design rules</span>
+          </button>
+        `;
+      });
 
-  } else if(lay===1){
-    // Split: accent sidebar left
-    html=`<div style="width:100%;height:100%;background:${t.bg};display:flex;overflow:hidden">
-      <div style="width:34%;background:${t.accent};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:${fs(10)};gap:${fs(5)};">
-        ${cs.logoURL?`<img src="${cs.logoURL}" style="width:${fs(42)};height:${fs(42)};object-fit:contain;border-radius:6px;background:rgba(255,255,255,.15);padding:3px">`:`<div style="width:${fs(42)};height:${fs(42)};border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:${fs(19)};font-weight:800;color:#000;font-family:'Space Grotesk',sans-serif;">${(cs.name||'B')[0].toUpperCase()}</div>`}
-        ${cs.company?`<div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(8)};font-weight:800;color:#000;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-top:3px">${cs.company}</div>`:''}
-      </div>
-      <div style="flex:1;padding:${fs(14)} ${fs(14)};display:flex;flex-direction:column;justify-content:space-between">
+      // Set initials on logo builder
+      document.getElementById('logo-builder-text').value = state.logoBuilder.text;
+      document.getElementById('logo-builder-color').value = state.logoBuilder.color;
+      document.getElementById('logo-builder-color-val').innerText = state.logoBuilder.color;
+
+      // Set url in QR config
+      document.getElementById('qr-input-url').value = state.cardInputs.qrCodeUrl;
+    }
+
+    function updateCardDetails(field, value) {
+      state.cardInputs[field] = value;
+      renderCardPreview();
+
+      if (field === 'name') {
+        const mockSlug = value.toLowerCase().replace(/[^a-z0-9]/g, '');
+        document.getElementById('qr-input-url').value = `https://bgcards.app/card/${mockSlug}`;
+        state.cardInputs.qrCodeUrl = `https://bgcards.app/card/${mockSlug}`;
+      }
+    }
+
+    // AI Suggestions
+    function suggestAITitle() {
+      const titles = [
+        "Vice President of Product Strategy",
+        "Lead Solutions Architect & Consultant",
+        "Principal AI Research Engineer",
+        "Creative Director & Brand Architect",
+        "Managing Partner & Strategy Counsel",
+        "Founding UX Lead"
+      ];
+      const selected = titles[Math.floor(Math.random() * titles.length)];
+      state.cardInputs.title = selected;
+      document.getElementById('input-title').value = selected;
+      renderCardPreview();
+      showToast('AI Content suggestion', 'Suggested a premium job title based on industry trends.', 'info');
+    }
+
+    // Asset uploads
+    function handleAssetUpload(input, type) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        document.getElementById(`${type}-filename`).innerText = file.name;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (type === 'logo') {
+            state.cardInputs.logoUrl = e.target.result;
+          } else {
+            state.cardInputs.profilePicUrl = e.target.result;
+          }
+          renderCardPreview();
+          showToast('Image Loaded', 'Asset uploaded and embedded into live preview.', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // AI Logo Badge Builder
+    function changeLogoShape(shape) {
+      state.logoBuilder.shape = shape;
+      document.querySelectorAll('.logo-shape-btn').forEach(btn => {
+        btn.classList.remove('active', 'border-primary', 'text-primary');
+        btn.classList.add('border-transparent', 'text-slate-600');
+        if (btn.innerText.toLowerCase() === shape) {
+          btn.classList.add('active', 'border-primary', 'text-primary');
+          btn.classList.remove('border-transparent', 'text-slate-600');
+        }
+      });
+      updateLogoGenerator();
+    }
+
+    function updateLogoGenerator() {
+      state.logoBuilder.text = document.getElementById('logo-builder-text').value;
+      state.logoBuilder.color = document.getElementById('logo-builder-color').value;
+      document.getElementById('logo-builder-color-val').innerText = state.logoBuilder.color;
+    }
+
+    function applyGeneratedLogo() {
+      const shape = state.logoBuilder.shape;
+      const text = state.logoBuilder.text || "AI";
+      const color = state.logoBuilder.color;
+
+      let pathSvg = '';
+      if (shape === 'circle') {
+        pathSvg = `<circle cx="50" cy="50" r="45" fill="none" stroke="${color}" stroke-width="8"/>`;
+      } else if (shape === 'hexagon') {
+        pathSvg = `<polygon points="50,5 90,28 90,72 50,95 10,72 10,28" fill="none" stroke="${color}" stroke-width="8"/>`;
+      } else if (shape === 'diamond') {
+        pathSvg = `<polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="${color}" stroke-width="8"/>`;
+      } else if (shape === 'shield') {
+        pathSvg = `<path d="M10,10 L50,5 L90,10 L90,55 C90,80 50,95 50,95 C50,95 10,80 10,55 Z" fill="none" stroke="${color}" stroke-width="8"/>`;
+      } else if (shape === 'square') {
+        pathSvg = `<rect x="10" y="10" width="80" height="80" fill="none" stroke="${color}" stroke-width="8"/>`;
+      } else { 
+        pathSvg = `<circle cx="50" cy="50" r="45" fill="none" stroke="${color}" stroke-width="8" stroke-dasharray="10 5"/>`;
+      }
+
+      const logoSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full">
+          ${pathSvg}
+          <text x="50" y="58" font-family="'Outfit', sans-serif" font-weight="900" font-size="28" fill="${color}" text-anchor="middle">${text}</text>
+        </svg>
+      `;
+
+      state.cardInputs.logoUrl = 'data:image/svg+xml;base64,' + btoa(logoSvg);
+      renderCardPreview();
+      showToast('AI Logo Applied', 'Generated emblem design linked onto card mockup.', 'success');
+    }
+
+    // Font selection
+    function changeCardFont(fontFamily) {
+      state.cardInputs.fontFamily = fontFamily;
+      document.querySelectorAll('.font-btn').forEach(btn => {
+        btn.classList.remove('active', 'border-primary');
+        btn.classList.add('border-transparent');
+      });
+      event.currentTarget.classList.add('active', 'border-primary');
+      event.currentTarget.classList.remove('border-transparent');
+      
+      renderCardPreview();
+    }
+
+    // Custom colors & Presets
+    function changeCustomColor(type, val) {
+      state.cardInputs[type] = val;
+      document.getElementById(`color-${type === 'bgColor' ? 'bg' : type === 'primaryColor' ? 'primary' : 'secondary'}-val`).innerText = val;
+      renderCardPreview();
+    }
+
+    function applyColorPreset(primary, secondary, bg) {
+      state.cardInputs.primaryColor = primary;
+      state.cardInputs.secondaryColor = secondary;
+      state.cardInputs.bgColor = bg;
+
+      document.getElementById('color-bg').value = bg.startsWith('linear') ? '#FFFFFF' : bg;
+      document.getElementById('color-primary').value = primary;
+      document.getElementById('color-secondary').value = secondary;
+
+      document.getElementById('color-bg-val').innerText = bg;
+      document.getElementById('color-primary-val').innerText = primary;
+      document.getElementById('color-secondary-val').innerText = secondary;
+
+      renderCardPreview();
+      showToast('Preset Palette Applied', 'Transferred color preset rules directly onto card style sheet.', 'success');
+    }
+
+    // Canva absolute dragging listeners
+    let currentDragElement = null;
+    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+    function handleDragStart(e) {
+      e.stopPropagation();
+      const el = e.currentTarget;
+      currentDragElement = el;
+
+      const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+
+      startX = clientX;
+      startY = clientY;
+
+      startLeft = parseInt(el.style.left) || 0;
+      startTop = parseInt(el.style.top) || 0;
+
+      document.addEventListener('mousemove', handleDragMove);
+      document.addEventListener('mouseup', handleDragEnd);
+      document.addEventListener('touchmove', handleDragMove, { passive: false });
+      document.addEventListener('touchend', handleDragEnd);
+    }
+
+    function handleDragMove(e) {
+      if (!currentDragElement) return;
+      e.preventDefault();
+
+      const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+
+      const scale = state.zoom;
+      
+      // Keep boundaries inside 700x400
+      const newLeft = Math.max(0, Math.min(700 - currentDragElement.offsetWidth, startLeft + (dx / scale)));
+      const newTop = Math.max(0, Math.min(400 - currentDragElement.offsetHeight, startTop + (dy / scale)));
+
+      currentDragElement.style.left = `${newLeft}px`;
+      currentDragElement.style.top = `${newTop}px`;
+
+      const key = currentDragElement.dataset.elementKey;
+      const face = currentDragElement.dataset.elementFace;
+      state.cardInputs.positions[face][key] = { x: newLeft, y: newTop };
+    }
+
+    function handleDragEnd() {
+      currentDragElement = null;
+      document.removeEventListener('mousemove', handleDragMove);
+      document.removeEventListener('mouseup', handleDragEnd);
+      document.removeEventListener('touchmove', handleDragMove);
+      document.removeEventListener('touchend', handleDragEnd);
+      saveCardsToLocalStorage();
+    }
+
+
+    // Flip mechanism
+    function flipCard() {
+      const container = document.getElementById('card-inner');
+      container.classList.toggle('flipped');
+    }
+
+    // Zoom adjustments
+    function adjustZoom(delta) {
+      let target = parseFloat((state.zoom + delta).toFixed(1));
+      if (target >= 0.5 && target <= 1.5) {
+        state.zoom = target;
+        document.getElementById('zoom-value').innerText = `${Math.round(target * 100)}%`;
+        document.getElementById('card-inner').style.transform = `scale(${target}) ${document.getElementById('card-inner').classList.contains('flipped') ? 'rotateY(180deg)' : ''}`;
+      }
+    }
+
+    // Toggle safety bleed guides
+    function toggleBleedGuides() {
+      state.cardInputs.showBleed = !state.cardInputs.showBleed;
+      
+      const workspace = document.getElementById('view-creator');
+      if (state.cardInputs.showBleed) {
+        workspace.classList.add('show-bleed-lines');
+      } else {
+        workspace.classList.remove('show-bleed-lines');
+      }
+    }
+
+    function updateQRCodeUrl(url) {
+      state.cardInputs.qrCodeUrl = url;
+      renderCardPreview();
+    }
+
+
+    // Dynamic rendering card engine (Canvas Absolute position models)
+    function renderCardPreview() {
+      const frontWrap = document.getElementById('card-front-face');
+      const backWrap = document.getElementById('card-back-face');
+      
+      if (!frontWrap || !backWrap) return;
+
+      const data = state.cardInputs;
+      const cssFont = data.fontFamily;
+      const bgStyle = data.bgColor;
+      const primaryCol = data.primaryColor;
+      const secondaryCol = data.secondaryColor;
+
+      // positions
+      const posFront = data.positions.front;
+      const posBack = data.positions.back;
+
+      // Logo Image element
+      let logoMarkup = `<img src="./logo-bg.jpg" alt="BG Logo" class="h-12 max-w-[120px] object-contain rounded-lg border border-slate-700">`;
+      if (data.logoUrl) {
+        logoMarkup = `<img src="${data.logoUrl}" alt="Corporate Logo" class="h-12 max-w-[120px] object-contain">`;
+      }
+
+      // Profile picture
+      let profileMarkup = '';
+      if (data.profilePicUrl) {
+        profileMarkup = `
+          <div class="h-16 w-16 rounded-full border-2 overflow-hidden shadow-inner shrink-0" style="border-color: ${primaryCol}">
+            <img src="${data.profilePicUrl}" alt="Profile avatar" class="w-full h-full object-cover">
+          </div>
+        `;
+      }
+
+      // Render Front Side Canva absolute elements
+      frontWrap.style.background = bgStyle;
+      frontWrap.style.fontFamily = cssFont;
+      
+      // Template styles configurations
+      let borderStripe = '';
+      if (data.templateId === 'corporate') {
+        borderStripe = `<div class="absolute left-0 top-0 bottom-0 w-4" style="background: ${primaryCol};"></div>`;
+      } else if (data.templateId === 'lawyerfirm') {
+        borderStripe = `<div class="absolute inset-4 border-2 pointer-events-none" style="border-color: ${primaryCol};"></div>`;
+      }
+
+      frontWrap.innerHTML = `
+        <div class="w-full h-full relative p-8">
+          <div class="bleed-line"></div>
+          ${borderStripe}
+          
+          <!-- Element A: Name & Job title -->
+          <div class="draggable-element absolute cursor-move p-2 select-none" 
+               data-element-key="nameTitle" data-element-face="front"
+               style="left: ${posFront.nameTitle.x}px; top: ${posFront.nameTitle.y}px;"
+               onmousedown="handleDragStart(event)" ontouchstart="handleDragStart(event)">
+            <h3 class="font-extrabold text-2xl tracking-tight leading-none" style="color: ${secondaryCol};">${data.name}</h3>
+            <p class="text-xs font-bold tracking-wider uppercase mt-1.5" style="color: ${primaryCol};">${data.title}</p>
+          </div>
+
+          <!-- Element B: Logo & Company -->
+          <div class="draggable-element absolute cursor-move p-2 select-none flex items-center gap-3" 
+               data-element-key="companyLogo" data-element-face="front"
+               style="left: ${posFront.companyLogo.x}px; top: ${posFront.companyLogo.y}px;"
+               onmousedown="handleDragStart(event)" ontouchstart="handleDragStart(event)">
+            ${profileMarkup || logoMarkup}
+            <div>
+              <span class="block font-bold text-sm tracking-tight leading-none" style="color: ${secondaryCol};">${data.company}</span>
+              <span class="block text-[9px] text-slate-400 mt-1">Networking Suite</span>
+            </div>
+          </div>
+
+          <!-- Element C: Contacts list -->
+          <div class="draggable-element absolute cursor-move p-2 select-none space-y-1 text-[10px]" 
+               data-element-key="contacts" data-element-face="front"
+               style="left: ${posFront.contacts.x}px; top: ${posFront.contacts.y}px;"
+               onmousedown="handleDragStart(event)" ontouchstart="handleDragStart(event)">
+            <div class="flex items-center gap-2" style="color: ${secondaryCol};"><i data-lucide="phone" class="w-3.5 h-3.5" style="color: ${primaryCol};"></i> ${data.phone}</div>
+            <div class="flex items-center gap-2" style="color: ${secondaryCol};"><i data-lucide="mail" class="w-3.5 h-3.5" style="color: ${primaryCol};"></i> ${data.email}</div>
+            <div class="flex items-center gap-2" style="color: ${secondaryCol};"><i data-lucide="globe" class="w-3.5 h-3.5" style="color: ${primaryCol};"></i> ${data.website}</div>
+            <div class="flex items-center gap-2" style="color: ${secondaryCol};"><i data-lucide="map-pin" class="w-3.5 h-3.5" style="color: ${primaryCol};"></i> ${data.address}</div>
+          </div>
+        </div>
+      `;
+
+      // Render Back Side Canva elements
+      backWrap.style.background = bgStyle;
+      backWrap.style.fontFamily = cssFont;
+
+      backWrap.innerHTML = `
+        <div class="w-full h-full relative p-8">
+          <div class="bleed-line"></div>
+          
+          <!-- Element D: Back Side Company logo group -->
+          <div class="draggable-element absolute cursor-move p-2 select-none flex flex-col items-center gap-2 text-center" 
+               data-element-key="logoGroup" data-element-face="back"
+               style="left: ${posBack.logoGroup.x}px; top: ${posBack.logoGroup.y}px;"
+               onmousedown="handleDragStart(event)" ontouchstart="handleDragStart(event)">
+            ${logoMarkup}
+            <span class="block font-bold text-sm tracking-wide mt-1" style="color: ${secondaryCol};">${data.company}</span>
+            <span class="block text-[8px] text-slate-400 font-semibold uppercase tracking-widest">Connect / Scan Profile</span>
+          </div>
+
+          <!-- Element E: Back Side QR Code -->
+          <div class="draggable-element absolute cursor-move p-2 select-none flex flex-col items-center gap-1.5" 
+               data-element-key="qrGroup" data-element-face="back"
+               style="left: ${posBack.qrGroup.x}px; top: ${posBack.qrGroup.y}px;"
+               onmousedown="handleDragStart(event)" ontouchstart="handleDragStart(event)">
+            <div id="qr-code-back" class="bg-white p-1.5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-center"></div>
+          </div>
+        </div>
+      `;
+
+      // Draw QR Code
+      setTimeout(() => {
+        const qrb = document.getElementById('qr-code-back');
+        if (qrb) {
+          qrb.innerHTML = '';
+          const qr = qrcode(4, 'L');
+          qr.addData(data.qrCodeUrl || 'https://bgcards.app');
+          qr.make();
+          qrb.innerHTML = qr.createImgTag(3, 4);
+          const img = qrb.querySelector('img');
+          if (img) img.className = "w-12 h-12";
+        }
+        lucide.createIcons();
+      }, 20);
+    }
+
+    // Interactive Hero name simulator
+    function updateHeroDemo(val) {
+      if (!val) val = "Bhavya Goel";
+      const h3 = document.querySelector('#view-home h3');
+      if (h3) h3.innerText = val;
+    }
+
+
+    // Authentication logic (Simplified Connection Modal)
+    function openAuthModal() {
+      document.getElementById('auth-modal').classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+    }
+
+    function simulateAuthLogin() {
+      const nameVal = document.getElementById('auth-username-input').value;
+      if (!nameVal) {
+        showToast('Input Required', 'Please enter your name to connect.', 'warning');
+        return;
+      }
+      
+      if (nameVal.toLowerCase() === 'admin') {
+        state.user = {
+          name: 'Chief Administrator',
+          email: 'admin@bgcards.app',
+          avatarUrl: '',
+          tier: 'System Console'
+        };
+        document.getElementById('nav-admin-link').classList.remove('hidden');
+      } else {
+        state.user = {
+          name: nameVal,
+          email: nameVal.toLowerCase().replace(/\s+/g, '') + '@bgcards.app',
+          avatarUrl: '',
+          tier: 'Free Member'
+        };
+        document.getElementById('nav-admin-link').classList.add('hidden');
+      }
+
+      closeAuthModal();
+      showToast('Connected Successfully', `Welcome to BG Cards, ${state.user.name}!`, 'success');
+
+      // Update Nav profile representation
+      document.getElementById('auth-buttons-nav').classList.add('hidden');
+      document.getElementById('user-profile-nav').classList.remove('hidden');
+      document.getElementById('nav-user-name').innerText = state.user.name;
+      document.getElementById('nav-user-badge').innerText = state.user.tier;
+      document.getElementById('nav-avatar-initials').innerText = state.user.name.substring(0,1).toUpperCase();
+      document.getElementById('nav-dashboard-link').classList.remove('hidden');
+
+      loadSavedCards();
+      
+      confetti({
+        particleCount: 80,
+        spread: 50,
+        origin: { y: 0.8 }
+      });
+
+      navigateTo('dashboard');
+    }
+
+    function logout() {
+      state.user = null;
+      document.getElementById('auth-buttons-nav').classList.remove('hidden');
+      document.getElementById('user-profile-nav').classList.add('hidden');
+      document.getElementById('nav-dashboard-link').classList.add('hidden');
+      document.getElementById('nav-admin-link').classList.add('hidden');
+      
+      showToast('Logged Out', 'You have disconnected from session memory.', 'info');
+      navigateTo('home');
+    }
+
+
+    // LocalStorage Saved Cards Operations
+    function loadSavedCards() {
+      const local = localStorage.getItem('bg_cards');
+      if (local) {
+        state.savedCards = JSON.parse(local);
+      } else {
+        state.savedCards = [];
+        saveCardsToLocalStorage();
+      }
+      document.getElementById('stat-cards-count').innerText = state.savedCards.length;
+    }
+
+    function saveCardsToLocalStorage() {
+      localStorage.setItem('bg_cards', JSON.stringify(state.savedCards));
+      document.getElementById('stat-cards-count').innerText = state.savedCards.length;
+    }
+
+    function saveCardToDashboard() {
+      if (!state.user) {
+        openAuthModal();
+        showToast('Name Required', 'Please enter your name first to store card layouts.', 'warning');
+        return;
+      }
+
+      const currentId = state.cardInputs.id;
+      if (currentId) {
+        const idx = state.savedCards.findIndex(c => c.id === currentId);
+        if (idx !== -1) {
+          state.savedCards[idx] = {
+            ...state.savedCards[idx],
+            ...state.cardInputs
+          };
+          showToast('Card Updated', 'Successfully modified design layouts in your database.', 'success');
+        }
+      } else {
+        const newCard = {
+          ...state.cardInputs,
+          id: 'card-' + Date.now(),
+          views: 0,
+          downloads: 0,
+          scans: 0
+        };
+        state.savedCards.push(newCard);
+        state.cardInputs.id = newCard.id;
+        showToast('Design Saved', 'Added card layouts to your professional directory.', 'success');
+      }
+
+      saveCardsToLocalStorage();
+      
+      confetti({
+        particleCount: 50,
+        spread: 30,
+        origin: { y: 0.8 }
+      });
+    }
+
+    function deleteCard(cardId) {
+      if (confirm('Are you sure you want to delete this business card design permanently?')) {
+        state.savedCards = state.savedCards.filter(c => c.id !== cardId);
+        saveCardsToLocalStorage();
+        renderDashboardList();
+        showToast('Design Deleted', 'Business card layout removed from index directory.', 'info');
+      }
+    }
+
+    function duplicateCard(cardId) {
+      const target = state.savedCards.find(c => c.id === cardId);
+      if (target) {
+        const copy = {
+          ...target,
+          id: 'card-' + Date.now(),
+          name: target.name + ' (Copy)',
+          views: 0,
+          downloads: 0,
+          scans: 0
+        };
+        state.savedCards.push(copy);
+        saveCardsToLocalStorage();
+        renderDashboardList();
+        showToast('Layout Duplicated', 'Cloned design card to dashboard registry.', 'success');
+      }
+    }
+
+    // Edit Saved Card
+    function editCard(cardId) {
+      const target = state.savedCards.find(c => c.id === cardId);
+      if (target) {
+        state.cardInputs = { ...target };
+        bindInputsToState();
+        navigateTo('creator');
+        showToast('Editor Opened', `Loaded card profile template for ${target.name}.`, 'info');
+      }
+    }
+
+    function renderDashboardList() {
+      const grid = document.getElementById('dashboard-cards-grid');
+      const emptyState = document.getElementById('dashboard-empty-state');
+
+      grid.innerHTML = '';
+
+      if (state.savedCards.length === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        grid.classList.add('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+        grid.classList.remove('hidden');
+
+        state.savedCards.forEach(card => {
+          const item = document.createElement('div');
+          item.className = "bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-6 flex flex-col justify-between hover:shadow-md transition-all";
+          
+          item.innerHTML = `
+            <div class="flex flex-col sm:flex-row gap-5 items-center justify-between">
+              <!-- Text details -->
+              <div class="space-y-1.5 text-center sm:text-left">
+                <span class="inline-block bg-primary/10 text-primary font-bold text-[8px] px-2 py-0.5 rounded-full uppercase tracking-wider">${card.templateId} preset</span>
+                <h4 class="font-outfit font-extrabold text-base text-secondary">${card.name}</h4>
+                <p class="text-xs text-slate-500 font-semibold">${card.title} at ${card.company}</p>
+                <div class="text-[10px] text-slate-400 font-mono mt-2 flex items-center justify-center sm:justify-start gap-3">
+                  <span>👁️ ${card.views} views</span>
+                  <span>📥 ${card.downloads} DLs</span>
+                  <span>📷 ${card.scans} scans</span>
+                </div>
+              </div>
+
+              <!-- Compact QR code representation -->
+              <div class="bg-slate-50 p-2 border border-slate-100 rounded-2xl shrink-0">
+                <div id="dash-qr-${card.id}" class="w-14 h-14 bg-white flex items-center justify-center"></div>
+              </div>
+            </div>
+
+            <!-- Actions buttons -->
+            <div class="border-t border-slate-100 pt-4 flex flex-wrap gap-2.5 text-xs font-bold">
+              <button onclick="editCard('${card.id}')" class="bg-primary hover:bg-primary-600 text-white py-2.5 px-4 rounded-xl shadow-md shadow-primary/5 transition-all flex items-center gap-1.5"><i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit</button>
+              <button onclick="duplicateCard('${card.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 px-4 rounded-xl transition-all flex items-center gap-1.5"><i data-lucide="copy" class="w-3.5 h-3.5"></i> Duplicate</button>
+              <a href="#card/${card.name.toLowerCase().replace(/[^a-z0-9]/g, '')}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 px-4 rounded-xl transition-all flex items-center gap-1.5"><i data-lucide="eye" class="w-3.5 h-3.5"></i> Web Link</a>
+              <button onclick="deleteCard('${card.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 py-2.5 px-4 rounded-xl transition-all ml-auto"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            </div>
+          `;
+          
+          grid.appendChild(item);
+
+          // Draw the QR
+          setTimeout(() => {
+            const qrd = document.getElementById(`dash-qr-${card.id}`);
+            if (qrd) {
+              const qr = qrcode(4, 'L');
+              qr.addData(card.qrCodeUrl || 'https://bgcards.app');
+              qr.make();
+              qrd.innerHTML = qr.createImgTag(2.5, 2);
+              const img = qrd.querySelector('img');
+              if (img) img.className = "w-12 h-12";
+            }
+          }, 30);
+        });
+      }
+
+      setTimeout(() => { lucide.createIcons(); }, 50);
+    }
+
+
+    // Admin Panel Logic
+    function renderAdminPanel() {
+      const tbody = document.getElementById('admin-users-table');
+      tbody.innerHTML = '';
+
+      mockUsersDB.forEach(user => {
+        const isSuspended = user.status === 'Suspended';
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition-colors";
+        
+        tr.innerHTML = `
+          <td class="p-4 flex items-center gap-3">
+            <div class="h-8 w-8 rounded-full bg-primary text-white font-extrabold flex items-center justify-center text-[10px] uppercase shadow-inner">
+              ${user.name.substring(0,1)}
+            </div>
+            <div>
+              <span class="block font-bold text-slate-800">${user.name}</span>
+              <span class="block text-[10px] text-slate-400 font-semibold">${user.email}</span>
+            </div>
+          </td>
+          <td class="p-4">
+            <span class="px-2.5 py-1 rounded-full font-bold text-[9px] bg-emerald-100 text-emerald-800">${user.plan}</span>
+          </td>
+          <td class="p-4 font-semibold text-slate-600">${user.orders}</td>
+          <td class="p-4 text-center">
+            <button onclick="toggleUserStatus(${user.id})" class="px-3 py-1.5 rounded-lg font-bold text-[10px] ${isSuspended ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-red-50 text-red-600 hover:bg-red-100'} transition-all">
+              ${isSuspended ? 'Unsuspend' : 'Suspend User'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const templatesControls = document.getElementById('admin-templates-controls');
+      templatesControls.innerHTML = '';
+      
+      templatesList.forEach(tpl => {
+        templatesControls.innerHTML += `
+          <div class="flex items-center justify-between text-xs py-1.5 font-sans">
+            <span class="font-bold text-slate-700">${tpl.name}</span>
+            <div class="relative inline-flex items-center cursor-pointer select-none">
+              <input type="checkbox" checked class="sr-only peer">
+              <div class="w-8 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      setTimeout(() => { lucide.createIcons(); }, 50);
+    }
+
+    function toggleUserStatus(userId) {
+      const user = mockUsersDB.find(u => u.id === userId);
+      if (user) {
+        user.status = user.status === 'Active' ? 'Suspended' : 'Active';
+        showToast('Status Toggled', `User account status changed for ${user.name}.`, 'info');
+        renderAdminPanel();
+      }
+    }
+
+
+    // Public Web Share page rendering
+    function showPublicShareCard(slug) {
+      let card = state.savedCards.find(c => c.name.toLowerCase().replace(/[^a-z0-9]/g, '') === slug);
+      if (!card) {
+        card = state.savedCards[0] || state.cardInputs;
+      }
+
+      navigateTo('share');
+
+      document.getElementById('share-user-name').innerText = card.name;
+      document.getElementById('share-user-title').innerText = card.title;
+      document.getElementById('share-user-company').innerText = card.company;
+      if (card.profilePicUrl) {
+        document.getElementById('share-profile-wrap').classList.remove('hidden');
+        document.getElementById('share-profile-avatar').src = card.profilePicUrl;
+      } else {
+        document.getElementById('share-profile-wrap').classList.add('hidden');
+      }
+
+      const container = document.getElementById('share-card-container');
+      const cssFont = card.fontFamily;
+      const bgStyle = card.bgColor;
+      const primaryCol = card.primaryColor;
+      const secondaryCol = card.secondaryColor;
+
+      let logoMarkup = `<img src="./logo-bg.jpg" alt="logo" class="h-8 max-w-[80px] object-contain rounded border border-slate-200">`;
+      if (card.logoUrl) logoMarkup = `<img src="${card.logoUrl}" alt="logo" class="h-8 max-w-[80px] object-contain">`;
+
+      container.style.background = bgStyle;
+      container.style.fontFamily = cssFont;
+      
+      container.innerHTML = `
+        <div class="w-full h-full p-8 flex flex-col justify-between ${cssFont} text-slate-800" style="background: ${bgStyle};">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-extrabold text-xl leading-none" style="color: ${secondaryCol};">${card.name}</h3>
+              <p class="text-[10px] font-semibold mt-1.5 uppercase tracking-wide" style="color: ${primaryCol};">${card.title}</p>
+            </div>
+            ${logoMarkup}
+          </div>
+          <div class="flex justify-between items-end text-[9px] border-t border-slate-200/60 pt-4" style="color: ${secondaryCol};">
+            <div class="space-y-1">
+              <div>Phone: ${card.phone}</div>
+              <div>Email: ${card.email}</div>
+            </div>
+            <div class="space-y-1 text-right">
+              <div>Web: ${card.website}</div>
+              <div>Office: ${card.address}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      card.views = (card.views || 0) + 1;
+      saveCardsToLocalStorage();
+    }
+
+    function downloadContactVcf() {
+      const card = state.savedCards[0] || state.cardInputs;
+      const vcard = `BEGIN:VCARD
+VERSION:3.0
+N:${card.name};;;
+FN:${card.name}
+ORG:${card.company}
+TITLE:${card.title}
+TEL;TYPE=CELL:${card.phone}
+EMAIL;TYPE=PREF,INTERNET:${card.email}
+URL:${card.website}
+ADR;TYPE=WORK:;;${card.address}
+END:VCARD`;
+
+      const blob = new Blob([vcard], { type: 'text/vcard' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${card.name.replace(/\s+/g, '_')}_contact.vcf`;
+      link.click();
+      showToast('Contact Saved', 'VCF address book contact card downloaded successfully.', 'success');
+    }
+
+    function copyCurrentShareLink() {
+      const mockLink = window.location.href;
+      navigator.clipboard.writeText(mockLink).then(() => {
+        showToast('Link Copied', 'Mobile digital card link copied to clipboard.', 'success');
+      });
+    }
+
+
+    // Standalone exports logic
+    function toggleExportMenu() {
+      const menu = document.getElementById('export-dropdown');
+      const chev = document.getElementById('export-chevron');
+      menu.classList.toggle('hidden');
+      chev.classList.toggle('rotate-180');
+    }
+
+    function exportCard(format) {
+      toggleExportMenu();
+      const face = document.getElementById('card-inner').classList.contains('flipped') ? 'back' : 'front';
+      const element = face === 'front' ? document.getElementById('card-front-face') : document.getElementById('card-back-face');
+      const cardName = state.cardInputs.name.replace(/\s+/g, '_') || 'business_card';
+      
+      if (!element) return;
+
+      showToast('Generating File', 'Rendering high-resolution vector assets, please wait...', 'info');
+
+      if (format === 'svg') {
+        const data = state.cardInputs;
+        const svgContent = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" width="700" height="400">
+            <rect width="100%" height="100%" fill="${data.bgColor.startsWith('linear') ? '#FFFFFF' : data.bgColor}"/>
+            <text x="50" y="80" font-family="sans-serif" font-weight="bold" font-size="32" fill="${data.secondaryColor}">${data.name}</text>
+            <text x="50" y="115" font-family="sans-serif" font-weight="semibold" font-size="16" fill="${data.primaryColor}">${data.title}</text>
+            <text x="50" y="145" font-family="sans-serif" font-size="14" fill="#94A3B8">${data.company}</text>
+            <line x1="50" y1="180" x2="650" y2="180" stroke="#E2E8F0" stroke-width="1"/>
+            <text x="50" y="220" font-family="sans-serif" font-size="12" fill="${data.secondaryColor}">Phone: ${data.phone}</text>
+            <text x="50" y="245" font-family="sans-serif" font-size="12" fill="${data.secondaryColor}">Email: ${data.email}</text>
+            <text x="50" y="270" font-family="sans-serif" font-size="12" fill="${data.secondaryColor}">Website: ${data.website}</text>
+            <text x="50" y="295" font-family="sans-serif" font-size="12" fill="${data.secondaryColor}">Address: ${data.address}</text>
+          </svg>
+        `;
+        const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${cardName}_${face}.svg`;
+        link.click();
+        triggerDownloadSuccess();
+        return;
+      }
+
+      html2canvas(element, {
+        scale: 3, 
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null
+      }).then(canvas => {
+        if (format === 'png' || format === 'jpg') {
+          const mime = format === 'png' ? 'image/png' : 'image/jpeg';
+          const imgUrl = canvas.toDataURL(mime, 0.95);
+          
+          const link = document.createElement('a');
+          link.href = imgUrl;
+          link.download = `${cardName}_${face}.${format}`;
+          link.click();
+          triggerDownloadSuccess();
+        } 
+        else if (format === 'pdf') {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({
+            orientation: 'landscape',
+            unit: 'in',
+            format: [3.5, 2.0]
+          });
+
+          const imgData = canvas.toDataURL('image/jpeg', 0.95);
+          pdf.addImage(imgData, 'JPEG', 0, 0, 3.5, 2.0);
+          pdf.save(`${cardName}_${face}.pdf`);
+          triggerDownloadSuccess();
+        }
+      });
+    }
+
+    function triggerDownloadSuccess() {
+      confetti({
+        particleCount: 100,
+        spread: 60,
+        origin: { y: 0.8 }
+      });
+      showToast('Export Completed', 'High resolution file exported successfully. Ready for networking!', 'success');
+      
+      const downloadsCount = parseInt(document.getElementById('stat-downloads').innerText);
+      document.getElementById('stat-downloads').innerText = downloadsCount + 1;
+    }
+
+
+    // NFC Order panel
+    function orderNfcCard() {
+      document.getElementById('nfc-card-preview-name').innerText = state.cardInputs.name;
+      document.getElementById('nfc-card-preview-company').innerText = state.cardInputs.company || 'Aether Design';
+      document.getElementById('nfc-modal').classList.remove('hidden');
+    }
+
+    function closeNfcModal() {
+      document.getElementById('nfc-modal').classList.add('hidden');
+    }
+
+    // Submit NFC Order
+    function submitNfcOrder() {
+      closeNfcModal();
+      showToast('NFC Order Placed', 'A verification invoice has been dispatched to your email address.', 'success');
+      
+      confetti({
+        particleCount: 70,
+        spread: 40,
+        origin: { y: 0.7 }
+      });
+    }
+
+
+    // Reset Creator state inputs
+    function resetBuilder() {
+      if (confirm('Are you sure you want to clear your current layout customization inputs?')) {
+        state.cardInputs = {
+          name: 'Aashish Aggarwal',
+          title: 'Strategy Lead',
+          company: 'Aether Innovations',
+          phone: '+1 (555) 234-5678',
+          email: 'contact@bgcards.app',
+          website: 'www.aether.design',
+          address: '100 Silicon Valley, CA',
+          linkedin: 'linkedin.com/in/aashish',
+          twitter: 'twitter.com/aashish',
+          logoUrl: '',
+          profilePicUrl: '',
+          templateId: 'minimal',
+          primaryColor: '#2563EB',
+          secondaryColor: '#0F172A',
+          textColor: '#1E293B',
+          bgColor: '#F8FAFC',
+          fontFamily: 'font-sans',
+          logoShape: 'hexagon',
+          logoColor: '#2563EB',
+          logoText: 'AE',
+          qrCodeUrl: 'https://bgcards.app/card/aashish',
+          showBleed: false,
+          positions: {
+            front: {
+              nameTitle: { x: 50, y: 50 },
+              companyLogo: { x: 500, y: 50 },
+              contacts: { x: 50, y: 240 }
+            },
+            back: {
+              logoGroup: { x: 260, y: 80 },
+              qrGroup: { x: 285, y: 220 }
+            }
+          }
+        };
+        bindInputsToState();
+        renderCardPreview();
+        showToast('Editor Reset', 'All input settings reverted to default minimal presets.', 'info');
+      }
+    }
+
+    // Workspace tab swapping
+    function switchWorkspaceTab(tabId) {
+      document.querySelectorAll('.ws-tab-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-primary', 'text-white');
+        btn.classList.add('bg-slate-200/60', 'text-slate-600');
+      });
+      event.target.classList.add('active', 'bg-primary', 'text-white');
+      event.target.classList.remove('bg-slate-200/60', 'text-slate-600');
+
+      document.querySelectorAll('.ws-tab-pane').forEach(pane => {
+        pane.classList.add('hidden');
+      });
+      
+      document.getElementById(`ws-tab-content-${tabId}`).classList.remove('hidden');
+      setTimeout(() => { lucide.createIcons(); }, 30);
+    }
+
+
+    // Toast notification utility
+    function showToast(title, message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let icon = 'check-circle';
+      let borderCol = 'border-emerald-500';
+      let bgCol = 'bg-emerald-50';
+      let textCol = 'text-emerald-800';
+
+      if (type === 'info') {
+        icon = 'info';
+        borderCol = 'border-blue-500';
+        bgCol = 'bg-blue-50';
+        textCol = 'text-blue-800';
+      } else if (type === 'warning') {
+        icon = 'alert-triangle';
+        borderCol = 'border-amber-500';
+        bgCol = 'bg-amber-50';
+        textCol = 'text-amber-800';
+      } else if (type === 'error') {
+        icon = 'x-circle';
+        borderCol = 'border-red-500';
+        bgCol = 'bg-red-50';
+        textCol = 'text-red-800';
+      }
+
+      toast.className = `p-4 border-l-4 ${borderCol} ${bgCol} rounded-r-xl shadow-lg flex gap-3 pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0 w-80`;
+      
+      toast.innerHTML = `
+        <div class="${textCol} shrink-0"><i data-lucide="${icon}" class="w-5 h-5"></i></div>
         <div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:${fs(14)};color:${t.text};line-height:1.1;text-transform:uppercase;">${cs.name||'Your Name'}</div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(8.5)};color:${t.accent};font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:2px">${cs.title||'Title'}</div>
+          <h4 class="font-bold text-xs ${textCol}">${title}</h4>
+          <p class="text-[10px] text-slate-500 mt-1 font-semibold leading-relaxed">${message}</p>
         </div>
-        <div>${contactLine}</div>
-      </div>
-    </div>`;
+      `;
 
-  } else if(lay===2){
-    // Minimal: vertical accent bar left
-    html=`<div style="width:100%;height:100%;background:${t.bg};border:1px solid rgba(255,255,255,.05);padding:${fs(20)} ${fs(24)};display:flex;flex-direction:column;justify-content:center;gap:${fs(7)};position:relative;overflow:hidden">
-      <div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:${t.accent}"></div>
-      <div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:${fs(18)};color:${t.text};line-height:1;text-transform:uppercase;">${cs.name||'Your Name'}</div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(9)};color:${t.accent};margin-top:${fs(3)};text-transform:uppercase;font-weight:700;">${cs.title||'Title'}${cs.company?' · '+cs.company:''}</div>
-      </div>
-      ${cs.tagline?`<div style="font-family:'Inter',sans-serif;font-size:${fs(8)};color:${t.muted};font-style:italic">"${cs.tagline}"</div>`:''}
-      <div style="display:flex;flex-wrap:wrap;gap:${fs(2)} ${fs(9)}">${contactLine}</div>
-    </div>`;
+      container.appendChild(toast);
+      lucide.createIcons();
 
-  } else if(lay===3){
-    // Modern: gradient bg, logo top-right
-    html=`<div style="width:100%;height:100%;background:linear-gradient(135deg,${t.bg} 0%,${t.text==='#ffffff'?'#1a1a2e':'#f0eded'} 100%);padding:${fs(16)} ${fs(20)};display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
-      <div style="position:absolute;top:-${fs(28)};right:-${fs(28)};width:${fs(120)};height:${fs(120)};border-radius:50%;background:${t.accent};opacity:.08"></div>
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:${fs(16)};color:${t.text};text-transform:uppercase;">${cs.name||'Your Name'}</div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(9)};color:${t.accent};font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:2px">${cs.title||'Title'}</div>
-        </div>
-        ${cs.logoURL?`<img src="${cs.logoURL}" style="width:${fs(36)};height:${fs(36)};object-fit:contain;border-radius:5px">`:`<div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(21)};font-weight:800;color:${t.accent};opacity:.35">${(cs.company||cs.name||'B')[0].toUpperCase()}</div>`}
-      </div>
-      <div>${cs.company?`<div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:${fs(8)};color:${t.muted};margin-bottom:${fs(3)};text-transform:uppercase;letter-spacing:1px">${cs.company}</div>`:''}
-      <div style="display:flex;flex-wrap:wrap;gap:${fs(2)} ${fs(7)}">${contactLine}</div></div>
-    </div>`;
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
 
-  } else if(lay===4){
-    // Center: everything centered, horizontal rule
-    html=`<div style="width:100%;height:100%;background:${t.bg};padding:${fs(16)} ${fs(20)};display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,${t.accent},transparent)"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,${t.accent},transparent)"></div>
-      <div style="text-align:center">
-        ${cs.logoURL?`<img src="${cs.logoURL}" style="width:${fs(34)};height:${fs(34)};object-fit:contain;border-radius:50%;margin-bottom:${fs(4)}">`:''}
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:${fs(16)};color:${t.text};letter-spacing:1px;text-transform:uppercase;">${cs.name||'Your Name'}</div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:${fs(8.5)};color:${t.accent};letter-spacing:3px;text-transform:uppercase;margin-top:2px">${cs.title||'Title'}</div>
-        ${cs.company?`<div style="width:${fs(34)};height:1px;background:${t.accent};margin:${fs(6)} auto;opacity:.5"></div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:${fs(8)};color:${t.muted};text-transform:uppercase;">${cs.company}</div>`:''}
-      </div>
-      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:${fs(2)} ${fs(9)};text-align:center">${contactLine}</div>
-    </div>`;
-
-  } else {
-    // Bold: avatar circle + border accent
-    html=`<div style="width:100%;height:100%;background:${t.bg};padding:${fs(16)} ${fs(20)};display:flex;flex-direction:column;justify-content:space-between;border:1px solid ${t.accent}33;position:relative;overflow:hidden">
-      <div style="display:flex;align-items:center;gap:${fs(9)}">
-        ${cs.logoURL?`<img src="${cs.logoURL}" style="width:${fs(32)};height:${fs(32)};object-fit:contain;border-radius:6px;background:${t.accent}22;padding:3px">`:`<div style="width:${fs(32)};height:${fs(32)};border-radius:50%;border:2px solid ${t.accent};display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:${fs(14)};color:${t.accent};flex-shrink:0">${(cs.name||'B')[0].toUpperCase()}</div>`}
-        <div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:${fs(15)};color:${t.text};text-transform:uppercase;">${cs.name||'Your Name'}</div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(8.5)};color:${t.accent};font-weight:700;text-transform:uppercase;">${cs.title||'Title'}</div>
-        </div>
-      </div>
-      ${cs.tagline?`<div style="font-family:'Inter',sans-serif;font-size:${fs(8)};color:${t.muted};font-style:italic">"${cs.tagline}"</div>`:''}
-      <div>${cs.company?`<div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(9)};font-weight:700;color:${t.accent};margin-bottom:${fs(3)};text-transform:uppercase;">${cs.company}</div>`:''}
-      <div style="display:flex;flex-wrap:wrap;gap:${fs(2)} ${fs(7)}">${contactLine}</div></div>
-    </div>`;
-  }
-
-  c.innerHTML=html;
-}
-
-function drawBack(){
-  const t=ALL_THEMES[cs.theme]||ALL_THEMES[0];
-  const c=el('card-back');
-  const w=c.offsetWidth||350;
-  const fs=n=>Math.max(6,n*(w/340))+'px';
-  c.innerHTML=`<div style="width:100%;height:100%;background:${t.bg};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:${fs(20)};text-align:center;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,${t.accent},transparent)"></div>
-    <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,${t.accent},transparent)"></div>
-    ${cs.logoURL?`<img src="${cs.logoURL}" style="width:${fs(44)};height:${fs(44)};object-fit:contain;border-radius:8px;margin-bottom:${fs(8)};opacity:.9">`:`<div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(24)};font-weight:800;color:${t.accent};margin-bottom:${fs(7)};text-transform:uppercase;">${cs.company||(cs.name||'BG')[0].toUpperCase()}</div>`}
-    ${cs.btext?`<div style="font-family:'Inter',sans-serif;font-size:${fs(9)};color:${t.muted};line-height:1.65;max-width:82%">${cs.btext}</div>`:''}
-    ${cs.bsocial?`<div style="font-family:'Space Grotesk',sans-serif;font-size:${fs(9)};color:${t.accent};font-weight:700;margin-top:${fs(8)};text-transform:uppercase;">${cs.bsocial}</div>`:''}
-    ${cs.web?`<div style="font-family:'Inter',sans-serif;font-size:${fs(8)};color:${t.muted};margin-top:${fs(4)}">${cs.web}</div>`:''}
-  </div>`;
-}
-
-function drawCards(){drawFront();drawBack();}
-
-/* ══════════════════════════════════════════
-   DOWNLOAD
-══════════════════════════════════════════ */
-async function dlPNG(){
-  const cardEl=cs.side==='front'?el('card-front'):el('card-back');
-  toast('Preparing download...','info');
-  try{
-    const canvas=await html2canvas(cardEl,{scale:4,useCORS:true,allowTaint:false,backgroundColor:null});
-    const a=document.createElement('a');
-    a.download=`bgcards-${cs.side}-${Date.now()}.png`;
-    a.href=canvas.toDataURL('image/png');
-    a.click();
-    toast('Downloaded!','success');
-  }catch(e){console.error(e);toast('Export failed','error');}
-}
-
-async function dlStd(){
-  const cardEl=cs.side==='front'?el('card-front'):el('card-back');
-  toast('Preparing 3.5×2" export...','info');
-  try{
-    const sc=Math.max(3,1050/(cardEl.offsetWidth||350));
-    const canvas=await html2canvas(cardEl,{scale:sc,useCORS:true,allowTaint:false,backgroundColor:null});
-    const final=document.createElement('canvas');
-    final.width=1050;final.height=600;
-    const ctx=final.getContext('2d');
-    ctx.drawImage(canvas,0,0,1050,600);
-    const a=document.createElement('a');
-    a.download=`bgcards-3.5x2-${Date.now()}.png`;
-    a.href=final.toDataURL('image/png','1.0');
-    a.click();
-    toast('Standard size downloaded!','success');
-  }catch(e){console.error(e);toast('Export failed','error');}
-}
-
-/* ══════════════════════════════════════════
-   INIT
-══════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded',function(){
-  buildHomepageGrid();
-});
-</script>
-
-<script>
-function toggleTheme(){var t=document.body.dataset.theme==='light'?'dark':'light';document.body.dataset.theme=t;localStorage.setItem('bgTheme',t);var b=document.getElementById('theme-btn');if(b)b.textContent=t==='light'?'🌙':'☀️';}
-(function(){var t=localStorage.getItem('bgTheme')||'dark';if(t==='light')document.body.dataset.theme='light';var b=document.getElementById('theme-btn');if(b)b.textContent=t==='light'?'🌙':'☀️';})();
-</script>
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 4000);
+    }
+  </script>
 </body>
 </html>
