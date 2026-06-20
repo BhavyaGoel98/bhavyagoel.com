@@ -1,0 +1,1479 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BG NEWS — News. Faster. Smarter. Terminal Edition (India)</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+    <style type="text/css">
+      .scrollbar-none::-webkit-scrollbar { display: none; }
+      .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+      @keyframes marquee {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(-50%); }
+      }
+      .animate-marquee {
+        display: inline-flex;
+        white-space: nowrap;
+        animation: marquee 35s linear infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-black text-white font-sans transition-colors duration-300 antialiased selection:bg-[#D4AF37] selection:text-black min-h-screen flex flex-col justify-between">
+
+    <!-- Top Breaking Notification Banner Block (Hidden by default, slides down on alarm) -->
+    <div id="alert-banner" class="fixed top-0 inset-x-0 z-50 bg-neutral-950 text-white border-b-2 border-[#D4AF37] py-3.5 px-6 shadow-2xl transform -translate-y-full transition-transform duration-500 ease-in-out">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-3 overflow-hidden">
+          <span class="flex h-2.5 w-2.5 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+          </span>
+          <span class="font-mono text-xs text-[#D4AF37] uppercase tracking-widest font-bold shrink-0">Breaking Intel</span>
+          <span class="text-neutral-700 font-mono">|</span>
+          <p id="alert-banner-text" class="text-xs md:text-sm font-medium hover:underline cursor-pointer truncate max-w-[200px] sm:max-w-md md:max-w-xl"></p>
+        </div>
+        <div class="flex items-center space-x-4 shrink-0">
+          <button id="alert-read-btn" class="text-[10px] bg-[#D4AF37] text-neutral-950 px-2.5 py-1 font-bold uppercase hover:bg-white transition-all">Read</button>
+          <button id="alert-close" class="text-neutral-500 hover:text-white transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Status & Meta Header -->
+    <div id="top-ticker-bar" class="bg-black text-white text-[10px] font-mono py-2 border-b border-[#D4AF37]/35 px-6 uppercase tracking-widest z-40">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2.5">
+        <div class="flex items-center space-x-6 flex-wrap gap-y-1">
+          <span class="text-[#D4AF37] font-bold">MARKETS LIVE (INDIA):</span>
+          <span>NIFTY 50 <span class="text-green-500 font-bold">23,501.10 (+0.82%)</span></span>
+          <span>SENSEX <span class="text-green-500 font-bold">77,210.45 (+0.78%)</span></span>
+          <span>USD/INR <span class="text-[#D4AF37] font-semibold">₹83.54</span></span>
+          <span class="text-neutral-800 hidden md:inline">|</span>
+          <span class="flex items-center text-emerald-400">
+            <span id="network-dot" class="inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span>
+            <span id="network-status">STREAM ACTIVE (LIVE SEC)</span>
+          </span>
+        </div>
+        <div class="flex items-center space-x-5 flex-wrap gap-y-1">
+          <span id="current-date-meta" class="text-neutral-400"></span>
+          <span class="text-[#D4AF37] font-bold">● TERMINAL CONNECTED</span>
+          <button id="master-theme-toggle" class="hover:text-brand-gold transition-colors flex items-center gap-1 cursor-pointer font-bold text-neutral-400">
+            <span id="theme-toggle-text">ULTRA-DARK</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bloomberg / Reuters Inspired Masthead -->
+    <header class="bg-black border-b border-[#D4AF37]/20 transition-colors">
+      <div class="max-w-7xl mx-auto px-6 py-4.5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-baseline gap-3.5">
+          <h1 class="text-4xl font-serif font-black tracking-tighter italic text-[#D4AF37] select-none cursor-pointer transition-colors hover:text-white" id="logo-trigger">
+            BG NEWS
+          </h1>
+          <span class="text-[10px] uppercase tracking-[0.3em] opacity-60 font-sans text-neutral-300">News. Faster. Smarter.</span>
+        </div>
+
+        <div class="flex gap-4 md:gap-8 items-center text-xs uppercase tracking-wider font-semibold">
+          <div class="flex flex-col text-right font-mono text-[10px] text-neutral-500 uppercase leading-normal">
+            <span>NEW DELHI/IST: <span id="clock-meta" class="text-white font-bold">00:00:00</span></span>
+            <span>TERMINAL EDITION v2.4</span>
+          </div>
+          <button id="sync-refresh-btn" class="flex items-center gap-1.5 hover:text-black hover:bg-[#D4AF37] transition-all text-[10px] font-bold border border-[#D4AF37]/50 bg-black text-[#D4AF37] px-3 py-1.5 rounded-sm hover:cursor-pointer">
+            <svg class="w-3.5 h-3.5 scale-90 transition-transform text-[#D4AF37]" id="sync-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 15.118l-.007-.008L21 15"/></svg>
+            SYNC IN FEED
+          </button>
+        </div>
+      </div>
+
+      <!-- Animated News Ticker Header -->
+      <div id="ticker-container" class="bg-[#D4AF37] text-black overflow-hidden relative flex items-center h-8 font-bold border-t border-b border-[#D4AF37]/20">
+        <div class="absolute left-0 top-0 bottom-0 bg-black text-[#D4AF37] font-mono font-black text-[10px] tracking-wider px-4 flex items-center z-10 select-none uppercase">
+          BREAKING ALERT
+        </div>
+        <div class="overflow-hidden w-full relative h-full flex items-center pl-28">
+          <div id="ticker-slider" class="animate-marquee whitespace-nowrap flex items-center gap-12 font-mono text-[11px] text-neutral-950 tracking-wide font-bold hover:[animation-play-state:paused] cursor-pointer">
+            <!-- Dynamic headlines generated via JS -->
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Channels Scroll Deck -->
+    <nav class="sticky top-0 z-30 bg-neutral-950 border-b border-white/10 shadow-lg select-none">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-stretch">
+        <div class="flex overflow-x-auto scrollbar-none items-center space-x-1 py-1" id="category-tabs-nav">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="flex items-center py-2 space-x-3 justify-between shrink-0">
+          <div class="relative flex items-center shadow-inner">
+            <span class="absolute left-3 text-neutral-500 text-xs">🔍</span>
+            <input type="text" id="news-search-input" placeholder="SEARCH HEADLINES..." class="pl-9 pr-6 py-1.5 bg-white/5 border border-white/10 rounded-sm text-[10px] uppercase font-bold tracking-wider focus:outline-none focus:border-[#D4AF37] text-white focus:bg-white/10 w-44 sm:w-56 transition-all font-mono placeholder:text-neutral-500" />
+            <button id="search-clear-btn" class="absolute right-2.5 text-neutral-400 hover:text-white hidden">×</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Dynamic Application Container -->
+    <main class="flex-1 max-w-7xl mx-auto px-6 py-6 w-full transition-colors bg-black">
+
+      <!-- DASHBOARD STATS GRID -->
+      <div class="grid grid-cols-2 md:grid-cols-4 border border-white/10 bg-white/5 rounded-sm mb-6 select-none shadow-inner">
+        <div class="p-4 border-r border-b md:border-b-0 border-white/10">
+          <p class="text-[9px] text-white/40 uppercase tracking-widest font-mono">INTELLIGENCE LOGGED</p>
+          <div class="flex items-baseline gap-2 mt-1">
+            <p class="text-2xl font-serif italic text-[#D4AF37] font-black" id="articles-count-meta">0</p>
+            <span class="text-[9px] text-[#D4AF37]/50 font-mono">ITEMS DETECTED</span>
+          </div>
+        </div>
+        <div class="p-4 border-r border-b md:border-b-0 border-white/10">
+          <p class="text-[9px] text-white/40 uppercase tracking-widest font-mono">TRENDING FOCUS</p>
+          <p class="text-sm font-serif italic text-white font-bold leading-tight mt-1 truncate" id="trending-topic-lbl">ARTIFICIAL INTELLIGENCE</p>
+        </div>
+        <div class="p-4 border-r border-white/10">
+          <p class="text-[9px] text-white/40 uppercase tracking-widest font-mono">ALARM ALERTS</p>
+          <div class="flex items-baseline gap-2 mt-1">
+            <p class="text-2xl font-serif italic text-red-500 font-black animate-pulse" id="breaking-count-lbl">0</p>
+            <span class="text-[9px] text-red-400/60 font-mono">STANDBY ACTIVE</span>
+          </div>
+        </div>
+        <div class="p-4">
+          <p class="text-[9px] text-white/40 uppercase tracking-widest font-mono">PERSONAL PROFILE</p>
+          <p class="text-lg font-serif italic text-white/80 font-bold leading-tight mt-1" id="personal-match-score">88% ADVISORY</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+        <!-- LEFT SIDEBAR: CONTROLS & CURATED PARAMETERS -->
+        <aside class="lg:col-span-1 space-y-6 flex flex-col">
+          <!-- View Desk Panel -->
+          <div class="p-4 bg-white/5 border border-white/10 rounded shadow-sm">
+            <h3 class="text-[9px] uppercase text-[#D4AF37] mb-3 font-bold tracking-widest font-mono">CONTROL CONSOLE</h3>
+            <div class="flex flex-col gap-2">
+              <button id="view-home-btn" class="active flex items-[#000] justify-between px-3 py-2 border border-white/10 bg-white/5 rounded text-xs text-white hover:border-[#D4AF37] transition-all cursor-pointer font-bold font-mono tracking-wider [&.active]:border-[#D4AF37] [&.active]:bg-[#D4AF37]/5 [&.active]:text-[#D4AF37]">
+                <span>GLOBAL WIRE</span>
+                <span class="text-[10px]">🌐</span>
+              </button>
+              <button id="view-bookmarks-btn" class="flex items-center justify-between px-3 py-2 border border-white/10 bg-white/5 rounded text-xs text-white hover:border-[#D4AF37] transition-all cursor-pointer font-bold font-mono tracking-wider [&.active]:border-[#D4AF37] [&.active]:bg-[#D4AF37]/5 [&.active]:text-[#D4AF37]">
+                <span>PERSISTED BOOKMARKS</span>
+                <span id="saved-counter-badge" class="bg-[#D4AF37] text-black text-[9px] font-black px-1.5 rounded-sm">0</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Personalized Curated Briefing Desk -->
+          <div class="bg-white/5 border border-white/10 p-5 rounded">
+            <div class="flex items-center space-x-2 border-b border-white/10 pb-2.5 mb-3.5">
+              <span class="text-[#D4AF37] text-sm leading-none">✦</span>
+              <h4 class="font-serif italic font-extrabold tracking-tight text-white text-sm">PERSONAL ADVISORY HUB</h4>
+            </div>
+
+            <!-- Unconfigured Profile View -->
+            <div id="briefing-unconfigured" class="space-y-4 text-xs font-mono text-white/70">
+              <p class="text-white/55 leading-relaxed text-[11px]">Select disciplines and label your agency profile to start high density briefing filters.</p>
+              
+              <div class="space-y-1 max-h-40 overflow-y-auto pr-1">
+                <div id="briefing-checkboxes" class="grid grid-cols-1 gap-1.5 text-[11px]">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <div class="space-y-2 pt-2.5 border-t border-white/10">
+                <input type="text" id="user-display-name" placeholder="Agent Alias (e.g., Reader)" class="w-full bg-black border border-white/20 p-2 text-white placeholder:text-neutral-500 rounded text-[11px] focus:outline-none focus:border-[#D4AF37]" />
+                <button id="save-briefing-preferences-btn" class="w-full text-center bg-[#D4AF37] hover:bg-[#D4AF37]/80 text-black font-black py-2 rounded-sm transition-all text-[10px] cursor-pointer">ASSEMBLE DAILY BRIEFING</button>
+              </div>
+            </div>
+
+            <!-- Preconfigured Curated Profile View -->
+            <div id="briefing-configured" class="hidden space-y-3">
+              <p class="text-[9px] font-mono text-white/40 tracking-wider">SEC PORTAL ONLINE:</p>
+              <h5 id="briefing-username-lbl" class="font-serif italic font-black text-[#D4AF37] text-lg"></h5>
+              
+              <div class="border-t border-b border-white/15 py-2.5 font-mono text-[10px] text-white/60 flex flex-wrap gap-1.5" id="briefing-categories-badges">
+                <!-- Tags showing selected categories -->
+              </div>
+
+              <button id="briefing-exclusive-portal-btn" class="w-full text-center bg-[#D4AF37]/10 hover:bg-[#D4AF37] border border-[#D4AF37]/45 text-[#D4AF37] hover:text-black text-[10px] font-mono font-bold py-2 rounded transition-all cursor-pointer">
+                LAUNCH PRIVATE INTAKE
+              </button>
+              <button id="edit-briefing-preferences-btn" class="w-full text-center text-white/40 hover:text-white text-[9px] font-mono underline cursor-pointer">
+                Reconfigure Filters
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- CENTER CONTENT: DYNAMIC FEED & SPOTLIGHT -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="border-b border-[#D4AF37]/35 pb-2.5 flex justify-between items-baseline">
+            <h2 id="view-title" class="font-serif italic font-black text-2xl tracking-tight text-[#D4AF37] uppercase">GLOBAL FEED CHRONICLES</h2>
+            <p id="view-sub-text" class="text-[10px] text-white/40 font-mono tracking-widest uppercase"></p>
+          </div>
+
+          <!-- Hero spotlight spot -->
+          <div id="hero-spotlight" class="border border-white/10 bg-white/5 relative hover:border-[#D4AF37]/50 transition-colors duration-300 rounded overflow-hidden">
+            <!-- Populated dynamically via JS -->
+          </div>
+
+          <!-- Stories columns bento lists -->
+          <div id="articles-feed-grid" class="grid grid-cols-1 gap-4">
+            <!-- Dynamic feed items loaded here -->
+          </div>
+
+          <!-- Zero state placeholder -->
+          <div id="zero-state" class="hidden py-16 flex flex-col items-center text-center justify-center space-y-4">
+            <div class="p-4 bg-white/5 border border-white/10 rounded-full text-neutral-400">
+              ⚠️
+            </div>
+            <h3 class="font-serif text-lg font-bold text-white">No items correspond to matrix parameters</h3>
+            <p class="text-xs text-white/60 font-mono max-w-sm">Re-evaluate global filtration metrics, source matrix, or click Reset beneath to resume normal streams.</p>
+            <button onclick="window.app && window.app.resetFilters()" class="text-xs bg-[#D4AF37] text-black font-bold px-5 py-2 hover:bg-white transition-all border border-black uppercase tracking-wider">RESET GENERAL CHANNELS</button>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR: ADVANCED FILTERS, TRENDING & ALERTS -->
+        <aside class="lg:col-span-1 space-y-6">
+          <!-- Filter selections controls directly embedded inside layout -->
+          <div class="border border-white/10 bg-white/5 p-4 rounded text-xs">
+            <h3 class="font-serif italic font-bold text-[#D4AF37] border-b border-white/10 pb-2 mb-3 mt-1 text-sm tracking-wider uppercase">FILTER PARADIGMS</h3>
+            <div class="space-y-3 font-mono text-[10px]">
+              <div class="flex flex-col space-y-1">
+                <label class="text-white/40 uppercase tracking-widest">Bureau Agency Source</label>
+                <select id="source-filter-select" class="w-full bg-black text-white border border-white/20 p-2 rounded text-xs focus:outline-none focus:border-[#D4AF37]">
+                  <option value="ALL">All Bureau Sources</option>
+                </select>
+              </div>
+
+              <div class="flex flex-col space-y-1">
+                <label class="text-white/40 uppercase tracking-widest">Time Horizon</label>
+                <select id="time-filter-select" class="w-full bg-black text-white border border-white/20 p-2 rounded text-xs focus:outline-none focus:border-[#D4AF37]">
+                  <option value="ALL">All History logs</option>
+                  <option value="24H">Last 24 Hours</option>
+                  <option value="7D">Last 7 Days</option>
+                  <option value="30D">Last 30 Days</option>
+                </select>
+              </div>
+
+              <div class="flex flex-col space-y-1">
+                <label class="text-white/40 uppercase tracking-widest">Sort Protocol</label>
+                <select id="sort-filter-select" class="w-full bg-black text-white border border-[#D4AF37]/30 p-2 rounded text-xs focus:outline-none focus:border-[#D4AF37]">
+                  <option value="NEWEST">Newest Headlines First</option>
+                  <option value="OLDEST">Historical Archive First</option>
+                  <option value="MOST_RELEVANT">Most Relevant (Saves/Metrics)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hot Margin Radar list (interactive) -->
+          <div class="border border-white/10 p-5 rounded bg-black transition-colors shadow-lg">
+            <h4 class="font-serif text-[#D4AF37] italic font-black text-sm tracking-tight border-b border-white/10 pb-2.5 mb-2 flex items-center justify-between">
+              <span>MARGIN RANKINGS</span>
+              <span class="inline-block w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span>
+            </h4>
+            <div class="flex flex-col" id="trending-keywords-list">
+              <!-- Dynamically mapped ranked hashtags with count metrics -->
+            </div>
+          </div>
+
+          <!-- Interactive Active Intelligence desk -->
+          <div class="border border-white/10 bg-white/5 p-5 rounded">
+            <h4 class="font-serif text-white font-bold text-xs tracking-widest uppercase border-b border-white/10 pb-2.5 mb-2">SYSTEM ACTIVE FLASHES</h4>
+            <p class="text-[10px] font-mono text-white/55 mb-4.5 leading-relaxed">Turn on active alarm chimes to track priority market breaking events.</p>
+            
+            <div class="space-y-3.5 text-xs font-mono">
+              <div class="flex items-center justify-between">
+                <span>Breaking Flares</span>
+                <label class="relative inline-flex items-center cursor-pointer select-none font-sans">
+                  <input type="checkbox" id="notify-breaking" class="sr-only peer" checked>
+                  <div class="w-8 h-4 bg-white/10 rounded-full peer peer-checked:bg-[#D4AF37] transition-all relative after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:after:translate-x-4"></div>
+                </label>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <span>Chime Synthesizer</span>
+                <label class="relative inline-flex items-center cursor-pointer select-none font-sans">
+                  <input type="checkbox" id="notify-sound" class="sr-only peer" checked>
+                  <div class="w-8 h-4 bg-white/10 rounded-full peer peer-checked:bg-[#D4AF37] transition-all relative after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:after:translate-x-4"></div>
+                </label>
+              </div>
+
+              <button id="test-alert-trigger" class="w-full text-center border border-[#D4AF37]/45 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black font-mono font-bold py-2 text-[10px] uppercase rounded transition-all mt-3">
+                TEST DEMO ALARM CHIME
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- Master Distraction-Free Reading Mode Modal Layer -->
+    <div id="reader-mode-overlay" class="fixed inset-0 z-50 bg-black/95 hidden items-center justify-center p-0 md:p-6 backdrop-blur-md transition-opacity duration-300">
+      <div id="reader-container" class="bg-[#0C0C0C] text-neutral-100 w-full max-w-4xl h-full md:h-[90vh] md:rounded-sm shadow-2xl flex flex-col overflow-hidden transition-all duration-300 border border-[#D4AF37]/25 relative">
+        
+        <!-- Header HUD Tools -->
+        <div class="bg-black border-b border-white/10 py-3.5 px-6 flex items-center justify-between shrink-0 font-mono text-[11px] text-neutral-400">
+          <div class="flex items-center space-x-4">
+            <button id="reader-close-btn" class="flex items-center gap-1.5 hover:text-[#D4AF37] transition-colors font-bold text-white cursor-pointer group uppercase tracking-widest text-[11px]">
+              ← CLOSE READER
+            </button>
+            <span class="text-neutral-700">|</span>
+            <span id="reader-source-meta" class="font-bold text-[#D4AF37] uppercase tracking-wider text-[11px]">REUTERS</span>
+          </div>
+
+          <div class="flex items-center space-x-5">
+            <div class="flex items-center space-x-1 border border-white/20 rounded bg-black font-sans shadow-sm overflow-hidden select-none">
+              <button id="font-dec-btn" class="px-3 py-1 hover:bg-white/10 transition-colors uppercase font-bold text-[10px] text-white cursor-pointer border-r border-white/15">A-</button>
+              <button id="font-inc-btn" class="px-3 py-1 hover:bg-white/10 transition-colors uppercase font-bold text-[10px] text-white cursor-pointer">A+</button>
+            </div>
+
+            <span class="text-neutral-700">|</span>
+
+            <!-- Audio narrator synthesize with high visual status integration -->
+            <button id="audio-narrator-btn" class="flex items-center gap-1.5 hover:text-[#D4AF37] font-bold transition-all text-white cursor-pointer select-none bg-white/5 px-2.5 py-1 rounded" title="Text synthesis reader">
+              <span id="audio-narrator-text">AUDIO ASSIST</span>
+            </button>
+
+            <select id="reader-theme-select" class="bg-black border border-white/20 py-1 px-2 rounded-sm text-[10px] font-mono select-none text-white focus:outline-none focus:border-[#D4AF37]">
+              <option value="midnight">Terminal Dark</option>
+              <option value="sepia">Sepia Paper</option>
+              <option value="terminal">Green Matrix</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Waveform indicator -->
+        <div id="audio-visualizer-bar" class="bg-[#D4AF37]/5 py-2 px-6 border-b border-[#D4AF37]/25 hidden transition-all select-none">
+          <div class="max-w-xl mx-auto flex items-center justify-between">
+            <span class="text-[9px] font-mono uppercase text-[#D4AF37] font-bold tracking-widest flex items-center gap-1.5">
+              <span>⚡ Synthesizer Active (Narrating content aloud)</span>
+            </span>
+            <div class="flex items-center space-x-1 shrink-0 h-4">
+              <span class="w-0.5 bg-[#D4AF37] h-2 rounded"></span>
+              <span class="w-0.5 bg-[#D4AF37] h-4 rounded"></span>
+              <span class="w-0.5 bg-[#D4AF37] h-3 rounded"></span>
+              <span class="w-0.5 bg-[#D4AF37] h-1.5 rounded"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- content paper container -->
+        <div id="reader-body-scroller" class="flex-1 overflow-y-auto px-6 md:px-16 py-10 leading-relaxed font-serif select-text cursor-default">
+          <article class="max-w-3xl mx-auto space-y-6">
+            <div class="space-y-3.5">
+              <div class="flex items-center space-x-3 text-xs font-mono text-neutral-400">
+                <span id="reader-category" class="bg-[#D4AF37] text-neutral-950 font-black px-2 py-0.5 rounded-sm tracking-widest uppercase text-[10px]">SCIENCE</span>
+                <span>•</span>
+                <span id="reader-date" class="font-bold">JUNE 20, 2026</span>
+                <span>•</span>
+                <span id="reader-author" class="text-neutral-500">REPORTER SEC INTEL</span>
+              </div>
+              
+              <h1 id="reader-title" class="text-3xl md:text-5xl font-serif font-black italic text-white md:leading-normal tracking-tight">
+                Quantum Chips Ignite Global Supercomputer Realignment
+              </h1>
+
+              <div class="h-0.5 w-16 bg-[#D4AF37]"></div>
+            </div>
+
+            <!-- paragraphs rendered via script -->
+            <div id="reader-paragraphs" class="space-y-6 text-neutral-300 text-base md:text-lg tracking-wide font-sans leading-relaxed pt-3">
+              <!-- Rendered dynamically -->
+            </div>
+          </article>
+        </div>
+
+        <!-- footer controls -->
+        <div class="bg-black border-t border-white/10 p-4 shrink-0 flex flex-col sm:flex-row justify-between items-center px-8 gap-3 text-[10px] font-mono">
+          <p id="reader-reading-speed-lbl" class="text-neutral-400 font-bold uppercase"></p>
+          <button id="reader-bookmark-toggle-btn" class="flex items-center gap-2 bg-[#D4AF37] text-black px-4 py-2 font-bold hover:bg-white hover:text-black transition-colors rounded-sm cursor-pointer select-none">
+            <span id="reader-bookmark-text">Save Article to Bookmarks</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fine Print Footer -->
+    <footer class="bg-black text-neutral-500 py-10 px-6 border-t border-[#D4AF37]/45 tracking-widest block select-none">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center text-[10px] font-mono uppercase">
+        <div class="flex flex-col items-center md:items-start space-y-1">
+          <h5 class="text-[#D4AF37] font-serif font-black text-xl italic tracking-tighter">
+            BG NEWS
+          </h5>
+          <p class="text-neutral-600">© 2026 BG NEWS CHANNEL. UNIVERSAL SYSTEM DECLASSIFIED SERVICES INC.</p>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <a href="#" class="hover:text-white transition-colors">Terminals Hub</a>
+          <span>•</span>
+          <a href="#" class="hover:text-white transition-colors">Brokerage Registry</a>
+          <span>•</span>
+          <a href="#" class="hover:text-white transition-colors">Universal Licensing Matrix</a>
+        </div>
+
+        <div>
+          <span class="text-[9px] uppercase p-1.5 border border-[#D4AF37]/50 tracking-widest text-[#D4AF37] font-bold">GOLD STANDARD TERMINAL SECURE</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- MAIN SOUND SYNTHESIZER BELLOW ALERT CHIMES (WEB AUDIO API) -->
+    <script>
+      function playNewsAlertChime() {
+        try {
+          const soundEnabled = document.getElementById('notify-sound')?.checked;
+          if (!soundEnabled) return;
+
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+          
+          const playBeep = (freq, startTime, duration) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
+            
+            gain.gain.setValueAtTime(0.12, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.01);
+            
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+          };
+
+          const now = ctx.currentTime;
+          playBeep(880, now, 0.12);
+          playBeep(880, now + 0.15, 0.12);
+          playBeep(1174.66, now + 0.30, 0.35);
+        } catch (e) {
+          console.warn("Audio Context blocked by browser safety policy.", e);
+        }
+      }
+    </script>
+
+    <!-- CORE LOGICAL ENGINE: Pure Vanilla ES-Module Script -->
+    <script type="module">
+      const articlesDatabase = [
+        {
+          id: "art-top-1",
+          title: "Global Ocean Coalition Ratifies Historic High Seas Sanctuary Treaty",
+          source: "PTI (Press Trust of India)",
+          summary: "Representatives from 120 nations sign a legally binding accord establishing expansive deep-sea ecological preserves, halting industrial mining in international waters.",
+          content: "A landmark coalition of 120 countries has formally ratified the High Seas Ecosystem Accord, creating the first-ever legally binding international treaty to safeguard deep-ocean ecosystems outside national jurisdictions.\n\nThe treaty establishes strict limits on deep-sea mining, offshore commercial drilling, and industrialized fishing inside freshly mapped ecological sanctuaries. Scholars have heralded the agreement as 'the Paris Accord for marine biomes,' noting that international waters represent nearly two-thirds of the planet's oceans but have historically remained unpoliced.\n\nEnforcement will be governed by a newly formed Global Ocean Authority, utilizing satellite telemetry and AI autonomous patrol vessels to monitor compliance in real time.",
+          pubDate: "",
+          category: "Top News",
+          author: "Elena Rostov",
+          breaking: true
+        },
+        {
+          id: "art-tech-1",
+          title: "Sovereign Silicon Labs Unveil 1,024-Qubit Monolithic Quantum Processor",
+          source: "Digit India",
+          summary: "Researchers achieve stable cryogenic phase coherence at -10°C, bypassing expensive liquid helium requirements and speeding commercial adoption frames.",
+          content: "Computer scientists at Silicon Labs have unveiled a revolutionary quantum processor capable of sustaining stable 1,024-qubit operations at temperatures significantly warmer than traditional liquid-helium refrigerators.\n\nThe breakthrough leverages a proprietary silicon-carbide lattice substrate that minimizes thermal decoherence. Traditional quantum computing chips required operation at absolute zero (-273°C), representing a massive hurdle for industrial scale; the new chip operates at a manageable -10°C.\n\nThis structural leap means data centers can feasibly support quantum hybrid clusters without needing complex liquid-nitrogen arrays. Early field tests show the chip solving cryptography and molecular routing formulas 12 million times faster than current supercomputers.",
+          pubDate: "",
+          category: "Technology",
+          author: "Marcello Vane",
+          breaking: false
+        },
+        {
+          id: "art-ai-1",
+          title: "Logical Coherence Benchmarks Shattered by Next-Gen Tree-of-Thought Systems",
+          source: "Moneycontrol AI Desk",
+          summary: "Logic-X achieves post-doctoral examination scores of 96% in organic chemistry, demonstrating multi-step reasoning capabilities.",
+          content: "An international artificial intelligence research consortium has published evaluation results for their latest reasoning engine, codenamed Logic-X. The system achieved a score of 96% on advanced post-doctoral science and chemistry examinations, showcasing deep logical synthesis rather than rote pattern recall.\n\nUnlike traditional text predictors, Logic-X utilizes an inner monologue 'tree-of-thought' reasoning loop, assessing multiple hypothetical outcomes and correcting its own math before displaying answers to users.\n\nCritics warn of accelerated automation in executive research circles, while proponents celebrate the tool as a force multiplier for discovering clean energy catalysts and pharmaceutical candidates.",
+          pubDate: "",
+          category: "Artificial Intelligence",
+          author: "Dr. Aris Vance",
+          breaking: true
+        },
+        {
+          id: "art-ai-2",
+          title: "Global Creative Guild Concludes Multi-Year Generative Royalty Agreement",
+          source: "Livemint Tech",
+          summary: "Negotiators establish a secure micro-royalty framework for semantic training structures, creating digital remuneration standards for authors.",
+          content: "After three years of tense negotiations, major digital publishing houses, legal coalitions, and leading AI labs have signed the Universal Cognitive Metadata Treaty. This treaty guarantees artists and authors micro-royalties whenever their intellectual property is utilized to train AI models.\n\nThe system utilizes a secure cryptographic ledger that maps semantic influences back to source materials, calculating fair distributions during commercial API calls. The initiative is set to revitalize the digital creator economy, providing a sustainable income stream in an age of automated drafting.",
+          pubDate: "",
+          category: "Artificial Intelligence",
+          author: "Sarah Jenkins",
+          breaking: false
+        },
+        {
+          id: "art-bus-1",
+          title: "Federal Antitrust Regulators Launch Formal Inquiry Into $84B Retail Consolidation",
+          source: "CNBC-TV18",
+          summary: "Sweeping merger between logistics super-conglomerates prompts major anti-monopoly reviews across European and American legal circuits.",
+          content: "Two of the world’s largest logistics and retail conglomerates have announced a definitive merger agreement valued at $84 billion, a monumental consolidation that will reshape the supply chain ecosystem of consumer goods.\n\nThe merged entity, tentatively named Apex Alliance, will control over 14% of global retail distribution channels. Proponents state the consolidation will streamline transport delays and reduce shipping costs amidst rising diesel inflation.\n\nHowever, consumer advocacy groups are already lobbying regulatory agencies to block the transaction, citing concerns about localized monopolies and worker collective bargaining leverage.",
+          pubDate: "",
+          category: "Business",
+          author: "Richard Gold",
+          breaking: false
+        },
+        {
+          id: "art-fin-1",
+          title: "Commodity Collapse: Crude Offloads 8.4% as Solar Penetration Breaks Grid Records",
+          source: "Business Standard",
+          summary: "WTI Crude contracts drop below $64 following solar baseload surges, reshaping investment sheets.",
+          content: "Commodity markets reacted sharply to news of unprecedented green power utilization across industrial zones, triggering an 8.4% single-day drop in crude oil futures.\n\nWest Texas Intermediate fell to $63.20 per barrel, its lowest level in thirty months. The price drop is attributed to both rising diplomatic inventory releases and a structural decline in fossil baseload demand as modular nuclear and high-density thermal grids come online.\n\nFund managers are rapidly adjusting long portfolios, shifting away from heavy crude extraction credits into grid storage and transmission infrastructure assets.",
+          pubDate: "",
+          category: "Finance",
+          author: "Tyler Sterling",
+          breaking: true
+        },
+        {
+          id: "art-sci-1",
+          title: "Artemis Lunar Lander Successfully Traverses Historic Clavius Crater Rim",
+          source: "ISRO Bulletin",
+          summary: "Autonomous mapping rovers transmit high-resolution geological surveys indicating dense deposits of frozen sub-surface aquifers.",
+          content: "In a stunning display of precision space engineering, the autonomous rover companion of the Artemis VI lunar mission has successfully navigated the steep inclines of the Clavius Crater, transmitting unprecedented subterranean geological data.\n\nUsing advanced neutron spectrometers and ground-penetrating radar arrays, the robotic vehicle confirmed the existence of thick, persistent sheets of pure water ice nestled just four inches below the dry lunar regolith.\n\nThis resource discovery represents a major milestone for human sustainability on the moon, confirming that future lunar bases can harvest drinking water and synthesize hydrogen fuel entirely on-site.",
+          pubDate: "",
+          category: "Science",
+          author: "Commander Alice Wu",
+          breaking: false
+        },
+        {
+          id: "art-sci-2",
+          title: "Continuous Ignitions maintained at Tokamak Fusion Center For Record Ten Days",
+          source: "IISc Reports",
+          summary: "Magnetic confinement arrays exceed 150% Net Energy Yield profiles, paving physical pathways for grid deployment frameworks.",
+          content: "Engineers at the National Ignition Facility have shattered previous clean-energy milestones, maintaining a continuous, burning nuclear fusion reaction that yielded 150% net energy output for ten unbroken days of grid operation.\n\nThe system utilizes advanced High-Temperature Superconducting (HTS) magnets to shape and isolate deuterium-tritium plasma, preventing localized cooling from vessel contact. The reactor produced a self-sustaining helium-ion 'burning' state without catastrophic magnetic degradation.\n\n'We are no longer talking about fifty years in the future,' said the facility director. 'This is the foundational baseline for commercial fusion reactors that will power whole cities before the end of this decade.'",
+          pubDate: "",
+          category: "Science",
+          author: "Dr. Kenneth Boyd",
+          breaking: false
+        },
+        {
+          id: "art-spt-1",
+          title: "Precision Micro-Telemetry Debut Accelerates Offside Judgment Speeds",
+          source: "Cricbuzz",
+          summary: "High-frequency tracking embedded inside match balls reduces VAR validation delay metrics to sub-millisecond frames during Championship finals.",
+          content: "The global football championship concluded last night with a historic technical milestone: the flawless debut of high-frequency automatic spatial offside assessments.\n\nBy embedding sub-gram telemetry microchips inside the match ball and players' boots, combined with 30 high-speed cameras mapping 150 skeletal vertices, controversial decisions were parsed instantly. Offside errors were flagged within 0.15 seconds, prompting immediate haptic vibration alerts to the referee's watch.\n\nThe system successfully eliminated tedious five-minute video replays, preserving the natural flow and cinematic intensity of the match. Fans and commentators praised the technology as 'the gold standard for algorithmic sports judging.'",
+          pubDate: "",
+          category: "Sports",
+          author: "Danielle Vance",
+          breaking: false
+        },
+        {
+          id: "art-ent-1",
+          title: "Independent Boutique Houses Dominate Global Film Accolades Festivities",
+          source: "Bollywood Hungama",
+          summary: "Creative original scripts sweep main distinctions as major streaming networks condense experimental blockbuster scales due to returns saturation.",
+          content: "The annual cinema distribution gala ended in a stunning upset as small, independently financed art-house films captured four of the five major creative distinctions, marking a massive departure from big-budget franchise dominance.\n\nAs major subscription providers pull back from multi-million-dollar filler projects to focus on profitable select IP, indie creators are capturing high-caliber theatrical audiences with original, raw scripts and intimate character arcs.\n\n'Audiences are experiencing blockbuster fatigue,' said a leading film critic. 'They want narratives that reflect genuine human emotion and complex cultural landscapes rather than CGI battles.'",
+          pubDate: "",
+          category: "Entertainment",
+          author: "Clara Montero",
+          breaking: false
+        },
+        {
+          id: "art-wld-1",
+          title: "Sub-Saharan Community Solar Desalination Pipelines Stabilize Multi-Base Aquifers",
+          source: "Sanctuary Asia",
+          summary: "Community check-structure engineering elevates regional table elevations by 4.5 meters, reviving dried agricultural belts.",
+          content: "In the arid expansion of the Sahel, a community-driven initiative using modular solar pipelines has successfully recharged nested underground aquifers, restoring farming viability to thousands of smallholder families.\n\nBy building small, stone-filled check dams that slow rainfall runoff combined with low-cost brackish water solar desalination filters, the community has raised regional water tables by an average of 4.5 meters.\n\nThe project demonstrates that small-scale, decentralized ecological engineering can yield immediate, resilient relief against shifting precipitation trends without needing multi-billion-dollar state funding.",
+          pubDate: "",
+          category: "World",
+          author: "Omar Sise",
+          breaking: false
+        },
+        {
+          id: "art-stu-1",
+          title: "Solid-State Battery Pioneer Obtains $2.4B Valuation Following Aviation Trials",
+          source: "YourStory Startups",
+          summary: "MIT spinoff passes extreme thermal load nail penetration tests, facilitating lightweight short-haul electric flights.",
+          content: "A young tech spinoff from the MIT Materials Lab has achieved a $2.4B valuation after its solid-state sulfur batteries successfully completed comprehensive aviation performance and safety evaluations.\n\nThe company’s batteries, which boast double the energy density of high-tier lithium-ion cells, utilize a solid ceramic electrolyte that cannot catch fire even when punctured or exposed to 300°C temperatures.\n\nCommercial aviation giants are already placing initial orders, aiming to utilize the lightweight solid-state packs to build regional electric commuter planes capable of carrying 40 passengers for 500-mile flights.",
+          pubDate: "",
+          category: "Startups",
+          author: "Evelyn Carter",
+          breaking: true
+        }
+      ];
+
+      class NewsEngine {
+        constructor() {
+          this.allArticles = [];
+          this.activeCategory = "ALL";
+          this.activeSource = "ALL";
+          this.activeHorizon = "ALL";
+          this.activeSort = "NEWEST";
+          this.searchQuery = "";
+          this.bookmarks = JSON.parse(localStorage.getItem('bg_bookmarks') || '[]');
+          this.briefingPreferences = JSON.parse(localStorage.getItem('bg_briefing_prefs') || 'null');
+          this.userAlias = localStorage.getItem('bg_user_alias') || 'Reader';
+          this.readingArticle = null;
+          this.speechUtterance = null;
+          this.speechPlaying = false;
+          this.readerFontSizeScale = 1;
+          
+          this.init();
+        }
+
+        init() {
+          this.generateLiveTimestampDates();
+          this.initDOM();
+          this.initBriefingPanel();
+          this.registerEvents();
+          this.evaluateStats();
+          this.populateFilterDropdowns();
+          this.render();
+          this.initTimerLoops();
+        }
+
+        generateLiveTimestampDates() {
+          const now = Date.now();
+          const oneHour = 60 * 60 * 1000;
+          this.allArticles = articlesDatabase.map((art, idx) => {
+            const hourOffset = idx * 2.5; 
+            const newDate = new Date(now - (hourOffset * oneHour));
+            return {
+              ...art,
+              pubDate: newDate.toISOString(),
+              bookmark: this.bookmarks.includes(art.id)
+            };
+          });
+        }
+
+        initDOM() {
+          const now = new Date();
+          document.getElementById('current-date-meta').innerText = now.toLocaleDateString('en-IN', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+          }).toUpperCase();
+          
+          document.getElementById('clock-meta').innerText = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: false }) + " IST";
+          document.getElementById('saved-counter-badge').innerText = this.bookmarks.length;
+        }
+
+        initBriefingPanel() {
+          const categories = [
+            "Top News", "Technology", "Artificial Intelligence", "Business", 
+            "Finance", "Science", "Sports", "Entertainment", "World", "Startups"
+          ];
+          
+          const checkboxContainer = document.getElementById('briefing-checkboxes');
+          if (checkboxContainer) {
+            checkboxContainer.innerHTML = categories.map(cat => `
+              <label class="flex items-center space-x-2 cursor-pointer hover:text-[#D4AF37] select-none py-1">
+                <input type="checkbox" name="briefing-tag" value="${cat}" class="rounded border-white/20 bg-black text-[#D4AF37] focus:ring-0 focus:ring-offset-0 accent-[#D4AF37]" />
+                <span class="text-white/80">${cat}</span>
+              </label>
+            `).join('');
+          }
+
+          this.updatePersonalBriefingVisualState();
+        }
+
+        updatePersonalBriefingVisualState() {
+          const unconfiguredEl = document.getElementById('briefing-unconfigured');
+          const configuredEl = document.getElementById('briefing-configured');
+          
+          if (this.briefingPreferences) {
+            unconfiguredEl.classList.add('hidden');
+            configuredEl.classList.remove('hidden');
+            document.getElementById('briefing-username-lbl').innerText = `AGENT ${this.userAlias.toUpperCase()}`;
+            
+            const badgesContainer = document.getElementById('briefing-categories-badges');
+            if (badgesContainer) {
+              badgesContainer.innerHTML = this.briefingPreferences.map(cat => `
+                <span class="bg-[#D4AF37]/10 border border-[#D4AF37]/35 text-[#D4AF37] px-2 py-0.5 rounded-sm uppercase text-[9px] select-none">${cat}</span>
+              `).join('');
+            }
+          } else {
+            unconfiguredEl.classList.remove('hidden');
+            configuredEl.classList.add('hidden');
+          }
+        }
+
+        registerEvents() {
+          const categories = [
+            "ALL", "Top News", "Technology", "Artificial Intelligence", "Business", 
+            "Finance", "Science", "Sports", "Entertainment", "World", "Startups"
+          ];
+          
+          const navContainer = document.getElementById('category-tabs-nav');
+          navContainer.innerHTML = categories.map(cat => `
+            <button class="nav-tab shrink-0 font-mono text-[9px] px-3.5 py-3 tracking-wider uppercase border-b-2 border-transparent hover:text-[#D4AF37] cursor-pointer transition-colors ${cat === 'ALL' ? 'active-tab border-[#D4AF37] text-[#D4AF37] font-bold bg-[#D4AF37]/5 px-3 py-1.5 border border-[#D4AF37]/35 rounded text-[11px] font-mono tracking-widest' : 'text-neutral-500'}" data-category="${cat}">
+              ${cat}
+            </button>
+          `).join('');
+
+          navContainer.querySelectorAll('.nav-tab').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              this.activeCategory = e.currentTarget.getAttribute('data-category');
+              
+              navContainer.querySelectorAll('.nav-tab').forEach(b => {
+                b.classList.remove('active-tab', 'border-[#D4AF37]', 'text-[#D4AF37]', 'font-bold', 'bg-[#D4AF37]/5', 'rounded');
+                b.classList.add('text-neutral-500');
+              });
+              
+              e.currentTarget.classList.add('active-tab', 'border-[#D4AF37]', 'text-[#D4AF37]', 'font-bold', 'bg-[#D4AF37]/5', 'rounded');
+              e.currentTarget.classList.remove('text-neutral-500');
+
+              document.getElementById('view-bookmarks-btn').classList.remove('active');
+              document.getElementById('view-home-btn').classList.add('active');
+
+              this.render();
+            });
+          });
+
+          const searchInput = document.getElementById('news-search-input');
+          searchInput.addEventListener('input', (e) => {
+            this.searchQuery = e.target.value.trim().toLowerCase();
+            const clearBtn = document.getElementById('search-clear-btn');
+            if (this.searchQuery) {
+              clearBtn.classList.remove('hidden');
+            } else {
+              clearBtn.classList.add('hidden');
+            }
+            this.render();
+          });
+
+          document.getElementById('search-clear-btn').addEventListener('click', () => {
+            searchInput.value = "";
+            this.searchQuery = "";
+            document.getElementById('search-clear-btn').classList.add('hidden');
+            this.render();
+          });
+
+          document.getElementById('source-filter-select').addEventListener('change', (e) => {
+            this.activeSource = e.target.value;
+            this.render();
+          });
+
+          document.getElementById('time-filter-select').addEventListener('change', (e) => {
+            this.activeHorizon = e.target.value;
+            this.render();
+          });
+
+          document.getElementById('sort-filter-select').addEventListener('change', (e) => {
+            this.activeSort = e.target.value;
+            this.render();
+          });
+
+          document.getElementById('view-home-btn').addEventListener('click', (e) => {
+            document.getElementById('view-bookmarks-btn').classList.remove('active');
+            e.currentTarget.classList.add('active');
+            this.render();
+          });
+
+          document.getElementById('view-bookmarks-btn').addEventListener('click', (e) => {
+            document.getElementById('view-home-btn').classList.remove('active');
+            e.currentTarget.classList.add('active');
+            this.render();
+          });
+
+          document.getElementById('save-briefing-preferences-btn').addEventListener('click', () => {
+            const aliasInput = document.getElementById('user-display-name').value.trim();
+            const checkboxes = document.querySelectorAll('input[name="briefing-tag"]:checked');
+            
+            if (checkboxes.length < 2) {
+              alert("System Compliance directive: Select at least 2 disciplines to configure curated advisory parameters.");
+              return;
+            }
+
+            const chosenCategories = Array.from(checkboxes).map(box => box.value);
+            this.briefingPreferences = chosenCategories;
+            this.userAlias = aliasInput || 'Reader';
+            
+            localStorage.setItem('bg_briefing_prefs', JSON.stringify(chosenCategories));
+            localStorage.setItem('bg_user_alias', this.userAlias);
+            
+            this.updatePersonalBriefingVisualState();
+            playNewsAlertChime();
+            this.launchPersonalBriefing();
+          });
+
+          document.getElementById('edit-briefing-preferences-btn').addEventListener('click', () => {
+            this.briefingPreferences = null;
+            localStorage.removeItem('bg_briefing_prefs');
+            this.updatePersonalBriefingVisualState();
+          });
+
+          document.getElementById('briefing-exclusive-portal-btn').addEventListener('click', () => {
+            this.launchPersonalBriefing();
+          });
+
+          document.getElementById('logo-trigger').addEventListener('click', () => {
+            this.resetFilters();
+          });
+
+          document.getElementById('test-alert-trigger').addEventListener('click', () => {
+            this.fireRandomBreakingAlert();
+          });
+
+          document.getElementById('alert-close').addEventListener('click', () => {
+            document.getElementById('alert-banner').classList.add('-translate-y-full');
+          });
+
+          document.getElementById('alert-read-btn').addEventListener('click', () => {
+            const activeAlert = document.getElementById('alert-banner').getAttribute('data-target-id');
+            const article = this.allArticles.find(a => a.id === activeAlert);
+            if (article) {
+              this.openReader(article);
+              document.getElementById('alert-banner').classList.add('-translate-y-full');
+            }
+          });
+
+          document.getElementById('sync-refresh-btn').addEventListener('click', () => {
+            this.performRSSSynchronization();
+          });
+
+          document.getElementById('master-theme-toggle').addEventListener('click', () => {
+            this.toggleMasterAppTheme();
+          });
+
+          document.getElementById('reader-close-btn').addEventListener('click', () => {
+            this.closeReader();
+          });
+
+          document.getElementById('reader-theme-select').addEventListener('change', (e) => {
+            this.applyReaderSpecificTheme(e.target.value);
+          });
+
+          document.getElementById('font-dec-btn').addEventListener('click', () => {
+            if (this.readerFontSizeScale > 0.75) {
+              this.readerFontSizeScale -= 0.1;
+              this.applyReaderFontSize();
+            }
+          });
+
+          document.getElementById('font-inc-btn').addEventListener('click', () => {
+            if (this.readerFontSizeScale < 1.7) {
+              this.readerFontSizeScale += 0.1;
+              this.applyReaderFontSize();
+            }
+          });
+
+          document.getElementById('audio-narrator-btn').addEventListener('click', () => {
+            this.toggleAudioSynthesisNarration();
+          });
+
+          document.getElementById('reader-bookmark-toggle-btn').addEventListener('click', () => {
+            if (this.readingArticle) {
+              this.toggleBookmark(this.readingArticle.id);
+              this.updateReaderBookmarkState();
+            }
+          });
+        }
+
+        launchPersonalBriefing() {
+          if (!this.briefingPreferences) return;
+          this.activeCategory = "ALL";
+          this.searchQuery = "";
+          
+          document.getElementById('view-title').innerText = `CURATED FILES: AGENT ${this.userAlias.toUpperCase()}`;
+          document.getElementById('view-bookmarks-btn').classList.remove('active');
+          document.getElementById('view-home-btn').classList.add('active');
+
+          window.scrollTo({
+            top: document.getElementById('view-title').offsetTop - 20,
+            behavior: 'smooth'
+          });
+
+          this.render(true);
+        }
+
+        populateFilterDropdowns() {
+          const selectElement = document.getElementById('source-filter-select');
+          const sources = Array.from(new Set(this.allArticles.map(a => a.source)));
+          selectElement.innerHTML = `<option value="ALL">All Bureau Sources</option>` + 
+            sources.map(src => `<option value="${src}">${src}</option>`).join('');
+        }
+
+        evaluateStats() {
+          const now = new Date();
+          const todayString = now.toDateString();
+          const countToday = this.allArticles.filter(art => {
+            const d = new Date(art.pubDate);
+            return d.toDateString() === todayString;
+          }).length;
+          
+          document.getElementById('articles-count-meta').innerText = countToday;
+          document.getElementById('breaking-count-lbl').innerText = this.allArticles.filter(a => a.breaking).length;
+        }
+
+        initTimerLoops() {
+          setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock-meta').innerText = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: false }) + " IST";
+          }, 1000);
+
+          setInterval(() => {
+            this.fireRandomBreakingAlert(true);
+          }, 90000);
+
+          this.rebuildHotMarqueeHeadlines();
+        }
+
+        rebuildHotMarqueeHeadlines() {
+          const tickerElement = document.getElementById('ticker-slider');
+          if (!tickerElement) return;
+
+          const tickerItems = this.allArticles.map(art => {
+            const sym = art.breaking ? "🚨" : "⚡";
+            return `<span class="hover:text-amber-500 transition-all inline-flex items-center gap-1 cursor-pointer" onclick="window.appOpenArticle('${art.id}')">${sym} ${art.source.toUpperCase()}: ${art.title.toUpperCase()}</span>`;
+          });
+
+          tickerElement.innerHTML = [...tickerItems, ...tickerItems].join(' <span class="text-black font-bold mx-2">/</span> ');
+        }
+
+        toggleMasterAppTheme() {
+          const body = document.body;
+          const label = document.getElementById('theme-toggle-text');
+          if (body.classList.contains('bg-black')) {
+            body.className = "bg-neutral-50 text-neutral-950 font-sans transition-colors duration-300 antialiased selection:bg-[#D4AF37] selection:text-black min-h-screen flex flex-col justify-between";
+            label.innerText = "CLASSIC SLATE";
+          } else {
+            body.className = "bg-black text-white font-sans transition-colors duration-300 antialiased selection:bg-[#D4AF37] selection:text-black min-h-screen flex flex-col justify-between";
+            label.innerText = "ULTRA-DARK";
+          }
+        }
+
+        getFilteredArticles(briefingMode = false) {
+          let list = [...this.allArticles];
+
+          const bookingsActive = document.getElementById('view-bookmarks-btn').classList.contains('active');
+          if (bookingsActive) {
+            list = list.filter(art => this.bookmarks.includes(art.id));
+            document.getElementById('view-title').innerText = "PERSISTED INTELLIGENCE DOCK";
+            return list;
+          }
+
+          if (briefingMode && this.briefingPreferences) {
+            list = list.filter(art => this.briefingPreferences.includes(art.category));
+          } else {
+            if (this.activeCategory !== "ALL") {
+              list = list.filter(art => art.category.toLowerCase() === this.activeCategory.toLowerCase());
+              document.getElementById('view-title').innerText = `${this.activeCategory.toUpperCase()} TELEGRAMS`;
+            } else {
+              document.getElementById('view-title').innerText = "GLOBAL FEED CHRONICLES";
+            }
+          }
+
+          if (this.searchQuery) {
+            list = list.filter(art => 
+              art.title.toLowerCase().includes(this.searchQuery) ||
+              art.summary.toLowerCase().includes(this.searchQuery) ||
+              art.source.toLowerCase().includes(this.searchQuery)
+            );
+          }
+
+          if (this.activeSource !== "ALL") {
+            list = list.filter(art => art.source === this.activeSource);
+          }
+
+          if (this.activeHorizon !== "ALL") {
+            const now = Date.now();
+            const intervals = {
+              "24H": 24 * 60 * 60 * 1000,
+              "7D": 7 * 24 * 60 * 60 * 1000,
+              "30D": 30 * 24 * 60 * 60 * 1000
+            };
+            const cutoff = now - intervals[this.activeHorizon];
+            list = list.filter(art => new Date(art.pubDate).getTime() >= cutoff);
+          }
+
+          if (this.activeSort === "NEWEST") {
+            list.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+          } else if (this.activeSort === "OLDEST") {
+            list.sort((a, b) => new Date(a.pubDate).getTime() - new Date(b.pubDate).getTime());
+          } else if (this.activeSort === "MOST_RELEVANT") {
+            list.sort((a, b) => (b.summary.length + (b.bookmark ? 50 : 0)) - (a.summary.length + (a.bookmark ? 50 : 0)));
+          }
+
+          return list;
+        }
+
+        render(briefingMode = false) {
+          const list = this.getFilteredArticles(briefingMode);
+          const spotlightEl = document.getElementById('hero-spotlight');
+          const gridEl = document.getElementById('articles-feed-grid');
+          const zeroStateEl = document.getElementById('zero-state');
+
+          this.renderTrendingKeywordsSidebar();
+
+          if (list.length === 0) {
+            spotlightEl.classList.add('hidden');
+            gridEl.classList.add('hidden');
+            zeroStateEl.classList.remove('hidden');
+            document.getElementById('view-sub-text').innerText = "0 MATRICES INDEXED";
+            return;
+          }
+
+          zeroStateEl.classList.add('hidden');
+          gridEl.classList.remove('hidden');
+
+          const isBookmarksPage = document.getElementById('view-bookmarks-btn').classList.contains('active');
+
+          if (list.length > 0 && !this.searchQuery && !isBookmarksPage) {
+            spotlightEl.classList.remove('hidden');
+            const heroArt = list[0]; 
+            this.renderHeroSpotlight(heroArt);
+          } else {
+            spotlightEl.classList.add('hidden');
+          }
+
+          const remainingList = (!this.searchQuery && !isBookmarksPage) ? list.slice(1) : list;
+          
+          if (remainingList.length === 0) {
+            gridEl.innerHTML = `
+              <div class="col-span-full py-8 text-center font-mono text-xs text-white/40 border border-white/10 rounded-sm">
+                Additional items staggered under filters. Use categories above to expand general scopes.
+              </div>
+            `;
+          } else {
+            gridEl.innerHTML = remainingList.map(art => this.generateCardMarkup(art)).join('');
+          }
+
+          document.getElementById('view-sub-text').innerText = `${list.length} INDICATORS INDEXED`;
+        }
+
+        renderHeroSpotlight(art) {
+          const bannerEl = document.getElementById('hero-spotlight');
+          const isBookmarked = this.bookmarks.includes(art.id);
+          const dateStr = this.formatArticleDate(art.pubDate);
+          
+          bannerEl.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-5 hover:bg-white/[0.02] transition-colors cursor-pointer relative" onclick="window.appOpenArticle('${art.id}', event)">
+              <span class="absolute top-0 right-0 bg-[#D4AF37] text-black text-[9px] px-2 py-0.5 font-bold uppercase select-none tracking-widest">SPOTLIGHT REPORT</span>
+              <div class="md:col-span-3 p-6 md:p-8 flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                  <div class="flex items-center space-x-2.5 text-[10px] font-mono">
+                    <span class="bg-[#D4AF37]/10 border border-[#D4AF37]/35 text-[#D4AF37] px-2.5 py-0.5 uppercase tracking-wider font-bold">${art.category}</span>
+                    <span class="text-white/40">•</span>
+                    <span class="text-white/60 font-bold uppercase">${art.source}</span>
+                    <span class="text-neutral-700">|</span>
+                    <span class="text-white/40 font-semibold">${dateStr}</span>
+                  </div>
+                  <h3 class="font-serif text-2xl md:text-3xl font-black italic text-[#D4AF37] leading-tight hover:text-white transition-colors">${art.title}</h3>
+                  <p class="text-xs text-white/70 leading-relaxed max-w-2xl line-clamp-3 font-sans">${art.summary}</p>
+                </div>
+                
+                <div class="flex items-center justify-between border-t border-white/10 pt-4 text-[10px] font-mono select-none">
+                  <div class="flex items-center space-x-1 uppercase tracking-widest text-[#D4AF37] font-black">
+                    <span>LAUNCH RAW TELEGRAM VIEW</span>
+                  </div>
+                  <div class="flex items-center space-x-3 gap-1" onclick="event.stopPropagation()">
+                    <button class="text-white/40 hover:text-[#D4AF37] transition-colors p-1" onclick="window.appToggleBookmark('${art.id}', event)">
+                      <svg class="w-5 h-5 ${isBookmarked ? 'fill-[#D4AF37] text-[#D4AF37]' : 'fill-none'}" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="md:col-span-2 relative bg-[#0C0C0C] flex flex-col items-center justify-center p-8 text-center select-none border-t md:border-t-0 md:border-l border-white/15 min-h-[200px]">
+                <div class="relative z-10 space-y-1">
+                  <div class="font-serif italic text-2xl font-black text-[#D4AF37]">BG WIRE SYSTEM</div>
+                  <div class="text-[9px] font-mono tracking-[0.2em] text-white/45 uppercase">UNIVERSAL TELEGRAM NET</div>
+                  <div class="text-[10px] text-white/30 font-mono mt-4 border border-white/5 p-1 px-2">AUTHENTICATED HUB</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        generateCardMarkup(art) {
+          const isBookmarked = this.bookmarks.includes(art.id);
+          const dateStr = this.formatArticleDate(art.pubDate);
+
+          return `
+            <div class="border border-white/10 hover:border-[#D4AF37]/50 bg-white/5 p-4 rounded-sm flex flex-col justify-between space-y-4 shadow-sm cursor-pointer group hover:bg-white/[0.02] transition-colors" onclick="window.appOpenArticle('${art.id}', event)">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-[10px] font-mono">
+                  <span class="text-[#D4AF37] font-bold uppercase tracking-wide">${art.category}</span>
+                  <span class="text-white/40 uppercase">${art.source}</span>
+                </div>
+                
+                <h4 class="font-serif text-lg font-bold text-white italic leading-snug group-hover:text-[#D4AF37] transition-colors line-clamp-2">${art.title}</h4>
+                <p class="text-[11px] text-white/55 leading-normal line-clamp-3 font-sans">${art.summary}</p>
+              </div>
+
+              <div class="border-t border-white/10 pt-3 flex items-center justify-between text-[10px] font-mono text-white/45 uppercase select-none">
+                <span>${dateStr}</span>
+                <div class="flex items-center space-x-2" onclick="event.stopPropagation()">
+                  <button class="p-1 hover:text-[#D4AF37] text-white/30 transition-colors" onclick="window.appToggleBookmark('${art.id}', event)">
+                    <svg class="w-4 h-4 ${isBookmarked ? 'fill-[#D4AF37] text-[#D4AF37]' : 'fill-none'}" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        renderTrendingKeywordsSidebar() {
+          const keywords = ["#ArtificialIntelligence", "#QuantumCompute", "#FusionEnergy", "#AntitrustCrusade", "#CommoditiesSellers", "#SubwayFarms", "#SolidStatePower", "#SportsCalib", "#DigitalOlympic"];
+          const container = document.getElementById('trending-keywords-list');
+          if (container) {
+            container.innerHTML = keywords.map((kw, idx) => `
+              <div class="flex justify-between items-center py-2.5 border-b border-white/5 last:border-0 hover:bg-white/[0.02] px-2 rounded-sm cursor-pointer select-none transition-colors" onclick="window.appSetKeywordFilter('${kw}')">
+                <div class="flex gap-2.5 items-center">
+                  <span class="text-[11px] font-serif italic text-white/30">0${idx + 1}</span>
+                  <span class="text-[11px] font-bold leading-tight hover:text-[#D4AF37] text-white/85 transition-colors">${kw}</span>
+                </div>
+                <span class="text-[9px] text-[#D4AF37]/80 font-mono uppercase bg-[#D4AF37]/10 px-1 font-semibold">+${340 - idx * 22}% GROWTH</span>
+              </div>
+            `).join('');
+          }
+        }
+
+        formatArticleDate(isoString) {
+          const now = Date.now();
+          const pDate = new Date(isoString);
+          const diffMs = now - pDate.getTime();
+          
+          if (diffMs < 0) return "Just now";
+          const diffHours = Math.floor(diffMs / (60 * 60 * 1000));
+          
+          if (diffHours < 1) {
+            const diffMin = Math.floor(diffMs / (60 * 1000));
+            return `${diffMin || 1}m AGO`;
+          }
+          if (diffHours < 24) return `${diffHours}h AGO`;
+          const days = Math.floor(diffHours / 24);
+          return days === 1 ? "1 DAY AGO" : `${days} DAYS AGO`;
+        }
+
+        toggleBookmark(id, event) {
+          if (event) event.stopPropagation();
+          const idx = this.bookmarks.indexOf(id);
+          playNewsAlertChime();
+
+          if (idx > -1) {
+            this.bookmarks.splice(idx, 1);
+          } else {
+            this.bookmarks.push(id);
+          }
+
+          localStorage.setItem('bg_bookmarks', JSON.stringify(this.bookmarks));
+          document.getElementById('saved-counter-badge').innerText = this.bookmarks.length;
+          this.render();
+        }
+
+        setKeywordFilter(kw) {
+          const searchInp = document.getElementById('news-search-input');
+          const cleanKw = kw.replace('#', '');
+          
+          searchInp.value = cleanKw;
+          this.searchQuery = cleanKw.toLowerCase();
+          document.getElementById('search-clear-btn').classList.remove('hidden');
+
+          window.scrollTo({
+            top: document.getElementById('view-title').offsetTop - 30,
+            behavior: 'smooth'
+          });
+
+          this.render();
+        }
+
+        resetFilters() {
+          this.activeCategory = "ALL";
+          this.activeSource = "ALL";
+          this.activeHorizon = "ALL";
+          this.activeSort = "NEWEST";
+          this.searchQuery = "";
+          
+          document.getElementById('news-search-input').value = "";
+          document.getElementById('search-clear-btn').classList.add('hidden');
+          document.getElementById('source-filter-select').value = "ALL";
+          document.getElementById('time-filter-select').value = "ALL";
+          document.getElementById('sort-filter-select').value = "NEWEST";
+
+          const navContainer = document.getElementById('category-tabs-nav');
+          navContainer.querySelectorAll('.nav-tab').forEach(b => {
+            b.classList.remove('active-tab', 'border-[#D4AF37]', 'text-[#D4AF37]', 'font-bold', 'bg-[#D4AF37]/5', 'rounded');
+            b.classList.add('text-neutral-500');
+            
+            if (b.getAttribute('data-category') === 'ALL') {
+              b.classList.add('active-tab', 'border-[#D4AF37]', 'text-[#D4AF37]', 'font-bold', 'bg-[#D4AF37]/5', 'rounded');
+              b.classList.remove('text-neutral-500');
+            }
+          });
+
+          document.getElementById('view-bookmarks-btn').classList.remove('active');
+          document.getElementById('view-home-btn').classList.add('active');
+
+          this.render();
+        }
+
+        fireRandomBreakingAlert(ambientOnly = false) {
+          if (ambientOnly) {
+            const alertEnabled = document.getElementById('notify-breaking')?.checked;
+            if (!alertEnabled) return;
+          }
+
+          const candidates = this.allArticles.filter(a => a.breaking);
+          if (candidates.length === 0) return;
+          const randomArt = candidates[Math.floor(Math.random() * candidates.length)];
+          
+          const alertBanner = document.getElementById('alert-banner');
+          const textEl = document.getElementById('alert-banner-text');
+          
+          alertBanner.setAttribute('data-target-id', randomArt.id);
+          textEl.innerText = `${randomArt.source.toUpperCase()}: ${randomArt.title}`;
+
+          playNewsAlertChime();
+          
+          alertBanner.classList.remove('-translate-y-full');
+          setTimeout(() => {
+            alertBanner.classList.add('-translate-y-full');
+          }, 12000);
+        }
+
+        async performRSSSynchronization() {
+          const syncBtn = document.getElementById('sync-refresh-btn');
+          const icon = document.getElementById('sync-icon');
+          const dot = document.getElementById('network-dot');
+          const statusLbl = document.getElementById('network-status');
+
+          syncBtn.disabled = true;
+          icon.classList.add('animate-spin');
+          dot.className = "inline-block w-1.5 h-1.5 bg-amber-500 rounded-full mr-1.5 animate-pulse";
+          statusLbl.innerText = "SYNCHRONIZING SEC DIGITAL GRID...";
+
+          playNewsAlertChime();
+
+          const feedsToFetch = {
+            "Top News": "https://feeds.bbci.co.uk/news/rss.xml",
+            "Science": "https://www.sciencedaily.com/rss/all.xml",
+            "Sports": "https://www.espn.com/espn/rss/news",
+          };
+
+          let liveArticles = [];
+          try {
+            const promises = Object.entries(feedsToFetch).map(async ([category, url]) => {
+              const fetchUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&api_key=`;
+              const res = await fetch(fetchUrl);
+              if (!res.ok) throw new Error("Throttled");
+              const data = await res.json();
+              
+              if (data && data.status === 'ok' && data.items) {
+                return data.items.map((item, idx) => ({
+                  id: `live-${category}-${idx}-${Math.floor(Math.random() * 10000)}`,
+                  title: item.title,
+                  source: data.feed.title || "Bureau Wire",
+                  summary: item.description ? item.description.replace(/<\/?[^>]+(>|$)/g, "").trim() : "Summary not indexed.",
+                  content: item.content ? item.content : item.description,
+                  pubDate: item.pubDate || new Date().toISOString(),
+                  category: category,
+                  author: item.author || "Press Bureau",
+                  breaking: idx === 0,
+                }));
+              }
+              return [];
+            });
+
+            const results = await Promise.all(promises);
+            liveArticles = results.flat();
+          } catch (e) {
+            console.warn("RSS Sync throttled. Shifting to Offline Backup Matrix.", e);
+          }
+
+          if (liveArticles.length > 0) {
+            const keysToReplace = Object.keys(feedsToFetch);
+            this.allArticles = [
+              ...liveArticles,
+              ...this.allArticles.filter(art => !keysToReplace.includes(art.category))
+            ];
+            dot.className = "inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse";
+            statusLbl.innerText = "INTAKE DATA SYNC SUCCESSFUL (LIVE ACTIVE)";
+            playNewsAlertChime();
+          } else {
+            dot.className = "inline-block w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5 animate-pulse";
+            statusLbl.innerText = "STREAM SEC ACTIVE (LOCAL COMPLIANCED)";
+          }
+
+          setTimeout(() => {
+            syncBtn.disabled = false;
+            icon.classList.remove('animate-spin');
+            this.evaluateStats();
+            this.rebuildHotMarqueeHeadlines();
+            this.populateFilterDropdowns();
+            this.render();
+          }, 1500);
+        }
+
+        openReader(art) {
+          this.readingArticle = art;
+          document.getElementById('reader-title').innerText = art.title;
+          document.getElementById('reader-category').innerText = art.category.toUpperCase();
+          document.getElementById('reader-date').innerText = new Date(art.pubDate).toLocaleDateString('en-IN', {
+            year: 'numeric', month: 'long', day: 'numeric'
+          }).toUpperCase();
+          document.getElementById('reader-source-meta').innerText = art.source.toUpperCase();
+          document.getElementById('reader-author').innerText = art.author ? `COMPLIANCE AGENT: ${art.author.toUpperCase()}` : "COMPLIANCE PRESS WIRE";
+          
+          const contentContainer = document.getElementById('reader-paragraphs');
+          const bodyParagraphs = art.content ? art.content.split('\n\n') : [art.summary];
+          
+          contentContainer.innerHTML = bodyParagraphs.map((para, idx) => `
+            <p class="reader-para leading-relaxed pt-2 cursor-pointer hover:bg-white/5 p-2 rounded transition-all" data-p-id="${idx}">${para}</p>
+          `).join('');
+
+          const wordCount = bodyParagraphs.join(' ').split(' ').length;
+          const readMin = Math.ceil(wordCount / 220); 
+          document.getElementById('reader-reading-speed-lbl').innerText = `METRICS METADATA: ~${wordCount} WORDS | AUDIT READ TIME INDEX: ${readMin} MIN`;
+
+          this.updateReaderBookmarkState();
+          this.shutdownVoiceSynthesis();
+
+          const overlay = document.getElementById('reader-mode-overlay');
+          overlay.classList.remove('hidden');
+          overlay.classList.add('flex');
+          document.body.style.overflow = "hidden";
+        }
+
+        closeReader() {
+          this.shutdownVoiceSynthesis();
+          const overlay = document.getElementById('reader-mode-overlay');
+          overlay.classList.remove('flex');
+          overlay.classList.add('hidden');
+          document.body.style.overflow = "";
+          this.readingArticle = null;
+        }
+
+        applyReaderSpecificTheme(themeKey) {
+          const container = document.getElementById('reader-container');
+          container.className = "text-[#DFE2E5] w-full max-w-4xl h-full md:h-[90vh] md:rounded-sm shadow-2xl flex flex-col overflow-hidden transition-all duration-300 border border-[#D4AF37]/25 relative";
+          
+          if (themeKey === 'sepia') {
+            container.className = "bg-[#F4ECD8] text-[#433422] w-full max-w-4xl h-full md:h-[90vh] md:rounded-sm shadow-2xl flex flex-col overflow-hidden transition-all duration-300 border border-[#433422]/20 relative";
+          } else if (themeKey === 'midnight') {
+            container.className = "bg-[#0C0C0C] text-neutral-100 w-full max-w-4xl h-full md:h-[90vh] md:rounded-sm shadow-2xl flex flex-col overflow-hidden transition-all duration-300 border border-[#D4AF37]/25 relative";
+          } else if (themeKey === 'terminal') {
+            container.className = "bg-black text-[#50FA7B] w-full max-w-4xl h-full md:h-[90vh] md:rounded-sm shadow-2xl flex flex-col overflow-hidden transition-all duration-300 border border-[#50FA7B]/30 relative font-mono";
+          }
+        }
+
+        applyReaderFontSize() {
+          const pContainer = document.getElementById('reader-paragraphs');
+          pContainer.style.fontSize = `${this.readerFontSizeScale * 1.1}rem`;
+          pContainer.style.lineHeight = `${this.readerFontSizeScale * 1.8}rem`;
+        }
+
+        updateReaderBookmarkState() {
+          if (!this.readingArticle) return;
+          const isSaved = this.bookmarks.includes(this.readingArticle.id);
+          const btnText = document.getElementById('reader-bookmark-text');
+
+          if (isSaved) {
+            btnText.innerText = "Intel Saved in Local Archives";
+          } else {
+            btnText.innerText = "Lock Article to Bookmarks Drawer";
+          }
+        }
+
+        toggleAudioSynthesisNarration() {
+          if (!('speechSynthesis' in window)) {
+            alert("Speech Synthesizer limits: Your terminal client lack Web Speech API support.");
+            return;
+          }
+          if (this.speechPlaying) {
+            this.pauseVoiceSynthesis();
+          } else {
+            this.playVoiceSynthesis();
+          }
+        }
+
+        playVoiceSynthesis() {
+          if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+            this.speechPlaying = true;
+            this.updateVoiceNarratorUIState(true);
+            return;
+          }
+
+          const paras = Array.from(document.querySelectorAll('.reader-para')).map(p => p.innerText);
+          if (paras.length === 0) return;
+
+          const textBlock = `${this.readingArticle.title}. Source: ${this.readingArticle.source}. ${paras.join(' ')}`;
+          this.speechUtterance = new SpeechSynthesisUtterance(textBlock);
+          
+          const voices = window.speechSynthesis.getVoices();
+          const luxuryVoice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('google')) || 
+                               voices.find(v => v.lang.startsWith('en'));
+          if (luxuryVoice) this.speechUtterance.voice = luxuryVoice;
+
+          this.speechUtterance.onend = () => {
+            this.shutdownVoiceSynthesis();
+          };
+          this.speechUtterance.onerror = () => {
+            this.shutdownVoiceSynthesis();
+          };
+
+          this.speechPlaying = true;
+          this.updateVoiceNarratorUIState(true);
+          window.speechSynthesis.speak(this.speechUtterance);
+        }
+
+        pauseVoiceSynthesis() {
+          window.speechSynthesis.pause();
+          this.speechPlaying = false;
+          this.updateVoiceNarratorUIState(false);
+        }
+
+        shutdownVoiceSynthesis() {
+          window.speechSynthesis.cancel();
+          this.speechPlaying = false;
+          this.speechUtterance = null;
+          this.updateVoiceNarratorUIState(false);
+        }
+
+        updateVoiceNarratorUIState(isPlaying) {
+          const btnText = document.getElementById('audio-narrator-text');
+          const visualizer = document.getElementById('audio-visualizer-bar');
+          const btn = document.getElementById('audio-narrator-btn');
+
+          if (isPlaying) {
+            btnText.innerText = "PAUSE NARRATION";
+            visualizer.classList.remove('hidden');
+            btn.classList.add('bg-red-500/20', 'text-red-500');
+          } else {
+            btnText.innerText = "AUDIO ASSIST";
+            visualizer.classList.add('hidden');
+            btn.classList.remove('bg-red-500/20', 'text-red-500');
+          }
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const app = new NewsEngine();
+        window.app = app;
+        window.appOpenArticle = (id) => {
+          const art = app.allArticles.find(a => a.id === id);
+          if (art) app.openReader(art);
+        };
+        window.appToggleBookmark = (id, e) => {
+          app.toggleBookmark(id, e);
+        };
+        window.appSetKeywordFilter = (kw) => {
+          app.setKeywordFilter(kw);
+        };
+      });
+    </script>
+  </body>
+</html>
