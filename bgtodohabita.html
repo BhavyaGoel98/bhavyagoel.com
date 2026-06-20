@@ -1,523 +1,2572 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BG Todohabita · BG FAME</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@600;700;800&amp;display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --sb:#1e1e1e;--sb-hover:#3d3d3d;--sb-active:#4d4d4d;
-  --main:#202020;--main2:#2a2a2a;--surface:#333;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
-  --text:#fff;--muted:#808080;--faint:#555;
-  --red:#db4035;--p1:#db4035;--p2:#ff9a14;--p3:#246fe0;--p4:#808080;
-  --teal:#14b8a6;--sb-w:260px;--r:6px;
-}
-html,body{height:100%;overflow:hidden}
-body{font-family:'Inter',sans-serif;font-size:14px;background:var(--main);color:var(--text);display:flex}
-a{color:inherit;text-decoration:none}
-button,input,textarea,select{font-family:inherit;cursor:pointer}
-input,textarea{cursor:text}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>todohabit — daily routines, gently built</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-/* ── HOMEPAGE OVERLAY ── */
-#hp{position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s}
-#hp-cv{position:absolute;inset:0;width:100%;height:100%}
-.hp-nav{position:absolute;top:0;left:0;right:0;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;z-index:2}
-.hp-nav-logo{font-family:'Space Grotesk',sans-serif;font-weight:800;color:#14b8a6;font-size:1rem}
-.hp-back{font-size:.78rem;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.15);padding:5px 14px;border-radius:50px;transition:all .2s}
-.hp-back:hover{color:#fff;border-color:rgba(255,255,255,.4)}
-.hp-body{position:relative;z-index:1;text-align:center;padding:0 24px;max-width:680px}
-.hp-logo{width:72px;height:72px;border-radius:14px;object-fit:contain;margin:0 auto 18px;display:block;border:2px solid rgba(20,184,166,.35);box-shadow:0 0 30px rgba(20,184,166,.2)}
-.hp-badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#14b8a6;border:1px solid rgba(20,184,166,.3);padding:4px 14px;border-radius:50px;margin-bottom:14px}
-.hp-h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:800;color:#fff;margin-bottom:10px;line-height:1.1}
-.hp-h1 span{color:#14b8a6;text-shadow:0 0 20px rgba(20,184,166,.4)}
-.hp-p{font-size:.95rem;color:rgba(255,255,255,.55);margin-bottom:28px;line-height:1.6}
-.hp-feats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
-.hp-feat{background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.15);border-radius:10px;padding:10px 16px;font-size:.8rem;color:rgba(255,255,255,.75)}
-.hp-feat strong{display:block;color:#14b8a6;font-size:.88rem;margin-bottom:2px}
-.hp-cta{background:#14b8a6;color:#fff;border:none;padding:13px 34px;border-radius:50px;font-size:.95rem;font-weight:700;box-shadow:0 0 24px rgba(20,184,166,.35);transition:all .2s}
-.hp-cta:hover{transform:scale(1.04)}
+  <style>
+    /* Reset & Theme Variables */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* ── SIDEBAR ── */
-.sidebar{width:var(--sb-w);min-width:var(--sb-w);height:100vh;background:var(--sb);display:flex;flex-direction:column;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
-.sb-hdr{padding:14px 12px 8px;display:flex;align-items:center;justify-content:space-between;gap:4px}
-.sb-brand{display:flex;align-items:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.88rem}
-.sb-icon-box{width:26px;height:26px;border-radius:5px;background:#14b8a6;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#fff;flex-shrink:0}
-.add-btn{margin:6px 10px;padding:9px 12px;border-radius:var(--r);background:transparent;border:none;color:#db4035;font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:8px;width:calc(100% - 20px);text-align:left;transition:background .15s}
-.add-btn:hover{background:rgba(219,64,53,.1)}
-.sb-item{display:flex;align-items:center;gap:8px;padding:7px 14px;color:rgba(255,255,255,.68);font-size:.85rem;border-radius:var(--r);margin:1px 5px;cursor:pointer;transition:all .12s}
-.sb-item:hover{background:var(--sb-hover);color:#fff}
-.sb-item.active{background:var(--sb-active);color:#fff;font-weight:600}
-.sb-ic{font-size:.95rem;width:20px;text-align:center}
-.sb-cnt{margin-left:auto;font-size:.7rem;color:var(--muted);background:rgba(255,255,255,.08);padding:1px 7px;border-radius:50px}
-.sb-div{height:1px;background:var(--border);margin:7px 10px}
-.sb-proj-hdr{display:flex;align-items:center;justify-content:space-between;padding:3px 19px 3px 14px;margin-top:4px}
-.sb-proj-lbl{font-size:.68rem;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
-.sb-proj-add{background:none;border:none;color:var(--faint);font-size:1rem;padding:0 2px;transition:color .15s}
-.sb-proj-add:hover{color:#fff}
-.proj-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sb-bot{margin-top:auto;padding:10px;border-top:1px solid var(--border)}
-.sb-back-lnk{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted);padding:6px 8px;border-radius:var(--r);transition:all .15s}
-.sb-back-lnk:hover{background:var(--sb-hover);color:#fff}
+    :root {
+      /* Palette (Organic Forest Green & Slate Warm Theme) */
+      --brand-primary: #054d3b;
+      --brand-primary-light: #aee2d5;
+      --brand-primary-hover: #033c2e;
+      
+      --bg-base: #fbfbf9;
+      --bg-surface: #ffffff;
+      --bg-alt: #f3f3f0;
+      
+      --color-text-main: #1c201e;
+      --color-text-muted: #64746b;
+      --color-text-faint: #9caaa0;
+      
+      --border-thin: rgba(5, 77, 59, 0.08);
+      --border-medium: rgba(5, 77, 59, 0.15);
+      
+      --priority-p1: #ef4444;
+      --priority-p2: #f97316;
+      --priority-p3: #3b82f6;
+      --priority-p4: #737373;
+      
+      --sidebar-width: 270px;
+      --radius-standard: 12px;
+      --radius-pill: 100px;
+      
+      --shadow-soft: 0 4px 20px -2px rgba(5, 77, 59, 0.04), 0 2px 6px -1px rgba(5, 77, 59, 0.02);
+      --shadow-large: 0 20px 50px -12px rgba(5, 77, 59, 0.15);
+    }
 
-/* ── MAIN ── */
-.main{flex:1;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
-.main-hdr{padding:28px 36px 0;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0}
-.view-title{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700}
-.view-sub{font-size:.75rem;color:var(--muted);margin-top:3px}
-.main-body{padding:14px 36px 60px;flex:1}
+    /* Dark Mode Core Settings */
+    [data-theme="dark"] {
+      --bg-base: #0a0c0b;
+      --bg-surface: #121413;
+      --bg-alt: #1a1e1c;
+      
+      --color-text-main: #f0f4f1;
+      --color-text-muted: #95a59c;
+      --color-text-faint: #5d6d64;
+      
+      --border-thin: rgba(174, 226, 213, 0.09);
+      --border-medium: rgba(174, 226, 213, 0.18);
+      
+      --shadow-soft: 0 4px 25px -4px rgba(0, 0, 0, 0.3);
+      --shadow-large: 0 24px 60px -10px rgba(0, 0, 0, 0.5);
+    }
 
-/* ── TASK LIST ── */
-.task-list{display:flex;flex-direction:column;gap:1px}
-.task-item{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:var(--r);border:1px solid transparent;transition:background .1s}
-.task-item:hover{background:rgba(255,255,255,.04);border-color:var(--border)}
-.task-item.done .t-name{text-decoration:line-through;color:var(--muted)}
-.t-chk{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--muted);flex-shrink:0;cursor:pointer;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .18s}
-.t-chk:hover{border-color:#fff}
-.t-chk.done-c{opacity:.45}
-.t-body{flex:1;min-width:0}
-.t-name{font-size:.87rem;line-height:1.45;color:rgba(255,255,255,.9);word-break:break-word;outline:none}
-.t-name:focus{background:rgba(255,255,255,.04);border-radius:3px;padding:0 3px;margin:0 -3px}
-.t-meta{display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap}
-.t-due{font-size:.71rem;display:flex;align-items:center;gap:3px}
-.t-due.od{color:#db4035}.t-due.td{color:#25b84c}.t-due.tm{color:#ff9a14}.t-due.ft{color:var(--muted)}
-.t-proj{font-size:.71rem;color:var(--muted);display:flex;align-items:center;gap:3px}
-.t-flag{font-size:.73rem}
-.t-acts{display:none;align-items:center;margin-left:auto}
-.task-item:hover .t-acts{display:flex}
-.t-act{background:none;border:none;color:var(--muted);padding:3px 6px;border-radius:3px;font-size:.72rem;transition:all .1s}
-.t-act:hover{background:rgba(255,255,255,.08);color:#fff}
+    body {
+      font-family: "Inter", sans-serif;
+      font-size: 13.5px;
+      background-color: var(--bg-base);
+      color: var(--color-text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-/* ── ADD FORM ── */
-.add-form{display:none;border:1px solid var(--border2);border-radius:var(--r);padding:12px;margin:6px 0;background:var(--main2)}
-.add-form.vis{display:block;animation:sd .15s ease}
-@keyframes sd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-.f-name{width:100%;background:none;border:none;color:var(--text);font-size:.9rem;font-weight:500;outline:none;padding:2px 0}
-.f-name::placeholder{color:var(--muted)}
-.f-desc{width:100%;background:none;border:none;color:rgba(255,255,255,.5);font-size:.8rem;outline:none;resize:none;padding:2px 0}
-.f-desc::placeholder{color:var(--faint)}
-.f-div{height:1px;background:var(--border);margin:8px 0}
-.f-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;position:relative}
-.f-tool{background:none;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.48);padding:4px 10px;border-radius:var(--r);font-size:.73rem;display:flex;align-items:center;gap:4px;transition:all .12s}
-.f-tool:hover{border-color:rgba(255,255,255,.25);color:#fff}
-.f-sel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.48);padding:4px 8px;border-radius:var(--r);font-size:.73rem;outline:none}
-.pri-dd{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#2a2a2a;border:1px solid var(--border2);border-radius:var(--r);padding:4px;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.5);min-width:150px}
-.pri-dd.open{display:block;animation:sd .1s ease}
-.pri-opt{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:.8rem;transition:background .1s}
-.pri-opt:hover{background:rgba(255,255,255,.06)}
-.f-acts{display:flex;align-items:center;gap:8px;margin-top:10px}
-.btn-add{background:#db4035;color:#fff;border:none;padding:7px 18px;border-radius:var(--r);font-size:.8rem;font-weight:600;transition:all .15s}
-.btn-add:hover{background:#c0392b}
-.btn-cancel{background:none;border:none;color:var(--muted);font-size:.8rem;padding:7px 12px;transition:color .15s}
-.btn-cancel:hover{color:#fff}
+    button, input, textarea, select {
+      font-family: inherit;
+      color: inherit;
+    }
 
-/* ── QUICK ADD MODAL ── */
-#qa{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.65);align-items:flex-start;justify-content:center;padding-top:12vh}
-#qa.open{display:flex;animation:fi .15s ease}
-@keyframes fi{from{opacity:0}to{opacity:1}}
-.qa-box{background:#2a2a2a;border:1px solid var(--border2);border-radius:10px;width:560px;max-width:90vw;padding:18px;box-shadow:0 24px 64px rgba(0,0,0,.7);animation:pi .18s ease}
-@keyframes pi{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+    /* ── HOMEPAGE HERO OVERLAY ── */
+    #hp {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #080b09;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    #hp-cv {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.35;
+    }
 
-/* ── DATE HEADERS ── */
-.d-hdr{display:flex;align-items:center;gap:10px;margin:18px 0 8px;font-size:.78rem;font-weight:600;color:var(--muted)}
-.d-hdr-ln{flex:1;height:1px;background:var(--border)}
-.od-hdr{font-size:.76rem;font-weight:600;color:#db4035;margin:14px 0 6px;display:flex;align-items:center;gap:6px}
+    .hp-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
 
-/* ── EMPTY STATE ── */
-.empty{text-align:center;padding:56px 20px}
-.empty .em{font-size:2.4rem;margin-bottom:12px}
-.empty h3{font-size:.92rem;font-weight:600;margin-bottom:5px}
-.empty p{font-size:.8rem;color:var(--muted)}
-.add-trigger{display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--muted);font-size:.84rem;padding:8px 0;border-radius:var(--r);transition:color .15s;margin-top:8px;width:fit-content}
-.add-trigger:hover{color:#fff}
-.hidden{display:none!important}
+    .hp-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: var(--brand-primary-light);
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-/* ── POMODORO ── */
-#pf{position:fixed;bottom:24px;right:24px;z-index:200;width:50px;height:50px;border-radius:50%;background:#14b8a6;border:none;display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 20px rgba(20,184,166,.4);transition:all .2s}
-#pf:hover{transform:scale(1.1)}
-#pp{display:none;position:fixed;bottom:84px;right:24px;z-index:200;background:#1a1a1a;border:1px solid var(--border2);border-radius:14px;padding:22px;width:210px;text-align:center;box-shadow:0 12px 36px rgba(0,0,0,.6)}
-#pp.open{display:block;animation:pi .15s ease}
-.p-ring{position:relative;width:110px;height:110px;margin:0 auto 14px}
-.p-ring svg{transform:rotate(-90deg)}
-#p-prog{transition:stroke-dashoffset .5s linear}
-.p-t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700}
-.p-lbl{font-size:.72rem;color:var(--muted);margin-bottom:10px}
-.p-btns{display:flex;gap:6px;justify-content:center}
-.p-btn{background:var(--surface);border:none;color:#fff;padding:5px 12px;border-radius:50px;font-size:.78rem;transition:all .15s}
-.p-btn:hover{background:#14b8a6}
+    .hp-back-link {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 16px;
+      border-radius: var(--radius-pill);
+      transition: all 0.2s ease;
+    }
 
-/* ── LIGHT MODE ── */
-[data-theme="light"]{--sb:#f0f0f0;--sb-hover:#e0e0e0;--sb-active:#d0d0d0;--main:#fff;--main2:#f8f8f8;--surface:#ececec;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);--text:#1a1a1a;--muted:#666;--faint:#aaa}
-[data-theme="light"] body{background:#fff;color:#1a1a1a}
-[data-theme="light"] .sidebar{background:#f0f0f0}
-[data-theme="light"] .sb-item{color:#444}
-[data-theme="light"] .sb-item:hover{background:#e0e0e0;color:#111}
-[data-theme="light"] .sb-item.active{background:#d4d4d4;color:#111}
-[data-theme="light"] .t-name{color:#1a1a1a}
-[data-theme="light"] .task-item:hover{background:#f5f5f5}
-[data-theme="light"] .add-form,.task-item:hover{background:#fafafa}
-[data-theme="light"] .add-form{border-color:#ddd}
-[data-theme="light"] .qa-box{background:#fff}
-[data-theme="light"] #pp{background:#fff;border-color:#e0e0e0}
-[data-theme="light"] .f-sel{background:#fff;color:#555;border-color:#ccc}
-[data-theme="light"] .pri-dd{background:#fff}
-[data-theme="light"] #theme-btn{border-color:rgba(0,0,0,.2);color:#444}
+    .hp-back-link:hover {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.05);
+    }
 
-#theme-btn{background:none;border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:3px 11px;font-size:.76rem;color:rgba(255,255,255,.65);cursor:pointer;transition:all .15s}
-#theme-btn:hover{border-color:rgba(255,255,255,.5);color:#fff}
-</style>
+    .hp-content {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 660px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hp-logo-box {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 24px;
+      background: rgba(174, 226, 213, 0.08);
+      border: 1px solid rgba(174, 226, 213, 0.2);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-primary-light);
+    }
+
+    .hp-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brand-primary-light);
+      background: rgba(174, 226, 213, 0.08);
+      border: 1px solid rgba(174, 226, 213, 0.18);
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      margin-bottom: 20px;
+    }
+
+    .hp-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 12px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hp-title span {
+      color: var(--brand-primary-light);
+      font-weight: 700;
+    }
+
+    .hp-desc {
+      font-size: 0.95rem;
+      color: #8c9c93;
+      margin-bottom: 34px;
+      line-height: 1.6;
+    }
+
+    .hp-feats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+
+    .hp-feat {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.75);
+      text-align: left;
+      min-width: 130px;
+    }
+
+    .hp-feat strong {
+      display: block;
+      color: var(--brand-primary-light);
+      font-size: 0.85rem;
+      margin-bottom: 3px;
+    }
+
+    .hp-cta {
+      background: var(--brand-primary-light);
+      color: #080b09;
+      border: none;
+      padding: 14px 38px;
+      border-radius: var(--radius-pill);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      box-shadow: 0 10px 30px -5px rgba(174, 226, 213, 0.35);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hp-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px -3px rgba(174, 226, 213, 0.5);
+      background: #ffffff;
+    }
+
+    /* ── SIDEBAR CONTAINER ── */
+    .sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      height: 100vh;
+      background-color: var(--bg-alt);
+      border-right: 1px solid var(--border-thin);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      transition: background-color 0.3s ease, border-right 0.3s ease;
+    }
+
+    .sb-hdr {
+      padding: 24px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-brand-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background-color: var(--brand-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .brand-logo-circle {
+      background-color: var(--brand-primary-light);
+      color: #042e23;
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .brand-title {
+      color: var(--brand-primary-light);
+    }
+
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-pill);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--bg-surface);
+      color: var(--color-text-main);
+      border-color: var(--color-text-main);
+    }
+
+    .add-task-btn {
+      margin: 10px 14px 16px;
+      padding: 10px 14px;
+      border-radius: var(--radius-standard);
+      background-color: transparent;
+      border: 1.5px dashed var(--border-medium);
+      color: var(--brand-primary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    [data-theme="dark"] .add-task-btn {
+      color: var(--brand-primary-light);
+    }
+
+    .add-task-btn:hover {
+      background-color: var(--bg-surface);
+      border-color: var(--brand-primary);
+    }
+
+    .menu-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      color: var(--color-text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(5, 77, 59, 0.04);
+      color: var(--color-text-main);
+    }
+
+    [data-theme="dark"] .menu-item:hover {
+      background-color: rgba(174, 226, 213, 0.04);
+    }
+
+    .menu-item.active {
+      background-color: var(--bg-surface);
+      color: var(--brand-primary);
+      font-weight: 600;
+      box-shadow: var(--shadow-soft);
+    }
+
+    [data-theme="dark"] .menu-item.active {
+      color: var(--brand-primary-light);
+    }
+
+    .menu-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+    }
+
+    .menu-badge {
+      margin-left: auto;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      background-color: rgba(5, 77, 59, 0.05);
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+    }
+
+    [data-theme="dark"] .menu-badge {
+      background-color: rgba(174, 226, 213, 0.05);
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background-color: var(--border-thin);
+      margin: 16px 14px;
+    }
+
+    .sidebar-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px 6px;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--color-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .add-section-btn {
+      background: none;
+      border: none;
+      color: var(--color-text-faint);
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .add-section-btn:hover {
+      color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .add-section-btn:hover {
+      color: var(--brand-primary-light);
+    }
+
+    .project-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px;
+      border-top: 1px solid var(--border-thin);
+    }
+
+    .footer-support-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .footer-support-link:hover {
+      background-color: var(--bg-surface);
+      color: var(--color-text-main);
+    }
+
+
+    /* ── MAIN WORKSPACE ── */
+    .main-workspace {
+      flex: 1;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .main-hdr {
+      padding: 32px 40px 10px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .view-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .view-sub {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+
+    .main-body {
+      padding: 12px 40px 80px;
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+    }
+
+
+    /* ── DIRECT CALENDAR SCHEDULER WIDGET ── */
+    .scheduler-container {
+      background-color: var(--bg-surface);
+      border: 1.5px dashed var(--border-medium);
+      border-radius: var(--radius-standard);
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .scheduler-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .scheduler-indicators {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.72rem;
+      color: var(--color-text-muted);
+    }
+
+    .indicator-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .indicator-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .indicator-add {
+      background-color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .indicator-add {
+      background-color: var(--brand-primary-light);
+    }
+
+    .scheduler-layout {
+      display: grid;
+      grid-template-cols: 1;
+      gap: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .scheduler-layout {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+
+    /* Interactive Calendar Box */
+    .cal-box {
+      background-color: var(--bg-alt);
+      border: 1px solid var(--border-thin);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cal-month-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .cal-arrows {
+      display: flex;
+      gap: 3px;
+    }
+
+    .cal-arrow {
+      background: none;
+      border: 1px solid var(--border-thin);
+      border-radius: 6px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .cal-arrow:hover {
+      background-color: var(--bg-surface);
+      color: var(--color-text-main);
+    }
+
+    .cal-today-btn {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-thin);
+      background: none;
+      cursor: pointer;
+    }
+
+    .cal-today-btn:hover {
+      background-color: var(--bg-surface);
+    }
+
+    .cal-week-labels {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--color-text-faint);
+      text-transform: uppercase;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-cell {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: none;
+      padding: 4px;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .cal-cell-blank {
+      aspect-ratio: 1;
+      opacity: 0.15;
+    }
+
+    .cal-cell:hover {
+      background-color: var(--bg-surface);
+    }
+
+    .cal-cell.is-selected {
+      background-color: var(--brand-primary);
+      color: #ffffff;
+      border-color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .cal-cell.is-selected {
+      background-color: var(--brand-primary-light);
+      color: #042e23;
+      border-color: var(--brand-primary-light);
+    }
+
+    .cal-cell.is-today {
+      border: 1px solid var(--brand-primary);
+      color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .cal-cell.is-today {
+      border-color: var(--brand-primary-light);
+      color: var(--brand-primary-light);
+    }
+
+    .cal-cell-todo-dot {
+      width: 4.5px;
+      height: 4.5px;
+      background-color: var(--color-text-faint);
+      border-radius: 50%;
+    }
+
+    .cal-cell.is-selected .cal-cell-todo-dot {
+      background-color: #ffffff;
+    }
+
+    [data-theme="dark"] .cal-cell.is-selected .cal-cell-todo-dot {
+      background-color: #042e23;
+    }
+
+    /* Interactive task scheduler panel */
+    .scheduler-panel {
+      border-left: 1px solid var(--border-thin);
+      padding-left: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    @media (max-width: 767px) {
+      .scheduler-panel {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid var(--border-thin);
+        padding-top: 16px;
+      }
+    }
+
+    .panel-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .panel-lbl {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .panel-date-target {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--brand-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    [data-theme="dark"] .panel-date-target {
+      color: var(--brand-primary-light);
+    }
+
+    .panel-input {
+      width: 100%;
+      background-color: var(--bg-alt);
+      border: 1px solid var(--border-thin);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .panel-input:focus {
+      border-color: var(--brand-primary);
+    }
+
+    .panel-select {
+      width: 100%;
+      background-color: var(--bg-alt);
+      border: 1px solid var(--border-thin);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .priority-row-btns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .prio-btn {
+      background-color: var(--bg-alt);
+      border: 1px solid var(--border-thin);
+      border-radius: 6px;
+      padding: 6px 0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .prio-btn:hover {
+      background-color: var(--bg-surface);
+    }
+
+    .prio-btn.pio-active-P1 { background-color: var(--priority-p1); color: #fff; border-color: var(--priority-p1); }
+    .prio-btn.pio-active-P2 { background-color: var(--priority-p2); color: #fff; border-color: var(--priority-p2); }
+    .prio-btn.pio-active-P3 { background-color: var(--priority-p3); color: #fff; border-color: var(--priority-p3); }
+    .prio-btn.pio-active-P4 { background-color: var(--color-text-main); color: var(--bg-surface); border-color: var(--color-text-main); }
+
+
+    /* ── ADD TASK FORM (INLINE / INBOX) ── */
+    .add-form-card {
+      display: none;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-standard);
+      padding: 18px;
+      margin-bottom: 20px;
+      background-color: var(--bg-surface);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .add-form-card.visible {
+      display: block;
+      animation: form-slide 0.2s ease-out;
+    }
+
+    @keyframes form-slide {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-title-input {
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text-main);
+      padding: 4px 0;
+    }
+
+    .form-title-input::placeholder {
+      color: var(--color-text-faint);
+    }
+
+    .form-desc-input {
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      resize: none;
+      margin-top: 4px;
+    }
+
+    .form-desc-input::placeholder {
+      color: var(--color-text-faint);
+    }
+
+    .form-separator {
+      height: 1px;
+      background-color: var(--border-thin);
+      margin: 10px 0;
+    }
+
+    .form-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .form-action-pill {
+      background: none;
+      border: 1px solid var(--border-thin);
+      color: var(--color-text-muted);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .form-action-pill:hover {
+      border-color: var(--color-text-muted);
+      color: var(--color-text-main);
+    }
+
+    .form-select-inline {
+      background-color: var(--bg-alt);
+      border: 1px solid var(--border-thin);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 0.72rem;
+      outline: none;
+    }
+
+    .prio-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-standard);
+      padding: 6px;
+      z-index: 200;
+      box-shadow: var(--shadow-large);
+      min-width: 140px;
+    }
+
+    .prio-menu.open {
+      display: block;
+    }
+
+    .prio-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8.5px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 500;
+      transition: background-color 0.15s ease;
+    }
+
+    .prio-menu-item:hover {
+      background-color: var(--bg-alt);
+    }
+
+    .form-submit-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn-primary-add {
+      background-color: var(--brand-primary);
+      color: #ffffff;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    [data-theme="dark"] .btn-primary-add {
+      background-color: var(--brand-primary-light);
+      color: #042e23;
+    }
+
+    .btn-primary-add:hover {
+      opacity: 0.95;
+    }
+
+    .btn-cancel-add {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .btn-cancel-add:hover {
+      color: var(--color-text-main);
+    }
+
+
+    /* ── TASK LIST & ITEMS ── */
+    .tasks-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+    }
+
+    .task-row-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .task-row-card:hover {
+      background-color: var(--bg-surface);
+      border-color: var(--border-thin);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--color-text-faint);
+      flex-shrink: 0;
+      cursor: pointer;
+      margin-top: 1.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .task-checkbox:hover {
+      border-color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .task-checkbox:hover {
+      border-color: var(--brand-primary-light);
+    }
+
+    .task-checkbox-checked {
+      opacity: 0.55;
+    }
+
+    .task-info-block {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--color-text-main);
+      outline: none;
+      word-break: break-word;
+    }
+
+    .task-row-card.is-completed .task-title {
+      text-decoration: line-through;
+      color: var(--color-text-faint);
+    }
+
+    .task-meta-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      font-size: 0.68rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meta-pill.overdue { color: var(--priority-p1); font-weight: 600; }
+    .meta-pill.today { color: #10b981; font-weight: 600; }
+    .meta-pill.tomorrow { color: var(--priority-p2); }
+    .meta-pill.later { color: var(--color-text-muted); }
+
+    .meta-pill.project-tag {
+      color: var(--color-text-muted);
+    }
+
+    .row-actions-block {
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      transition: opacity 0.15s ease;
+    }
+
+    .task-row-card:hover .row-actions-block {
+      opacity: 1;
+    }
+
+    .action-row-btn {
+      background: none;
+      border: none;
+      color: var(--color-text-faint);
+      padding: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-row-btn:hover {
+      color: var(--priority-p1);
+      background-color: var(--bg-alt);
+    }
+
+
+    /* ── DATES HEADERS / GROUPINGS ── */
+    .upcoming-section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      font-family: "JetBrains Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .upcoming-section-line {
+      flex: 1;
+      height: 1px;
+      background-color: var(--border-thin);
+    }
+
+    .overdue-banner {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--priority-p1);
+      margin: 16px 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+
+    /* ── EMPTY STATES ── */
+    .empty-prompt-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-symbol {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+
+    .empty-h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-text-main);
+      margin-bottom: 4px;
+    }
+
+    .empty-p {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    .add-trigger-bottom-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-top: 12px;
+      width: fit-content;
+      transition: color 0.15s ease;
+    }
+
+    .add-trigger-bottom-btn:hover {
+      color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .add-trigger-bottom-btn:hover {
+      color: var(--brand-primary-light);
+    }
+
+
+    /* ── FLOATING POMODORO TIMER PANEL ── */
+    .pomo-fab-trigger {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 500;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: var(--brand-primary);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 10px 25px -5px rgba(5, 77, 59, 0.35);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] .pomo-fab-trigger {
+      background-color: var(--brand-primary-light);
+      color: #042e23;
+    }
+
+    .pomo-fab-trigger:hover {
+      transform: scale(1.05);
+    }
+
+    .pomo-panel-overlay {
+      display: none;
+      position: fixed;
+      bottom: 84px;
+      right: 24px;
+      z-index: 510;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: 16px;
+      padding: 22px;
+      width: 220px;
+      text-align: center;
+      box-shadow: var(--shadow-large);
+    }
+
+    .pomo-panel-overlay.is-open {
+      display: block;
+      animation: form-slide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pomo-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-thin);
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+
+    .pomo-hdr-text {
+      font-size: 0.65rem;
+      font-weight: 700;
+      font-family: "JetBrains Mono", monospace;
+      color: var(--color-text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sound-toggle-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-text-faint);
+    }
+
+    .sound-toggle-btn:hover {
+      color: var(--color-text-main);
+    }
+
+    .pomo-ring-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 12px;
+    }
+
+    .pomo-ring-wrap svg {
+      transform: rotate(-90deg);
+    }
+
+    .pomo-ring-progress {
+      transition: stroke-dashoffset 0.4s linear;
+    }
+
+    .pomo-clock-digit {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clock-numbers {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .clock-status-label {
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-text-faint);
+    }
+
+    .pomo-mode-tabs {
+      display: flex;
+      border-radius: 8px;
+      background-color: var(--bg-alt);
+      padding: 3px;
+      margin-bottom: 12px;
+    }
+
+    .pomo-tab-btn {
+      flex: 1;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: none;
+      color: var(--color-text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .pomo-tab-btn.active-focus {
+      background-color: rgba(5, 77, 59, 0.08);
+      color: var(--brand-primary);
+    }
+
+    [data-theme="dark"] .pomo-tab-btn.active-focus {
+      background-color: rgba(174, 226, 213, 0.08);
+      color: var(--brand-primary-light);
+    }
+
+    .pomo-tab-btn.active-break {
+      background-color: rgba(249, 115, 22, 0.08);
+      color: #ea580c;
+    }
+
+    .pomo-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pomo-action-btn-p {
+      border: none;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      background-color: var(--brand-primary);
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .pomo-action-btn-p {
+      background-color: var(--brand-primary-light);
+      color: #042e23;
+    }
+
+    .pomo-action-btn-s {
+      background: none;
+      border: 1px solid var(--border-thin);
+      border-radius: 6px;
+      padding: 5px 8px;
+      cursor: pointer;
+      color: var(--color-text-muted);
+    }
+
+    .pomo-action-btn-s:hover {
+      background-color: var(--bg-alt);
+      color: var(--color-text-main);
+    }
+
+    /* Helper styles for particle animations */
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
 
-<!-- HOMEPAGE OVERLAY -->
-<div id="hp">
-  <canvas id="hp-cv"></canvas>
-  <div class="hp-nav">
-    <div class="hp-nav-logo">🌿 BG Todohabita</div>
-    <a href="bgfame.html" class="hp-back">← BG FAME</a>
-  </div>
-  <div class="hp-body">
-    <img src="bgtodohabita-logo.png" alt="" class="hp-logo" onerror="this.style.display='none'">
-    <div class="hp-badge">PRODUCTIVITY · BG FAME SUITE</div>
-    <h1 class="hp-h1">Plan smarter.<br><span>Build habits.</span></h1>
-    <p class="hp-p">The productivity companion that turns your day into momentum — tasks, projects, priorities, and focus in one place.</p>
-    <div class="hp-feats">
-      <div class="hp-feat"><strong>✅ Tasks</strong>P1–P4 priorities</div>
-      <div class="hp-feat"><strong>📁 Projects</strong>Organize by goal</div>
-      <div class="hp-feat"><strong>📅 Schedule</strong>Today &amp; Upcoming</div>
-      <div class="hp-feat"><strong>🍅 Pomodoro</strong>25-min focus timer</div>
+  <!-- HOMEPAGE BACKGROUND OVERLAY -->
+  <div id="hp">
+    <canvas id="hp-cv"></canvas>
+    <div class="hp-nav">
+      <div class="hp-brand">🌿 todohabit</div>
+      <a href="#" class="hp-back-link" onclick="dismissHp()">direct enter →</a>
     </div>
-    <button class="hp-cta" onclick="dismissHp()">🌿 Start Planning →</button>
-  </div>
-</div>
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="sb-hdr">
-    <div class="sb-brand">
-      <div class="sb-icon-box">BG</div>
-      <span>Todohabita</span>
-    </div>
-    <button id="theme-btn" onclick="toggleTheme()">☀️</button>
-  </div>
-
-  <button class="add-btn" onclick="openQA()">+ Add task</button>
-
-  <div class="sb-item active" data-view="inbox" onclick="setView('inbox')">
-    <span class="sb-ic">📥</span><span>Inbox</span>
-    <span class="sb-cnt" id="cnt-inbox"></span>
-  </div>
-  <div class="sb-item" data-view="today" onclick="setView('today')">
-    <span class="sb-ic">📅</span><span>Today</span>
-    <span class="sb-cnt" id="cnt-today"></span>
-  </div>
-  <div class="sb-item" data-view="upcoming" onclick="setView('upcoming')">
-    <span class="sb-ic">📆</span><span>Upcoming</span>
-    <span class="sb-cnt" id="cnt-upcoming"></span>
-  </div>
-
-  <div class="sb-div"></div>
-  <div class="sb-proj-hdr">
-    <span class="sb-proj-lbl">My Projects</span>
-    <button class="sb-proj-add" onclick="addProject()" title="Add project">+</button>
-  </div>
-  <div id="proj-list"></div>
-
-  <div class="sb-bot">
-    <a href="bgfame.html" class="sb-back-lnk">← BG FAME Suite</a>
-  </div>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-  <div class="main-hdr">
-    <div>
-      <h1 class="view-title" id="view-title">Inbox</h1>
-      <div class="view-sub" id="view-sub"></div>
-    </div>
-  </div>
-  <div class="main-body">
-    <!-- Inline add form -->
-    <div class="add-form" id="inline-form">
-      <input class="f-name" id="f-name" type="text" placeholder="Task name" autocomplete="off">
-      <textarea class="f-desc" id="f-desc" placeholder="Description (optional)" rows="1"></textarea>
-      <div class="f-div"></div>
-      <div class="f-tools">
-        <button class="f-tool" onclick="toggleDD('f')">
-          <span id="f-pflag">🏳️</span> Priority
-        </button>
-        <button class="f-tool" onclick="document.getElementById('f-due').showPicker()">
-          📅 <span id="f-due-lbl">Due date</span>
-        </button>
-        <input type="date" id="f-due" style="display:none" oninput="setDue('f',this.value)">
-        <select class="f-sel" id="f-proj"><option value="">No Project</option></select>
-        <div class="pri-dd" id="f-dd">
-          <div class="pri-opt" onclick="setPri('f',1)"><span style="color:#db4035">🚩</span> P1 — Urgent</div>
-          <div class="pri-opt" onclick="setPri('f',2)"><span style="color:#ff9a14">🚩</span> P2 — High</div>
-          <div class="pri-opt" onclick="setPri('f',3)"><span style="color:#246fe0">🚩</span> P3 — Medium</div>
-          <div class="pri-opt" onclick="setPri('f',4)"><span style="color:#808080">🏳️</span> P4 — Low</div>
+    <div class="hp-content">
+      <div class="hp-logo-box">
+        <i data-lucide="sparkles" style="width: 32px; height: 32px;"></i>
+      </div>
+      <div class="hp-badge">deliberate focus &amp; routines</div>
+      <h1 class="hp-title">A dashboard,<br><span>gently built.</span></h1>
+      <p class="hp-desc">The modern organic productivity visualizer. Maintain deliberate habits, schedule long-term tasks on visual calendar grids, and focus with customized Pomodoro synths.</p>
+      
+      <div class="hp-feats">
+        <div class="hp-feat">
+          <strong>📅 Visual Calendar</strong>
+          Interactive grids for future scheduler
+        </div>
+        <div class="hp-feat">
+          <strong>🍅 Zen Pomodoro</strong>
+          Double chime sound synthesis
+        </div>
+        <div class="hp-feat">
+          <strong>🌿 Minimal Frame</strong>
+          Custom dark &amp; light palettes
         </div>
       </div>
-      <div class="f-acts">
-        <button class="btn-add" onclick="submitInline()">Add task</button>
-        <button class="btn-cancel" onclick="closeInline()">Cancel</button>
+
+      <button class="hp-cta" onclick="dismissHp()">Start Planning 🌿</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
+    <div class="sb-hdr">
+      <div class="sidebar-brand-block">
+        <div class="brand-logo-circle">
+          <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
+        </div>
+        <span class="brand-title">todohabit</span>
+      </div>
+      <button class="theme-toggle-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle Dark/Light Frame">
+        <i data-lucide="sun" id="theme-icon" style="width: 14px; height: 14px;"></i>
+      </button>
+    </div>
+
+    <button class="add-task-btn" onclick="openInlineForm()">
+      <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+      <span>Add New Task</span>
+    </button>
+
+    <div class="menu-group">
+      <div class="menu-item active" data-view="inbox" onclick="switchToView('inbox')">
+        <div class="menu-icon-wrap"><i data-lucide="inbox" style="width: 14px; height: 14px;"></i></div>
+        <span>Inbox</span>
+        <span class="menu-badge" id="badge-inbox"></span>
+      </div>
+      <div class="menu-item" data-view="today" onclick="switchToView('today')">
+        <div class="menu-icon-wrap"><i data-lucide="calendar" style="width: 14px; height: 14px;"></i></div>
+        <span>Today</span>
+        <span class="menu-badge" id="badge-today"></span>
+      </div>
+      <div class="menu-item" data-view="upcoming" onclick="switchToView('upcoming')">
+        <div class="menu-icon-wrap"><i data-lucide="calendar-days" style="width: 14px; height: 14px;"></i></div>
+        <span>Upcoming</span>
+        <span class="menu-badge" id="badge-upcoming"></span>
       </div>
     </div>
 
-    <div class="task-list" id="task-list"></div>
+    <div class="sidebar-divider"></div>
 
-    <div class="empty hidden" id="empty-state">
-      <div class="em">🌿</div>
-      <h3>All clear here!</h3>
-      <p>Press <kbd style="background:rgba(255,255,255,.1);padding:1px 6px;border-radius:3px">Q</kbd> or click below to add a task</p>
+    <div class="sidebar-section-header">
+      <span class="section-label">My Projects</span>
+      <button class="add-section-btn" onclick="createNewProject()" title="Add Custom Project">
+        <i data-lucide="plus" style="width: 12px; height: 12px;"></i>
+      </button>
+    </div>
+    
+    <div class="menu-group" id="projects-list-container">
+      <!-- Generated via JS -->
     </div>
 
-    <div class="add-trigger" onclick="openInline()">
-      <span style="font-size:1.1rem;color:#db4035">+</span> Add task
-    </div>
-  </div>
-</div>
-
-<!-- QUICK ADD MODAL -->
-<div id="qa" onclick="if(event.target===this)closeQA()">
-  <div class="qa-box">
-    <input class="f-name" id="qa-name" type="text" placeholder="Task name" autocomplete="off" style="font-size:.96rem;margin-bottom:8px">
-    <textarea class="f-desc" id="qa-desc" placeholder="Description (optional)" rows="1" style="margin-bottom:8px"></textarea>
-    <div class="f-div"></div>
-    <div class="f-tools" style="position:relative">
-      <button class="f-tool" onclick="toggleDD('qa')">
-        <span id="qa-pflag">🏳️</span> Priority
-      </button>
-      <button class="f-tool" onclick="document.getElementById('qa-due').showPicker()">
-        📅 <span id="qa-due-lbl">Due date</span>
-      </button>
-      <input type="date" id="qa-due" style="display:none" oninput="setDue('qa',this.value)">
-      <select class="f-sel" id="qa-proj"><option value="">No Project</option></select>
-      <div class="pri-dd" id="qa-dd">
-        <div class="pri-opt" onclick="setPri('qa',1)"><span style="color:#db4035">🚩</span> P1 — Urgent</div>
-        <div class="pri-opt" onclick="setPri('qa',2)"><span style="color:#ff9a14">🚩</span> P2 — High</div>
-        <div class="pri-opt" onclick="setPri('qa',3)"><span style="color:#246fe0">🚩</span> P3 — Medium</div>
-        <div class="pri-opt" onclick="setPri('qa',4)"><span style="color:#808080">🏳️</span> P4 — Low</div>
+    <div class="sidebar-footer">
+      <div class="footer-support-link">
+        <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i>
+        <span>daily routines, gently built</span>
       </div>
     </div>
-    <div class="f-acts">
-      <button class="btn-add" onclick="submitQA()">Add task</button>
-      <button class="btn-cancel" onclick="closeQA()">Cancel</button>
+  </aside>
+
+  <!-- MAIN AREA WORKSPACE -->
+  <main class="main-workspace">
+    <div class="main-hdr">
+      <div>
+        <h1 class="view-title" id="rendered-view-title">Inbox</h1>
+        <div class="view-sub" id="rendered-view-sub"></div>
+      </div>
+    </div>
+
+    <div class="main-body">
+
+      <!-- Interactive Calendar scheduler block (only shows in Upcoming mode) -->
+      <div class="scheduler-container hidden" id="calendar-scheduler-card">
+        <div class="scheduler-header">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #10b981;"></i>
+              Direct Calendar Scheduler
+            </h3>
+            <div class="scheduler-indicators">
+              <span class="indicator-pill"><span class="indicator-dot" style="background-color: var(--brand-primary);"></span>Selected</span>
+              <span class="indicator-pill"><span class="indicator-dot" style="background-color: #10b981;"></span>Has Tasks</span>
+            </div>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--color-text-muted);">Select any day on the calendar grid to schedule a task directly.</p>
+        </div>
+
+        <div class="scheduler-layout">
+          <!-- Left: Calendar view -->
+          <div class="cal-box">
+            <div class="cal-top">
+              <span class="cal-month-title" id="cal-selected-month-label">June 2026</span>
+              <div class="cal-arrows">
+                <button class="cal-arrow" onclick="navMonth(-1)"><i data-lucide="chevron-left" style="width: 12px; height: 12px;"></i></button>
+                <button class="cal-today-btn" onclick="navToCurrent()">Today</button>
+                <button class="cal-arrow" onclick="navMonth(1)"><i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i></button>
+              </div>
+            </div>
+
+            <div class="cal-week-labels">
+              <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+            </div>
+
+            <div class="cal-grid" id="cal-days-grid-cells">
+              <!-- Generated dynamically via JS -->
+            </div>
+          </div>
+
+          <!-- Right: Task form panel picker -->
+          <div class="scheduler-panel">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="panel-row">
+                <span class="panel-lbl">Target Day</span>
+                <div class="panel-date-target">
+                  <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                  <span id="label-scheduler-target-date">Select Date</span>
+                </div>
+              </div>
+
+              <div class="panel-row">
+                <span class="panel-lbl">Task Description</span>
+                <input class="panel-input" type="text" id="sched-task-title-input" placeholder="e.g. Discuss Q2 roadmap objectives">
+              </div>
+
+              <div class="panel-row">
+                <span class="panel-lbl">Project Placement</span>
+                <select class="panel-select" id="sched-project-select-input">
+                  <option value="">Inbox (Default)</option>
+                </select>
+              </div>
+
+              <div class="panel-row">
+                <span class="panel-lbl">Primacy / Priority</span>
+                <div class="priority-row-btns">
+                  <button class="prio-btn" id="prio-sched-P1" onclick="selectSchedPrio('P1')">P1</button>
+                  <button class="prio-btn" id="prio-sched-P2" onclick="selectSchedPrio('P2')">P2</button>
+                  <button class="prio-btn" id="prio-sched-P3" onclick="selectSchedPrio('P3')">P3</button>
+                  <button class="prio-btn prio-sched-P4 pri-P4" id="prio-sched-P4" onclick="selectSchedPrio('P4')">P4</button>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-primary-add" onclick="submitSchedForm()" style="width: 100%; padding: 8px 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+              <span>Schedule Future Task</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INLINE ADD TASK FORM -->
+      <div class="add-form-card" id="task-inline-form-box">
+        <input class="form-title-input" id="form-name-input" type="text" placeholder="Task name..." autocomplete="off">
+        <textarea class="form-desc-input" id="form-desc-input" placeholder="Description (optional)" rows="1"></textarea>
+        
+        <div class="form-separator"></div>
+
+        <div class="form-meta-row">
+          <!-- Priority Picker Button -->
+          <button class="form-action-pill" onclick="toggleFormPrioMenu(event)">
+            <span id="label-form-prio-flag" style="color: var(--priority-p4)">🏳️</span>
+            <span>Priority</span>
+            <div class="prio-menu" id="form-prio-dropdown-menu">
+              <div class="prio-menu-item" onclick="setFormPriority('P1', event)" style="color: var(--priority-p1)">🚩 Priority 1</div>
+              <div class="prio-menu-item" onclick="setFormPriority('P2', event)" style="color: var(--priority-p2)">🚩 Priority 2</div>
+              <div class="prio-menu-item" onclick="setFormPriority('P3', event)" style="color: var(--priority-p3)">🚩 Priority 3</div>
+              <div class="prio-menu-item" onclick="setFormPriority('P4', event)" style="color: var(--color-text-faint)">🏳️ Priority 4</div>
+            </div>
+          </button>
+
+          <!-- Standard Date Picker -->
+          <button class="form-action-pill" onclick="document.getElementById('form-date-native-picker').showPicker()">
+            <i data-lucide="calendar" style="width: 12px; height: 12px;"></i>
+            <span id="label-form-date">Select Date</span>
+          </button>
+          <input type="date" id="form-date-native-picker" style="display: none" oninput="setFormDate(this.value)">
+
+          <!-- Project Select Drop -->
+          <select class="form-select-inline" id="form-project-select">
+            <option value="">No Project</option>
+          </select>
+        </div>
+
+        <div class="form-submit-row">
+          <button class="btn-primary-add" onclick="submitInlineForm()">Add Task</button>
+          <button class="btn-cancel-add" onclick="closeInlineForm()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- RENDER GRID FOR CURRENT VIEW TASKS -->
+      <div class="tasks-grid" id="main-rendered-tasks-container">
+        <!-- JS dynamically fills -->
+      </div>
+
+      <!-- EMPTY STATE PROMPT -->
+      <div class="empty-prompt-state hidden" id="tasks-empty-fallback-state">
+        <div class="empty-symbol">🌿</div>
+        <h3 class="empty-h3">All clear here!</h3>
+        <p class="empty-p">No scheduled routines exist. Press Q to add a task.</p>
+      </div>
+
+      <!-- Add Trigger Bottom -->
+      <div class="add-trigger-bottom-btn" onclick="openInlineForm()" id="bottom-trigger-bar">
+        <i data-lucide="plus" style="width: 14px; height: 14px; color: var(--brand-primary);"></i>
+        <span>Add a Task</span>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- POMODORO FLOATING TIMER CONTAINER -->
+  <div class="pomo-wrapper">
+    <button class="pomo-fab-trigger" id="pomo-toggle-fab" onclick="togglePomodoroPanel()" title="Start Focus Timer">
+      <i data-lucide="timer" style="width: 18px; height: 18px;" id="pomo-fab-icon"></i>
+    </button>
+
+    <div class="pomo-panel-overlay" id="pomo-card-panel">
+      <!-- Header -->
+      <div class="pomo-panel-header">
+        <span class="pomo-hdr-text">Focus Clock</span>
+        <button class="sound-toggle-btn" id="pomo-sound-btn" onclick="togglePomoSound()" title="Toggle Sound">
+          <i data-lucide="bell" style="width: 12px; height: 12px;" id="pomo-bell-icon"></i>
+        </button>
+      </div>
+
+      <!-- Progress Area -->
+      <div class="pomo-ring-wrap">
+        <svg width="112" height="112">
+          <!-- Backing Track Ring -->
+          <circle cx="56" cy="56" r="46" fill="none" stroke="rgba(5,77,59,0.06)" stroke-width="4"></circle>
+          <!-- Dynamic Progress Bar -->
+          <circle cx="56" cy="56" r="46" fill="none" id="pomo-circular-indicator" stroke="var(--brand-primary)" stroke-width="4.5" stroke-dasharray="289" stroke-dashoffset="0" stroke-linecap="round" class="pomo-ring-progress"></circle>
+        </svg>
+        
+        <div class="pomo-clock-digit">
+          <span class="clock-numbers" id="pomo-time-countdown">25:00</span>
+          <span class="clock-status-label" id="pomo-active-state-label">Focus</span>
+        </div>
+      </div>
+
+      <!-- Mode Selector Tabs -->
+      <div class="pomo-mode-tabs">
+        <button class="pomo-tab-btn active-focus" id="pomo-tab-focus" onclick="setPomoMode('focus')">25m Focus</button>
+        <button class="pomo-tab-btn" id="pomo-tab-break" onclick="setPomoMode('break')">5m Break</button>
+      </div>
+
+      <!-- Functional Controls -->
+      <div class="pomo-controls-row">
+        <button class="pomo-action-btn-s" onclick="resetPomoTimer()" title="Reset Focus Clock">
+          <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i>
+        </button>
+        <button class="pomo-action-btn-p" id="pomo-play-pause-btn" onclick="togglePomoPlay()">
+          Start
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- POMODORO FAB -->
-<button id="pf" onclick="togglePomo()" title="Pomodoro Timer">🍅</button>
-<div id="pp">
-  <div class="p-ring">
-    <svg width="110" height="110">
-      <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="7"/>
-      <circle cx="55" cy="55" r="48" fill="none" stroke="#14b8a6" stroke-width="7"
-        stroke-dasharray="301.6" id="p-prog" stroke-dashoffset="0" stroke-linecap="round"/>
-    </svg>
-    <div class="p-t" id="p-time">25:00</div>
-  </div>
-  <div class="p-lbl" id="p-lbl">🎯 Focus</div>
-  <div class="p-btns">
-    <button class="p-btn" onclick="startPomo()" id="p-start">▶ Start</button>
-    <button class="p-btn" onclick="resetPomo()">↺</button>
-    <button class="p-btn" onclick="switchPomo()" id="p-sw">☕ Break</button>
-  </div>
-</div>
+  <script>
+    // ── DATA STATE MODEL ──
+    const S = {
+      tasks: [],
+      projects: [],
+      currentView: 'inbox', // 'inbox' | 'today' | 'upcoming' | 'p:id'
+      nextId: 1,
+      
+      // Inline Add Form Variables
+      formSelectedPriority: 'P4',
+      formSelectedDueDate: null,
+      
+      // Scheduler Widget Variables
+      schedSelectedDate: null,
+      schedSelectedPriority: 'P4',
+      
+      // Current Calendar Month View State
+      calYear: new Date().getFullYear(),
+      calMonth: new Date().getMonth() // 0-indexed
+    };
 
-<script>
-// ── STATE ──
-var S={tasks:[],projects:[],view:'inbox',nid:1,fPri:4,fDue:null,qaPri:4,qaDue:null};
-var TODAY=new Date().toISOString().slice(0,10);
-var TMR=new Date(Date.now()+86400000).toISOString().slice(0,10);
-var PCOLS=['#e44332','#ff9a14','#a970ff','#14b8a6','#246fe0','#299438'];
+    const TODAY_STR = new Date().toISOString().slice(0, 10);
+    const TOMORROW_STR = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    
+    // Default mock project colors
+    const PROJECT_COLORS = ['#ef4444', '#f97316', '#3b82f6', '#10b981', '#a855f7', '#14b8a6'];
 
-function save(){localStorage.setItem('bgtodo_tasks',JSON.stringify(S.tasks));localStorage.setItem('bgtodo_projects',JSON.stringify(S.projects));localStorage.setItem('bgtodo_nid',S.nid)}
-function load(){try{var t=localStorage.getItem('bgtodo_tasks'),p=localStorage.getItem('bgtodo_projects'),n=localStorage.getItem('bgtodo_nid');if(t)S.tasks=JSON.parse(t);if(p)S.projects=JSON.parse(p);if(n)S.nid=+n}catch(e){}}
+    // Local Storage Helpers
+    function localSave() {
+      localStorage.setItem('bgtodo_tasks', JSON.stringify(S.tasks));
+      localStorage.setItem('bgtodo_projects', JSON.stringify(S.projects));
+      localStorage.setItem('bgtodo_nid', S.nextId);
+    }
 
-// ── HOMEPAGE ──
-function dismissHp(){var h=document.getElementById('hp');h.style.opacity='0';setTimeout(function(){h.remove()},520)}
-(function(){
-  var cv=document.getElementById('hp-cv');if(!cv)return;
-  var ctx=cv.getContext('2d'),W,H,pts=[];
-  function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();addEventListener('resize',resize);
-  for(var i=0;i<60;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.8+.7});
-  function fr(){ctx.clearRect(0,0,W,H);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fillStyle='rgba(20,184,166,.7)';ctx.fill();pts.forEach(function(q){var dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle='rgba(20,184,166,'+(1-d/100)*.15+')';ctx.lineWidth=.5;ctx.stroke()}})});requestAnimationFrame(fr)}fr();
-})();
+    function localLoad() {
+      try {
+        const storedTasks = localStorage.getItem('bgtodo_tasks');
+        const storedProjects = localStorage.getItem('bgtodo_projects');
+        const storedId = localStorage.getItem('bgtodo_nid');
+        
+        if (storedTasks) S.tasks = JSON.parse(storedTasks);
+        if (storedProjects) S.projects = JSON.parse(storedProjects);
+        if (storedId) S.nextId = parseInt(storedId, 10);
+      } catch (err) {
+        console.warn('LocalStorage load failure', err);
+      }
+    }
 
-// ── THEME ──
-function toggleTheme(){var t=document.body.dataset.theme==='light'?'dark':'light';document.body.dataset.theme=t;localStorage.setItem('bgTheme',t);document.getElementById('theme-btn').textContent=t==='light'?'🌙':'☀️'}
-(function(){var t=localStorage.getItem('bgTheme')||'dark';if(t==='light')document.body.dataset.theme='light';document.getElementById('theme-btn').textContent=t==='light'?'🌙':'☀️'})();
+    // ── INITIAL HOMEPAGE DISMISS ──
+    function dismissHp() {
+      const hOverlay = document.getElementById('hp');
+      if (hOverlay) {
+        hOverlay.style.opacity = '0';
+        hOverlay.style.transform = 'scale(1.03)';
+        setTimeout(() => {
+          hOverlay.remove();
+        }, 510);
+      }
+    }
 
-// ── VIEW ──
-function setView(v){
-  S.view=v;
-  document.querySelectorAll('[data-view]').forEach(function(el){el.classList.toggle('active',el.dataset.view===v)});
-  document.querySelectorAll('[data-proj]').forEach(function(el){el.classList.remove('active')});
-  var titles={inbox:'Inbox',today:'Today',upcoming:'Upcoming'};
-  document.getElementById('view-title').textContent=titles[v]||v;
-  document.getElementById('view-sub').textContent=v==='today'?new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):'';
-  closeInline();render();
-}
-function setProjView(id){
-  S.view='p:'+id;
-  document.querySelectorAll('[data-view]').forEach(function(el){el.classList.remove('active')});
-  document.querySelectorAll('[data-proj]').forEach(function(el){el.classList.toggle('active',+el.dataset.proj===id)});
-  var p=S.projects.find(function(x){return x.id===id});
-  document.getElementById('view-title').textContent=p?p.name:'Project';
-  document.getElementById('view-sub').textContent='';
-  closeInline();render();
-}
+    // Interactive Hero particles background logic
+    (function initHeroParticles() {
+      const canvas = document.getElementById('hp-cv');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
+      
+      const particles = [];
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
 
-// ── PROJECTS ──
-function addProject(){var nm=prompt('Project name:');if(!nm||!nm.trim())return;S.projects.push({id:S.nid++,name:nm.trim(),color:PCOLS[S.projects.length%PCOLS.length]});save();renderSb();render()}
-function renderSb(){
-  var pl=document.getElementById('proj-list');pl.innerHTML='';
-  S.projects.forEach(function(p){
-    var c=S.tasks.filter(function(t){return t.pid===p.id&&!t.done}).length;
-    var d=document.createElement('div');d.className='sb-item';d.dataset.proj=p.id;
-    d.innerHTML='<span class="proj-dot" style="background:'+p.color+'"></span><span style="flex:1">'+esc(p.name)+'</span>'+(c?'<span class="sb-cnt">'+c+'</span>':'');
-    d.onclick=function(){setProjView(p.id)};
-    if(S.view==='p:'+p.id)d.classList.add('active');
-    pl.appendChild(d);
-  });
-  upSelects();upCounts();
-}
-function upSelects(){['f-proj','qa-proj'].forEach(function(id){var el=document.getElementById(id);if(!el)return;var v=el.value;el.innerHTML='<option value="">No Project</option>';S.projects.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p.name;el.appendChild(o)});el.value=v})}
-function upCounts(){
-  var i=S.tasks.filter(function(t){return!t.done&&!t.pid}).length;
-  var t=S.tasks.filter(function(t){return!t.done&&t.due===TODAY}).length;
-  var u=S.tasks.filter(function(t){return!t.done&&t.due&&t.due>TODAY}).length;
-  document.getElementById('cnt-inbox').textContent=i||'';
-  document.getElementById('cnt-today').textContent=t||'';
-  document.getElementById('cnt-upcoming').textContent=u||'';
-}
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          r: Math.random() * 2 + 1
+        });
+      }
 
-// ── RENDER ──
-function render(){
-  var vis=[];
-  if(S.view==='inbox')vis=S.tasks.filter(function(t){return!t.pid});
-  else if(S.view==='today')vis=S.tasks.filter(function(t){return t.due===TODAY});
-  else if(S.view==='upcoming')vis=S.tasks.filter(function(t){return t.due&&t.due>=TODAY});
-  else if(S.view.startsWith('p:')){var pid=+S.view.slice(2);vis=S.tasks.filter(function(t){return t.pid===pid})}
-  var active=vis.filter(function(t){return!t.done});
-  var done=vis.filter(function(t){return t.done});
-  var tl=document.getElementById('task-list');tl.innerHTML='';
-  document.getElementById('empty-state').classList.toggle('hidden',active.length>0||done.length>0);
-  if(S.view==='upcoming'){
-    var bd={};active.forEach(function(t){var k=t.due||'zzz';if(!bd[k])bd[k]=[];bd[k].push(t)});
-    var od=active.filter(function(t){return t.due&&t.due<TODAY});
-    if(od.length){var oh=document.createElement('div');oh.className='od-hdr';oh.innerHTML='⚠️ Overdue';tl.appendChild(oh);od.forEach(function(t){tl.appendChild(mkEl(t))})}
-    Object.keys(bd).filter(function(k){return k>=TODAY||k==='zzz'}).sort().forEach(function(k){
-      var h=document.createElement('div');h.className='d-hdr';
-      var lbl=k==='zzz'?'No Date':k===TODAY?'Today':k===TMR?'Tomorrow':fmtD(k);
-      h.innerHTML='<span>'+lbl+'</span><div class="d-hdr-ln"></div>';tl.appendChild(h);
-      bd[k].forEach(function(t){tl.appendChild(mkEl(t))});
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(174, 226, 213, 0.5)';
+          ctx.fill();
+
+          // Delicate connecting lines
+          particles.forEach(p2 => {
+            const distance = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (distance < 90) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(174, 226, 213, ${ (1 - distance / 90) * 0.12 })`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          });
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    // ── COLOR FRAME THEME MANAGEMENT ──
+    function toggleTheme() {
+      const currentTheme = document.body.getAttribute('data-theme');
+      const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', targetTheme);
+      localStorage.setItem('todohabit_theme', targetTheme);
+      
+      const themeBtnIcon = document.getElementById('theme-icon');
+      if (themeBtnIcon) {
+        themeBtnIcon.setAttribute('data-lucide', targetTheme === 'light' ? 'moon' : 'sun');
+        lucide.createIcons();
+      }
+    }
+
+    // Pre-initialize configuration Theme
+    (function systemThemeLoad() {
+      const savedTheme = localStorage.getItem('todohabit_theme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+      setTimeout(() => {
+        const themeBtnIcon = document.getElementById('theme-icon');
+        if (themeBtnIcon) {
+          themeBtnIcon.setAttribute('data-lucide', savedTheme === 'light' ? 'moon' : 'sun');
+          lucide.createIcons();
+        }
+      }, 50);
+    })();
+
+
+    // ── STATE NAVIGATION VIEW SWITCH ──
+    function switchToView(viewMode) {
+      S.currentView = viewMode;
+      
+      // Toggle side link active indicator classes
+      document.querySelectorAll('.menu-item[data-view]').forEach(item => {
+        item.classList.toggle('active', item.getAttribute('data-view') === viewMode);
+      });
+      document.querySelectorAll('.menu-item[data-proj-id]').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Update Top Headers
+      const viewTitle = document.getElementById('rendered-view-title');
+      const viewSub = document.getElementById('rendered-view-sub');
+      
+      const translations = { inbox: 'Inbox', today: 'Today', upcoming: 'Upcoming' };
+      viewTitle.textContent = translations[viewMode] || 'Tasks';
+      
+      if (viewMode === 'today') {
+        const formalStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+        viewSub.textContent = formalStr;
+      } else {
+        viewSub.textContent = '';
+      }
+
+      // Hide or show calendar interactive widget in upcoming mode
+      const schedWidget = document.getElementById('calendar-scheduler-card');
+      if (viewMode === 'upcoming') {
+        schedWidget.classList.remove('hidden');
+        renderInteractiveSchedulerCalendar();
+      } else {
+        schedWidget.classList.add('hidden');
+      }
+
+      closeInlineForm();
+      renderActiveViewGrid();
+    }
+
+    function switchToProjectView(projId) {
+      S.currentView = `p:${projId}`;
+      
+      document.querySelectorAll('.menu-item[data-view]').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelectorAll('.menu-item[data-proj-id]').forEach(item => {
+        item.classList.toggle('active', item.getAttribute('data-proj-id') == projId);
+      });
+
+      const matchedProj = S.projects.find(p => p.id == projId);
+      const viewTitle = document.getElementById('rendered-view-title');
+      const viewSub = document.getElementById('rendered-view-sub');
+      
+      viewTitle.textContent = matchedProj ? matchedProj.name : 'Project Board';
+      viewSub.textContent = 'Focus scope of project goals';
+
+      // Ensure calendar is hidden
+      document.getElementById('calendar-scheduler-card').classList.add('hidden');
+      
+      closeInlineForm();
+      renderActiveViewGrid();
+    }
+
+
+    // ── DATA PROJECT OPERATIONS ──
+    function createNewProject() {
+      const pName = prompt('Enter a new collaborative project name:');
+      if (!pName || !pName.trim()) return;
+      
+      const newProj = {
+        id: S.nextId++,
+        name: pName.trim(),
+        color: PROJECT_COLORS[S.projects.length % PROJECT_COLORS.length]
+      };
+      S.projects.push(newProj);
+      localSave();
+      renderSidebarProjectsList();
+      renderActiveViewGrid();
+    }
+
+    function renderSidebarProjectsList() {
+      const container = document.getElementById('projects-list-container');
+      container.innerHTML = '';
+
+      S.projects.forEach(p => {
+        const activeProjTasksCount = S.tasks.filter(t => t.projectId == p.id && !t.completed).length;
+
+        const pEl = document.createElement('div');
+        pEl.className = 'menu-item';
+        pEl.setAttribute('data-proj-id', p.id);
+        pEl.onclick = () => switchToProjectView(p.id);
+
+        pEl.innerHTML = `
+          <span class="project-dot" style="background-color: ${p.color}"></span>
+          <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.name}</span>
+          ${activeProjTasksCount ? `<span class="menu-badge">${activeProjTasksCount}</span>` : ''}
+        `;
+        container.appendChild(pEl);
+      });
+      
+      // Update fast builder project dropdown selects
+      updatePlacementOptionsDropdowns();
+      updateBadgeIndicators();
+    }
+
+    // Dropdowns placement helpers
+    function updatePlacementOptionsDropdowns() {
+      const formSel = document.getElementById('form-project-select');
+      const schedSel = document.getElementById('sched-project-select-input');
+
+      [formSel, schedSel].forEach(select => {
+        if (!select) return;
+        const currentVal = select.value;
+        select.innerHTML = select === formSel ? '<option value="">No Project</option>' : '<option value="">Inbox (Default)</option>';
+        S.projects.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = p.name;
+          select.appendChild(opt);
+        });
+        select.value = currentVal;
+      });
+    }
+
+    function updateBadgeIndicators() {
+      const iCount = S.tasks.filter(t => !t.projectId && !t.completed).length;
+      const tCount = S.tasks.filter(t => t.dueDate === TODAY_STR && !t.completed).length;
+      const uCount = S.tasks.filter(t => t.dueDate && t.dueDate > TODAY_STR && !t.completed).length;
+
+      document.getElementById('badge-inbox').textContent = iCount || '';
+      document.getElementById('badge-today').textContent = tCount || '';
+      document.getElementById('badge-upcoming').textContent = uCount || '';
+    }
+
+
+    // ── COMPREHENSIVE VIEW RENDERING ──
+    function renderActiveViewGrid() {
+      let segmentTasksList = [];
+
+      if (S.currentView === 'inbox') {
+        segmentTasksList = S.tasks.filter(t => !t.projectId);
+      } else if (S.currentView === 'today') {
+        segmentTasksList = S.tasks.filter(t => t.dueDate === TODAY_STR);
+      } else if (S.currentView === 'upcoming') {
+        segmentTasksList = S.tasks.filter(t => t.dueDate && t.dueDate >= TODAY_STR);
+      } else if (S.currentView.startsWith('p:')) {
+        const id = S.currentView.split(':')[1];
+        segmentTasksList = S.tasks.filter(t => t.projectId == id);
+      }
+
+      const activeTasks = segmentTasksList.filter(t => !t.completed);
+      const doneTasks = segmentTasksList.filter(t => t.completed);
+
+      const tasksContainer = document.getElementById('main-rendered-tasks-container');
+      tasksContainer.innerHTML = '';
+
+      const totalCount = activeTasks.length + doneTasks.length;
+      document.getElementById('tasks-empty-fallback-state').classList.toggle('hidden', totalCount > 0);
+
+      // Rendering logic depending on view grouping rules
+      if (S.currentView === 'upcoming') {
+        // Group upcoming items neatly into chronologically structured lists
+        const sortedActive = [...activeTasks].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+        
+        // Overdue tasks check
+        const overdue = S.tasks.filter(t => t.dueDate && t.dueDate < TODAY_STR && !t.completed);
+        if (overdue.length > 0) {
+          const oBanner = document.createElement('div');
+          oBanner.className = 'overdue-banner';
+          oBanner.innerHTML = `<i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i> Overdue Tasks (${overdue.length})`;
+          tasksContainer.appendChild(oBanner);
+
+          overdue.forEach(t => {
+            tasksContainer.appendChild(createTaskDomNode(t));
+          });
+        }
+
+        // Section categorizing mapping
+        const mappedDates = {};
+        sortedActive.forEach(t => {
+          if (!mappedDates[t.dueDate]) mappedDates[t.dueDate] = [];
+          mappedDates[t.dueDate].push(t);
+        });
+
+        // Loop over date categories
+        Object.keys(mappedDates).sort().forEach(dateKey => {
+          const humanLabel = dateKey === TODAY_STR ? 'Today' : dateKey === TOMORROW_STR ? 'Tomorrow' : formatHumanDisplayDate(dateKey);
+          
+          const header = document.createElement('div');
+          header.className = 'upcoming-section-title';
+          header.innerHTML = `<span>${humanLabel}</span><div class="upcoming-section-line"></div>`;
+          tasksContainer.appendChild(header);
+
+          mappedDates[dateKey].forEach(t => {
+            tasksContainer.appendChild(createTaskDomNode(t));
+          });
+        });
+
+      } else {
+        // Simple List Views (Inbox / Today / Project Boards)
+        // Check for Overdues on regular days
+        const overdue = S.currentView !== 'inbox' ? activeTasks.filter(t => t.dueDate && t.dueDate < TODAY_STR) : [];
+        if (overdue.length > 0) {
+          const oBanner = document.createElement('div');
+          oBanner.className = 'overdue-banner';
+          oBanner.innerHTML = `<i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i> Overdue`;
+          tasksContainer.appendChild(oBanner);
+          
+          overdue.forEach(t => {
+            tasksContainer.appendChild(createTaskDomNode(t));
+          });
+        }
+
+        // Active Tasks
+        activeTasks.filter(t => !overdue.includes(t)).forEach(t => {
+          tasksContainer.appendChild(createTaskDomNode(t));
+        });
+      }
+
+      // Done Tasks Section
+      if (doneTasks.length > 0) {
+        const header = document.createElement('div');
+        header.className = 'upcoming-section-title';
+        header.style.color = 'var(--color-text-faint)';
+        header.innerHTML = `<span>Completed (${doneTasks.length})</span><div class="upcoming-section-line"></div>`;
+        tasksContainer.appendChild(header);
+
+        doneTasks.forEach(t => {
+          tasksContainer.appendChild(createTaskDomNode(t));
+        });
+      }
+
+      lucide.createIcons();
+      updateBadgeIndicators();
+    }
+
+    function createTaskDomNode(task) {
+      const el = document.createElement('div');
+      el.className = `task-row-card ${task.completed ? 'is-completed' : ''}`;
+      
+      const pColor = { 'P1': 'var(--priority-p1)', 'P2': 'var(--priority-p2)', 'P3': 'var(--priority-p3)', 'P4': 'var(--color-text-faint)' }[task.priority || 'P4'];
+      const pFlagIcon = task.priority && task.priority !== 'P4' ? `<span class="meta-pill" style="color: ${pColor}"><i data-lucide="flag" style="width: 11px; height: 11px; fill: ${pColor}"></i>${task.priority}</span>` : '';
+
+      // Set Up Custom Due Meta Indicator Pill
+      let duePill = '';
+      if (task.dueDate) {
+        let dcClass = 'later';
+        let customLabel = formatHumanDisplayDate(task.dueDate);
+        
+        if (task.dueDate < TODAY_STR && !task.completed) {
+          dcClass = 'overdue';
+          customLabel = 'Overdue';
+        } else if (task.dueDate === TODAY_STR) {
+          dcClass = 'today';
+          customLabel = 'Today';
+        } else if (task.dueDate === TOMORROW_STR) {
+          dcClass = 'tomorrow';
+          customLabel = 'Tomorrow';
+        }
+        duePill = `<span class="meta-pill ${dcClass}"><i data-lucide="calendar" style="width: 11px; height: 11px;"></i>${customLabel}</span>`;
+      }
+
+      const pMatch = task.projectId ? S.projects.find(p => p.id == task.projectId) : null;
+      const projPill = pMatch ? `<span class="meta-pill project-tag"><span class="project-dot" style="background-color: ${pMatch.color}"></span>${pMatch.name}</span>` : '';
+
+      const showPillsBlock = (pFlagIcon || duePill || projPill) ? `<div class="task-meta-pills">${pFlagIcon}${duePill}${projPill}</div>` : '';
+
+      el.innerHTML = `
+        <div class="task-checkbox ${task.completed ? 'task-checkbox-checked' : ''}" onclick="toggleTaskCompletionState(${task.id})" style="border-color: ${pColor}">
+          ${task.completed ? `<i data-lucide="check" style="width: 10px; height: 10px; color: ${pColor}; stroke-width: 3.5;"></i>` : ''}
+        </div>
+        <div class="task-info-block">
+          <div class="task-title" contenteditable="true" onblur="handleTaskInPlaceRename(${task.id}, this.textContent)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}">${task.title}</div>
+          ${showPillsBlock}
+        </div>
+        <div class="row-actions-block">
+          <button class="action-row-btn" onclick="deleteTaskNode(${task.id})" title="Remove Task">
+            <i data-lucide="trash-2" style="width: 12.5px; height: 12.5px;"></i>
+          </button>
+        </div>
+      `;
+      return el;
+    }
+
+
+    // ── TASK OPERATIONS ──
+    function toggleTaskCompletionState(id) {
+      const match = S.tasks.find(t => t.id === id);
+      if (match) {
+        match.completed = !match.completed;
+        localSave();
+        renderActiveViewGrid();
+        if (S.currentView === 'upcoming') {
+          renderInteractiveSchedulerCalendar();
+        }
+      }
+    }
+
+    function deleteTaskNode(id) {
+      S.tasks = S.tasks.filter(t => t.id !== id);
+      localSave();
+      renderActiveViewGrid();
+      if (S.currentView === 'upcoming') {
+        renderInteractiveSchedulerCalendar();
+      }
+    }
+
+    function handleTaskInPlaceRename(id, textContent) {
+      const match = S.tasks.find(t => t.id === id);
+      if (match && textContent.trim()) {
+        match.title = textContent.trim();
+        localSave();
+      }
+    }
+
+
+    // ── INLINE QUICK BUILD FORM CONTROLS ──
+    function openInlineForm() {
+      const card = document.getElementById('task-inline-form-box');
+      card.classList.add('visible');
+      document.getElementById('form-name-input').focus();
+    }
+
+    function closeInlineForm() {
+      const card = document.getElementById('task-inline-form-box');
+      card.classList.remove('visible');
+      
+      // Reset inputs
+      document.getElementById('form-name-input').value = '';
+      document.getElementById('form-desc-input').value = '';
+      
+      S.formSelectedPriority = 'P4';
+      S.formSelectedDueDate = null;
+
+      document.getElementById('label-form-prio-flag').textContent = '🏳️';
+      document.getElementById('label-form-prio-flag').style.color = 'var(--color-text-faint)';
+      document.getElementById('label-form-date').textContent = 'Select Date';
+      document.getElementById('form-prio-dropdown-menu').classList.remove('open');
+    }
+
+    function toggleFormPrioMenu(event) {
+      event.stopPropagation();
+      document.getElementById('form-prio-dropdown-menu').classList.toggle('open');
+    }
+
+    // Capture global document clicks to close floating custom priority dropdowns safely
+    document.addEventListener('click', () => {
+      document.getElementById('form-prio-dropdown-menu').classList.remove('open');
     });
-  } else {
-    var od2=S.view!=='inbox'?active.filter(function(t){return t.due&&t.due<TODAY}):[];
-    if(od2.length){var oh2=document.createElement('div');oh2.className='od-hdr';oh2.innerHTML='⚠️ Overdue';tl.appendChild(oh2);od2.forEach(function(t){tl.appendChild(mkEl(t))})}
-    active.filter(function(t){return!od2.includes(t)}).forEach(function(t){tl.appendChild(mkEl(t))});
-  }
-  if(done.length){
-    var dh=document.createElement('div');dh.className='d-hdr';
-    dh.innerHTML='<span style="color:var(--muted)">Completed ('+done.length+')</span><div class="d-hdr-ln"></div>';
-    tl.appendChild(dh);done.forEach(function(t){tl.appendChild(mkEl(t))});
-  }
-  renderSb();
-}
 
-function mkEl(task){
-  var el=document.createElement('div');el.className='task-item'+(task.done?' done':'');
-  var pc=task.priority||4;
-  var pcol={1:'#db4035',2:'#ff9a14',3:'#246fe0',4:'#808080'}[pc];
-  var pflag=pc<4?'<span class="t-flag" style="color:'+pcol+'">🚩</span>':'';
-  var due='';
-  if(task.due){
-    var dc=task.due<TODAY&&!task.done?'od':task.due===TODAY?'td':task.due===TMR?'tm':'ft';
-    var dl=task.due===TODAY?'Today':task.due===TMR?'Tomorrow':fmtD(task.due);
-    due='<span class="t-due '+dc+'">📅 '+dl+'</span>';
-  }
-  var proj=task.pid?S.projects.find(function(p){return p.id===task.pid}):null;
-  var ph=proj?'<span class="t-proj"><span class="proj-dot" style="background:'+proj.color+'"></span>'+esc(proj.name)+'</span>':'';
-  var meta=(pflag||due||ph)?'<div class="t-meta">'+pflag+due+ph+'</div>':'';
-  el.innerHTML=
-    '<div class="t-chk'+(task.done?' done-c':'')+'" onclick="toggle('+task.id+')" style="border-color:'+pcol+'">'+(task.done?'<span style="font-size:.58rem;color:'+pcol+'">✓</span>':'')+'</div>'+
-    '<div class="t-body">'+
-      '<div class="t-name" contenteditable="true" onblur="rename('+task.id+',this.textContent)" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}">'+esc(task.name)+'</div>'+
-      meta+
-    '</div>'+
-    '<div class="t-acts"><button class="t-act" onclick="del('+task.id+')">🗑</button></div>';
-  return el;
-}
+    function setFormPriority(pLabel, event) {
+      event.stopPropagation();
+      S.formSelectedPriority = pLabel;
+      
+      const pColor = { 'P1': 'var(--priority-p1)', 'P2': 'var(--priority-p2)', 'P3': 'var(--priority-p3)', 'P4': 'var(--color-text-faint)' }[pLabel];
+      const flagEl = document.getElementById('label-form-prio-flag');
+      
+      flagEl.textContent = pLabel === 'P4' ? '🏳️' : '🚩';
+      flagEl.style.color = pColor;
+      
+      document.getElementById('form-prio-dropdown-menu').classList.remove('open');
+    }
 
-// ── TASK ACTIONS ──
-function toggle(id){var t=S.tasks.find(function(t){return t.id===id});if(t){t.done=!t.done;save();render()}}
-function del(id){S.tasks=S.tasks.filter(function(t){return t.id!==id});save();render()}
-function rename(id,nm){var t=S.tasks.find(function(t){return t.id===id});if(t&&nm.trim()){t.name=nm.trim();save()}}
-function addTask(nm,pri,due,pid){if(!nm||!nm.trim())return;S.tasks.push({id:S.nid++,name:nm.trim(),priority:pri||4,due:due||null,pid:pid?+pid:null,done:false,ca:Date.now()});save();render()}
+    function setFormDate(dateVal) {
+      S.formSelectedDueDate = dateVal || null;
+      const label = document.getElementById('label-form-date');
+      
+      if (dateVal) {
+        label.textContent = dateVal === TODAY_STR ? 'Today' : dateVal === TOMORROW_STR ? 'Tomorrow' : formatHumanDisplayDate(dateVal);
+      } else {
+        label.textContent = 'Select Date';
+      }
+    }
 
-// ── INLINE FORM ──
-function openInline(){document.getElementById('inline-form').classList.add('vis');document.getElementById('f-name').focus()}
-function closeInline(){document.getElementById('inline-form').classList.remove('vis');document.getElementById('f-name').value='';document.getElementById('f-desc').value='';S.fPri=4;S.fDue=null;document.getElementById('f-pflag').textContent='🏳️';document.getElementById('f-pflag').style.color='';document.getElementById('f-due-lbl').textContent='Due date';document.getElementById('f-dd').classList.remove('open')}
-function submitInline(){addTask(document.getElementById('f-name').value,S.fPri,S.fDue,document.getElementById('f-proj').value);closeInline()}
+    function submitInlineForm() {
+      const title = document.getElementById('form-name-input').value.trim();
+      const pId = document.getElementById('form-project-select').value;
+      
+      if (!title) {
+        alert('Please supply an action rule name!');
+        return;
+      }
 
-// ── QUICK ADD ──
-function openQA(){document.getElementById('qa').classList.add('open');document.getElementById('qa-name').focus()}
-function closeQA(){document.getElementById('qa').classList.remove('open');document.getElementById('qa-name').value='';document.getElementById('qa-desc').value='';S.qaPri=4;S.qaDue=null;document.getElementById('qa-pflag').textContent='🏳️';document.getElementById('qa-pflag').style.color='';document.getElementById('qa-due-lbl').textContent='Due date';document.getElementById('qa-dd').classList.remove('open')}
-function submitQA(){addTask(document.getElementById('qa-name').value,S.qaPri,S.qaDue,document.getElementById('qa-proj').value);closeQA()}
+      const newTask = {
+        id: S.nextId++,
+        title: title,
+        priority: S.formSelectedPriority,
+        dueDate: S.formSelectedDueDate,
+        projectId: pId ? parseInt(pId, 10) : null,
+        completed: false
+      };
 
-// ── PRIORITY / DUE ──
-function setPri(ctx,p){
-  var pcol={1:'#db4035',2:'#ff9a14',3:'#246fe0',4:'#808080'}[p];
-  var icon=p<4?'🚩':'🏳️';
-  if(ctx==='f'){S.fPri=p;document.getElementById('f-pflag').textContent=icon;document.getElementById('f-pflag').style.color=pcol;document.getElementById('f-dd').classList.remove('open')}
-  else{S.qaPri=p;document.getElementById('qa-pflag').textContent=icon;document.getElementById('qa-pflag').style.color=pcol;document.getElementById('qa-dd').classList.remove('open')}
-}
-function setDue(ctx,d){
-  var lbl=d===TODAY?'Today':d===TMR?'Tomorrow':d?fmtD(d):'Due date';
-  if(ctx==='f'){S.fDue=d;document.getElementById('f-due-lbl').textContent=lbl}
-  else{S.qaDue=d;document.getElementById('qa-due-lbl').textContent=lbl}
-}
-function toggleDD(ctx){document.getElementById(ctx+'-dd').classList.toggle('open')}
-document.addEventListener('click',function(e){if(!e.target.closest('.f-tools')&&!e.target.closest('.pri-dd'))document.querySelectorAll('.pri-dd').forEach(function(d){d.classList.remove('open')})});
+      S.tasks.push(newTask);
+      localSave();
+      closeInlineForm();
+      renderActiveViewGrid();
+      
+      if (S.currentView === 'upcoming') {
+        renderInteractiveSchedulerCalendar();
+      }
+    }
 
-// ── POMODORO ──
-var PM={mode:'focus',dur:25*60,rem:25*60,run:false,tmr:null};
-var CIRC=301.6;
-function togglePomo(){document.getElementById('pp').classList.toggle('open')}
-function upPomoUI(){
-  var m=Math.floor(PM.rem/60),s=PM.rem%60;
-  document.getElementById('p-time').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-  document.getElementById('p-prog').style.strokeDashoffset=CIRC*(PM.rem/PM.dur);
-  document.getElementById('p-prog').style.stroke=PM.mode==='focus'?'#14b8a6':'#ff9a14';
-  document.getElementById('p-lbl').textContent=PM.mode==='focus'?'🎯 Focus':'☕ Break';
-  document.getElementById('p-start').textContent=PM.run?'⏸ Pause':'▶ Start';
-}
-function startPomo(){if(PM.run){clearInterval(PM.tmr);PM.run=false}else{PM.run=true;PM.tmr=setInterval(function(){PM.rem--;if(PM.rem<=0){clearInterval(PM.tmr);PM.run=false;upPomoUI();alert(PM.mode==='focus'?'🎉 Focus done! Take a break.':'✅ Break over! Time to focus.')}else upPomoUI()},1000)}upPomoUI()}
-function resetPomo(){clearInterval(PM.tmr);PM.run=false;PM.rem=PM.dur;upPomoUI()}
-function switchPomo(){clearInterval(PM.tmr);PM.run=false;PM.mode=PM.mode==='focus'?'break':'focus';PM.dur=PM.mode==='focus'?25*60:5*60;PM.rem=PM.dur;document.getElementById('p-sw').textContent=PM.mode==='focus'?'☕ Break':'🎯 Focus';upPomoUI()}
 
-// ── HELPERS ──
-function fmtD(d){return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+    // ── INTERACTIVE UPCOMING DIRECT CALENDAR WIDGET ──
+    const MONTHS_LIST = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-// ── KEYBOARD ──
-document.addEventListener('keydown',function(e){
-  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.contentEditable==='true')return;
-  if(e.key==='q'||e.key==='Q')openQA();
-  if(e.key==='Escape'){closeQA();closeInline();document.getElementById('pp').classList.remove('open')}
-});
-document.getElementById('qa-name').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitQA()}});
-document.getElementById('f-name').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitInline()}});
+    function navMonth(direction) {
+      S.calMonth += direction;
+      if (S.calMonth < 0) {
+        S.calMonth = 11;
+        S.calYear -= 1;
+      } else if (S.calMonth > 11) {
+        S.calMonth = 0;
+        S.calYear += 1;
+      }
+      renderInteractiveSchedulerCalendar();
+    }
 
-// ── INIT ──
-load();
-if(!S.tasks.length){S.tasks.push({id:S.nid++,name:'Welcome to BG Todohabita! Press Q to add tasks 🌿',priority:3,due:TODAY,pid:null,done:false,ca:Date.now()});save()}
-upPomoUI();renderSb();render();
-</script>
+    function navToCurrent() {
+      const now = new Date();
+      S.calMonth = now.getMonth();
+      S.calYear = now.getFullYear();
+      
+      // Default scheduler selection tomorrow
+      const formattedMonth = String(now.getMonth() + 1).padStart(2, '0');
+      const formattedDay = String(now.getDate()).padStart(2, '0');
+      S.schedSelectedDate = `${now.getFullYear()}-${formattedMonth}-${formattedDay}`;
+
+      renderInteractiveSchedulerCalendar();
+      updateSchedulerUiToSelectedTarget();
+    }
+
+    function selectCalendarCellDay(day) {
+      const fM = String(S.calMonth + 1).padStart(2, '0');
+      const fD = String(day).padStart(2, '0');
+      S.schedSelectedDate = `${S.calYear}-${fM}-${fD}`;
+
+      renderInteractiveSchedulerCalendar();
+      updateSchedulerUiToSelectedTarget();
+    }
+
+    function updateSchedulerUiToSelectedTarget() {
+      const label = document.getElementById('label-scheduler-target-date');
+      if (S.schedSelectedDate) {
+        label.textContent = S.schedSelectedDate === TODAY_STR ? 'Today' : S.schedSelectedDate === TOMORROW_STR ? 'Tomorrow' : formatHumanDisplayDate(S.schedSelectedDate);
+      } else {
+        label.textContent = 'Select Date on Grid';
+      }
+    }
+
+    function selectSchedPrio(pLabel) {
+      S.schedSelectedPriority = pLabel;
+      // Toggle CSS visual classes on the direct calendar form
+      ['P1', 'P2', 'P3', 'P4'].forEach(p => {
+        const btn = document.getElementById(`prio-sched-${p}`);
+        if (p === pLabel) {
+          btn.className = `prio-btn pio-active-${p}`;
+        } else {
+          btn.className = 'prio-btn';
+        }
+      });
+    }
+
+    function submitSchedForm() {
+      const title = document.getElementById('sched-task-title-input').value.trim();
+      const pId = document.getElementById('sched-project-select-input').value;
+
+      if (!S.schedSelectedDate) {
+        alert('Please pick a calendar target cell date first!');
+        return;
+      }
+      if (!title) {
+        alert('Please enter a target task name!');
+        return;
+      }
+
+      const newTask = {
+        id: S.nextId++,
+        title: title,
+        priority: S.schedSelectedPriority,
+        dueDate: S.schedSelectedDate,
+        projectId: pId ? parseInt(pId, 10) : null,
+        completed: false
+      };
+
+      S.tasks.push(newTask);
+      localSave();
+
+      // Reset Form State
+      document.getElementById('sched-task-title-input').value = '';
+      selectSchedPrio('P4');
+      
+      renderActiveViewGrid();
+      renderInteractiveSchedulerCalendar();
+    }
+
+    function renderInteractiveSchedulerCalendar() {
+      // Setup default selection tomorrow if none exists
+      if (!S.schedSelectedDate) {
+        S.schedSelectedDate = TOMORROW_STR;
+      }
+      updateSchedulerUiToSelectedTarget();
+
+      // Labels and math
+      document.getElementById('cal-selected-month-label').textContent = `${MONTHS_LIST[S.calMonth]} ${S.calYear}`;
+      
+      const firstDayIdx = new Date(S.calYear, S.calMonth, 1).getDay();
+      const daysInMonth = new Date(S.calYear, S.calMonth + 1, 0).getDate();
+
+      const gridCellsCon = document.getElementById('cal-days-grid-cells');
+      gridCellsCon.innerHTML = '';
+
+      // Blank cells before first day of month
+      for (let i = 0; i < firstDayIdx; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell-blank';
+        gridCellsCon.appendChild(cell);
+      }
+
+      // Live calendar cells
+      for (let day = 1; day <= daysInMonth; day++) {
+        const formattedMonth = String(S.calMonth + 1).padStart(2, '0');
+        const formattedDay = String(day).padStart(2, '0');
+        const cellDateKey = `${S.calYear}-${formattedMonth}-${formattedDay}`;
+
+        const isSelected = S.schedSelectedDate === cellDateKey;
+        const isToday = TODAY_STR === cellDateKey;
+
+        // Pending user tasks on this date count
+        const hasPendingTasks = S.tasks.some(t => t.dueDate === cellDateKey && !t.completed);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => selectCalendarCellDay(day);
+        
+        btn.className = `cal-cell ${isSelected ? 'is-selected' : ''} ${isToday ? 'is-today' : ''}`;
+        
+        btn.innerHTML = `
+          <span>${day}</span>
+          ${hasPendingTasks ? `<span class="cal-cell-todo-dot" style="${isSelected ? 'background-color: currentColor' : 'background-color: #10b981'}"></span>` : ''}
+        `;
+        
+        gridCellsCon.appendChild(btn);
+      }
+    }
+
+
+    // ── ADVANCED AUDIO SYNTH FOCUS TIME POMODORO TIMER ──
+    const PM_TIMER = {
+      mode: 'focus', // 'focus' | 'break'
+      durationSecs: 25 * 60,
+      secsLeft: 25 * 60,
+      runningState: false,
+      intervalId: null,
+      audioAlertsEnabled: true
+    };
+
+    const SVG_DASH_CIRCUM = 289;
+
+    function togglePomodoroPanel() {
+      const panel = document.getElementById('pomo-card-panel');
+      const fab = document.getElementById('pomo-toggle-fab');
+      
+      const isOpen = panel.classList.toggle('is-open');
+      fab.style.transform = isOpen ? 'rotate(180deg) scale(1.05)' : '';
+    }
+
+    function togglePomoSound() {
+      PM_TIMER.audioAlertsEnabled = !PM_TIMER.audioAlertsEnabled;
+      const bIcon = document.getElementById('pomo-bell-icon');
+      bIcon.setAttribute('data-lucide', PM_TIMER.audioAlertsEnabled ? 'bell' : 'bell-off');
+      lucide.createIcons();
+    }
+
+    function setPomoMode(modeName) {
+      if (PM_TIMER.runningState) {
+        togglePomoPlay();
+      }
+      PM_TIMER.mode = modeName;
+      PM_TIMER.durationSecs = modeName === 'focus' ? 25 * 60 : 5 * 60;
+      PM_TIMER.secsLeft = PM_TIMER.durationSecs;
+
+      document.getElementById('pomo-tab-focus').className = modeName === 'focus' ? 'pomo-tab-btn active-focus' : 'pomo-tab-btn';
+      document.getElementById('pomo-tab-break').className = modeName === 'break' ? 'pomo-tab-btn active-break' : 'pomo-tab-btn';
+      
+      updatePomoVisualState();
+    }
+
+    function resetPomoTimer() {
+      if (PM_TIMER.runningState) {
+        togglePomoPlay();
+      }
+      PM_TIMER.secsLeft = PM_TIMER.durationSecs;
+      updatePomoVisualState();
+    }
+
+    function togglePomoPlay() {
+      const playBtn = document.getElementById('pomo-play-pause-btn');
+
+      if (PM_TIMER.runningState) {
+        // Pausing Clock
+        PM_TIMER.runningState = false;
+        clearInterval(PM_TIMER.intervalId);
+        playBtn.textContent = 'Start';
+      } else {
+        // Running Clock
+        PM_TIMER.runningState = true;
+        playBtn.textContent = 'Pause';
+
+        PM_TIMER.intervalId = setInterval(() => {
+          PM_TIMER.secsLeft--;
+          
+          if (PM_TIMER.secsLeft <= 0) {
+            // Chime focus success completion audio alerts
+            triggerSoundSynthesisAlert();
+            
+            // Mode Auto Rotation logic
+            const rotateToMode = PM_TIMER.mode === 'focus' ? 'break' : 'focus';
+            setPomoMode(rotateToMode);
+          } else {
+            updatePomoVisualState();
+          }
+        }, 1000);
+      }
+    }
+
+    function updatePomoVisualState() {
+      const m = Math.floor(PM_TIMER.secsLeft / 60);
+      const s = PM_TIMER.secsLeft % 60;
+      
+      document.getElementById('pomo-time-countdown').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      document.getElementById('pomo-active-state-label').textContent = PM_TIMER.mode === 'focus' ? 'Focusing' : 'Break Time';
+
+      const progressSvgNode = document.getElementById('pomo-circular-indicator');
+      const percentageLeft = PM_TIMER.secsLeft / PM_TIMER.durationSecs;
+      progressSvgNode.style.strokeDashoffset = SVG_DASH_CIRCUM * (1 - percentageLeft);
+      progressSvgNode.style.stroke = PM_TIMER.mode === 'focus' ? 'var(--brand-primary)' : '#f97316';
+    }
+
+    // High quality sine audio chime system wrapper
+    function triggerSoundSynthesisAlert() {
+      if (PM_TIMER.audioAlertsEnabled) {
+        try {
+          // Native browser sound engine (completely standalone sound synthesis, no static files needed)
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          
+          const chimeSynth = (delay, freq, span) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+            
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + span);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start(audioCtx.currentTime + delay);
+            osc.stop(audioCtx.currentTime + delay + span);
+          };
+
+          // Pleasant singing bowl double bell chime
+          chimeSynth(0, 587.33, 0.45); // D5 pitch
+          chimeSynth(0.15, 880, 0.60);  // A5 pitch
+        } catch (audioErr) {
+          console.warn('Sound synthesizer error', audioErr);
+        }
+      }
+    }
+
+
+    // ── GENERAL UTILITY HELPERS ──
+    function formatHumanDisplayDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      
+      return new Date(year, month, day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+
+    // ── KEYBOARD INTERACTION HANDLERS ──
+    document.addEventListener('keydown', (e) => {
+      // Don't intercept when actively editing text elements
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.contentEditable === 'true') {
+        return;
+      }
+      if (e.key === 'q' || e.key === 'Q') {
+        openInlineForm();
+      }
+      if (e.key === 'Escape') {
+        closeInlineForm();
+        const panel = document.getElementById('pomo-card-panel');
+        if (panel.classList.contains('is-open')) {
+          togglePomodoroPanel();
+        }
+      }
+    });
+
+    // Enter submission hooks on input boxes
+    document.getElementById('form-name-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitInlineForm();
+      }
+    });
+
+    document.getElementById('sched-task-title-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitSchedForm();
+      }
+    });
+
+
+    // ── SYSTEM LIFE CYCLE INITIALIZATION ──
+    (function systemBootstrap() {
+      localLoad();
+      
+      // Seed default welcome checklist if first build session empty
+      if (S.tasks.length === 0) {
+        S.tasks.push({
+          id: S.nextId++,
+          title: 'Welcome to todohabit! Press Q to add a new task 🌿',
+          priority: 'P3',
+          dueDate: TODAY_STR,
+          projectId: null,
+          completed: false
+        });
+        localSave();
+      }
+
+      // Render widgets
+      renderSidebarProjectsList();
+      switchToView('inbox');
+      
+      // Prepare SVG indicators
+      updatePomoVisualState();
+    })();
+  </script>
 </body>
 </html>
