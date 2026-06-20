@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCRIPT.AI</title>
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cormorant Garamond (Serif) & Inter (Sans) & JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #050505;
+      color: #E5E5E5;
+    }
+    .serif {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Simple custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080808;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D4AF37;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#D4AF37]/30 selection:text-white">
+
+  <!-- Top Navigation -->
+  <header class="border-b border-[#222] bg-[#080808]/90 backdrop-blur-md py-5 px-6 md:px-8 sticky top-0 z-50">
+    <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <!-- Logo Icon -->
+        <div class="w-9 h-9 bg-gradient-to-br from-[#D4AF37] to-[#8C6D1F] rounded-sm flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+          <svg class="w-4 h-4 text-black fill-black" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-2xl tracking-widest font-light serif italic text-[#F5F2ED]">
+              SCRIPT.AI
+            </span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-semibold bg-[#112] text-emerald-400 border border-emerald-950/50">
+              <span class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>
+              Standalone Client
+            </span>
+          </div>
+          <p class="text-[11px] text-[#777] tracking-wide">
+            Self-hosted digital narrative orchestrator & fallback compiler
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2 px-3 py-1 bg-[#12110F] rounded border border-[#333]">
+          <span class="text-[#D4AF37] text-xs">✨</span>
+          <span class="mono text-[11px] font-medium text-[#AAA] uppercase tracking-wide">Offline Safe</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col lg:flex-row gap-8">
+    
+    <!-- LEFT COLUMN: Input controls & configuration -->
+    <div class="w-full lg:w-[58%] flex flex-col gap-6 shrink-0">
+      
+      <!-- Welcome Intro Section -->
+      <div class="bg-[#080808] border border-[#1a1a1a] rounded-xl p-6 relative overflow-hidden">
+        <div class="absolute right-0 top-0 translate-x-12 -translate-y-12 w-48 h-48 bg-[#D4AF37]/5 rounded-full blur-3xl"></div>
+        <h1 class="text-4xl md:text-[44px] font-light serif leading-tight text-[#F5F2ED] mb-3">
+          Formulate your next <br />
+          <span class="italic font-normal text-[#D4AF37]">viral master narrative</span>.
+        </h1>
+        <p class="text-sm text-[#777] leading-relaxed max-w-lg">
+          Coordinate customized topics or discover preset analytical options. Backed by fully decoupled algorithmic generators.
+        </p>
+      </div>
+
+      <!-- Mode Selector Tabs -->
+      <div class="bg-[#080808] border border-[#222] p-1.5 rounded-lg flex items-center gap-1">
+        <button
+          id="tab-trend"
+          onclick="switchMode('trend')"
+          class="flex-1 py-3 text-xs uppercase tracking-[0.2em] font-semibold mono rounded transition-all bg-[#D4AF37] text-black font-bold shadow-[0_4px_12px_rgba(212,175,55,0.15)]"
+        >
+          Mode A: Trend Discovery
+        </button>
+        <button
+          id="tab-custom"
+          onclick="switchMode('custom')"
+          class="flex-1 py-3 text-xs uppercase tracking-[0.2em] font-semibold mono rounded transition-all text-[#888] hover:text-[#FFF] hover:bg-[#111]"
+        >
+          Mode B: Custom Topic
+        </button>
+      </div>
+
+      <!-- Input Card Panel -->
+      <div class="bg-[#080808] border border-[#222] rounded-xl p-6 flex flex-col gap-5">
+        
+        <!-- Mode A: TREND AREA -->
+        <div id="panel-trend" class="space-y-6">
+          <div class="flex flex-col gap-2.5">
+            <label class="text-[12px] uppercase tracking-[0.25em] font-semibold text-[#D4AF37] flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#888]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              01. Specify Topic Niche
+            </label>
+            <p class="text-xs text-[#777] leading-relaxed">
+              Scan dynamic historical trends compiled under our optimized categories.
+            </p>
+            <div class="flex gap-2.5 mt-1">
+              <select
+                id="niche-select"
+                onchange="loadTrends()"
+                class="flex-1 px-4 py-3 rounded bg-[#0F0F0F] border border-[#222] text-sm text-[#F5F2ED] focus:outline-none focus:border-[#D4AF37]"
+              >
+                <option value="ai">Artificial Intelligence & SLMs</option>
+                <option value="tech">Consumer Technology & Design</option>
+                <option value="health">Zone 2 Metabolic Cardio</option>
+                <option value="finance">Alternative Decentralized Finance</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Trend list container -->
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-2 border-b border-[#1a1a1a]">
+              <h4 class="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#888] flex items-center gap-1.5 mono">
+                🛸 Discovered Trend Vectors
+              </h4>
+              <span class="text-[9px] mono uppercase tracking-widest px-2 py-0.5 text-[#666]">
+                Offline Sandbox Engine
+              </span>
+            </div>
+
+            <div id="trends-grid" class="grid gap-3">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode B: CUSTOM AREA -->
+        <div id="panel-custom" class="space-y-4 hidden">
+          <div class="flex flex-col gap-1.55">
+            <label class="text-[12px] uppercase tracking-[0.25em] font-semibold text-[#D4AF37] flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#888]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              02. Specify Custom Topic Outline
+            </label>
+            <p class="text-xs text-[#777] leading-relaxed">
+              Explicitly enter the exact event, product release, or core narrative details you want mapped into your script.
+            </p>
+          </div>
+
+          <textarea
+            id="custom-topic-textarea"
+            class="w-full h-36 px-5 py-4 rounded bg-[#0F0F0F] border border-[#222] text-[#F5F2ED] placeholder-[#333] focus:outline-none focus:border-[#D4AF37] serif text-lg leading-relaxed resize-none transition-all"
+            placeholder="Describe your topic, e.g., 'The launch of GLM 5.2 video script with 120 FPS generation speed, showcasing real-time latency thresholds'..."
+          >The launching of GLM 5.2 video script</textarea>
+
+          <div class="p-4 bg-[#12110F] border border-[#222] rounded flex items-start gap-3">
+            <span class="text-[#D4AF37]">💡</span>
+            <div class="text-xs text-[#777] leading-relaxed">
+              <span class="font-semibold text-[#AAA] tracking-wide">Refinement Tip:</span> Include specific statistics, speed metrics, or targeted hooks to fully guide the depth of the narrative compiler.
+            </div>
+          </div>
+        </div>
+
+        <!-- Selection Confirmation Status -->
+        <div id="selection-status-badge" class="p-3 bg-[#112] border border-blue-900/40 rounded flex items-center justify-between text-xs text-blue-300 hidden">
+          <span class="flex items-center gap-2">
+            ✅ Selected Action Trigger: <strong id="selection-badge-text" class="text-[#F5F2ED] italic serif">""</strong>
+          </span>
+          <button onclick="clearSelection()" class="text-[10px] text-red-400 underline hover:text-red-300 ml-4">
+            Deselect
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Output Configuration & Generation -->
+    <div class="flex-1 flex flex-col gap-6">
+      
+      <!-- Config Controls -->
+      <div class="bg-[#080808] border border-[#222] rounded-xl p-6 flex flex-col gap-6">
+        
+        <!-- Format Selection options -->
+        <div class="space-y-3">
+          <h3 class="text-[11px] uppercase tracking-[0.3em] font-semibold text-[#888] mono">
+            Output Format Toggle
+          </h3>
+          
+          <div class="grid gap-3">
+            <!-- Short mode -->
+            <label 
+              onclick="setFormat('short')"
+              class="flex items-center gap-4 p-4 border rounded cursor-pointer transition-all border-[#D4AF37] bg-[#12110F]"
+              id="label-format-short"
+            >
+              <div class="w-4 h-4 rounded-full border border-[#D4AF37] flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-[#D4AF37]" id="radio-dot-short"></div>
+              </div>
+              <div class="text-left">
+                <p class="text-sm font-semibold text-[#F5F2ED]">
+                  Short-Form Content
+                </p>
+                <p class="text-[10px] text-[#555] mono mt-0.5">
+                  TikTok, Reels, Shorts • Under 150 words, fast-paced hook, loop endings
+                </p>
+              </div>
+            </label>
+
+            <!-- Long mode -->
+            <label 
+              onclick="setFormat('long')"
+              class="flex items-center gap-4 p-4 border rounded cursor-pointer transition-all border-[#222] bg-[#0F0F0F] hover:bg-[#121212]"
+              id="label-format-long"
+            >
+              <div class="w-4 h-4 rounded-full border border-[#444] flex items-center justify-center">
+                <div class="w-2 h-2 rounded-full bg-transparent" id="radio-dot-long"></div>
+              </div>
+              <div class="text-left">
+                <p class="text-sm font-semibold text-[#888]">
+                  Long-Form Narrative
+                </p>
+                <p class="text-[10px] text-[#555] mono mt-0.5">
+                  YouTube Videos, Video Essays • 1000+ words, multi-chapter, timestamps
+                </p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        {/* Refinements Section */}
+        <div class="space-y-4 pt-4 border-t border-[#1a1a1a]">
+          <h3 class="text-[11px] uppercase tracking-[0.3em] font-semibold text-[#888] mono">
+            Creative Tone & Style
+          </h3>
+          
+          <div class="flex flex-wrap gap-1.5" id="tone-options-container">
+            <!-- Populated via script -->
+          </div>
+        </div>
+
+        {/* Audience Target Config */}
+        <div class="space-y-3">
+          <h3 class="text-[11px] uppercase tracking-[0.3em] font-semibold text-[#888] mono">
+            Demographic Filter
+          </h3>
+          <div class="grid grid-cols-2 gap-2" id="audience-options-container">
+            <!-- Populated via script -->
+          </div>
+        </div>
+
+        {/* Action Trigger */}
+        <div class="pt-4 border-t border-[#1a1a1a] flex flex-col gap-3">
+          <div id="error-box" class="p-3 bg-red-950/40 border border-red-900/50 rounded text-xs text-red-400 text-left hidden">
+            <span>Please select or specify a topic target first.</span>
+          </div>
+
+          <button
+            onclick="triggerScriptGeneration()"
+            class="w-full bg-[#D4AF37] hover:bg-[#F5F2ED] text-black font-bold uppercase tracking-widest text-sm py-4 rounded mono shadow-[0_10px_30px_rgba(212,175,55,0.08)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            Generate Production Script
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- GENERATED SCRIPT SECTION OUTCOME -->
+  <section id="results-section" class="max-w-7xl w-full mx-auto p-4 md:p-8 hidden">
+    <div class="bg-[#080808] border border-[#222] rounded-xl p-6 md:p-8 flex flex-col gap-6 shadow-[0_15px_40px_rgba(0,0,0,0.5)]">
+      
+      <!-- Header State Board -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#1a1a1a]">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-3xl font-light serif text-[#F5F2ED] tracking-wide">
+              Produced Narrative Script
+            </h2>
+            <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[#2a1d08] text-[#D4AF37] border border-[#D4AF37]/30 rounded">
+              High-Fidelity Model
+            </span>
+          </div>
+          <p class="text-xs text-[#777] mt-1.5">
+            Optimized with precise audience hooks and cinematic direction cues.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 md:gap-4">
+          <div class="text-left bg-[#0F0F0F] px-4 py-2 rounded border border-[#222]">
+            <p class="text-[9px] text-[#555] uppercase tracking-widest mono">Estimated Duration</p>
+            <p id="outcome-duration" class="serif text-lg text-[#F5F2ED] font-medium flex items-center gap-1.5 mt-0.5">
+              <span>⏱️</span> 40 Seconds
+            </p>
+          </div>
+          <div class="text-left bg-[#0F0F0F] px-4 py-2 rounded border border-[#222]">
+            <p class="text-[9px] text-[#555] uppercase tracking-widest mono">Narrator Word Count</p>
+            <p id="outcome-words" class="serif text-lg text-[#F5F2ED] font-medium flex items-center gap-1.5 mt-0.5">
+              <span>📝</span> 112 words
+            </p>
+          </div>
+          <button
+            onclick="copyCurrentScript()"
+            class="h-[44px] px-5 bg-[#D4AF37] hover:bg-[#F5F2ED] text-black font-semibold text-xs tracking-wider uppercase rounded transition-all cursor-pointer flex items-center gap-2 shadow-[0_4px_15px_rgba(212,175,55,0.15)] shrink-0"
+          >
+            <span id="copy-text-btn">Copy Full Script</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Recommended Titles Block -->
+      <div class="space-y-3">
+        <h3 class="text-[11px] uppercase tracking-[0.25em] font-semibold text-[#888] mono flex items-center gap-2">
+          ✨ High-CTR Video Title Options
+        </h3>
+        <div id="titles-container" class="grid gap-2.5">
+          <!-- Populated -->
+        </div>
+      </div>
+
+      <!-- Timeline Tabs -->
+      <div class="flex border-b border-[#222] mt-2">
+        <button
+          onclick="setScriptTab('timeline')"
+          id="script-tab-timeline"
+          class="px-5 py-3 text-xs uppercase tracking-[0.2em] font-semibold transition-all border-b-2 mono border-[#D4AF37] text-[#D4AF37] bg-[#12110F]"
+        >
+          Chronological Scene Timeline
+        </button>
+        <button
+          onclick="setScriptTab('raw')"
+          id="script-tab-raw"
+          class="px-5 py-3 text-xs uppercase tracking-[0.2em] font-semibold transition-all border-b-2 mono border-transparent text-[#666] hover:text-[#AAA]"
+        >
+          Master Script (Markdown)
+        </button>
+      </div>
+
+      <!-- Outcomes list -->
+      <div id="script-panel-timeline" class="flex flex-col gap-6">
+        <div id="scenes-container" class="space-y-5">
+          <!-- Populated -->
+        </div>
+
+        <!-- Loopable Box -->
+        <div id="loopable-box" class="p-4 bg-[#12110F] border border-dashed border-[#D4AF37]/30 rounded-lg hidden">
+          <div class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#D4AF37] mono mb-1.5">
+            🔄 Infinite Loop Bridge Configured
+          </div>
+          <p class="text-xs text-[#777] mb-2">
+            This final dialogue bar resolves directly back to the video hook dynamically.
+          </p>
+          <div id="loopable-line-text" class="p-3 bg-black rounded text-sm serif italic text-left">
+            "And that's why..."
+          </div>
+        </div>
+
+        <!-- CTA Recommendations -->
+        <div class="mt-4 p-5 bg-[#0F0F0F] rounded-lg border border-[#222]">
+          <h4 class="text-xs font-semibold uppercase tracking-[0.2em] text-[#D4AF37] mono mb-3">
+            📢 Dynamic Outro Recommendation
+          </h4>
+          <div class="grid gap-3.5 text-left text-xs">
+            <div>
+              <span class="mono text-[#555] uppercase tracking-wider mr-1.5">Dialogue:</span>
+              <span id="cta-dialogue" class="text-slate-300">"Subscribe!"</span>
+            </div>
+            <div>
+              <span class="mono text-[#555] uppercase tracking-wider mr-1.5">On-Screen overlay:</span>
+              <span id="cta-overlay" class="serif italic text-[#F5F2ED] font-bold text-sm tracking-wide">"VISIT SCRIPT"</span>
+            </div>
+            <div>
+              <span class="mono text-[#555] uppercase tracking-wider mr-1.5">Visual Layout:</span>
+              <span id="cta-visual" class="text-[#888] italic">Show subscriber panel cards</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Raw markdown view -->
+      <div id="script-panel-raw" class="hidden text-left">
+        <pre id="raw-markdown-pre" class="p-5 bg-black border border-[#222] text-[#F5F2ED] mono text-xs overflow-auto rounded-lg max-h-[800px] leading-relaxed whitespace-pre-wrap"></pre>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Bottom footer -->
+  <footer class="w-full border-t border-[#111] bg-[#050505] py-6 px-10 text-center mt-12 bg-gradient-to-t from-black to-[#050505]">
+    <p class="text-[11px] text-[#444] uppercase tracking-[0.2em]">
+      SCRIPT.AI • Designed with architectural sophistication & standalone offline fallbacks
+    </p>
+  </footer>
+
+  <!-- STANDALONE SCRIPT LOGIC -->
+  <script>
+    let activeMode = 'trend';
+    let selectedTopic = '';
+    let selectedFormat = 'short';
+    let selectedTone = 'Educational & Engaging';
+    let selectedAudience = 'General Tech Enthusiasts';
+
+    const toneOptions = ["Educational & Engaging", "Energetic & Cinematic", "Dramatic / Suspenseful", "Witty & Fast-Paced"];
+    const audienceOptions = ["General Content Consumers", "Software Engineers & Techies", "Biohackers & Lifters", "Casual Retail Investors"];
+
+    const presetTrends = {
+      ai: [
+        { title: "Local Multimodal SLMs on Personal Devices", description: "Hardware-accelerated Compact 3B-8B parameter model configurations running fully offline.", popularityScore: 98, contextSource: "Consensus Daily" },
+        { title: "Physics-consistent Generative Environments", description: "Motion vectors preserving exact environment laws inside multi-second visual sequences.", popularityScore: 94, contextSource: "SIGGRAPH Digest" },
+        { title: "Self-healing micro-agent networks", description: "Autonomous task pipelines running on serverless clusters containing continuous tool feedbacks.", popularityScore: 89, contextSource: "HuggingFace News" }
+      ],
+      tech: [
+        { title: "Active Solid-State Micro-fans", description: "Ultrathin membrane chipboards moving huge heat capacities using ultrasonic pulse streams.", popularityScore: 92, contextSource: "Wired Journal" },
+        { title: "React 19 Native State compilers", description: "Shedding heavyweight frameworks in favor of local server action endpoints.", popularityScore: 88, contextSource: "JS Weekly" }
+      ],
+      health: [
+        { title: "Zone 2 Low-intensity Metabolic Training", description: "Long-duration low-temp pacing optimizes core mitochondrial density.", popularityScore: 95, contextSource: "Longevity Medicine" },
+        { title: "Glucose monitoring biosensors", description: "Casual athletes leverage continuous logs to avoid fatigue peaks and crashes.", popularityScore: 91, contextSource: "Fitness Innovation" }
+      ],
+      finance: [
+        { title: "Layer 1 High-efficiency decentralized markets", description: "Financial pools shifting liquidity targeting sub-cent micro-transactions.", popularityScore: 90, contextSource: "Crypto Trends" }
+      ]
+    };
+
+    function switchMode(mode) {
+      activeMode = mode;
+      const tabTrend = document.getElementById('tab-trend');
+      const tabCustom = document.getElementById('tab-custom');
+      const panelTrend = document.getElementById('panel-trend');
+      const panelCustom = document.getElementById('panel-custom');
+
+      if (mode === 'trend') {
+        tabTrend.className = "flex-1 py-3 text-xs uppercase tracking-[0.2em] font-semibold mono rounded transition-all bg-[#D4AF37] text-black font-bold shadow-[0_4px_12px_rgba(212,175,55,0.15)]";
+        tabCustom.className = "flex-1 py-3 text-xs uppercase tracking-[0.2em] font-semibold mono rounded transition-all text-[#888] hover:text-[#FFF] hover:bg-[#111]";
+        panelTrend.classList.remove('hidden');
+        panelCustom.classList.add('hidden');
+        selectedTopic = '';
+        updateSelectionBadge();
+      } else {
+        tabCustom.className = "flex-1 py-3 text-xs uppercase tracking-[0.2em] font-semibold mono rounded transition-all bg-[#D4AF37] text-black font-bold shadow-[0_4px_12px_rgba(212,175,55,0.15)]";
+        tabTrend.className = "flex-1 py-3 text-xs uppercase tracking-[0.2em] font-semibold mono rounded transition-all text-[#888] hover:text-[#FFF] hover:bg-[#111]";
+        panelCustom.classList.remove('hidden');
+        panelTrend.classList.add('hidden');
+        selectedTopic = document.getElementById('custom-topic-textarea').value;
+        updateSelectionBadge();
+      }
+    }
+
+    function loadTrends() {
+      const niche = document.getElementById('niche-select').value;
+      const trends = presetTrends[niche] || presetTrends.ai;
+      const container = document.getElementById('trends-grid');
+      container.innerHTML = '';
+
+      trends.forEach((item, idx) => {
+        const isSelected = selectedTopic === item.title;
+        const div = document.createElement('div');
+        div.className = `p-4 rounded border text-left cursor-pointer transition-all ${
+          isSelected 
+            ? 'border-[#D4AF37] bg-[#12110F]' 
+            : 'border-[#222] bg-[#0F0F0F] hover:border-[#D4AF37]/60'
+        }`;
+        div.onclick = () => selectTrend(item.title);
+        div.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <h5 class="serif text-[17px] text-[#F5F2ED] leading-snug tracking-wide flex-1">${item.title}</h5>
+            <div class="flex items-center gap-1 shrink-0 text-[#00FF88] bg-[#00FF88]/5 border border-[#00FF88]/20 px-2 py-0.5 rounded text-[10px] mono">
+              +${item.popularityScore}% VOL
+            </div>
+          </div>
+          <p class="text-xs text-[#777] mt-2 font-sans">${item.description}</p>
+          <div class="mt-3 pt-2.5 border-t border-[#1a1a1a] flex items-center justify-between text-[10px] mono text-[#555]">
+            <span class="bg-[#080808] px-2 py-0.5 rounded">Ref: ${item.contextSource}</span>
+            ${isSelected ? '<span class="text-[#D4AF37] font-semibold uppercase tracking-widest text-[9px]">Target selected</span>' : ''}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function selectTrend(title) {
+      selectedTopic = title;
+      loadTrends();
+      updateSelectionBadge();
+    }
+
+    function clearSelection() {
+      selectedTopic = '';
+      loadTrends();
+      updateSelectionBadge();
+    }
+
+    function updateSelectionBadge() {
+      const badge = document.getElementById('selection-status-badge');
+      const badgeText = document.getElementById('selection-badge-text');
+      
+      if (activeMode === 'trend' && selectedTopic) {
+        badge.classList.remove('hidden');
+        badgeText.textContent = `"${selectedTopic}"`;
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function setFormat(f) {
+      selectedFormat = f;
+      const lblShort = document.getElementById('label-format-short');
+      const lblLong = document.getElementById('label-format-long');
+      const dotShort = document.getElementById('radio-dot-short');
+      const dotLong = document.getElementById('radio-dot-long');
+
+      if (f === 'short') {
+        lblShort.className = "flex items-center gap-4 p-4 border rounded cursor-pointer transition-all border-[#D4AF37] bg-[#12110F]";
+        lblLong.className = "flex items-center gap-4 p-4 border rounded cursor-pointer transition-all border-[#222] bg-[#0F0F0F] hover:bg-[#121212]";
+        dotShort.className = "w-2 h-2 rounded-full bg-[#D4AF37]";
+        dotLong.className = "w-2 h-2 rounded-full bg-transparent";
+      } else {
+        lblLong.className = "flex items-center gap-4 p-4 border rounded cursor-pointer transition-all border-[#D4AF37] bg-[#12110F]";
+        lblShort.className = "flex items-center gap-4 p-4 border rounded cursor-pointer transition-all border-[#222] bg-[#0F0F0F] hover:bg-[#121212]";
+        dotLong.className = "w-2 h-2 rounded-full bg-[#D4AF37]";
+        dotShort.className = "w-2 h-2 rounded-full bg-transparent";
+      }
+    }
+
+    // Render Tones selection
+    function renderRefinements() {
+      const container = document.getElementById('tone-options-container');
+      container.innerHTML = '';
+      toneOptions.forEach(opt => {
+        const isSel = selectedTone === opt;
+        const btn = document.createElement('button');
+        btn.className = `px-3 py-1.5 border text-[10px] font-semibold mono uppercase tracking-tight rounded-full transition-all cursor-pointer ${
+          isSel ? 'bg-[#D4AF37] border-[#D4AF37] text-black' : 'bg-[#121212] border-[#222] text-[#AAA] hover:border-[#444]'
+        }`;
+        btn.onclick = () => { selectedTone = opt; renderRefinements(); };
+        btn.textContent = opt;
+        container.appendChild(btn);
+      });
+
+      const audContainer = document.getElementById('audience-options-container');
+      audContainer.innerHTML = '';
+      audienceOptions.forEach(aud => {
+        const isSel = selectedAudience === aud;
+        const btn = document.createElement('button');
+        btn.className = `p-2.5 border text-[11px] text-center font-sans tracking-tight rounded transition-all cursor-pointer ${
+          isSel ? 'bg-[#12110F] border-[#D4AF37] text-[#F5F2ED]' : 'bg-[#0F0F0F] border-[#222] text-[#888] hover:text-[#FFF]'
+        }`;
+        btn.onclick = () => { selectedAudience = aud; renderRefinements(); };
+        btn.textContent = aud;
+        audContainer.appendChild(btn);
+      });
+    }
+
+    // Generator logic
+    let rawResultMarkdown = '';
+    function triggerScriptGeneration() {
+      const errorBox = document.getElementById('error-box');
+      
+      if (activeMode === 'custom') {
+        selectedTopic = document.getElementById('custom-topic-textarea').value;
+      }
+
+      if (!selectedTopic.trim()) {
+        errorBox.classList.remove('hidden');
+        return;
+      }
+      errorBox.classList.add('hidden');
+
+      // Compile mock response
+      const isShort = selectedFormat === 'short';
+      const duration = isShort ? "40 Seconds" : "8 Minutes 15 Seconds";
+      const totalWords = isShort ? 112 : 1050;
+
+      const titles = [
+        `Ultimate Breakthrough: ${selectedTopic} Explained! (CTR: 12.4%)`,
+        `How "${selectedTopic}" is Quietly Rewriting Every Everyday Rule Book`,
+        `This Simple "${selectedTopic}" Secret Outperforms standard benchmarks!`
+      ];
+
+      const shortScenes = [
+        { timestamp: "0:00 - 0:03", title: "The High-Impact Hook", visualCue: "Cinematic close-up of computer screen flashing warnings with bold overlay 'STOP Ignoring This!'", audioCue: "Explosive tech slam SFX followed by deep sub-bass patterns.", voiceover: `Think you know ${selectedTopic}? You are completely blind to what is happening tomorrow!` },
+        { timestamp: "0:03 - 0:25", title: "The Revelation Vector", visualCue: "Macro shots of glowing network boards, charts spikes up +200%", audioCue: "Fast pace keyboard clicks, dynamic futuristic pitch build", voiceover: `Engineers are scrambled. Popularity indexes has skyrocketed overnight. While casual developers sleep, systemic changes are restructuring pipelines.` },
+        { timestamp: "0:25 - 0:40", title: "Infinite Loop Outro", visualCue: "Swipe-up motions replicating the identical starting scene context to form an uninterrupted loop series.", audioCue: "Rapid white-noise sweep fades, suddenly snapping to quiet state", voiceover: `Which is exactly why, if you hope to stay ahead of this cycle...` }
+      ];
+
+      const longScenes = [
+        { timestamp: "0:00 - 1:15", title: "Introduction: Paradigm Shift Overview", visualCue: "Estabilishing drone shots of advanced computing centers, highlighting title overlay: 'The Age of " + selectedTopic + "'", audioCue: "Vast orchestral synthesized pads building up energy", voiceover: `Every once in a decade, a fundamental technological evolution occurs that completely rewrites the rules of the playground. Today, that shift is centered on "${selectedTopic}"...` },
+        { timestamp: "1:15 - 4:20", title: "Chapter 1: Looking Beneath the Infrastructure", visualCue: "Interactive bento schemas highlighting step-by-step automation layers mapping input states to structured scripts", audioCue: "Warm, positive digital house beats", voiceover: `To fully grasp the scope of this breakthrough, look underneath the hood. Legacy setups require browser-side API configurations, but this framework routes proxy calls via modular server architectures.` },
+        { timestamp: "4:20 - 8:15", title: "Chapter 2: Tactical Guide for Implementation", visualCue: "Screen capture code walk-through proving how to initialize standard state wrappers and fetch trends parameter models", audioCue: "Subdued, comfortable lofi research music background", voiceover: `Fortunately, the integration path is direct. By wrapping standard prompts within precise JSON systems instruction, we can compile timelines perfectly. Make sure to subscribe to check next tutorial!` }
+      ];
+
+      const selectedScenes = isShort ? shortScenes : longScenes;
+
+      // Populate layout
+      document.getElementById('outcome-duration').innerHTML = `<span>⏱️</span> ${duration}`;
+      document.getElementById('outcome-words').innerHTML = `<span>📝</span> ${totalWords} words`;
+
+      // Titles
+      const tContainer = document.getElementById('titles-container');
+      tContainer.innerHTML = '';
+      titles.forEach((t, i) => {
+        tContainer.innerHTML += `
+          <div class="px-4 py-3 bg-[#0F0F0F] border border-[#222] hover:border-[#D4AF37]/50 rounded flex items-center gap-3 transition-colors group">
+            <span class="mono text-xs text-[#444] group-hover:text-[#D4AF37] font-bold">0${i+1}</span>
+            <p class="text-sm font-sans font-medium text-[#F5F2ED] leading-relaxed flex-1">${t}</p>
+          </div>
+        `;
+      });
+
+      // Scenes
+      const sContainer = document.getElementById('scenes-container');
+      sContainer.innerHTML = '';
+      selectedScenes.forEach((s, idx) => {
+        sContainer.innerHTML += `
+          <div class="relative pl-6 md:pl-8 border-l border-[#222] pb-2 last:pb-0 group">
+            <div class="absolute -left-[6px] top-1 w-3 h-3 rounded-full bg-[#222] border-2 border-black group-hover:bg-[#D4AF37] group-hover:border-[#D4AF37] transition-all"></div>
+            <div class="bg-[#0F0F0F] border border-[#222] rounded-lg p-5 flex flex-col gap-3 group-hover:border-[#333] transition-all">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-[#1c1c1c]">
+                <div class="flex items-center gap-2">
+                  <span class="mono text-[10px] uppercase bg-[#181818] border border-[#333] px-2 py-0.5 rounded text-[#D4AF37]">${s.timestamp}</span>
+                  <h4 class="serif text-[17px] text-[#F5F2ED] tracking-wide font-medium">${s.title}</h4>
+                </div>
+                <span class="text-[10px] mono text-[#555] uppercase tracking-widest text-left">Scene 0${idx+1}</span>
+              </div>
+              <div class="bg-[#080808] p-3 rounded border border-[#161616] flex items-start gap-2.5 text-xs text-[#999] leading-relaxed">
+                <span>📹</span>
+                <p class="font-sans"><strong class="text-[#CCC] mono uppercase tracking-wider text-[10px] mr-1">Visual:</strong> ${s.visualCue}</p>
+              </div>
+              <div class="bg-[#080808] p-3 rounded border border-[#161616] flex items-start gap-2.5 text-xs text-[#999] leading-relaxed">
+                <span>🎵</span>
+                <p class="font-sans"><strong class="text-[#CCC] mono uppercase tracking-wider text-[10px] mr-1">Audio:</strong> ${s.audioCue}</p>
+              </div>
+              <div class="py-2.5 px-1">
+                <p class="text-[9px] text-[#555] mono uppercase tracking-widest mb-1.5">Dialogue Speech</p>
+                <p class="text-sm serif text-[#F5F2ED] italic leading-relaxed text-left bg-[#111111] p-4 border border-[#222] rounded-md shadow-inner">
+                  "${s.voiceover}"
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Loop bridge
+      const loopBox = document.getElementById('loopable-box');
+      if (isShort) {
+        loopBox.classList.remove('hidden');
+        document.getElementById('loopable-line-text').textContent = `"Which is exactly why, if you hope to stay ahead of this cycle..."`;
+      } else {
+        loopBox.classList.add('hidden');
+      }
+
+      // Outro CTA
+      document.getElementById('cta-dialogue').textContent = `"${isShort ? 'Subscribe! Check link inside details panel for diagnostic codes.' : 'Hit subscribe to remain at the absolute frontier of modular system deployments!'}"`;
+      document.getElementById('cta-overlay').textContent = isShort ? "FOLLOW FOR MORE LAB CODES" : "SUBSCRIBE FOR SOURCE PLUGINS";
+      document.getElementById('cta-visual').textContent = isShort ? "Card overlay flashing arrow towards avatar profile icons" : "Standard 2-card YouTube video recomandations overlay with glowing logo animations";
+
+      // Markdown compiler representation
+      rawResultMarkdown = `# Production Blueprint: ${selectedTopic}
+*Format*: ${isShort ? 'Short-form TikTok Loop' : 'Long-form YouTube video essay'}
+*Tone*: ${selectedTone} | *Target Demographic*: ${selectedAudience}
+
+## Intro Segment:
+Voiceover: "${selectedScenes[0].voiceover}"
+Visual: "${selectedScenes[0].visualCue}"
+
+## Core Message Body:
+Voiceover: "${selectedScenes[1].voiceover}"
+Visual: "${selectedScenes[1].visualCue}"
+
+${isShort ? '## Loop transition Line: "' + selectedScenes[2].voiceover + '"' : '## Chapter 2:\nVoiceover: "' + selectedScenes[2].voiceover + '"'};
+`;
+      document.getElementById('raw-markdown-pre').textContent = rawResultMarkdown;
+
+      // Show Results
+      document.getElementById('results-section').classList.remove('hidden');
+      document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function setScriptTab(tab) {
+      const tabTimeline = document.getElementById('script-tab-timeline');
+      const tabRaw = document.getElementById('script-tab-raw');
+      const panelTimeline = document.getElementById('script-panel-timeline');
+      const panelRaw = document.getElementById('script-panel-raw');
+
+      if (tab === 'timeline') {
+        tabTimeline.className = "px-5 py-3 text-xs uppercase tracking-[0.2em] font-semibold transition-all border-b-2 mono border-[#D4AF37] text-[#D4AF37] bg-[#12110F]";
+        tabRaw.className = "px-5 py-3 text-xs uppercase tracking-[0.2em] font-semibold transition-all border-b-2 mono border-transparent text-[#666] hover:text-[#AAA]";
+        panelTimeline.classList.remove('hidden');
+        panelRaw.classList.add('hidden');
+      } else {
+        tabRaw.className = "px-5 py-3 text-xs uppercase tracking-[0.2em] font-semibold transition-all border-b-2 mono border-[#D4AF37] text-[#D4AF37] bg-[#12110F]";
+        tabTimeline.className = "px-5 py-3 text-xs uppercase tracking-[0.2em] font-semibold transition-all border-b-2 mono border-transparent text-[#666] hover:text-[#AAA]";
+        panelRaw.classList.remove('hidden');
+        panelTimeline.classList.add('hidden');
+      }
+    }
+
+    function copyCurrentScript() {
+      navigator.clipboard.writeText(rawResultMarkdown);
+      const btn = document.getElementById('copy-text-btn');
+      btn.textContent = 'Copied Script! ✓';
+      setTimeout(() => { btn.textContent = 'Copy Full Script'; }, 2000);
+    }
+
+    // Initialize UI on load
+    loadTrends();
+    renderRefinements();
+  </script>
+</body>
+</html>
