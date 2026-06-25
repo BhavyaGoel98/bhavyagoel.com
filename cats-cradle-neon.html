@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cat's Cradle — Neon Hand Link</title>
+<style>
+  :root{
+    --cyan: #00e5ff;
+    --magenta: #ff00e5;
+  }
+  html, body{
+    margin:0; padding:0; overflow:hidden;
+    background:#000;
+    width:100%; height:100%;
+    font-family: 'Courier New', Consolas, monospace;
+  }
+  /* The video element is kept in the DOM (not display:none) so the browser
+     keeps decoding frames, but it is invisible — we draw our own mirrored,
+     stylized copy of it onto the canvas every frame. */
+  #webcam{
+    position:absolute;
+    top:0; left:0;
+    width:2px; height:2px;
+    opacity:0.01;
+    pointer-events:none;
+  }
+  canvas{ display:block; }
+
+  #status{
+    position:fixed;
+    top:18px; left:18px;
+    color:var(--cyan);
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    text-shadow:0 0 8px rgba(0,229,255,0.85), 0 0 2px rgba(0,229,255,0.9);
+    z-index:10;
+    pointer-events:none;
+    transition:opacity 0.6s ease;
+  }
+  #status.hidden{ opacity:0; }
+  #status.error{
+    color:var(--magenta);
+    text-shadow:0 0 8px rgba(255,0,229,0.85);
+  }
+</style>
+</head>
+<body>
+
+<video id="webcam" playsinline autoplay muted></video>
+<div id="status">INITIALIZING CAMERA…</div>
+
+<!-- p5.js -->
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+<!-- MediaPipe Hands + camera utility (pinned versions for stability) -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js"></script>
+
+<script>
+/* ============================================================
+   CAT'S CRADLE — NEON HAND LINK
+   Two hands, mirrored on screen, glowing skeletons, and seven
+   elastic neon threads strung between matching fingertips.
+   Cyan = left hand · Magenta = right hand · Yellow = tension.
+   ============================================================ */
+
+// ---------- DOM ----------
+const videoEl  = document.getElementById('webcam');
+const statusEl = document.getElementById('status');
+
+// ---------- MediaPipe state ----------
+let handsModel = null;
+let camera     = null;
+let latestResults = null;
+let firstResultSeen = false;
+
+// ---------- Hand smoothing state ----------
+// Each side holds 21 smoothed {x,y} landmarks, a presence alpha (0..1),
+// and a per-finger "skeleton" so dots/lines fade in/out gracefully.
+const leftHandState  = { alpha: 0, pts: null };
+const rightHandState = { alpha: 0, pts: null };
+const SMOOTHING = 0.4;       // landmark position easing (0..1, higher = snappier)
+const FADE_IN   = 0.15;      // presence fade-in speed
+const FADE_OUT  = 0.08;      // presence fade-out speed
+
+// ---------- Finger layout (MediaPipe Hands 21-point model) ----------
+const FINGER_CHAINS = [
+  [0,1,2,3,4],     // thumb
+  [0,5,6,7,8],     // index
+  [0,9,10,11,12],  // middle
+  [0,13,14,15,16], // ring
+  [0,17,18,19,20]  // pinky
+];
+const FINGERTIPS = [4,8,12,16,20];
+
+// Seven cradle threads: five parallel finger-to-finger + two crossing
+// diagonals (thumb<->pinky) for the classic woven "cat's cradle" look.
+const STRING_PAIRS = [
+  [4,4],[8,8],[12,12],[16,16],[20,20],
+  [4,20],[20,4]
+];
+const stringStates = STRING_PAIRS.map(() => ({ prevDist: null, vibe: 0 }));
+
+// ---------- Color palette ----------
+let palette; // built in setup() once p5 color() is available
+let vignette; // cached radial-gradient overlay graphic
+
+// ============================================================
+// p5 lifecycle
+// ============================================================
+function setup() {
+  pixelDensity(1); // keep 1:1 pixels — smoother real-time performance
+  createCanvas(windowWidth, windowHeight);
+  textFont('Courier New');
+
+  palette = {
+    left:  { joint: color(0, 220, 255),  tip: color(150, 255, 255) },
+    right: { joint: color(255, 0, 220),  tip: color(255, 160, 255) },
+    tensionLow:  color(0, 255, 255),
+    tensionMid:  color(255, 0, 255),
+    tensionHigh: color(255, 225, 30)
+  };
+
+  buildVignette();
+  initHandTracking();
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  buildVignette();
+}
+
+function draw() {
+  background(0);
+  drawMirroredVideoCover();
+  drawDarkAtmosphere();
+  updateHandStates();
+  drawHand(leftHandState,  palette.left);
+  drawHand(rightHandState, palette.right);
+  if (leftHandState.alpha > 0.05 && rightHandState.alpha > 0.05) {
+    drawCradleStrings();
+  }
+  drawIdleHint();
+  drawCornerMark();
+}
+
+// ============================================================
+// Camera + MediaPipe setup
+// ============================================================
+function initHandTracking() {
+  if (typeof Hands === 'undefined' || typeof Camera === 'undefined') {
+    setStatus('HAND-TRACKING LIBRARY FAILED TO LOAD — CHECK CONNECTION', true);
+    return;
+  }
+
+  handsModel = new Hands({
+    locateFile: (file) =>
+      `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/${file}`
+  });
+
+  handsModel.setOptions({
+    maxNumHands: 2,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.7,
+    minTrackingConfidence: 0.6
+  });
+
+  handsModel.onResults((results) => {
+    latestResults = results;
+    if (!firstResultSeen) {
+      firstResultSeen = true;
+      setStatus('', false, true);
+    }
+  });
+
+  camera = new Camera(videoEl, {
+    onFrame: async () => {
+      await handsModel.send({ image: videoEl });
+    },
+    width: 1280,
+    height: 720
+  });
+
+  camera.start().catch((err) => {
+    console.error(err);
+    setStatus('CAMERA ACCESS DENIED — ALLOW CAMERA PERMISSIONS AND RELOAD', true);
+  });
+}
+
+function setStatus(text, isError = false, hide = false) {
+  statusEl.textContent = text;
+  statusEl.classList.toggle('error', isError);
+  statusEl.classList.toggle('hidden', hide);
+}
+
+// ============================================================
+// Video draw (mirrored, "cover" fit, no letterboxing)
+// ============================================================
+function computeCoverRect(srcW, srcH, dstW, dstH) {
+  const srcRatio = srcW / srcH;
+  const dstRatio = dstW / dstH;
+  let sx, sy, sw, sh;
+  if (srcRatio > dstRatio) {
+    sh = srcH; sw = srcH * dstRatio; sy = 0; sx = (srcW - sw) / 2;
+  } else {
+    sw = srcW; sh = srcW / dstRatio; sx = 0; sy = (srcH - sh) / 2;
+  }
+  return { sx, sy, sw, sh };
+}
+
+function drawMirroredVideoCover() {
+  const srcW = videoEl.videoWidth, srcH = videoEl.videoHeight;
+  if (!srcW || !srcH) return;
+  const cover = computeCoverRect(srcW, srcH, width, height);
+  drawingContext.save();
+  drawingContext.translate(width, 0);
+  drawingContext.scale(-1, 1);
+  drawingContext.drawImage(
+    videoEl,
+    cover.sx, cover.sy, cover.sw, cover.sh,
+    0, 0, width, height
+  );
+  drawingContext.restore();
+}
+
+function drawDarkAtmosphere() {
+  noStroke();
+  fill(4, 8, 16, 110); // cool dark tint over the feed
+  rect(0, 0, width, height);
+  if (vignette) image(vignette, 0, 0);
+}
+
+function buildVignette() {
+  vignette = createGraphics(width, height);
+  const ctx = vignette.drawingContext;
+  const grad = ctx.createRadialGradient(
+    width / 2, height / 2, Math.min(width, height) * 0.18,
+    width / 2, height / 2, Math.max(width, height) * 0.72
+  );
+  grad.addColorStop(0, 'rgba(0,0,0,0)');
+  grad.addColorStop(1, 'rgba(0,0,0,0.82)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, width, height);
+}
+
+// ============================================================
+// Landmark mapping + hand-side assignment
+// ============================================================
+function landmarkToScreen(lm, srcW, srcH, cover) {
+  const px = lm.x * srcW, py = lm.y * srcH;
+  const rx = (px - cover.sx) / cover.sw;
+  const ry = (py - cover.sy) / cover.sh;
+  const dx = rx * width, dy = ry * height;
+  return { x: width - dx, y: dy }; // mirrored to match the displayed video
+}
+
+function updateHandStates() {
+  const srcW = videoEl.videoWidth, srcH = videoEl.videoHeight;
+  const lm = (latestResults && latestResults.multiHandLandmarks) || [];
+
+  if (srcW && srcH && lm.length > 0) {
+    const cover = computeCoverRect(srcW, srcH, width, height);
+    const handsScreen = lm.map((landmarks) =>
+      landmarks.map((p) => landmarkToScreen(p, srcW, srcH, cover))
+    );
+    // Sort left-to-right as seen on screen — intuitive, mirror-true mapping.
+    handsScreen.sort((a, b) => a[0].x - b[0].x);
+
+    const leftPts  = handsScreen[0] || null;
+    const rightPts = handsScreen[1] || null;
+
+    leftPts  ? growHand(leftHandState, leftPts)   : shrinkHand(leftHandState);
+    rightPts ? growHand(rightHandState, rightPts) : shrinkHand(rightHandState);
+  } else {
+    shrinkHand(leftHandState);
+    shrinkHand(rightHandState);
+  }
+}
+
+function growHand(state, targetPts) {
+  if (!state.pts) {
+    state.pts = targetPts.map((p) => ({ x: p.x, y: p.y }));
+  } else {
+    for (let i = 0; i < 21; i++) {
+      state.pts[i].x = lerp(state.pts[i].x, targetPts[i].x, SMOOTHING);
+      state.pts[i].y = lerp(state.pts[i].y, targetPts[i].y, SMOOTHING);
+    }
+  }
+  state.alpha = lerp(state.alpha, 1, FADE_IN);
+}
+
+function shrinkHand(state) {
+  state.alpha = lerp(state.alpha, 0, FADE_OUT);
+  if (state.alpha < 0.01) state.alpha = 0;
+}
+
+// ============================================================
+// Drawing: per-hand skeleton + glowing joints
+// ============================================================
+function rgbaStr(c, alphaMul = 1) {
+  return `rgba(${red(c)},${green(c)},${blue(c)},${(alpha(c) / 255) * alphaMul})`;
+}
+
+function drawHand(state, pal) {
+  if (!state.pts || state.alpha < 0.01) return;
+  const a = state.alpha;
+  drawSkeleton(state.pts, pal.joint, a);
+  for (let i = 0; i < 21; i++) {
+    const isTip = FINGERTIPS.includes(i);
+    drawJointGlow(state.pts[i], isTip ? pal.tip : pal.joint, isTip ? 7 : 4.2, a);
+  }
+}
+
+function drawSkeleton(pts, baseColor, a) {
+  drawingContext.save();
+  drawingContext.shadowBlur = 5;
+  drawingContext.shadowColor = rgbaStr(baseColor, 0.5);
+  stroke(red(baseColor), green(baseColor), blue(baseColor), 75 * a);
+  strokeWeight(1.4);
+  noFill();
+  FINGER_CHAINS.forEach((chain) => {
+    beginShape();
+    chain.forEach((idx) => vertex(pts[idx].x, pts[idx].y));
+    endShape();
+  });
+  drawingContext.restore();
+}
+
+function drawJointGlow(p, col, r, a) {
+  drawingContext.save();
+  drawingContext.shadowBlur = 18;
+  drawingContext.shadowColor = rgbaStr(col, 0.9 * a);
+  noStroke();
+  fill(red(col), green(col), blue(col), 205 * a);
+  ellipse(p.x, p.y, r * 2, r * 2);
+  fill(255, 255, 255, 175 * a);
+  ellipse(p.x, p.y, r * 0.85, r * 0.85);
+  drawingContext.restore();
+}
+
+// ============================================================
+// Drawing: elastic cradle strings between fingertips
+// ============================================================
+function drawCradleStrings() {
+  const diag = Math.hypot(width, height);
+  const maxDist = diag * 0.45;
+  const minDist = 50;
+  const alphaMul = Math.min(leftHandState.alpha, rightHandState.alpha);
+  const t = millis() / 1000;
+
+  STRING_PAIRS.forEach((pair, i) => {
+    const p1 = leftHandState.pts[pair[0]];
+    const p2 = rightHandState.pts[pair[1]];
+    const d = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+
+    const st = stringStates[i];
+    if (st.prevDist == null) st.prevDist = d;
+    const delta = Math.abs(d - st.prevDist);
+    st.prevDist = d;
+    const boost = Math.min(delta * 1.8, 22);
+    st.vibe = Math.min(st.vibe * 0.90 + boost * 0.6, 26);
+
+    const tension = constrain(map(d, minDist, maxDist, 0, 1), 0, 1);
+    const col = tension < 0.5
+      ? lerpColor(palette.tensionLow, palette.tensionMid, tension * 2)
+      : lerpColor(palette.tensionMid, palette.tensionHigh, (tension - 0.5) * 2);
+    const thickness = map(tension, 0, 1, 5.5, 1.4);
+    const colA = color(red(col), green(col), blue(col), 235 * alphaMul);
+
+    drawElasticString(p1, p2, colA, thickness, st.vibe, tension, t);
+  });
+}
+
+function drawElasticString(p1, p2, colA, thickness, vibeAmp, tension, time) {
+  const dx = p2.x - p1.x, dy = p2.y - p1.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = -dy / len, ny = dx / len;
+  const segments = 16;
+
+  const pts = [];
+  for (let i = 0; i <= segments; i++) {
+    const u = i / segments;
+    const bx = lerp(p1.x, p2.x, u), by = lerp(p1.y, p2.y, u);
+    const envelope = Math.sin(Math.PI * u); // pinned at both fingertips
+    const wave = Math.sin(u * Math.PI * 7 + time * 9) * vibeAmp * envelope;
+    pts.push({ x: bx + nx * wave, y: by + ny * wave });
+  }
+
+  // outer glow pass
+  drawingContext.save();
+  drawingContext.shadowBlur = 12 + tension * 16;
+  drawingContext.shadowColor = rgbaStr(colA, 0.9);
+  stroke(colA);
+  strokeWeight(thickness);
+  noFill();
+  beginShape();
+  pts.forEach((p) => vertex(p.x, p.y));
+  endShape();
+  drawingContext.restore();
+
+  // bright core pass
+  stroke(255, 255, 255, alpha(colA) * 0.55);
+  strokeWeight(Math.max(thickness * 0.3, 0.6));
+  noFill();
+  beginShape();
+  pts.forEach((p) => vertex(p.x, p.y));
+  endShape();
+}
+
+// ============================================================
+// Idle hint + corner mark
+// ============================================================
+function drawIdleHint() {
+  const bothGone = leftHandState.alpha < 0.05 && rightHandState.alpha < 0.05;
+  if (!bothGone) return;
+  const pulse = 0.6 + 0.4 * Math.sin(millis() / 600);
+  drawingContext.save();
+  drawingContext.shadowBlur = 16;
+  drawingContext.shadowColor = 'rgba(0,229,255,0.85)';
+  noStroke();
+  fill(150, 235, 255, 150 * pulse);
+  textAlign(CENTER, CENTER);
+  textSize(15);
+  text('RAISE BOTH HANDS INTO FRAME TO WEAVE THE CRADLE', width / 2, height - 56);
+  drawingContext.restore();
+}
+
+function drawCornerMark() {
+  noStroke();
+  fill(150, 220, 255, 90);
+  textAlign(RIGHT, BOTTOM);
+  textSize(11);
+  text("CAT'S CRADLE // NEON HAND LINK", width - 18, height - 18);
+}
+</script>
+</body>
+</html>
