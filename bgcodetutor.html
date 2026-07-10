@@ -2,1792 +2,1095 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A0714">
 <title>BG Code Tutor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#F1F3EE;
-    --bg-elev:#FFFFFF;
-    --ink:#15191E;
-    --ink-soft:#57636C;
-    --ink-faint:#8A9298;
-    --accent:#1F8A70;
-    --accent-deep:#0E5A47;
-    --accent-soft:#E3F1EC;
-    --warm:#F2A93B;
-    --warm-deep:#8A5B12;
-    --warm-soft:#FBEDD3;
-    --code-bg:#11151C;
-    --code-text:#E7ECEF;
-    --code-accent:#7FD9C4;
-    --success:#2FBF71;
-    --success-soft:#E5F8EE;
-    --error:#E2574C;
-    --error-soft:#FBE9E7;
-    --border:#DCE2DC;
-    --radius:14px;
-    --radius-sm:8px;
-    --shadow:0 2px 10px rgba(20,25,30,.06);
-    --shadow-lg:0 12px 32px rgba(20,25,30,.14);
-    --font-display:'Space Grotesk',system-ui,sans-serif;
-    --font-body:'Inter',system-ui,sans-serif;
-    --font-mono:'JetBrains Mono',ui-monospace,'Courier New',monospace;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:var(--font-body);
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
-  #app{max-width:720px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
-  button{font-family:inherit;cursor:pointer;}
-  input,textarea{font-family:inherit;}
-  h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.01em;}
-  p{margin:0;line-height:1.5;}
-  a{color:var(--accent-deep);}
-  ::selection{background:var(--warm-soft);}
+/* ============================================================
+   BG CODE TUTOR — Design Tokens
+   ============================================================ */
+:root{
+  --bg0:#0A0714;          /* void */
+  --bg1:#140E24;          /* panel */
+  --bg2:#1D1533;          /* raised */
+  --glass:rgba(255,255,255,.055);
+  --glass-brd:rgba(255,255,255,.09);
+  --violet:#8B5CF6;       /* primary accent */
+  --violet-deep:#6D28D9;
+  --violet-soft:#C4B5FD;
+  --cyan:#22D3EE;         /* code / info */
+  --gold:#FBBF24;         /* coins */
+  --flame:#FB7185;        /* streak / lives */
+  --green:#34D399;        /* success */
+  --red:#F87171;
+  --diamond:#7DD3FC;
+  --text:#EDE9FE;
+  --dim:#8E86A8;
+  --faint:#5A527A;
+  --r-lg:24px; --r-md:18px; --r-sm:12px;
+  --disp:'Unbounded',sans-serif;
+  --ui:'Space Grotesk',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --shadow:0 12px 40px rgba(0,0,0,.45);
+  --glow:0 0 24px rgba(139,92,246,.45);
+}
+[data-theme="cyan"]{--violet:#22D3EE;--violet-deep:#0891B2;--violet-soft:#A5F3FC;--glow:0 0 24px rgba(34,211,238,.4)}
+[data-theme="sunset"]{--violet:#FB923C;--violet-deep:#EA580C;--violet-soft:#FED7AA;--glow:0 0 24px rgba(251,146,60,.4)}
+[data-theme="emerald"]{--violet:#34D399;--violet-deep:#059669;--violet-soft:#A7F3D0;--glow:0 0 24px rgba(52,211,153,.4)}
 
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:#040208;font-family:var(--ui);color:var(--text);
+  display:flex;justify-content:center;align-items:center;overflow:hidden;
+}
+button{font-family:var(--ui);border:none;background:none;color:inherit;cursor:pointer}
+input,textarea{font-family:var(--ui);color:var(--text)}
+::-webkit-scrollbar{width:0;height:0}
 
-  /* ---------- Topbar ---------- */
-  .topbar{
-    position:sticky;top:0;z-index:20;
-    display:flex;align-items:center;gap:10px;
-    padding:14px 20px;background:rgba(241,243,238,.92);backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--border);
-  }
-  .topbar .back{
-    width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
-    background:var(--bg-elev);display:flex;align-items:center;justify-content:center;
-    font-size:16px;flex:none;
-  }
-  .topbar .wordmark{font-family:var(--font-display);font-weight:700;font-size:16px;flex:1;}
-  .topbar .wordmark .dot{color:var(--accent);}
-  .free-badge{
-    font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--accent-deep);
-    background:var(--accent-soft);border-radius:999px;padding:5px 10px;white-space:nowrap;
-  }
-  .icon-btn{
-    width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
-    background:var(--bg-elev);display:flex;align-items:center;justify-content:center;font-size:15px;
-  }
+/* ---------- App frame ---------- */
+#phone{
+  position:relative;width:min(430px,100vw);height:min(932px,100dvh);
+  background:var(--bg0);overflow:hidden;display:flex;flex-direction:column;
+}
+@media(min-width:480px){#phone{border-radius:40px;border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 120px rgba(109,40,217,.25)}}
 
-  /* ---------- Layout ---------- */
-  .screen{padding:20px 20px 48px;flex:1;}
-  .stack{display:flex;flex-direction:column;gap:14px;}
-  .row{display:flex;align-items:center;gap:10px;}
-  .between{justify-content:space-between;}
+#aurora{
+  position:absolute;inset:-20% -20% auto -20%;height:60%;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(38% 45% at 25% 18%, rgba(139,92,246,.34), transparent 70%),
+    radial-gradient(30% 38% at 78% 8%, rgba(34,211,238,.16), transparent 70%),
+    radial-gradient(26% 30% at 55% 40%, rgba(109,40,217,.22), transparent 70%);
+  filter:blur(10px);animation:aurora 14s ease-in-out infinite alternate;
+}
+@keyframes aurora{to{transform:translateX(4%) translateY(3%) scale(1.06)}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+.no-motion *{animation-duration:.001s!important;transition-duration:.001s!important}
 
-  /* ---------- Buttons ---------- */
-  .btn{
-    border:none;border-radius:999px;padding:13px 22px;font-weight:600;font-size:14.5px;
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    transition:transform .12s ease, box-shadow .12s ease;
-  }
-  .btn:active{transform:scale(.97);}
-  .btn-primary{background:var(--ink);color:#fff;}
-  .btn-primary:disabled{background:#C7CCC8;color:#fff;cursor:not-allowed;}
-  .btn-accent{background:var(--accent);color:#fff;}
-  .btn-warm{background:var(--warm);color:#3A2705;}
-  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--border);}
-  .btn-soft{background:var(--bg-elev);color:var(--ink);border:1px solid var(--border);}
-  .btn-danger{background:var(--error-soft);color:var(--error);}
-  .btn-block{width:100%;}
-  .btn-sm{padding:8px 14px;font-size:13px;}
+#view{position:relative;z-index:1;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:20px 18px calc(96px + env(safe-area-inset-bottom))}
+.layer{position:absolute;inset:0;z-index:5;background:var(--bg0);overflow-y:auto;padding:18px 18px 40px;animation:slideUp .28s cubic-bezier(.22,1,.36,1)}
+@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
 
-  /* ---------- Cards ---------- */
-  .card{
-    background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);
-    padding:18px;box-shadow:var(--shadow);
-  }
-  .card-tap{cursor:pointer;transition:transform .12s ease;}
-  .card-tap:active{transform:scale(.985);}
-  .card.locked{opacity:.55;}
+/* ---------- Tab bar ---------- */
+#tabbar{
+  position:absolute;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:4;
+  display:flex;justify-content:space-around;padding:8px 6px;
+  background:rgba(20,14,36,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--glass-brd);border-radius:26px;box-shadow:var(--shadow);
+}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0;border-radius:16px;color:var(--faint);transition:color .2s,transform .15s}
+.tab svg{width:22px;height:22px}
+.tab span{font-size:10px;font-weight:600;letter-spacing:.04em}
+.tab.on{color:var(--violet-soft)}
+.tab.on svg{filter:drop-shadow(0 0 8px var(--violet))}
+.tab:active{transform:scale(.9)}
 
-  /* ---------- Welcome ---------- */
-  .hero-term{
-    background:var(--code-bg);color:var(--code-text);border-radius:var(--radius);
-    padding:18px 18px 20px;font-family:var(--font-mono);font-size:13px;line-height:1.7;
-    box-shadow:var(--shadow-lg);
-  }
-  .term-dots{display:flex;gap:6px;margin-bottom:12px;}
-  .term-dots span{width:9px;height:9px;border-radius:50%;display:inline-block;background:#3a4150;}
-  .term-dots span:nth-child(1){background:#E2574C;}
-  .term-dots span:nth-child(2){background:#F2A93B;}
-  .term-dots span:nth-child(3){background:#2FBF71;}
-  .cursor-blink{display:inline-block;width:7px;height:14px;background:var(--code-accent);margin-left:2px;animation:blink 1s steps(1) infinite;vertical-align:middle;}
-  @keyframes blink{50%{opacity:0;}}
-  .name-input{
-    width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;
-    font-size:16px;background:var(--bg-elev);color:var(--ink);
-  }
-  .name-input:focus{border-color:var(--accent);}
+/* ---------- Shared components ---------- */
+.card{background:var(--glass);border:1px solid var(--glass-brd);border-radius:var(--r-lg);padding:16px;backdrop-filter:blur(8px)}
+.card+.card,.card+.sec-h,.sec-h+.card{margin-top:14px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;margin:22px 2px 12px}
+.sec-h h3{font-size:15px;font-weight:700;letter-spacing:.02em}
+.sec-h button{font-size:12px;color:var(--violet-soft);font-weight:600}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.big-num{font-family:var(--disp);font-weight:700}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:15px;border-radius:18px;font-size:15px;font-weight:700;letter-spacing:.02em;
+  background:linear-gradient(135deg,var(--violet),var(--violet-deep));color:#fff;
+  box-shadow:0 8px 24px rgba(109,40,217,.4);transition:transform .12s,filter .2s;
+}
+.btn:active{transform:scale(.965)}
+.btn.ghost{background:var(--glass);border:1px solid var(--glass-brd);box-shadow:none;color:var(--text)}
+.btn.small{width:auto;padding:9px 16px;font-size:13px;border-radius:13px}
+.btn:disabled{filter:grayscale(.7) brightness(.6);pointer-events:none}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:99px;background:var(--glass);border:1px solid var(--glass-brd);font-size:12.5px;font-weight:700}
+.iconbtn{width:38px;height:38px;border-radius:13px;background:var(--glass);border:1px solid var(--glass-brd);display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .12s}
+.iconbtn:active{transform:scale(.88)}
+.pbar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:width .5s cubic-bezier(.22,1,.36,1)}
 
-  /* ---------- Progress bar ---------- */
-  .progress-track{height:8px;border-radius:999px;background:var(--border);overflow:hidden;}
-  .progress-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .4s ease;}
+/* ---------- Header / stat chips ---------- */
+.stat-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.stat-row .chip{flex-shrink:0}
+.hello h1{font-family:var(--disp);font-size:22px;font-weight:700;line-height:1.15;margin-top:2px}
+.hello{margin-bottom:16px}
 
-  /* ---------- Language grid ---------- */
-  .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .lang-card{padding:16px;}
-  .lang-emoji{font-size:26px;}
-  .soon-tag{
-    font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--ink-faint);
-    background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:2px 6px;
-  }
+/* ---------- Streak / hero cards ---------- */
+.hero-cta{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(139,92,246,.28),rgba(34,211,238,.10)),var(--glass)}
+.hero-cta .glowring{position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.5),transparent 70%);pointer-events:none}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.mini-grid .card{margin:0}
+.stat-cell{text-align:left}
+.stat-cell .big-num{font-size:24px;margin:4px 0 2px}
+.stat-cell .lbl{font-size:11px;color:var(--dim);font-weight:600}
 
-  /* ---------- Streak grid (signature element) ---------- */
-  .streak-card{padding:18px;}
-  .streak-grid{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;margin-top:12px;}
-  .streak-cell{width:100%;aspect-ratio:1;border-radius:3px;background:var(--border);}
-  .streak-legend{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:var(--ink-faint);font-family:var(--font-mono);}
-  .legend-chip{width:9px;height:9px;border-radius:2px;display:inline-block;}
+/* ---------- Course cards ---------- */
+.course-card{display:flex;align-items:center;gap:14px;transition:transform .15s}
+.course-card:active{transform:scale(.98)}
+.course-ico{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0;background:var(--bg2);border:1px solid var(--glass-brd)}
+.course-meta{flex:1;min-width:0}
+.course-meta h4{font-size:15px;font-weight:700}
+.course-meta p{font-size:12px;color:var(--dim);margin:3px 0 7px}
+.course-card.locked{opacity:.45;filter:saturate(.4)}
+.soon-tag{font-size:9px;font-weight:800;letter-spacing:.1em;padding:3px 7px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--dim)}
 
-  /* ---------- Lesson list ---------- */
-  .unit-lesson-row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elev);}
-  .lesson-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex:none;border:2px solid var(--border);color:var(--ink-faint);font-weight:700;}
-  .lesson-dot.done{background:var(--accent);border-color:var(--accent);color:#fff;}
-  .lesson-dot.current{border-color:var(--ink);color:var(--ink);}
-  .unit-lesson-row.locked{opacity:.55;cursor:default;}
+/* ---------- Learning trail (signature) ---------- */
+.trail-wrap{position:relative;margin-top:8px}
+.trail-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.trail-svg path{fill:none;stroke:rgba(139,92,246,.25);stroke-width:4;stroke-dasharray:2 10;stroke-linecap:round}
+.trail-svg path.lit{stroke:var(--violet);stroke-dasharray:none;filter:drop-shadow(0 0 6px rgba(139,92,246,.8));stroke-width:4.5}
+.node-row{position:relative;display:flex;padding:14px 0;z-index:1}
+.node{
+  width:76px;height:76px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--bg2);border:2px solid var(--glass-brd);font-size:26px;position:relative;transition:transform .15s;
+}
+.node:active{transform:scale(.92)}
+.node .st{font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--dim);margin-top:1px}
+.node.done{background:linear-gradient(135deg,var(--violet),var(--violet-deep));border-color:var(--violet-soft);box-shadow:var(--glow)}
+.node.done .st{color:#fff}
+.node.next{border-color:var(--violet);box-shadow:0 0 0 6px rgba(139,92,246,.15),var(--glow);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 5px rgba(139,92,246,.14),var(--glow)}50%{box-shadow:0 0 0 11px rgba(139,92,246,.05),var(--glow)}}
+.node.lock{opacity:.4}
+.unit-h{margin:20px 0 4px;display:flex;align-items:center;gap:10px}
+.unit-h .line{flex:1;height:1px;background:var(--glass-brd)}
+.unit-h span{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--violet-soft)}
 
-  /* ---------- Lesson player ---------- */
-  .lesson-goal{font-size:13px;color:var(--accent-deep);font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-family:var(--font-mono);}
-  .lesson-explain{font-size:15.5px;color:var(--ink);}
-  .example-box{background:var(--code-bg);border-radius:var(--radius-sm);overflow:hidden;}
-  .example-code{color:var(--code-text);font-family:var(--font-mono);font-size:13px;padding:14px;white-space:pre-wrap;margin:0;}
-  .example-out{border-top:1px solid #232a35;padding:10px 14px;font-family:var(--font-mono);font-size:12px;color:var(--code-accent);}
-  .example-out .label{color:#5b6573;text-transform:uppercase;letter-spacing:.05em;font-size:10px;display:block;margin-bottom:3px;}
+/* ---------- Lesson player ---------- */
+.lesson-top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.lesson-top .pbar{flex:1}
+.hearts{display:flex;gap:2px;font-size:14px}
+.ex-label{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);padding:4px 9px;border-radius:8px;margin-bottom:10px}
+.ex-q{font-size:19px;font-weight:700;line-height:1.35;margin-bottom:14px}
+.codeblock{font-family:var(--mono);font-size:13.5px;line-height:1.7;background:#0D0919;border:1px solid var(--glass-brd);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px;overflow-x:auto;white-space:pre}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;background:var(--glass);border:1.5px solid var(--glass-brd);font-size:14.5px;font-weight:600;margin-bottom:10px;transition:all .15s;font-family:var(--ui)}
+.opt code{font-family:var(--mono);font-size:13px}
+.opt:active{transform:scale(.98)}
+.opt.pick{border-color:var(--violet);background:rgba(139,92,246,.14)}
+.opt.right{border-color:var(--green);background:rgba(52,211,153,.14)}
+.opt.wrong{border-color:var(--red);background:rgba(248,113,113,.12);animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.opt .key{width:24px;height:24px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--dim);flex-shrink:0}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 16px}
+.bank .tok{padding:9px 14px;border-radius:12px;background:var(--bg2);border:1.5px solid var(--glass-brd);font-family:var(--mono);font-size:13.5px;font-weight:600;transition:all .15s}
+.tok.used{opacity:.25;pointer-events:none}
+.blank{display:inline-block;min-width:76px;border-bottom:2px solid var(--violet);text-align:center;color:var(--violet-soft);font-family:var(--mono);padding:0 4px}
+.arr-list .tok{display:block;width:100%;text-align:left;margin-bottom:8px}
+.arr-slot{min-height:44px;border:1.5px dashed var(--glass-brd);border-radius:12px;margin-bottom:8px;display:flex;align-items:center;padding:0 14px;font-family:var(--mono);font-size:13.5px;color:var(--violet-soft);background:rgba(139,92,246,.06)}
+.type-in{width:100%;padding:14px 16px;border-radius:16px;background:#0D0919;border:1.5px solid var(--glass-brd);font-family:var(--mono);font-size:14.5px;outline:none}
+.type-in:focus{border-color:var(--violet)}
+.verdict{position:sticky;bottom:0;margin:18px -18px -40px;padding:16px 18px calc(20px + env(safe-area-inset-bottom));border-radius:24px 24px 0 0;animation:slideUp .25s}
+.verdict.ok{background:linear-gradient(180deg,rgba(52,211,153,.16),rgba(52,211,153,.05)) ,var(--bg1);border-top:1px solid rgba(52,211,153,.4)}
+.verdict.no{background:linear-gradient(180deg,rgba(248,113,113,.15),rgba(248,113,113,.05)),var(--bg1);border-top:1px solid rgba(248,113,113,.4)}
+.verdict h4{font-size:16px;font-weight:800;margin-bottom:4px}
+.verdict p{font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px}
+.combo{position:fixed;top:18%;left:50%;transform:translateX(-50%);font-family:var(--disp);font-size:26px;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(251,191,36,.6);animation:comboPop 1s forwards;pointer-events:none;z-index:99}
+@keyframes comboPop{0%{transform:translateX(-50%) scale(.4);opacity:0}25%{transform:translateX(-50%) scale(1.15);opacity:1}70%{opacity:1}100%{transform:translateX(-50%) translateY(-30px) scale(1);opacity:0}}
 
-  .editor-label{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;}
-  .code-editor{
-    width:100%;min-height:140px;background:var(--code-bg);color:var(--code-text);
-    border:none;border-radius:var(--radius-sm);padding:14px;font-family:var(--font-mono);font-size:13.5px;
-    line-height:1.6;resize:vertical;
-  }
-  .code-editor:focus{outline:2px solid var(--accent);}
-  .output-panel{
-    background:#0B0E13;color:var(--code-text);border-radius:var(--radius-sm);
-    font-family:var(--font-mono);font-size:13px;padding:14px;min-height:48px;white-space:pre-wrap;
-    border:1px solid #1d242e;
-  }
-  .output-panel.empty{color:#4b5563;}
-  .output-panel .ok{color:var(--code-accent);}
-  .output-panel .err{color:#ff8a80;}
-  .html-frame{width:100%;min-height:160px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;}
-  .sql-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:12.5px;}
-  .sql-table th,.sql-table td{border:1px solid #232a35;padding:6px 8px;text-align:left;}
-  .sql-table th{color:var(--code-accent);background:#161c25;}
+/* ---------- Complete screen ---------- */
+.done-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;text-align:center;padding:30px 10px}
+.done-wrap .trophy{font-size:64px;animation:trophyIn .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes trophyIn{from{transform:scale(0) rotate(-30deg)}to{transform:scale(1)}}
+.done-wrap h2{font-family:var(--disp);font-size:24px;margin:14px 0 6px}
+.reward-row{display:flex;gap:12px;margin:22px 0 28px}
+.reward{background:var(--glass);border:1px solid var(--glass-brd);border-radius:18px;padding:14px 20px;text-align:center}
+.reward .big-num{font-size:22px}
+.reward .lbl{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--dim);text-transform:uppercase}
 
-  .hint-list{display:flex;flex-direction:column;gap:8px;}
-  .hint-item{background:var(--warm-soft);border:1px solid #f0d8a3;border-radius:var(--radius-sm);padding:10px 12px;font-size:13.5px;color:var(--warm-deep);}
+/* ---------- Playground ---------- */
+.pg-head{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.lang-pick{display:flex;gap:6px}
+.lang-pick .chip.on{background:rgba(139,92,246,.2);border-color:var(--violet);color:var(--violet-soft)}
+.editor-wrap{position:relative;border-radius:var(--r-md);border:1px solid var(--glass-brd);background:#0D0919;overflow:hidden}
+.editor-wrap textarea,.editor-wrap pre{
+  font-family:var(--mono);font-size:13px;line-height:1.65;padding:14px;margin:0;
+  min-height:230px;width:100%;white-space:pre;overflow-wrap:normal;overflow:auto;tab-size:2;
+}
+.editor-wrap pre{position:absolute;inset:0;pointer-events:none;color:#C9C3E4}
+.editor-wrap textarea{position:relative;background:transparent;color:transparent;caret-color:var(--cyan);border:none;outline:none;resize:vertical;z-index:1}
+.tk-kw{color:#C084FC}.tk-str{color:#86EFAC}.tk-num{color:#FBBF24}.tk-fn{color:#67E8F9}.tk-cm{color:#5A527A;font-style:italic}
+.console{font-family:var(--mono);font-size:12.5px;line-height:1.6;background:#07040F;border:1px solid var(--glass-brd);border-radius:var(--r-md);padding:13px 15px;min-height:80px;margin-top:12px;white-space:pre-wrap;color:#B7E6C6}
+.console .err{color:var(--red)}
+.console .dim{color:var(--faint)}
 
-  .feedback-banner{border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;}
-  .feedback-banner.success{background:var(--success-soft);color:var(--accent-deep);}
-  .feedback-banner.error{background:var(--error-soft);color:var(--error);}
+/* ---------- Leaderboard ---------- */
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(255,255,255,.05)}
+.lb-row:last-child{border:none}
+.lb-rank{font-family:var(--disp);font-size:14px;font-weight:700;width:28px;color:var(--dim)}
+.lb-row.me{background:rgba(139,92,246,.12);border-radius:14px;padding:12px 10px;border:1px solid rgba(139,92,246,.3)}
+.avatar{width:40px;height:40px;border-radius:14px;background:var(--bg2);border:1px solid var(--glass-brd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.lb-name{flex:1;font-size:14px;font-weight:700}
+.lb-name small{display:block;font-size:11px;color:var(--dim);font-weight:500}
+.lb-xp{font-size:13px;font-weight:800;color:var(--violet-soft)}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:18px 0 8px}
+.pod{text-align:center;flex:1}
+.pod .avatar{width:56px;height:56px;font-size:28px;margin:0 auto 8px;border-radius:18px}
+.pod .bar{border-radius:14px 14px 0 0;background:linear-gradient(180deg,rgba(139,92,246,.35),rgba(139,92,246,.05));border:1px solid var(--glass-brd);border-bottom:none;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-family:var(--disp);font-weight:700}
+.pod.p1 .avatar{box-shadow:0 0 22px rgba(251,191,36,.5);border-color:var(--gold)}
+.pod .nm{font-size:12px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod .xp{font-size:11px;color:var(--dim);margin-bottom:8px}
 
-  .recap-box{background:var(--accent-soft);border-radius:var(--radius-sm);padding:14px;font-size:14px;color:var(--accent-deep);}
+/* ---------- Heatmap / achievements / profile ---------- */
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.heat i{aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.06)}
+.heat i.h1{background:rgba(139,92,246,.3)}.heat i.h2{background:rgba(139,92,246,.55)}.heat i.h3{background:var(--violet);box-shadow:0 0 6px rgba(139,92,246,.6)}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ach{text-align:center;padding:14px 6px;border-radius:var(--r-md);background:var(--glass);border:1px solid var(--glass-brd)}
+.ach .ico{font-size:26px}
+.ach h5{font-size:11px;font-weight:700;margin-top:6px}
+.ach p{font-size:9.5px;color:var(--dim);margin-top:2px;line-height:1.35}
+.ach.off{opacity:.35;filter:grayscale(1)}
+.prof-head{text-align:center;padding:10px 0 4px}
+.prof-head .avatar{width:84px;height:84px;font-size:42px;margin:0 auto 12px;border-radius:26px;box-shadow:var(--glow);border-color:var(--violet)}
+.prof-head h2{font-family:var(--disp);font-size:20px}
+.prof-head .rank{font-size:12px;color:var(--violet-soft);font-weight:700;margin-top:4px;letter-spacing:.06em}
+.setrow{display:flex;justify-content:space-between;align-items:center;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14px;font-weight:600}
+.setrow:last-child{border:none}
+.switch{width:46px;height:26px;border-radius:99px;background:rgba(255,255,255,.1);position:relative;transition:background .2s}
+.switch.on{background:var(--violet)}
+.switch i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.switch.on i{left:23px}
 
-  /* ---------- Quiz ---------- */
-  .quiz-dots{display:flex;gap:6px;}
-  .quiz-dots span{width:8px;height:8px;border-radius:50%;background:var(--border);}
-  .quiz-dots span.active{background:var(--ink);}
-  .quiz-dots span.answered{background:var(--accent);}
-  .option-btn{
-    display:block;width:100%;text-align:left;padding:14px 16px;border-radius:var(--radius-sm);
-    border:1.5px solid var(--border);background:var(--bg-elev);font-size:14.5px;font-weight:500;
-  }
-  .option-btn.selected{border-color:var(--ink);}
-  .option-btn.correct{border-color:var(--success);background:var(--success-soft);}
-  .option-btn.incorrect{border-color:var(--error);background:var(--error-soft);}
-  .fill-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;font-size:15px;font-family:var(--font-mono);}
+/* ---------- Onboarding ---------- */
+.ob{display:flex;flex-direction:column;min-height:100%;padding:30px 6px 20px}
+.ob .art{font-size:76px;text-align:center;margin:40px 0 26px;filter:drop-shadow(0 0 30px rgba(139,92,246,.5))}
+.ob h1{font-family:var(--disp);font-size:26px;text-align:center;line-height:1.25}
+.ob p{text-align:center;color:var(--dim);font-size:14px;line-height:1.6;margin:12px 0 auto}
+.ob .grad{background:linear-gradient(90deg,var(--violet-soft),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dots{display:flex;gap:6px;justify-content:center;margin:22px 0}
+.dots i{width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.15);transition:all .3s}
+.dots i.on{width:22px;background:var(--violet)}
+.av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.av-grid button{aspect-ratio:1;border-radius:18px;background:var(--glass);border:2px solid var(--glass-brd);font-size:28px;transition:all .15s}
+.av-grid button.on{border-color:var(--violet);background:rgba(139,92,246,.15);box-shadow:var(--glow)}
+.name-in{width:100%;padding:16px;border-radius:18px;background:var(--glass);border:1.5px solid var(--glass-brd);font-size:16px;font-weight:600;outline:none;text-align:center;margin:14px 0}
+.name-in:focus{border-color:var(--violet)}
+.goal-row{display:flex;gap:10px;margin:14px 0}
+.goal-row button{flex:1;padding:14px 6px;border-radius:16px;background:var(--glass);border:2px solid var(--glass-brd);font-weight:700;font-size:13px}
+.goal-row button.on{border-color:var(--violet);background:rgba(139,92,246,.15)}
+.goal-row small{display:block;font-weight:500;color:var(--dim);font-size:10px;margin-top:3px}
 
-  /* ---------- Toast ---------- */
-  #toast{
-    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
-    background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font-size:13.5px;
-    font-weight:500;box-shadow:var(--shadow-lg);opacity:0;transition:all .25s ease;pointer-events:none;
-    z-index:50;max-width:90%;text-align:center;
-  }
-  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* ---------- Modal / toast / confetti ---------- */
+#modal-root:not(:empty){position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.scrim{position:absolute;inset:0;background:rgba(4,2,8,.7);backdrop-filter:blur(4px);animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}}
+.sheet{position:relative;width:min(430px,100vw);max-height:86dvh;overflow-y:auto;background:var(--bg1);border:1px solid var(--glass-brd);border-radius:28px 28px 0 0;padding:22px 20px calc(26px + env(safe-area-inset-bottom));animation:slideUp .3s cubic-bezier(.22,1,.36,1)}
+.sheet .grab{width:40px;height:4px;border-radius:99px;background:rgba(255,255,255,.15);margin:0 auto 18px}
+#toast-root{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:99;display:flex;flex-direction:column;gap:8px;width:min(380px,92vw);pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;background:rgba(29,21,51,.95);border:1px solid var(--glass-brd);border-radius:16px;padding:12px 16px;font-size:13px;font-weight:700;box-shadow:var(--shadow);animation:toastIn .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes toastIn{from{transform:translateY(-20px);opacity:0}}
+.confetti{position:fixed;top:-10px;z-index:98;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
 
-  .badge{font-family:var(--font-mono);font-size:11px;font-weight:600;border-radius:6px;padding:3px 8px;display:inline-block;}
-  .badge-locked{background:var(--bg);color:var(--ink-faint);border:1px solid var(--border);}
+/* ---------- Tutor chat ---------- */
+.chat{display:flex;flex-direction:column;gap:10px;padding-bottom:80px}
+.msg{max-width:85%;padding:12px 15px;border-radius:18px;font-size:13.5px;line-height:1.55;white-space:pre-wrap}
+.msg.me{align-self:flex-end;background:linear-gradient(135deg,var(--violet),var(--violet-deep));border-bottom-right-radius:6px}
+.msg.bot{align-self:flex-start;background:var(--glass);border:1px solid var(--glass-brd);border-bottom-left-radius:6px}
+.msg.bot code{font-family:var(--mono);font-size:12px;color:var(--cyan)}
+.chat-bar{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;gap:8px;z-index:6}
+.chat-bar input{flex:1;padding:13px 16px;border-radius:18px;background:rgba(29,21,51,.95);border:1px solid var(--glass-brd);outline:none;font-size:14px}
+.chat-bar button{width:48px;border-radius:16px;background:linear-gradient(135deg,var(--violet),var(--violet-deep));font-size:18px}
 
-  .empty-state{text-align:center;padding:30px 10px;color:var(--ink-soft);font-size:14px;}
-
-  /* ---------- Loading ---------- */
-  .loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:14px;}
-  .spinner{width:28px;height:28px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--accent);animation:spin .8s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-
-  @media (min-width:560px){
-    .lesson-grid-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
-  }
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none !important;transition:none !important;}
-  }
+/* ---------- Misc ---------- */
+.back{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--dim);margin-bottom:14px}
+.week-chart{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:10px}
+.week-chart .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.week-chart .bar{width:100%;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--violet),rgba(139,92,246,.15));min-height:4px;transition:height .5s}
+.week-chart .b.today .bar{background:linear-gradient(180deg,var(--cyan),rgba(34,211,238,.2))}
+.week-chart small{font-size:9px;color:var(--faint);font-weight:700}
+.cert-canvas{width:100%;border-radius:14px;border:1px solid var(--glass-brd)}
+.empty{padding:26px 10px;text-align:center;color:var(--dim);font-size:13px;line-height:1.6}
+.empty .ico{font-size:36px;display:block;margin-bottom:8px}
 </style>
 </head>
 <body>
-<div id="app"></div>
-<div id="toast"></div>
-
+<div id="phone">
+  <div id="aurora"></div>
+  <main id="view"></main>
+  <nav id="tabbar" hidden></nav>
+</div>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
 <script>
-/* =========================================================
-   BG CODE TUTOR — single-file prototype
-   Storage: window.storage (artifact-persistent, personal/private)
-   ========================================================= */
+'use strict';
+/* ================= CORE: utils / store / audio / haptics ================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const todayKey=()=>new Date().toISOString().slice(0,10);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
-/* ---------------- Utilities ---------------- */
-function escapeHtml(str){
-  return String(str)
-    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
-    .replaceAll('"','&quot;').replaceAll("'",'&#39;');
-}
-function uidFromDate(){ return new Date().toISOString().slice(0,10); }
-function showToast(msg, ms=2400){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(()=> t.classList.remove('show'), ms);
-}
+const Store={
+  KEY:'bgct2',
+  d:null,
+  def(){return{
+    profile:null, xp:0, coins:120, diamonds:2, lives:5, lastLifeTs:Date.now(),
+    streak:0, lastActive:null, lastChest:null,
+    prog:{},               // courseId -> array of completed lesson ids
+    days:{},               // date -> xp earned
+    ach:[],                // unlocked achievement ids
+    certs:[],              // completed course ids
+    themes:['violet'], theme:'violet',
+    sound:true, haptics:true, motion:true,
+    stats:{answers:0,correct:0,lessons:0,perfect:0,challenges:0},
+    tutor:[],
+  }},
+  load(){try{this.d={...this.def(),...JSON.parse(localStorage.getItem(this.KEY)||'{}')}}catch(e){this.d=this.def()} return this.d},
+  save(){localStorage.setItem(this.KEY,JSON.stringify(this.d))},
+  reset(){localStorage.removeItem(this.KEY);location.reload()},
+};
+let S=Store.load();
 
-/* ---------------- SQL demo dataset ---------------- */
-const SONGS_TABLE = [
-  {id:1, title:'Loop De Loop',      artist:'The Iterators', genre:'electronic', year:2019, plays:154},
-  {id:2, title:'Recursive Love',    artist:'Call Stack',    genre:'pop',        year:2021, plays:320},
-  {id:3, title:'Boolean Heart',     artist:'True Colors',   genre:'pop',        year:2018, plays:210},
-  {id:4, title:'Stack Overflow',    artist:'The Iterators', genre:'rock',       year:2022, plays:410},
-  {id:5, title:'Null Pointer Blues',artist:'Deep Debug',    genre:'jazz',       year:2017, plays:95},
-  {id:6, title:'Array of Sunshine', artist:'True Colors',   genre:'pop',        year:2020, plays:275},
-  {id:7, title:'Binary Sunset',     artist:'Deep Debug',    genre:'electronic', year:2023, plays:500},
-  {id:8, title:'Hash It Out',       artist:'Call Stack',    genre:'hiphop',     year:2022, plays:188},
-];
+const Haptic={tap(){if(S.haptics&&navigator.vibrate)navigator.vibrate(8)},ok(){if(S.haptics&&navigator.vibrate)navigator.vibrate([12,40,12])},no(){if(S.haptics&&navigator.vibrate)navigator.vibrate([50,30,50])},win(){if(S.haptics&&navigator.vibrate)navigator.vibrate([15,30,15,30,40])}};
 
-/* ---------------- Code execution engines ---------------- */
-
-// JavaScript: real execution in a sandboxed Function, console.log captured.
-function runJS(code){
-  const logs = [];
-  const fakeConsole = {
-    log:(...args)=> logs.push(args.map(a=> typeof a==='object'? JSON.stringify(a) : String(a)).join(' ')),
+const Sfx=(()=>{let ctx;const ac=()=>ctx||(ctx=new (window.AudioContext||window.webkitAudioContext)());
+  function tone(f,t,dur,type='sine',vol=.15){if(!S.sound)return;try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,c.currentTime+t);g.gain.setValueAtTime(vol,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+dur);o.connect(g).connect(c.destination);o.start(c.currentTime+t);o.stop(c.currentTime+t+dur)}catch(e){}}
+  return{
+    tap(){tone(660,0,.06,'sine',.08)},
+    ok(){tone(523,0,.1);tone(784,.08,.14)},
+    no(){tone(220,0,.18,'square',.09)},
+    coin(){tone(988,0,.07,'triangle');tone(1319,.06,.12,'triangle')},
+    win(){[523,659,784,1047].forEach((f,i)=>tone(f,i*.11,.22,'triangle',.14))},
+    chest(){[392,523,659,784,1047].forEach((f,i)=>tone(f,i*.07,.15,'sine',.12))},
   };
-  try{
-    const fn = new Function('console', code);
-    fn(fakeConsole);
-    return {ok:true, output: logs.join('\n')};
-  }catch(e){
-    return {ok:false, error: e.message, output: logs.join('\n')};
-  }
-}
+})();
 
-// Python-lite: tiny interpreter for the beginner subset used in lessons
-// (assignment, +-*/, string/number literals, f-strings, print()).
-function pyTokenize(s){
-  const tokens=[]; let i=0;
-  while(i<s.length){
-    const c=s[i];
-    if(/\s/.test(c)){ i++; continue; }
-    if(c==='"'||c==="'"){
-      const quote=c; let j=i+1, str='';
-      while(j<s.length && s[j]!==quote){ str+=s[j]; j++; }
-      tokens.push({type:'str', value:str}); i=j+1; continue;
-    }
-    if(/[0-9]/.test(c)){
-      let j=i, num='';
-      while(j<s.length && /[0-9.]/.test(s[j])){ num+=s[j]; j++; }
-      tokens.push({type:'num', value:parseFloat(num)}); i=j; continue;
-    }
-    if(/[+\-*/]/.test(c)){ tokens.push({type:'op', value:c}); i++; continue; }
-    if(/[a-zA-Z_]/.test(c)){
-      let j=i, id='';
-      while(j<s.length && /[a-zA-Z0-9_]/.test(s[j])){ id+=s[j]; j++; }
-      if(id==='f' && (s[j]==='"'||s[j]==="'")){
-        const quote=s[j]; let k=j+1, str='';
-        while(k<s.length && s[k]!==quote){ str+=s[k]; k++; }
-        tokens.push({type:'fstr', value:str}); i=k+1; continue;
-      }
-      tokens.push({type:'id', value:id}); i=j; continue;
-    }
-    i++; // skip unknown char
-  }
-  return tokens;
-}
-function pyResolve(tok, vars){
-  if(!tok) return '';
-  if(tok.type==='str') return tok.value;
-  if(tok.type==='num') return tok.value;
-  if(tok.type==='id'){
-    if(!(tok.value in vars)) throw new Error(`name '${tok.value}' is not defined`);
-    return vars[tok.value];
-  }
-  if(tok.type==='fstr'){
-    return tok.value.replace(/\{([^}]+)\}/g, (m,name)=>{
-      const t = pyTokenize(name.trim())[0];
-      return String(pyResolve(t, vars));
-    });
-  }
-  return '';
-}
-function pyEvalTokens(tokens, vars){
-  if(tokens.length===0) return '';
-  let result = pyResolve(tokens[0], vars);
-  let i=1;
-  while(i<tokens.length-1 || (i<tokens.length && tokens[i].type==='op')){
-    const op = tokens[i] && tokens[i].value;
-    const rhs = pyResolve(tokens[i+1], vars);
-    if(op==='+'){
-      if(typeof result==='number' && typeof rhs==='number') result = result+rhs;
-      else result = String(result)+String(rhs);
-    } else if(op==='-'){ result = Number(result)-Number(rhs); }
-    else if(op==='*'){ result = Number(result)*Number(rhs); }
-    else if(op==='/'){ result = Number(result)/Number(rhs); }
-    else break;
-    i+=2;
-  }
-  return result;
-}
-function pySplitTopCommas(s){
-  const parts=[]; let cur=''; let inQuote=null;
-  for(const ch of s){
-    if(inQuote){ cur+=ch; if(ch===inQuote) inQuote=null; continue; }
-    if(ch==='"'||ch==="'"){ inQuote=ch; cur+=ch; continue; }
-    if(ch===','){ parts.push(cur); cur=''; continue; }
-    cur+=ch;
-  }
-  if(cur.trim()!=='') parts.push(cur);
-  return parts;
-}
-function runPythonLite(code){
-  const vars = {}; const logs = [];
-  try{
-    const lines = code.split('\n');
-    for(const raw of lines){
-      const line = raw.trim();
-      if(!line || line.startsWith('#')) continue;
-      const printMatch = line.match(/^print\((.*)\)$/);
-      if(printMatch){
-        const parts = pySplitTopCommas(printMatch[1]);
-        const outs = parts.map(p=> pyEvalTokens(pyTokenize(p), vars));
-        logs.push(outs.map(String).join(' '));
-        continue;
-      }
-      const assignMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.+)$/);
-      if(assignMatch){
-        vars[assignMatch[1]] = pyEvalTokens(pyTokenize(assignMatch[2]), vars);
-        continue;
-      }
-      throw new Error('This mini-Python runner only understands variable assignments and print(). Try simplifying that line.');
-    }
-    return {ok:true, output: logs.join('\n'), vars};
-  }catch(e){
-    return {ok:false, error: e.message, output: logs.join('\n')};
-  }
-}
+function toast(ico,msg){const t=document.createElement('div');t.className='toast';t.innerHTML=`<span>${ico}</span><span>${esc(msg)}</span>`;$('#toast-root').appendChild(t);setTimeout(()=>{t.style.opacity=0;t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2600)}
+function confetti(n=60){if(!S.motion)return;const cs=['#8B5CF6','#22D3EE','#FBBF24','#34D399','#FB7185'];for(let i=0;i<n;i++){const e=document.createElement('i');e.className='confetti';e.style.cssText=`left:${Math.random()*100}vw;width:${6+Math.random()*6}px;height:${8+Math.random()*8}px;background:${cs[i%5]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.4}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),3600)}}
+function sheet(html,onMount){const r=$('#modal-root');r.innerHTML=`<div class="scrim"></div><div class="sheet"><div class="grab"></div>${html}</div>`;r.querySelector('.scrim').onclick=closeSheet;if(onMount)onMount(r.querySelector('.sheet'))}
+function closeSheet(){$('#modal-root').innerHTML=''}
 
-// SQL-lite: minimal SELECT engine over the in-memory songs table.
-function runSQLLite(query, table){
-  try{
-    const q = query.trim().replace(/;\s*$/,'');
-    const m = q.match(/^SELECT\s+(.+?)\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+?))?(?:\s+ORDER BY\s+(.+?))?(?:\s+LIMIT\s+(\d+))?$/is);
-    if(!m) throw new Error('Could not parse that. Check the SELECT ... FROM ... shape of your query.');
-    let [, colsRaw, tableName, whereRaw, orderRaw, limitRaw] = m;
-    if(tableName.toLowerCase()!=='songs') throw new Error(`Unknown table "${tableName}". This database only has "songs".`);
-    let rows = table.slice();
-    if(whereRaw){
-      const conds = whereRaw.split(/\s+AND\s+/i).map(c=>{
-        const cm = c.match(/^(\w+)\s*(=|!=|>=|<=|>|<)\s*(.+)$/);
-        if(!cm) throw new Error('Could not parse the WHERE clause.');
-        let [, col, op, valRaw] = cm;
-        valRaw = valRaw.trim();
-        let val;
-        if(/^'.*'$/.test(valRaw) || /^".*"$/.test(valRaw)) val = valRaw.slice(1,-1);
-        else val = parseFloat(valRaw);
-        return {col, op, val};
-      });
-      rows = rows.filter(r=> conds.every(c=>{
-        const rv = r[c.col];
-        if(rv===undefined) throw new Error(`Unknown column "${c.col}".`);
-        switch(c.op){
-          case '=': return rv==c.val;
-          case '!=': return rv!=c.val;
-          case '>': return rv>c.val;
-          case '<': return rv<c.val;
-          case '>=': return rv>=c.val;
-          case '<=': return rv<=c.val;
-        }
-      }));
-    }
-    if(orderRaw){
-      const om = orderRaw.match(/^(\w+)\s*(ASC|DESC)?$/i);
-      if(!om) throw new Error('Could not parse the ORDER BY clause.');
-      const [, col, dir] = om;
-      const d = (dir||'ASC').toUpperCase();
-      rows = rows.slice().sort((a,b)=> a[col]>b[col]?1:a[col]<b[col]?-1:0);
-      if(d==='DESC') rows.reverse();
-    }
-    if(limitRaw) rows = rows.slice(0, parseInt(limitRaw,10));
-    let cols;
-    if(colsRaw.trim()==='*') cols = Object.keys(table[0]);
-    else cols = colsRaw.split(',').map(c=>c.trim());
-    const result = rows.map(r=>{
-      const o={}; cols.forEach(c=> o[c]=r[c]); return o;
-    });
-    return {ok:true, rows:result, columns:cols};
-  }catch(e){
-    return {ok:false, error:e.message};
-  }
-}
-
-/* ---------------- Curriculum data ---------------- */
-const LANGUAGES = [
-  {
-    id:'python', name:'Python', emoji:'🐍', engine:'python',
-    levels:{
-      beginner:{
-        units:[{
-          id:'py-u1', title:'Python Basics',
-          lessons:[
-            {
-              id:'py-l1', title:'Say hello with print()',
-              goal:'Use print() to display a message',
-              explanation:'print() shows whatever text you put inside the parentheses, as long as it is wrapped in quotes.',
-              example:{code:'print("Hi there!")', output:'Hi there!'},
-              starterCode:'print("Hello, world!")',
-              task:'Change the message so it greets the world from BG Code Tutor.',
-              hints:[
-                'print() displays whatever is inside its parentheses.',
-                'Text must be wrapped in quotes, like "this".',
-                'Try: print("Hello from BG Code Tutor!")'
-              ],
-              recap:'print() is how Python shows output to the screen — you will use it constantly.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/print\(/.test(code)) return {success:false, message:'Use print() somewhere in your code.'};
-                if(!/hello/i.test(run.output)) return {success:false, message:'Your message should say hello to someone.'};
-                return {success:true, message:'Nicely printed!'};
-              }
-            },
-            {
-              id:'py-l2', title:'Store data in a variable',
-              goal:'Create a variable and print its value',
-              explanation:'A variable stores a value using =. You can print it later just by using its name (no quotes needed).',
-              example:{code:'name = "Ada"\nprint(name)', output:'Ada'},
-              starterCode:'name = "Ada"\nprint(name)',
-              task:'Change the value stored in name, then print it.',
-              hints:[
-                'The = sign assigns a value to a variable.',
-                'When printing a variable, do not put it in quotes — print(name), not print("name").',
-                'Try: name = "Grace"\\nprint(name)'
-              ],
-              recap:'Variables let you store a value once and reuse it anywhere in your code.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/=/.test(code) || !/print\(/.test(code)) return {success:false, message:'Create a variable with = and print it.'};
-                if(!run.output.trim()) return {success:false, message:'Your code ran but printed nothing.'};
-                return {success:true, message:'That variable is doing its job!'};
-              }
-            },
-            {
-              id:'py-l3', title:'Combine text with +',
-              goal:'Join two strings together',
-              explanation:'You can stick strings together with +. Add a space " " between words so they do not run together.',
-              example:{code:'a = "Code"\nb = "Tutor"\nprint(a + " " + b)', output:'Code Tutor'},
-              starterCode:'first = "Code"\nsecond = "Tutor"\nprint(first + second)',
-              task:'Add a space between the two words so it reads naturally.',
-              hints:[
-                'Use + to join strings end-to-end.',
-                'Join in a space too: first + " " + second.',
-                'Try: print(first + " " + second)'
-              ],
-              recap:'+ joins strings together exactly as written — Python will not add spaces for you.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/\+/.test(code)) return {success:false, message:'Use + to join the two strings.'};
-                if(!/\s/.test(run.output.trim())) return {success:false, message:'There should be a space between the two joined words.'};
-                return {success:true, message:'Joined perfectly, with room to breathe.'};
-              }
-            },
-            {
-              id:'py-l4', title:'Do math with numbers',
-              goal:'Use +, -, *, / on numbers',
-              explanation:'Numbers do not need quotes. You can add, subtract, multiply or divide them directly.',
-              example:{code:'a = 3\nb = 4\nprint(a + b)', output:'7'},
-              starterCode:'apples = 3\noranges = 4\ntotal = apples + oranges\nprint(total)',
-              task:'Change the numbers and confirm the total updates correctly.',
-              hints:[
-                'Numbers are written without quotes.',
-                'total = apples + oranges adds the two values.',
-                'Make sure you print(total) at the end.'
-              ],
-              recap:'Python treats numbers as numbers — no quotes — so it can do real arithmetic on them.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/^-?\d+(\.\d+)?$/.test(run.output.trim())) return {success:false, message:'Your output should be a single number.'};
-                return {success:true, message:'The math checks out.'};
-              }
-            },
-            {
-              id:'py-l5', title:'Mix text and numbers with f-strings',
-              goal:'Build a sentence with an f-string',
-              explanation:'An f-string lets you drop a variable straight into a sentence using {curly braces}. Start the string with f.',
-              example:{code:'streak = 5\nprint(f"You\'re on a {streak}-day streak!")', output:"You're on a 5-day streak!"},
-              starterCode:'streak = 5\nprint(f"You are on a {streak}-day streak!")',
-              task:'Change the streak number and watch the sentence update.',
-              hints:[
-                'f-strings start with f right before the quote: f"...".',
-                'Put any variable inside curly braces: {streak}.',
-                'Try changing streak to a different number, like 12.'
-              ],
-              recap:'f-strings are the cleanest way to weave variables into readable sentences.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/f["\']/.test(code)) return {success:false, message:'Use an f-string (starts with f").'};
-                if(!/\d/.test(run.output)) return {success:false, message:'Your sentence should include a number.'};
-                return {success:true, message:'That reads beautifully.'};
-              }
-            },
-          ],
-          quiz:{
-            id:'py-u1-quiz', title:'Python Basics Quiz',
-            questions:[
-              {type:'mcq', prompt:'Which keyword displays text on the screen in Python?', options:['print','echo','show','write'], correctIndex:0},
-              {type:'fill', prompt:'Fill in the missing symbol: first __ second joins two strings together.', accept:['+']},
-              {type:'code', prompt:'Write code that prints the sum of 6 and 9.', engine:'python', starterCode:'# write your code here\n',
-                validate:(code, run)=>{
-                  if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                  return {success: run.output.trim()==='15', message: run.output.trim()==='15' ? 'Correct!' : 'Expected output: 15'};
-                }}
-            ]
-          }
-        }],
-        moreComing:5
-      }
-    }
-  },
-  {
-    id:'javascript', name:'JavaScript', emoji:'⚡', engine:'js',
-    levels:{
-      beginner:{
-        units:[{
-          id:'js-u1', title:'JS Foundations',
-          lessons:[
-            {
-              id:'js-l1', title:'Print to the console',
-              goal:'Use console.log() to show output',
-              explanation:'console.log() prints whatever you give it. Text needs quotes.',
-              example:{code:'console.log("Hi there!");', output:'Hi there!'},
-              starterCode:'console.log("Hello, world!");',
-              task:'Change the message to greet BG Code Tutor.',
-              hints:[
-                'console.log() prints its argument.',
-                'Text goes inside quotes.',
-                'Try: console.log("Hello from BG Code Tutor!");'
-              ],
-              recap:'console.log() is your main window into what your JavaScript code is doing.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/console\.log/.test(code)) return {success:false, message:'Use console.log() in your code.'};
-                if(!/hello/i.test(run.output)) return {success:false, message:'Your message should say hello to someone.'};
-                return {success:true, message:'Logged like a pro!'};
-              }
-            },
-            {
-              id:'js-l2', title:'Declare a variable with let',
-              goal:'Store and print a value',
-              explanation:'let creates a variable you can change later. Use it to store a value, then log it.',
-              example:{code:'let city = "Delhi";\nconsole.log(city);', output:'Delhi'},
-              starterCode:'let city = "Delhi";\nconsole.log(city);',
-              task:'Change the city and confirm the output updates.',
-              hints:[
-                'let name = value; creates a variable.',
-                'console.log(city) prints the variable\'s current value.',
-                'Do not wrap the variable name in quotes when logging it.'
-              ],
-              recap:'let is the standard way to declare a variable that may change later.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/let\s+\w+/.test(code)) return {success:false, message:'Declare a variable using let.'};
-                if(!run.output.trim()) return {success:false, message:'Your code ran but printed nothing.'};
-                return {success:true, message:'Variable declared and delivered.'};
-              }
-            },
-            {
-              id:'js-l3', title:'Combine strings with +',
-              goal:'Join two strings together',
-              explanation:'+ joins strings end-to-end. Add a space " " so words do not collide.',
-              example:{code:'console.log("Code" + " " + "Tutor");', output:'Code Tutor'},
-              starterCode:'let first = "Code";\nlet second = "Tutor";\nconsole.log(first + second);',
-              task:'Add a space between the two joined words.',
-              hints:[
-                '+ concatenates strings in JavaScript.',
-                'Join in a space too: first + " " + second.',
-                'Try: console.log(first + " " + second);'
-              ],
-              recap:'+ in JavaScript concatenates strings exactly as written.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/\+/.test(code)) return {success:false, message:'Use + to join the strings.'};
-                if(!/\s/.test(run.output.trim())) return {success:false, message:'There should be a space between the joined words.'};
-                return {success:true, message:'Joined cleanly.'};
-              }
-            },
-            {
-              id:'js-l4', title:'Do math with numbers',
-              goal:'Use +, -, *, / on numbers',
-              explanation:'JavaScript numbers do not need quotes, so you can do arithmetic directly.',
-              example:{code:'console.log(3 + 4);', output:'7'},
-              starterCode:'let price = 250;\nlet discount = 50;\nlet total = price - discount;\nconsole.log(total);',
-              task:'Change the numbers and confirm the total updates.',
-              hints:[
-                'Numbers are written without quotes.',
-                'total = price - discount subtracts the two values.',
-                'Make sure you console.log(total) at the end.'
-              ],
-              recap:'JavaScript handles arithmetic the way you would expect from a calculator.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/^-?\d+(\.\d+)?$/.test(run.output.trim())) return {success:false, message:'Your output should be a single number.'};
-                return {success:true, message:'The numbers add up.'};
-              }
-            },
-            {
-              id:'js-l5', title:'Make decisions with if / else',
-              goal:'Print different messages based on a condition',
-              explanation:'if (condition) { ... } else { ... } runs one block or the other, depending on whether the condition is true.',
-              example:{code:'let hour = 20;\nif (hour < 12) {\n  console.log("Good morning!");\n} else {\n  console.log("Good evening!");\n}', output:'Good evening!'},
-              starterCode:'let hour = 9;\nif (hour < 12) {\n  console.log("Good morning!");\n} else {\n  console.log("Good day!");\n}',
-              task:'Change the hour and check that the right message prints both above and below 12.',
-              hints:[
-                'if checks a condition; else runs when that condition is false.',
-                'Try setting hour above and below 12 to see both branches.',
-                'Make sure both branches use console.log().'
-              ],
-              recap:'if / else is how your program chooses between two paths.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                if(!/\bif\s*\(/.test(code) || !/\belse\b/.test(code)) return {success:false, message:'Use both if and else.'};
-                if(!/(good morning|good day|good evening)/i.test(run.output)) return {success:false, message:'Your branches should print a greeting message.'};
-                return {success:true, message:'Good call — literally.'};
-              }
-            },
-          ],
-          quiz:{
-            id:'js-u1-quiz', title:'JS Foundations Quiz',
-            questions:[
-              {type:'mcq', prompt:'Which keyword declares a variable that can change later?', options:['let','print','def','class'], correctIndex:0},
-              {type:'fill', prompt:'Fill in the missing operator: 7 __ 8 adds two numbers.', accept:['+']},
-              {type:'code', prompt:'Write code that logs the sum of 7 and 8.', engine:'js', starterCode:'// write your code here\n',
-                validate:(code, run)=>{
-                  if(!run.ok) return {success:false, message:'Your code has an error: '+run.error};
-                  return {success: run.output.trim()==='15', message: run.output.trim()==='15' ? 'Correct!' : 'Expected output: 15'};
-                }}
-            ]
-          }
-        }],
-        moreComing:5
-      }
-    }
-  },
-  {
-    id:'webdev', name:'HTML & CSS', emoji:'🌐', engine:'html',
-    levels:{
-      beginner:{
-        units:[{
-          id:'web-u1', title:'Build Your First Page',
-          lessons:[
-            {
-              id:'web-l1', title:'Structure a page with HTML',
-              goal:'Use heading and paragraph tags',
-              explanation:'<h1> makes a big heading. <p> makes a paragraph of text. Tags usually come in opening/closing pairs.',
-              example:{code:'<h1>Hello</h1>\n<p>This is a paragraph.</p>', output:'(renders a heading and a paragraph)'},
-              starterCode:'<h1>My First Page</h1>\n<p>Welcome to BG Code Tutor.</p>',
-              task:'Add a second paragraph below the first one.',
-              hints:[
-                'Wrap paragraph text in <p> and </p>.',
-                'You can add as many <p> tags as you like.',
-                'Try adding: <p>I am learning to code!</p>'
-              ],
-              recap:'HTML tags describe the structure of a page — headings, paragraphs, and more.',
-              validate:(code)=>{
-                const pCount = (code.match(/<p[\s>]/gi)||[]).length;
-                const hasH1 = /<h1[\s>]/i.test(code);
-                if(!hasH1) return {success:false, message:'Keep the <h1> heading.'};
-                if(pCount<2) return {success:false, message:'Add a second <p> paragraph.'};
-                return {success:true, message:'Page structure looking solid.'};
-              }
-            },
-            {
-              id:'web-l2', title:'Add links and images',
-              goal:'Use <a> and <img> tags',
-              explanation:'<a href="...">text</a> creates a clickable link. <img src="..."> embeds an image (no closing tag needed).',
-              example:{code:'<a href="#">Click me</a>', output:'(renders a link)'},
-              starterCode:'<p>Check out our course catalog:</p>\n<a href="#">View courses</a>',
-              task:'Add an <img> tag below the link (any src is fine — it is just practice).',
-              hints:[
-                '<img> tags do not need a closing tag.',
-                'Give it a src attribute, like src="logo.png".',
-                'Try: <img src="logo.png" alt="logo">'
-              ],
-              recap:'Links and images are what make the web feel like the web.',
-              validate:(code)=>{
-                if(!/<a\s+[^>]*href/i.test(code)) return {success:false, message:'Keep an <a href="..."> link in your code.'};
-                if(!/<img\s+[^>]*src/i.test(code)) return {success:false, message:'Add an <img src="..."> tag.'};
-                return {success:true, message:'Now your page can link out and show pictures.'};
-              }
-            },
-            {
-              id:'web-l3', title:'Style text with CSS',
-              goal:'Use a <style> block to change color',
-              explanation:'A <style> block lets you write CSS rules. color: teal; changes text color.',
-              example:{code:'<style>h1 { color: teal; }</style>\n<h1>Styled!</h1>', output:'(renders a teal heading)'},
-              starterCode:'<style>\n  h1 { color: teal; }\n</style>\n<h1>Styled Heading</h1>',
-              task:'Change the heading color to something else, like "crimson" or "#1F8A70".',
-              hints:[
-                'CSS rules go inside <style>...</style>.',
-                'The property for text color is color: value;.',
-                'Try color: crimson; or any valid color name.'
-              ],
-              recap:'CSS controls how your HTML looks — color is one of dozens of properties you can set.',
-              validate:(code)=>{
-                if(!/<style/i.test(code)) return {success:false, message:'Keep the <style> block.'};
-                if(!/color\s*:/i.test(code)) return {success:false, message:'Set a color: value; rule on the heading.'};
-                if(!/<h1/i.test(code)) return {success:false, message:'Keep the <h1> heading to style.'};
-                return {success:true, message:'Looking sharp.'};
-              }
-            },
-            {
-              id:'web-l4', title:'Space things out with padding & margin',
-              goal:'Control spacing with the box model',
-              explanation:'padding adds space inside an element. margin adds space outside it. Both can be set in pixels.',
-              example:{code:'<style>div { padding: 16px; margin: 12px; background: #eee; }</style>\n<div>Boxed in</div>', output:'(renders a spaced box)'},
-              starterCode:'<style>\n  .card { padding: 10px; margin: 10px; background: #eee; }\n</style>\n<div class="card">Hello box</div>',
-              task:'Increase the padding and margin so the box has noticeably more breathing room.',
-              hints:[
-                'padding is space inside the border; margin is space outside it.',
-                'Both accept pixel values, like 24px.',
-                'Try padding: 24px; margin: 20px;'
-              ],
-              recap:'padding and margin are the two core tools for spacing in CSS.',
-              validate:(code)=>{
-                if(!/padding\s*:/i.test(code) || !/margin\s*:/i.test(code)) return {success:false, message:'Set both padding and margin.'};
-                return {success:true, message:'That box has room to breathe now.'};
-              }
-            },
-            {
-              id:'web-l5', title:'Center content with flexbox',
-              goal:'Use display: flex to center an element',
-              explanation:'display: flex turns on flexbox layout. justify-content: center and align-items: center center children horizontally and vertically.',
-              example:{code:'<style>.wrap{display:flex;justify-content:center;}</style>\n<div class="wrap"><p>Centered</p></div>', output:'(renders centered text)'},
-              starterCode:'<style>\n  .wrap { display: block; height: 120px; background: #eee; }\n</style>\n<div class="wrap"><p>Center me</p></div>',
-              task:'Change display: block to display: flex, then add justify-content: center.',
-              hints:[
-                'display: flex turns an element into a flex container.',
-                'justify-content: center centers children horizontally.',
-                'You can also add align-items: center to center vertically.'
-              ],
-              recap:'Flexbox is the modern, reliable way to center and align content.',
-              validate:(code)=>{
-                if(!/display\s*:\s*flex/i.test(code)) return {success:false, message:'Set display: flex; on the wrapper.'};
-                if(!/justify-content\s*:\s*center/i.test(code)) return {success:false, message:'Add justify-content: center;.'};
-                return {success:true, message:'Perfectly centered.'};
-              }
-            },
-          ],
-          quiz:{
-            id:'web-u1-quiz', title:'HTML & CSS Quiz',
-            questions:[
-              {type:'mcq', prompt:'Which tag makes the largest heading?', options:['<h1>','<p>','<big>','<head>'], correctIndex:0},
-              {type:'fill', prompt:'Fill in the missing attribute: <img __="logo.png"> sets the image source.', accept:['src']},
-              {type:'code', prompt:'Write an <h1> tag containing the text "Hi".', engine:'html', starterCode:'<!-- write your code here -->\n',
-                validate:(code)=>{
-                  const ok = /<h1[^>]*>\s*Hi\s*<\/h1>/i.test(code);
-                  return {success: ok, message: ok ? 'Correct!' : 'Expected something like <h1>Hi</h1>'};
-                }}
-            ]
-          }
-        }],
-        moreComing:5
-      }
-    }
-  },
-  {
-    id:'sql', name:'SQL', emoji:'🗄️', engine:'sql',
-    levels:{
-      beginner:{
-        units:[{
-          id:'sql-u1', title:'Query Basics',
-          lessons:[
-            {
-              id:'sql-l1', title:'Select everything with SELECT *',
-              goal:'Retrieve every row and column from a table',
-              explanation:'SELECT * FROM songs; returns every column for every row in the songs table.',
-              example:{code:'SELECT * FROM songs;', output:'(returns all 8 rows)'},
-              starterCode:'SELECT * FROM songs;',
-              task:'Run the query as-is to see every song in the table.',
-              hints:[
-                '* means "all columns".',
-                'Every SQL query needs FROM followed by a table name.',
-                'This table is called songs.'
-              ],
-              recap:'SELECT * is the fastest way to peek at everything in a table.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Query error: '+run.error};
-                if(run.rows.length !== SONGS_TABLE.length) return {success:false, message:'Expected all '+SONGS_TABLE.length+' rows back.'};
-                return {success:true, message:'There they all are.'};
-              }
-            },
-            {
-              id:'sql-l2', title:'Pick specific columns',
-              goal:'Select only the columns you need',
-              explanation:'List column names separated by commas instead of using * to get only what you want.',
-              example:{code:'SELECT title FROM songs;', output:'(returns just the title column)'},
-              starterCode:'SELECT title, artist FROM songs;',
-              task:'Run the query, then try changing it to also include genre.',
-              hints:[
-                'Separate column names with commas.',
-                'Column order in your query controls the column order in the result.',
-                'Try: SELECT title, artist, genre FROM songs;'
-              ],
-              recap:'Selecting specific columns keeps results focused on what you actually need.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Query error: '+run.error};
-                if(run.columns.length<2) return {success:false, message:'Select at least two columns.'};
-                return {success:true, message:'Nicely narrowed down.'};
-              }
-            },
-            {
-              id:'sql-l3', title:'Filter rows with WHERE',
-              goal:'Return only rows that match a condition',
-              explanation:'WHERE filters rows. SELECT * FROM songs WHERE genre = \'pop\'; returns only pop songs.',
-              example:{code:"SELECT * FROM songs WHERE genre = 'pop';", output:'(returns only pop songs)'},
-              starterCode:"SELECT * FROM songs WHERE genre = 'pop';",
-              task:'Try changing \'pop\' to another genre, like \'rock\' or \'jazz\'.',
-              hints:[
-                'Text values in WHERE need single quotes, like \'pop\'.',
-                'WHERE column = value keeps only matching rows.',
-                'You can also use >, <, or != for numbers.'
-              ],
-              recap:'WHERE is how you narrow a result down to the rows that matter.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Query error: '+run.error};
-                if(!/WHERE/i.test(code)) return {success:false, message:'Add a WHERE clause.'};
-                if(run.rows.length===0) return {success:false, message:'That filter matched zero rows — try a different value.'};
-                if(run.rows.length===SONGS_TABLE.length) return {success:false, message:'That did not actually filter anything — check your WHERE value.'};
-                return {success:true, message:'Filtered down nicely.'};
-              }
-            },
-            {
-              id:'sql-l4', title:'Sort results with ORDER BY',
-              goal:'Sort rows by a column',
-              explanation:'ORDER BY column sorts ascending by default. Add DESC to sort from highest to lowest.',
-              example:{code:'SELECT title, year FROM songs ORDER BY year DESC;', output:'(newest songs first)'},
-              starterCode:'SELECT title, year FROM songs ORDER BY year DESC;',
-              task:'Run it, then try switching DESC to ASC and see the order flip.',
-              hints:[
-                'ORDER BY column ASC sorts smallest/earliest first.',
-                'ORDER BY column DESC sorts largest/latest first.',
-                'You can sort by any column, including text ones.'
-              ],
-              recap:'ORDER BY controls the sequence your results come back in.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Query error: '+run.error};
-                if(!/ORDER BY/i.test(code)) return {success:false, message:'Add an ORDER BY clause.'};
-                return {success:true, message:'Sorted just right.'};
-              }
-            },
-            {
-              id:'sql-l5', title:'Limit your results',
-              goal:'Return only the top few rows',
-              explanation:'LIMIT n caps the number of rows returned — handy after sorting, to get a "top N" list.',
-              example:{code:'SELECT title FROM songs ORDER BY plays DESC LIMIT 3;', output:'(top 3 most-played songs)'},
-              starterCode:'SELECT title FROM songs ORDER BY plays DESC LIMIT 3;',
-              task:'Run it, then change LIMIT 3 to LIMIT 1 to find the single most-played song.',
-              hints:[
-                'LIMIT goes at the very end of the query.',
-                'Combine ORDER BY ... DESC with LIMIT to get a "top N" list.',
-                'LIMIT 1 returns just the single best match.'
-              ],
-              recap:'LIMIT keeps big result sets manageable — especially paired with sorting.',
-              validate:(code, run)=>{
-                if(!run.ok) return {success:false, message:'Query error: '+run.error};
-                if(!/LIMIT/i.test(code)) return {success:false, message:'Add a LIMIT clause.'};
-                if(run.rows.length>3) return {success:false, message:'Your LIMIT should return 3 or fewer rows.'};
-                return {success:true, message:'Trimmed to the top results.'};
-              }
-            },
-          ],
-          quiz:{
-            id:'sql-u1-quiz', title:'Query Basics Quiz',
-            questions:[
-              {type:'mcq', prompt:'Which clause filters rows based on a condition?', options:['WHERE','ORDER BY','LIMIT','FROM'], correctIndex:0},
-              {type:'fill', prompt:'Fill in the missing clause: __ BY year DESC sorts newest first.', accept:['ORDER']},
-              {type:'code', prompt:'Write a query that returns the title of the song with the most plays (one row only).', engine:'sql',
-                starterCode:'SELECT title FROM songs\n-- finish this query\n',
-                validate:(code, run)=>{
-                  if(!run.ok) return {success:false, message:'Query error: '+run.error};
-                  const top = SONGS_TABLE.slice().sort((a,b)=>b.plays-a.plays)[0];
-                  const ok = run.rows.length===1 && run.rows[0].title===top.title;
-                  return {success: ok, message: ok ? 'Correct!' : `Expected exactly one row: "${top.title}"`};
-                }}
-            ]
-          }
-        }],
-        moreComing:5
-      }
-    }
-  },
-];
-
-const COMING_SOON_LANGUAGES = [
-  {id:'java', name:'Java', emoji:'☕'},
-  {id:'c', name:'C', emoji:'🔧'},
-  {id:'cpp', name:'C++', emoji:'➕'},
-  {id:'csharp', name:'C#', emoji:'🎯'},
-  {id:'php', name:'PHP', emoji:'🐘'},
-  {id:'go', name:'Go', emoji:'🐹'},
-  {id:'rust', name:'Rust', emoji:'⚙️'},
-  {id:'kotlin', name:'Kotlin', emoji:'🟣'},
-  {id:'swift', name:'Swift', emoji:'🐦'},
-];
-
-function findLanguage(id){ return LANGUAGES.find(l=>l.id===id); }
-function findUnit(lang){ return lang.levels.beginner.units[0]; }
-function findLesson(lang, lessonId){ return findUnit(lang).lessons.find(l=>l.id===lessonId); }
-function allLessonsOf(lang){ return findUnit(lang).lessons; }
-
-/* ---------------- State + persistence ---------------- */
-const STORAGE_KEY = 'bgct:state';
-
-function defaultState(){
-  return {
-    user:null,                 // {name}
-    currentLanguageId:null,
-    progress:{},               // lessonId -> {status:'done', completedAt}
-    quizProgress:{},           // quizId -> {status:'done', score, completedAt}
-  };
-}
-let persisted = defaultState();
-let ui = {
-  screen:'loading',
-  currentLanguageId:null,
-  currentLessonId:null,
-  currentQuizId:null,
-  hintIndex:0,
-  codeDraft:{},          // lessonId/quizQid -> code string
-  lastResult:{},         // lessonId/quizQid -> {success, message}
-  quizIndex:0,
-  quizAnswers:{},         // qid -> selected answer
-  quizFeedback:{},
-  confirmingReset:false,
+/* ================= GAMIFY ================= */
+const Gamify={
+  LEVELS:[0,60,150,300,500,780,1150,1600,2200,3000,4000,5300,7000,9000,12000],
+  RANKS:[[1,'Bronze Coder','🥉'],[3,'Silver Coder','🥈'],[5,'Gold Coder','🥇'],[7,'Sapphire Dev','💠'],[9,'Amethyst Dev','🔮'],[12,'Code Legend','👑']],
+  level(){let l=1;this.LEVELS.forEach((t,i)=>{if(S.xp>=t)l=i+1});return l},
+  levelPct(){const l=this.level();const lo=this.LEVELS[l-1]??0,hi=this.LEVELS[l]??(lo+3000);return clamp((S.xp-lo)/(hi-lo)*100,0,100)},
+  rank(){const l=this.level();let r=this.RANKS[0];this.RANKS.forEach(x=>{if(l>=x[0])r=x});return r},
+  addXP(n){S.xp+=n;const d=todayKey();S.days[d]=(S.days[d]||0)+n;this.touchStreak();Store.save()},
+  addCoins(n){S.coins+=n;Sfx.coin();Store.save()},
+  touchStreak(){const t=todayKey();if(S.lastActive===t)return;const y=new Date(Date.now()-864e5).toISOString().slice(0,10);S.streak=S.lastActive===y?S.streak+1:1;S.lastActive=t;Store.save();if(S.streak>1)toast('🔥',`${S.streak} day streak!`)},
+  tickLives(){const MAX=5,MS=30*60*1000;if(S.lives>=MAX){S.lastLifeTs=Date.now();return}const gained=Math.floor((Date.now()-S.lastLifeTs)/MS);if(gained>0){S.lives=clamp(S.lives+gained,0,MAX);S.lastLifeTs=S.lives>=MAX?Date.now():S.lastLifeTs+gained*MS;Store.save()}},
+  loseLife(){if(S.lives>=5)S.lastLifeTs=Date.now();S.lives=clamp(S.lives-1,0,5);Store.save()},
+  nextLifeMin(){return Math.max(0,Math.ceil((S.lastLifeTs+30*60*1000-Date.now())/60000))},
 };
 
-async function loadState(){
-  try{
-    const res = await window.storage.get(STORAGE_KEY, false);
-    if(res && res.value){
-      const parsed = JSON.parse(res.value);
-      persisted = Object.assign(defaultState(), parsed);
-    }
-  }catch(e){
-    persisted = defaultState();
-  }
-}
-async function saveState(){
-  try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(persisted), false);
-  }catch(e){
-    showToast("Couldn't save progress — it will still work for this session.");
-  }
+const ACH=[
+ {id:'first',ico:'🐣',n:'First Steps',d:'Complete your first lesson',t:s=>s.stats.lessons>=1},
+ {id:'five',ico:'📚',n:'Bookworm',d:'Complete 5 lessons',t:s=>s.stats.lessons>=5},
+ {id:'ten',ico:'🎓',n:'Scholar',d:'Complete 10 lessons',t:s=>s.stats.lessons>=10},
+ {id:'perfect',ico:'💯',n:'Flawless',d:'Perfect lesson, no mistakes',t:s=>s.stats.perfect>=1},
+ {id:'streak3',ico:'🔥',n:'On Fire',d:'3 day streak',t:s=>s.streak>=3},
+ {id:'streak7',ico:'⚡',n:'Unstoppable',d:'7 day streak',t:s=>s.streak>=7},
+ {id:'xp500',ico:'🚀',n:'Rising Star',d:'Earn 500 XP',t:s=>s.xp>=500},
+ {id:'xp2000',ico:'🌟',n:'XP Machine',d:'Earn 2,000 XP',t:s=>s.xp>=2000},
+ {id:'rich',ico:'💰',n:'Coin Collector',d:'Hold 500 coins',t:s=>s.coins>=500},
+ {id:'cert',ico:'📜',n:'Certified',d:'Earn a certificate',t:s=>s.certs.length>=1},
+ {id:'sharp',ico:'🎯',n:'Sharpshooter',d:'100 correct answers',t:s=>s.stats.correct>=100},
+ {id:'daily',ico:'🗓️',n:'Challenger',d:'Finish 3 daily challenges',t:s=>s.stats.challenges>=3},
+];
+function checkAch(){ACH.forEach(a=>{if(!S.ach.includes(a.id)&&a.t(S)){S.ach.push(a.id);S.diamonds+=1;Store.save();Sfx.win();Haptic.win();toast(a.ico,`Achievement: ${a.n}! +1 💎`)}})}
+
+/* Simulated weekly leaderboard */
+const BOTS=[['Aarav','🦊'],['Priya','🐼'],['Kabir','🐯'],['Ananya','🦄'],['Rohan','🐸'],['Ishita','🐨'],['Dev','🦁'],['Meera','🐙'],['Arjun','🤖'],['Sara','🐳']];
+function weekSeed(){const d=new Date();const onejan=new Date(d.getFullYear(),0,1);return d.getFullYear()*100+Math.ceil(((d-onejan)/864e5+onejan.getDay()+1)/7)}
+function rng(seed){return()=>{seed=(seed*9301+49297)%233280;return seed/233280}}
+function weekXP(){const start=new Date();start.setDate(start.getDate()-start.getDay());let x=0;for(let i=0;i<7;i++){const k=new Date(start.getTime()+i*864e5).toISOString().slice(0,10);x+=S.days[k]||0}return x}
+function leaderboard(){const r=rng(weekSeed());const dayFrac=(new Date().getDay()+1)/7;
+  const rows=BOTS.map(([n,a],i)=>({n,a,xp:Math.round((80+r()*520)*dayFrac+i*7),me:false}));
+  rows.push({n:S.profile?.name||'You',a:S.profile?.avatar||'🙂',xp:weekXP(),me:true});
+  return rows.sort((a,b)=>b.xp-a.xp)}
+
+/* ================= CONTENT: courses / units / lessons / exercises =================
+   Exercise types: mcq {q,code?,c[],a,x,label?} | fib {q,tpl(use ___),bank[],ans,x}
+                   arrange {q,lines[] in correct order,x} | type {q,code?,ans,x} */
+const M=(q,c,a,x,code,label)=>({t:'mcq',q,c,a,x,code,label});
+const F=(q,tpl,bank,ans,x)=>({t:'fib',q,tpl,bank,ans,x});
+const A=(q,lines,x)=>({t:'arrange',q,lines,x});
+const T=(q,ans,x,code)=>({t:'type',q,ans,x,code});
+
+const COURSES=[
+{id:'py',name:'Python',ico:'🐍',desc:'The friendliest first language',units:[
+ {name:'Unit 1 · Basics',lessons:[
+  {id:'py1',ico:'👋',name:'Hello Python',ex:[
+   M('Which function shows text on the screen?',['echo()','print()','show()','say()'],1,'print() is Python\'s built-in way to display output.'),
+   T('Type the code that prints Hello','print("Hello")','Strings need quotes, and print() needs parentheses.'),
+   M('What will this code output?',['Hello BG','"Hello BG"','Error','hello bg'],0,'Quotes mark the string but are not printed.','print("Hello BG")','Predict output'),
+   F('Fill the blank to print 42','___(42)',['print','input','echo','type'],'print','print works for numbers too — no quotes needed.'),
+   M('Which line has correct syntax?',['print "hi"','print(hi)','print("hi")','Print("hi")'],2,'Python 3 needs parentheses, quotes for strings, and lowercase print.','','Fix the bug'),
+  ]},
+  {id:'py2',ico:'📦',name:'Variables',ex:[
+   M('What does a variable do?',['Stores a value','Prints text','Deletes code','Loops forever'],0,'Variables are named boxes that hold values you can reuse.'),
+   F('Store 18 in a variable named age','age ___ 18',['=','==','->',':'],'=','A single = assigns a value. Double == compares.'),
+   M('What is printed?',['name','BG','"BG"','Error'],1,'print(name) looks up the value stored in name.','name = "BG"\nprint(name)','Predict output'),
+   A('Arrange the code to store then print a score',['score = 100','print(score)'],'You must create a variable before you can print it.'),
+   M('Which variable name is INVALID?',['my_age','age2','2age','userAge'],2,'Names can\'t start with a digit.'),
+  ]},
+  {id:'py3',ico:'🔢',name:'Numbers & Math',ex:[
+   M('What is 7 // 2 in Python?',['3.5','3','4','2'],1,'// is floor division — it drops the decimal part.'),
+   M('What does this print?',['8','15','35','53'],2,'* means multiply: 5 × 7 = 35.','print(5 * 7)','Predict output'),
+   F('Get the remainder of 10 ÷ 3','print(10 ___ 3)',['%','//','**','+'],'%','% is the modulo operator — remainder after division.'),
+   T('Type an expression for 2 to the power 5','2**5','** is Python\'s power operator.'),
+   M('What is the value of x?',['11','21','16','Error'],0,'Operator precedence: 3*2=6 first, then 5+6=11.','x = 5 + 3 * 2','Predict output'),
+  ]},
+ ]},
+ {name:'Unit 2 · Control Flow',lessons:[
+  {id:'py4',ico:'🔀',name:'If & Else',ex:[
+   M('Which keyword starts a condition?',['when','check','if','case'],2,'if runs a block only when its condition is True.'),
+   F('Complete the condition check','if age ___ 18:\n  print("Adult")',['>=','=','=>','!'],'>=','>= means greater than or equal to. A single = would assign.'),
+   M('What prints when x = 3?',['Big','Small','Nothing','Error'],1,'3 > 5 is False, so the else branch runs.','x = 3\nif x > 5:\n  print("Big")\nelse:\n  print("Small")','Predict output'),
+   A('Arrange a valid if/else',['if score > 50:','  print("Pass")','else:','  print("Fail")'],'if first, indented body, then else with its own body.'),
+   M('What is wrong here?',['Missing colon after if','print is misspelled','x needs quotes','Nothing'],0,'Every if line must end with a colon.','if x > 2\n  print(x)','Fix the bug'),
+  ]},
+  {id:'py5',ico:'🔁',name:'Loops',ex:[
+   M('How many times does this loop run?',['2','3','4','Forever'],1,'range(3) gives 0, 1, 2 — three passes.','for i in range(3):\n  print(i)'),
+   F('Loop over 0..4','for i in ___(5):\n  print(i)',['range','loop','count','list'],'range','range(5) produces the numbers 0 through 4.'),
+   M('What does this print?',['0 1 2','1 2 3','1 2','3 2 1'],1,'range(1, 4) starts at 1 and stops before 4.','for n in range(1, 4):\n  print(n)','Predict output'),
+   A('Arrange a loop that sums 1..3',['total = 0','for n in range(1, 4):','  total = total + n','print(total)'],'Initialize before the loop, add inside it, print after.'),
+   M('Which loop repeats while a condition is True?',['for','while','until','repeat'],1,'while keeps looping as long as its condition stays True.'),
+  ]},
+  {id:'py6',ico:'🧰',name:'Functions',ex:[
+   M('Which keyword defines a function?',['func','def','function','fn'],1,'def name(): starts a function definition.'),
+   F('Define a greet function','___ greet():\n  print("Hi")',['def','func','make','new'],'def','def, the name, parentheses, then a colon.'),
+   M('What does this print?',['12','7','34','Error'],1,'The function returns 3+4=7, which gets printed.','def add(a, b):\n  return a + b\nprint(add(3, 4))','Predict output'),
+   A('Arrange: define then call',['def cheer():','  print("Go BG!")','cheer()'],'Define the function first, then call it by name with ().'),
+   T('Call a function named start (no arguments)','start()','Calling always needs parentheses, even with no arguments.'),
+  ]},
+ ]},
+]},
+{id:'js',name:'JavaScript',ico:'⚡',desc:'The language of the web',units:[
+ {name:'Unit 1 · Basics',lessons:[
+  {id:'js1',ico:'👋',name:'Hello JS',ex:[
+   M('Which prints to the browser console?',['print()','console.log()','echo()','log.console()'],1,'console.log() is the standard JS output tool.'),
+   T('Type code that logs Hi','console.log("Hi")','console.log with a quoted string.'),
+   M('What is logged?',['5','"5"','23','Error'],2,'"2" + 3 glues them into the string "23" — + concatenates with strings.','console.log("2" + 3)','Predict output'),
+   F('Log the number 99','console.___(99)',['log','print','out','show'],'log','console.log handles any value type.'),
+   M('Which line is valid JS?',['console.log(hello)','console.log("hello")','Console.Log("hello")','log "hello"'],1,'Lowercase console.log, quotes around string text.','','Fix the bug'),
+  ]},
+  {id:'js2',ico:'📦',name:'let & const',ex:[
+   M('Which declares a variable you can change?',['const','let','fixed','var only'],1,'let allows reassignment; const does not.'),
+   F('Declare a constant PI','___ PI = 3.14',['const','let','def','static'],'const','Use const for values that never change.'),
+   M('What happens here?',['Logs 2','Logs 1','TypeError','Logs undefined'],2,'Reassigning a const throws a TypeError.','const x = 1\nx = 2\nconsole.log(x)','Predict output'),
+   A('Arrange: declare, change, log',['let score = 0','score = 10','console.log(score)'],'let allows the reassignment on line 2.'),
+   M('Which name is valid?',['let 1st','let my-score','let _count','let new'],2,'Names can start with _ or letters; new is a reserved word.'),
+  ]},
+  {id:'js3',ico:'🔢',name:'Operators',ex:[
+   M('What is 10 % 3?',['3','1','0','3.33'],1,'% gives the remainder: 10 = 3×3 + 1.'),
+   M('What is logged?',['true','false','Error','"true"'],0,'=== checks value AND type; 5 equals 5.','console.log(5 === 5)','Predict output'),
+   F('Strictly compare a and b','if (a ___ b) { }',['===','=','=>','equals'],'===','Always prefer === over == in modern JS.'),
+   M('What does count++ do?',['Adds 2','Adds 1','Doubles it','Resets to 0'],1,'++ is the increment operator.'),
+   T('Type an expression for 4 squared using **','4**2','JS also supports the ** power operator.'),
+  ]},
+ ]},
+ {name:'Unit 2 · Logic & Functions',lessons:[
+  {id:'js4',ico:'🔀',name:'Conditions',ex:[
+   M('Which is a valid if statement?',['if x > 5 then','if (x > 5) {}','if x > 5:','when (x > 5)'],1,'JS needs parentheses around the condition and braces for the body.'),
+   M('What is logged when age = 20?',['Teen','Adult','Nothing','Error'],1,'20 >= 18 is true, so the first branch runs.','let age = 20\nif (age >= 18) {\n  console.log("Adult")\n} else {\n  console.log("Teen")\n}','Predict output'),
+   F('Add the else keyword','if (ok) { go() } ___ { stop() }',['else','otherwise','elif','or'],'else','JS uses else — not elif like Python (it uses else if).'),
+   A('Arrange a condition',['let hp = 0','if (hp === 0) {','  console.log("Game over")','}'],'Declare first, then the if with its braced body.'),
+   M('Find the bug',['= should be ===','Missing colon','console misspelled','Nothing wrong'],0,'A single = assigns inside the condition — use === to compare.','if (x = 5) { console.log("five") }','Fix the bug'),
+  ]},
+  {id:'js5',ico:'🔁',name:'Loops',ex:[
+   M('How many logs?',['4','5','6','Infinite'],1,'i runs 0,1,2,3,4 — five iterations.','for (let i = 0; i < 5; i++) {\n  console.log(i)\n}'),
+   F('Complete the classic loop','for (let i = 0; i < 3; ___) { }',['i++','i+','++','i=1'],'i++','The third slot updates the counter each pass.'),
+   M('What is logged?',['0 1 2','1 2 3','3 6 9','9'],2,'Each i (1,2,3) is multiplied by 3 before logging.','for (let i = 1; i <= 3; i++) {\n  console.log(i * 3)\n}','Predict output'),
+   A('Arrange a while loop',['let n = 3','while (n > 0) {','  console.log(n)','  n--','}'],'while checks first, body runs, n-- moves toward the exit.'),
+   M('What stops a loop early?',['exit','break','stop','end'],1,'break jumps out of the nearest loop immediately.'),
+  ]},
+  {id:'js6',ico:'🧰',name:'Functions',ex:[
+   M('Which defines a function?',['function greet() {}','def greet():','func greet {}','greet() =>'],0,'The function keyword, a name, parentheses, and braces.'),
+   M('What is logged?',['20','9','45','Error'],0,'double(10) returns 10*2 = 20.','function double(n) {\n  return n * 2\n}\nconsole.log(double(10))','Predict output'),
+   F('Write an arrow function','const add = (a, b) ___ a + b',['=>','->','=','::'],'=>','Arrow functions use => between parameters and body.'),
+   A('Arrange: define and call',['function hello() {','  console.log("Hey BG")','}','hello()'],'Definition block first, then invoke with hello().'),
+   T('Call a function named play with argument 5','play(5)','Arguments go inside the parentheses of the call.'),
+  ]},
+ ]},
+]},
+{id:'web',name:'HTML & CSS',ico:'🎨',desc:'Build & style real pages',units:[
+ {name:'Unit 1 · HTML',lessons:[
+  {id:'web1',ico:'🏗️',name:'Tags & Structure',ex:[
+   M('What does HTML describe?',['Page style','Page structure','Server logic','Databases'],1,'HTML defines the structure and content of a page.'),
+   M('Which is the largest heading?',['<h6>','<head>','<h1>','<big>'],2,'<h1> is the top-level heading; h6 is the smallest.'),
+   F('Create a paragraph','<___>Hello world</___>',['p','par','text','pg'],'p','<p> wraps paragraph text; most tags need a closing pair.'),
+   A('Arrange a valid page skeleton',['<html>','<body>','<h1>BG</h1>','</body>','</html>'],'body sits inside html; content sits inside body.'),
+   M('Find the bug',['Missing closing </p>','h1 not allowed','Text needs quotes','Nothing'],0,'Most elements must be closed: <p>Hi</p>.','<p>Hi','Fix the bug'),
+  ]},
+  {id:'web2',ico:'🔗',name:'Links & Images',ex:[
+   M('Which tag makes a link?',['<link>','<a>','<url>','<href>'],1,'<a href="..."> creates an anchor (clickable link).'),
+   F('Link to bhavyagoel.com','<a ___="https://bhavyagoel.com">Visit</a>',['href','src','link','url'],'href','href holds the destination URL of a link.'),
+   M('Which attribute sets an image source?',['href','src','img','path'],1,'<img src="pic.png"> — src points to the image file.'),
+   M('Why add alt text to images?',['SEO only','Makes it load faster','Accessibility & fallback','It is required syntax'],2,'alt describes the image for screen readers and broken loads.'),
+   T('Type a line break tag','<br>','<br> is a void tag — no closing needed.'),
+  ]},
+  {id:'web3',ico:'📋',name:'Lists & Buttons',ex:[
+   M('Which makes a bulleted list?',['<ol>','<ul>','<list>','<dl>'],1,'<ul> = unordered (bullets); <ol> = ordered (numbers).'),
+   F('Add a list item','<ul><___>Python</___></ul>',['li','item','ul','row'],'li','Every entry in a list lives in an <li>.'),
+   A('Arrange an ordered list',['<ol>','<li>Wake up</li>','<li>Code</li>','</ol>'],'<ol> wraps the items; each step is one <li>.'),
+   M('Which creates a clickable button?',['<btn>','<button>','<click>','<input only>'],1,'<button>Label</button> is the semantic button element.'),
+   M('What is printed inside the button?',['Start','<b>Start</b>','Nothing','Error'],0,'The <b> just bolds it — the visible label is Start.','<button><b>Start</b></button>','Predict output'),
+  ]},
+ ]},
+ {name:'Unit 2 · CSS',lessons:[
+  {id:'web4',ico:'🖌️',name:'Selectors & Color',ex:[
+   M('What does CSS control?',['Structure','Behavior','Presentation','Hosting'],2,'CSS styles how HTML looks — colors, spacing, layout.'),
+   F('Make all h1 purple','h1 { ___: purple; }',['color','font','paint','text'],'color','color sets the text color of matched elements.'),
+   M('Which selects class="card"?',['#card','.card','card()','*card'],1,'A leading dot selects by class; # selects by id.'),
+   M('What color are paragraphs?',['red','blue','purple','black'],1,'The later rule wins when specificity is equal.','p { color: red; }\np { color: blue; }','Predict output'),
+   T('Select the element with id hero','#hero','# targets a unique id.'),
+  ]},
+  {id:'web5',ico:'📐',name:'Box Model',ex:[
+   M('Order from inside out?',['margin, border, padding','padding, border, margin','border, padding, margin','content is outermost'],1,'Content → padding → border → margin.'),
+   F('Add space INSIDE the border','.card { ___: 16px; }',['padding','margin','gap','inset'],'padding','Padding pushes content away from the border, inside it.'),
+   M('What adds space BETWEEN two cards?',['padding','margin','border','outline'],1,'Margin is the space outside the border, between elements.'),
+   M('How wide is the visible box?',['100px','120px','140px','160px'],2,'100 + 10+10 padding + 10+10 border = 140px (default box model).','div {\n  width: 100px;\n  padding: 10px;\n  border: 10px solid;\n}','Predict output'),
+   F('Round the corners','.card { border-___: 16px; }',['radius','round','curve','arc'],'radius','border-radius curves box corners.'),
+  ]},
+  {id:'web6',ico:'🧲',name:'Flexbox',ex:[
+   M('Which enables flexbox on a container?',['display: flex','flex: on','layout: flex','position: flex'],0,'display:flex turns children into flex items.'),
+   F('Center items horizontally','.row { display: flex; justify-___: center; }',['content','items','self','align'],'content','justify-content controls the main-axis alignment.'),
+   M('Which centers items on the CROSS axis?',['justify-content','align-items','text-align','place-x'],1,'align-items handles the cross axis (usually vertical).'),
+   M('Which property adds space between flex children?',['space','gap','margin-flex','pad'],1,'gap sets consistent spacing without extra margins.'),
+   A('Arrange a centered layout rule',['.hero {','  display: flex;','  justify-content: center;','  align-items: center;','}'],'Enable flex first, then align on both axes.'),
+  ]},
+ ]},
+]},
+{id:'sql',name:'SQL',ico:'🗄️',desc:'Talk to databases',units:[
+ {name:'Unit 1 · Reading Data',lessons:[
+  {id:'sql1',ico:'🔍',name:'SELECT',ex:[
+   M('What does SELECT do?',['Deletes rows','Reads data','Creates tables','Edits rows'],1,'SELECT retrieves rows from a table.'),
+   F('Get all columns from users','SELECT ___ FROM users;',['*','all','rows','#'],'*','* means every column.'),
+   T('Select only the name column from users','SELECT name FROM users;','List specific columns instead of * to fetch less data.'),
+   M('What does this return?',['All columns','Only name & age','An error','Row count'],1,'Only the listed columns come back.','SELECT name, age FROM users;','Predict output'),
+   M('SQL keywords are…',['Case-sensitive','Conventionally UPPERCASE','Always lowercase','Emoji'],1,'select works, but UPPERCASE keywords are the readable convention.'),
+  ]},
+  {id:'sql2',ico:'🎯',name:'WHERE',ex:[
+   M('Which clause filters rows?',['FILTER','WHERE','IF','HAVING only'],1,'WHERE keeps only rows matching a condition.'),
+   F('Users older than 18','SELECT * FROM users ___ age > 18;',['WHERE','IF','FILTER','WHEN'],'WHERE','WHERE goes after FROM.'),
+   M('How do you match text in SQL?',["name = 'BG'",'name == "BG"','name is BG','name : BG'],0,"SQL uses single quotes and a single = for comparison."),
+   M('What rows return?',['All users','Users named BG','Users not named BG','Error'],2,'<> (or !=) means not equal.',"SELECT * FROM users\nWHERE name <> 'BG';",'Predict output'),
+   A('Arrange a filtered query',['SELECT name','FROM students','WHERE grade >= 90;'],'SELECT → FROM → WHERE, in that order.'),
+  ]},
+  {id:'sql3',ico:'📊',name:'Sort & Count',ex:[
+   M('Which sorts results?',['SORT BY','ORDER BY','ARRANGE','RANK BY'],1,'ORDER BY column ASC|DESC sorts the result set.'),
+   F('Highest score first','SELECT * FROM scores ORDER BY points ___;',['DESC','DOWN','MAX','TOP'],'DESC','DESC = descending; ASC is the default.'),
+   M('What does COUNT(*) return?',['Column list','Number of rows','Largest value','Table size in MB'],1,'COUNT(*) counts matching rows.'),
+   M('What number returns if users has 12 rows?',['0','1','12','Error'],2,'One row containing the count 12.','SELECT COUNT(*) FROM users;','Predict output'),
+   F('Limit to 5 results','SELECT * FROM posts ___ 5;',['LIMIT','TOP','MAX','ONLY'],'LIMIT','LIMIT caps how many rows come back.'),
+  ]},
+ ]},
+ {name:'Unit 2 · Writing Data',lessons:[
+  {id:'sql4',ico:'➕',name:'INSERT',ex:[
+   M('Which adds a new row?',['ADD','INSERT INTO','APPEND','NEW ROW'],1,'INSERT INTO table (cols) VALUES (...).'),
+   F('Insert a user','INSERT INTO users (name) ___ (\'BG\');',['VALUES','SET','DATA','ROW'],'VALUES','VALUES supplies the data for the listed columns.'),
+   A('Arrange a full insert',['INSERT INTO students','(name, grade)','VALUES','(\'Priya\', 95);'],'Table, column list, VALUES, then the data tuple.'),
+   M('What is wrong?',['Missing VALUES keyword','Table name invalid','Too many quotes','Nothing'],0,'You must write VALUES before the data.',"INSERT INTO users (name) ('BG');",'Fix the bug'),
+   M('Strings in SQL use…',['Double quotes','Single quotes','Backticks','No quotes'],1,"Standard SQL wraps text in 'single quotes'."),
+  ]},
+  {id:'sql5',ico:'✏️',name:'UPDATE',ex:[
+   M('Which changes existing rows?',['CHANGE','MODIFY','UPDATE','EDIT'],2,'UPDATE table SET col = value WHERE ...'),
+   F('Set the score','UPDATE players ___ score = 100 WHERE id = 1;',['SET','TO','VALUE','='],'SET','SET pairs columns with their new values.'),
+   M('What happens with no WHERE?',['Nothing','One row updates','EVERY row updates','Error'],2,'Without WHERE, the update hits the whole table — dangerous!','UPDATE players SET score = 0;','Predict output'),
+   A('Arrange a safe update',['UPDATE users','SET name = \'Bhavya\'','WHERE id = 7;'],'UPDATE → SET → WHERE. Always scope with WHERE.'),
+   M('Find the bug',['SET missing','WHERE before SET','Should be UPDATE not UPDATES','Nothing'],2,'The keyword is UPDATE (no S).','UPDATES users SET age = 21;','Fix the bug'),
+  ]},
+  {id:'sql6',ico:'🗑️',name:'DELETE',ex:[
+   M('Which removes rows?',['REMOVE','DELETE FROM','DROP ROW','CUT'],1,'DELETE FROM table WHERE condition.'),
+   F('Delete inactive users','DELETE FROM users ___ active = 0;',['WHERE','IF','SET','ON'],'WHERE','WHERE decides which rows die — never forget it.'),
+   M('What does DELETE FROM logs; do?',['Deletes the table','Deletes ALL rows','Deletes one row','Errors'],1,'Table stays, but every row is removed.','','Predict output'),
+   M('Which removes the whole TABLE?',['DELETE TABLE','DROP TABLE','ERASE','CLEAR'],1,'DROP TABLE removes structure and data.'),
+   A('Arrange a targeted delete',['DELETE FROM posts','WHERE id = 42;'],'DELETE FROM, then a precise WHERE.'),
+  ]},
+ ]},
+]},
+];
+const SOON=[['TypeScript','🔷'],['Java','☕'],['C++','⚙️'],['Go','🐹'],['Rust','🦀'],['React','⚛️'],['Node.js','🟢'],['Git & GitHub','🌿'],['Flutter','🐦'],['Machine Learning','🧠'],['Data Science','📈'],['Cybersecurity','🛡️']];
+const allLessons=c=>c.units.flatMap(u=>u.lessons);
+const EX_POOL=COURSES.flatMap(c=>allLessons(c).flatMap(l=>l.ex.map(e=>({...e,course:c.name}))));
+
+/* ================= PLAYGROUND: highlighter, JS runner, Python-subset interpreter ================= */
+const HL={
+ py:{kw:/\b(def|return|if|elif|else|for|while|in|and|or|not|True|False|None|print|range|len|str|int|break|continue)\b/g},
+ js:{kw:/\b(const|let|var|function|return|if|else|for|while|true|false|null|undefined|console|log|break|continue|new|typeof)\b/g},
+};
+function highlight(code,lang){let h=esc(code);
+ h=h.replace(/(&quot;.*?&quot;|'[^'\n]*'|`[^`\n]*`)/g,'\u0001$1\u0002');
+ h=h.replace(/(#[^\n\u0001]*|\/\/[^\n\u0001]*)/g,'\u0003$1\u0004');
+ h=h.replace(/\b(\d+\.?\d*)\b/g,'<i class="tk-num">$1</i>');
+ const kw=(HL[lang]||HL.js).kw;h=h.replace(kw,'<i class="tk-kw">$&</i>');
+ h=h.replace(/\u0001([\s\S]*?)\u0002/g,'<i class="tk-str">$1</i>').replace(/\u0003([\s\S]*?)\u0004/g,'<i class="tk-cm">$1</i>');
+ return h}
+
+function runJS(code){const out=[];const fake={log:(...a)=>out.push(a.map(v=>typeof v==='object'?JSON.stringify(v):String(v)).join(' '))};
+ try{new Function('console',code)(fake);return{out:out.join('\n')||'(no output)'}}catch(e){return{out:out.join('\n'),err:e.message}}}
+
+/* Compact Python-subset interpreter: print, variables, arithmetic, strings, bool,
+   comparisons, and/or/not, if/elif/else, while, for-in-range, str/int/len, +=. */
+function runPY(src){
+ const out=[];let steps=0;const STEP_MAX=20000;
+ const lines=src.replace(/\t/g,'  ').split('\n');
+ const blocks=parse(0,lines.length,0);
+ try{exec(blocks,{});return{out:out.join('\n')||'(no output)'}}
+ catch(e){return{out:out.join('\n'),err:e.message}}
+
+ function indentOf(l){const m=l.match(/^ */);return m[0].length}
+ function parse(start,end,ind){const res=[];let i=start;
+  while(i<end){const raw=lines[i];if(!raw.trim()||raw.trim().startsWith('#')){i++;continue}
+   if(indentOf(raw)<ind)break; if(indentOf(raw)>ind)throw new Error('IndentationError on line '+(i+1));
+   const line=raw.trim();
+   const m=line.match(/^(if|elif|else|while|for)\b(.*?):$/);
+   if(m){const body=[];let j=i+1;while(j<end&&(!lines[j].trim()||indentOf(lines[j])>ind))j++;
+    res.push({kind:m[1],head:m[2].trim(),body:parse(i+1,j,ind+2),line:i});i=j}
+   else{res.push({kind:'stmt',src:line,line:i});i++}}
+  return res}
+ function exec(nodes,env){for(let i=0;i<nodes.length;i++){const n=nodes[i];guard();
+   if(n.kind==='stmt'){stmt(n.src,env)}
+   else if(n.kind==='if'){let done=truthy(evalExpr(n.head,env));if(done)exec(n.body,env);
+     while(i+1<nodes.length&&(nodes[i+1].kind==='elif'||nodes[i+1].kind==='else')){i++;const b=nodes[i];
+       if(!done){if(b.kind==='else'){exec(b.body,env);done=true}else if(truthy(evalExpr(b.head,env))){exec(b.body,env);done=true}}}}
+   else if(n.kind==='while'){while(truthy(evalExpr(n.head,env))){guard();exec(n.body,env)}}
+   else if(n.kind==='for'){const fm=n.head.match(/^(\w+)\s+in\s+range\((.*)\)$/);if(!fm)throw new Error('Only "for x in range(...)" is supported');
+     const args=splitArgs(fm[2]).map(a=>evalExpr(a,env));let[st,en,sp]=args.length===1?[0,args[0],1]:args.length===2?[args[0],args[1],1]:args;
+     for(let v=st;sp>0?v<en:v>en;v+=sp){guard();env[fm[1]]=v;exec(n.body,env)}}
+   else if(n.kind==='elif'||n.kind==='else')throw new Error((n.kind)+' without if (line '+(n.line+1)+')');}}
+ function stmt(s,env){let m;
+  if(m=s.match(/^print\((.*)\)$/)){out.push(splitArgs(m[1]).map(a=>disp(evalExpr(a,env))).join(' '));return}
+  m=s.match(/^([A-Za-z_]\w*)\s*(\+|-|\*|\/)?=(?!=)\s*(.+)$/);
+  if(m){const[,name,op,rhs]=m;const v=evalExpr(rhs,env);
+   env[name]=op?applyOp(op,env[name],v):v;return}
+  evalExpr(s,env)}
+ function guard(){if(++steps>STEP_MAX)throw new Error('Too many steps — infinite loop?')}
+ function truthy(v){return v!==0&&v!==false&&v!==''&&v!=null}
+ function disp(v){return v===true?'True':v===false?'False':String(v)}
+ function splitArgs(s){const r=[];let d=0,q=null,cur='';for(const ch of s){if(q){cur+=ch;if(ch===q)q=null;continue}
+   if(ch==='"'||ch==="'"){q=ch;cur+=ch}else if('([{'.includes(ch)){d++;cur+=ch}else if(')]}'.includes(ch)){d--;cur+=ch}
+   else if(ch===','&&d===0){r.push(cur.trim());cur=''}else cur+=ch}if(cur.trim())r.push(cur.trim());return r}
+ function applyOp(op,a,b){if(op==='+'){if(typeof a==='string'||typeof b==='string')return String(a)+String(b);return a+b}
+  if(op==='-')return a-b;if(op==='*')return typeof a==='string'?a.repeat(b):a*b;if(op==='/')return a/b;
+  if(op==='//')return Math.floor(a/b);if(op==='%')return((a%b)+b)%b;if(op==='**')return Math.pow(a,b)}
+ function evalExpr(s,env){let i=0;s=s.trim();
+  const peek=()=>s[i],eat=re=>{const m=s.slice(i).match(re);if(m&&m.index===0){i+=m[0].length;return m[0]}return null};
+  const ws=()=>{while(s[i]===' ')i++};
+  function orE(){let a=andE();while(true){ws();if(eat(/^or\b/)){const b=andE();a=truthy(a)?a:b}else return a}}
+  function andE(){let a=notE();while(true){ws();if(eat(/^and\b/)){const b=notE();a=truthy(a)?b:a}else return a}}
+  function notE(){ws();if(eat(/^not\b/))return!truthy(notE());return cmp()}
+  function cmp(){let a=add();while(true){ws();const op=eat(/^(==|!=|<=|>=|<|>)/);if(!op)return a;const b=add();
+   a=op==='=='?a===b:op==='!='?a!==b:op==='<'?a<b:op==='>'?a>b:op==='<='?a<=b:a>=b}}
+  function add(){let a=mul();while(true){ws();const op=eat(/^(\+|-)(?!=)/);if(!op)return a;a=applyOp(op,a,mul())}}
+  function mul(){let a=pow();while(true){ws();const op=eat(/^(\/\/|\*\*|\*|\/|%)/);if(!op)return a;
+   if(op==='**')a=applyOp('**',a,pow());else a=applyOp(op,a,pow())}}
+  function pow(){return unary()}
+  function unary(){ws();if(eat(/^-/))return -unary();return atom()}
+  function atom(){ws();
+   if(eat(/^\(/)){const v=orE();ws();if(!eat(/^\)/))throw new Error('Missing )');return v}
+   let m;
+   if(m=eat(/^\d+\.\d+/))return parseFloat(m); if(m=eat(/^\d+/))return parseInt(m);
+   if(m=eat(/^"((?:[^"\\]|\\.)*)"/)||(m=eat(/^'((?:[^'\\]|\\.)*)'/)))return m.slice(1,-1).replace(/\\n/g,'\n').replace(/\\(['"\\])/g,'$1');
+   if(eat(/^True\b/))return true; if(eat(/^False\b/))return false; if(eat(/^None\b/))return null;
+   if(m=eat(/^(str|int|len|abs)\s*\(/)){const fn=m.replace(/\s*\($/,'');const arg=orE();ws();if(!eat(/^\)/))throw new Error('Missing )');
+    if(fn==='str')return disp(arg); if(fn==='int')return parseInt(arg); if(fn==='len')return String(arg).length; return Math.abs(arg)}
+   if(m=eat(/^[A-Za-z_]\w*/)){if(!(m in env))throw new Error("NameError: '"+m+"' is not defined");return env[m]}
+   throw new Error('SyntaxError near: '+s.slice(i,i+12))}
+  const v=orE();ws();if(i<s.length)throw new Error('SyntaxError near: '+s.slice(i,i+12));return v}
 }
 
-/* ---------------- Derived helpers ---------------- */
-function lessonStatus(lessonId){
-  return (persisted.progress[lessonId] && persisted.progress[lessonId].status) || 'todo';
-}
-function markLessonDone(lessonId){
-  persisted.progress[lessonId] = {status:'done', completedAt: Date.now()};
-  saveState();
-}
-function quizStatus(quizId){
-  return (persisted.quizProgress[quizId] && persisted.quizProgress[quizId].status) || 'todo';
-}
-function markQuizDone(quizId, score){
-  persisted.quizProgress[quizId] = {status:'done', score, completedAt: Date.now()};
-  saveState();
-}
-function langCompletion(lang){
-  const lessons = allLessonsOf(lang);
-  const done = lessons.filter(l=> lessonStatus(l.id)==='done').length;
-  const quiz = findUnit(lang).quiz;
-  const quizDone = quizStatus(quiz.id)==='done';
-  const total = lessons.length + 1;
-  const doneCount = done + (quizDone?1:0);
-  return {done:doneCount, total, pct: Math.round((doneCount/total)*100)};
-}
-function findContinueTarget(){
-  const preferred = ui.currentLanguageId || persisted.currentLanguageId;
-  const order = preferred ? [findLanguage(preferred), ...LANGUAGES.filter(l=>l.id!==preferred)] : LANGUAGES;
-  for(const lang of order){
-    if(!lang) continue;
-    const lessons = allLessonsOf(lang);
-    const next = lessons.find(l=> lessonStatus(l.id)!=='done');
-    if(next) return {langId:lang.id, lessonId:next.id};
-    const quiz = findUnit(lang).quiz;
-    if(quizStatus(quiz.id)!=='done') return {langId:lang.id, quizId:quiz.id};
-  }
-  return null;
-}
-function activityHeatmap(){
-  const counts = {};
-  Object.values(persisted.progress).forEach(p=>{
-    const d = new Date(p.completedAt).toISOString().slice(0,10);
-    counts[d] = (counts[d]||0)+1;
-  });
-  Object.values(persisted.quizProgress).forEach(p=>{
-    const d = new Date(p.completedAt).toISOString().slice(0,10);
-    counts[d] = (counts[d]||0)+1;
-  });
-  return counts;
-}
-function currentStreakDays(){
-  const counts = activityHeatmap();
-  let streak = 0;
-  let d = new Date();
-  while(true){
-    const key = d.toISOString().slice(0,10);
-    if(counts[key]){ streak++; d.setDate(d.getDate()-1); }
-    else break;
-  }
-  return streak;
+/* ================= ROUTER / SHELL ================= */
+const ICONS={
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>',
+ learn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h14v13H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h14"/></svg>',
+ code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>',
+ rank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M6 3h12v5a6 6 0 0 1-12 0V3Z"/><path d="M18 5h3a3 3 0 0 1-3 5M6 5H3a3 3 0 0 0 3 5"/></svg>',
+ me:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-5 8-5s6.5 1 8 5"/></svg>',
+};
+const TABS=[['home','Home'],['learn','Learn'],['code','Practice'],['rank','Ranks'],['me','Profile']];
+let curTab='home';
+function renderTabs(){$('#tabbar').hidden=false;$('#tabbar').innerHTML=TABS.map(([id,l])=>`<button class="tab ${curTab===id?'on':''}" data-t="${id}">${ICONS[id]}<span>${l}</span></button>`).join('');
+ $$('#tabbar .tab').forEach(b=>b.onclick=()=>{Haptic.tap();Sfx.tap();go(b.dataset.t)})}
+function go(tab){curTab=tab;$$('.layer').forEach(l=>l.remove());renderTabs();
+ ({home:renderHome,learn:renderLearn,code:renderPractice,rank:renderRanks,me:renderProfile})[tab]();$('#view').scrollTop=0}
+function pushLayer(html){const l=document.createElement('div');l.className='layer';l.innerHTML=html;$('#phone').appendChild(l);return l}
+function popLayer(){const ls=$$('.layer');if(ls.length)ls[ls.length-1].remove()}
+
+/* ================= SCREENS ================= */
+function statChips(){Gamify.tickLives();return`<div class="stat-row">
+ <span class="chip">🔥 ${S.streak}</span>
+ <span class="chip" style="color:var(--violet-soft)">⭐ ${S.xp} XP</span>
+ <span class="chip" style="color:var(--gold)">🪙 ${S.coins}</span>
+ <span class="chip" style="color:var(--diamond)">💎 ${S.diamonds}</span>
+ <span class="chip" style="color:var(--flame)">❤️ ${S.lives}${S.lives<5?` <small style="font-weight:500;color:var(--faint)">+1 in ${Gamify.nextLifeMin()}m</small>`:''}</span>
+</div>`}
+function courseDone(c){return(S.prog[c.id]||[]).length}
+function nextLesson(c){const done=S.prog[c.id]||[];return allLessons(c).find(l=>!done.includes(l.id))}
+function currentCourse(){return COURSES.find(c=>courseDone(c)>0&&courseDone(c)<allLessons(c).length)||COURSES.find(c=>courseDone(c)===0)||COURSES[0]}
+
+function renderHome(){
+ const c=currentCourse(),nl=nextLesson(c),lvl=Gamify.level(),rank=Gamify.rank();
+ const hr=new Date().getHours(),greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+ const chestOpen=S.lastChest===todayKey();
+ const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-d.getDay()+i);return d.toISOString().slice(0,10)});
+ const maxD=Math.max(20,...days.map(k=>S.days[k]||0));
+ const lb=leaderboard().slice(0,3);
+ $('#view').innerHTML=`
+ ${statChips()}
+ <div class="hello" style="margin-top:16px"><span class="eyebrow">${greet}</span><h1>${esc(S.profile.name)} <span style="filter:none">${S.profile.avatar}</span></h1></div>
+
+ <div class="card hero-cta"><div class="glowring"></div>
+   <span class="eyebrow" style="color:var(--violet-soft)">Continue learning</span>
+   <h3 style="font-size:18px;margin:6px 0 2px">${c.ico} ${c.name}${nl?` — ${esc(nl.name)}`:''}</h3>
+   <p style="font-size:12px;color:var(--dim);margin-bottom:12px">${courseDone(c)}/${allLessons(c).length} lessons complete</p>
+   <div class="pbar" style="margin-bottom:14px"><i style="width:${courseDone(c)/allLessons(c).length*100}%"></i></div>
+   ${nl?`<button class="btn" id="cont">▶ ${courseDone(c)?'Continue':'Start'} lesson</button>`:`<button class="btn" id="cont">🎉 Course complete — view certificate</button>`}
+ </div>
+
+ <div class="mini-grid">
+   <button class="card stat-cell" id="daily"><span class="eyebrow" style="color:var(--cyan)">Daily challenge</span><div class="big-num" style="font-size:20px;margin-top:6px">🎯 5 questions</div><div class="lbl" style="margin-top:4px">2× XP · +20 🪙</div></button>
+   <button class="card stat-cell" id="chest" ${chestOpen?'disabled style="opacity:.5"':''}><span class="eyebrow" style="color:var(--gold)">Daily reward</span><div class="big-num" style="font-size:26px;margin-top:4px">${chestOpen?'✅':'🎁'}</div><div class="lbl" style="margin-top:4px">${chestOpen?'Claimed today':'Tap to open'}</div></button>
+ </div>
+
+ <div class="sec-h"><h3>This week</h3><span class="eyebrow">${weekXP()} XP</span></div>
+ <div class="card"><div class="week-chart">${days.map((k,i)=>`<div class="b ${k===todayKey()?'today':''}"><div class="bar" style="height:${Math.max(5,(S.days[k]||0)/maxD*100)}%"></div><small>${'SMTWTFS'[i]}</small></div>`).join('')}</div></div>
+
+ <div class="sec-h"><h3>Leaderboard</h3><button data-go="rank">See all →</button></div>
+ <div class="card">${lb.map((r,i)=>`<div class="lb-row ${r.me?'me':''}"><span class="lb-rank">${['🥇','🥈','🥉'][i]}</span><span class="avatar">${r.a}</span><span class="lb-name">${esc(r.n)}</span><span class="lb-xp">${r.xp} XP</span></div>`).join('')}</div>
+
+ <div class="sec-h"><h3>Achievements</h3><button data-go="me">All →</button></div>
+ <div class="ach-grid">${ACH.slice(0,3).map(a=>`<div class="ach ${S.ach.includes(a.id)?'':'off'}"><div class="ico">${a.ico}</div><h5>${a.n}</h5><p>${a.d}</p></div>`).join('')}</div>
+
+ <div class="sec-h"><h3>Your stats</h3></div>
+ <div class="mini-grid" style="margin-top:0">
+  <div class="card stat-cell"><span class="lbl">Level ${lvl} · ${rank[2]} ${rank[1]}</span><div class="pbar" style="margin-top:8px"><i style="width:${Gamify.levelPct()}%"></i></div></div>
+  <div class="card stat-cell"><span class="lbl">Accuracy</span><div class="big-num" style="font-size:22px;margin-top:4px">${S.stats.answers?Math.round(S.stats.correct/S.stats.answers*100):0}%</div></div>
+ </div>`;
+ $('#cont').onclick=()=>{Haptic.tap();if(nl)openLesson(c,nl);else showCert(c)};
+ $('#daily').onclick=()=>{Haptic.tap();startDaily()};
+ if(!chestOpen)$('#chest').onclick=openChest;
+ $$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 }
 
-/* ---------------- Navigation ---------------- */
-function goto(screen, extra={}){
-  ui.screen = screen;
-  Object.assign(ui, extra);
-  render();
+function openChest(){const coins=30+Math.floor(Math.random()*40),xp=10+Math.floor(Math.random()*15);
+ S.lastChest=todayKey();S.coins+=coins;Gamify.addXP(xp);Store.save();Sfx.chest();Haptic.win();confetti(40);
+ sheet(`<div style="text-align:center;padding:10px 0 6px"><div style="font-size:60px">🎁</div><h2 style="font-family:var(--disp);font-size:20px;margin:12px 0 4px">Daily reward!</h2>
+ <p style="color:var(--dim);font-size:13px;margin-bottom:18px">Come back tomorrow to keep the streak alive.</p>
+ <div class="reward-row" style="justify-content:center"><div class="reward"><div class="big-num" style="color:var(--gold)">+${coins}</div><div class="lbl">Coins</div></div>
+ <div class="reward"><div class="big-num" style="color:var(--violet-soft)">+${xp}</div><div class="lbl">XP</div></div></div>
+ <button class="btn" onclick="closeSheet();go('home')">Collect</button></div>`);checkAch()}
+
+function renderLearn(){
+ $('#view').innerHTML=`<div class="hello"><span class="eyebrow">Learning paths</span><h1>Pick your path</h1></div>
+ ${COURSES.map(c=>{const tot=allLessons(c).length,d=courseDone(c);return`
+  <button class="card course-card" data-c="${c.id}" style="width:100%;text-align:left">
+   <span class="course-ico">${c.ico}</span>
+   <span class="course-meta"><h4>${c.name}</h4><p>${c.desc}</p>
+   <span class="pbar"><i style="width:${d/tot*100}%"></i></span></span>
+   <span class="eyebrow" style="flex-shrink:0">${d}/${tot}</span>
+  </button>`}).join('')}
+ <div class="sec-h"><h3>Coming soon</h3><span class="eyebrow">${SOON.length} paths</span></div>
+ ${SOON.map(([n,i])=>`<div class="card course-card locked"><span class="course-ico">${i}</span><span class="course-meta"><h4>${n}</h4><p>In development</p></span><span class="soon-tag">SOON</span></div>`).join('')}`;
+ $$('[data-c]').forEach(b=>b.onclick=()=>{Haptic.tap();openTrail(COURSES.find(c=>c.id===b.dataset.c))})}
+
+/* -------- Signature: serpentine glowing trail -------- */
+function openTrail(c){
+ const done=S.prog[c.id]||[];let unlocked=true;
+ const l=pushLayer(`<button class="back" id="bk">← Back</button>
+ <div class="hello"><span class="eyebrow">Learning path</span><h1>${c.ico} ${c.name}</h1></div>
+ <div class="pbar"><i style="width:${courseDone(c)/allLessons(c).length*100}%"></i></div>
+ ${c.units.map(u=>`<div class="unit-h"><span>${u.name}</span><div class="line"></div></div>
+  <div class="trail-wrap" data-trail>
+   ${u.lessons.map((ls,i)=>{const isDone=done.includes(ls.id);const state=isDone?'done':unlocked?'next':'lock';if(!isDone)unlocked=false;
+    const align=i%2===0?'flex-start':'flex-end';const pad=i%2===0?'padding-left:12%':'padding-right:12%';
+    return`<div class="node-row" style="justify-content:${align};${pad}">
+     <button class="node ${state}" data-l="${ls.id}" ${state==='lock'?'disabled':''}>${state==='lock'?'🔒':ls.ico}<span class="st">${esc(ls.name)}</span></button></div>`}).join('')}
+   <svg class="trail-svg" data-svg preserveAspectRatio="none"></svg>
+  </div>`).join('')}
+ ${courseDone(c)===allLessons(c).length?`<button class="btn" style="margin-top:18px" id="crt">📜 View certificate</button>`:''}`);
+ l.querySelector('#bk').onclick=()=>{Haptic.tap();popLayer()};
+ if(l.querySelector('#crt'))l.querySelector('#crt').onclick=()=>showCert(c);
+ l.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{Haptic.tap();const ls=allLessons(c).find(x=>x.id===b.dataset.l);openLesson(c,ls)});
+ requestAnimationFrame(()=>l.querySelectorAll('[data-trail]').forEach(w=>drawTrail(w,done)));
+}
+function drawTrail(wrap,done){const svg=wrap.querySelector('[data-svg]');const nodes=[...wrap.querySelectorAll('.node')];if(nodes.length<2)return;
+ const wr=wrap.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${wr.width} ${wr.height}`);
+ let lit='',dim='';for(let i=0;i<nodes.length-1;i++){const a=nodes[i].getBoundingClientRect(),b=nodes[i+1].getBoundingClientRect();
+  const x1=a.left-wr.left+a.width/2,y1=a.top-wr.top+a.height/2,x2=b.left-wr.left+b.width/2,y2=b.top-wr.top+b.height/2;
+  const midY=(y1+y2)/2;const d=`M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2} `;
+  if(nodes[i].classList.contains('done'))lit+=d;else dim+=d}
+ svg.innerHTML=`<path d="${dim}"/><path class="lit" d="${lit}"/>`}
+
+/* ================= LESSON ENGINE ================= */
+let L=null; // live lesson state
+function openLesson(course,lesson,mode){
+ Gamify.tickLives();
+ if(S.lives<=0&&mode!=='daily'){sheet(`<div style="text-align:center"><div style="font-size:54px">💔</div><h2 style="font-family:var(--disp);font-size:19px;margin:12px 0 6px">Out of lives</h2>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:16px">Next life in ${Gamify.nextLifeMin()} min — or refill now.</p>
+  <button class="btn" id="rf">🪙 Refill 5 lives · 100 coins</button><button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Wait</button></div>`,
+  el=>el.querySelector('#rf').onclick=()=>{if(S.coins<100)return toast('🪙','Not enough coins');S.coins-=100;S.lives=5;Store.save();Sfx.coin();closeSheet();openLesson(course,lesson,mode)});return}
+ const exs=mode==='daily'?lesson.ex:shuffle(lesson.ex);
+ L={course,lesson,mode,exs,i:0,wrong:0,combo:0,layer:pushLayer('')};
+ renderEx();
+}
+function renderEx(){
+ const ex=L.exs[L.i];
+ const hearts=L.mode==='daily'?'⏱️':[...Array(5)].map((_,i)=>i<S.lives?'❤️':'🖤').join('');
+ L.layer.innerHTML=`<div class="lesson-top">
+   <button class="iconbtn" id="quit">✕</button>
+   <div class="pbar"><i style="width:${L.i/L.exs.length*100}%"></i></div>
+   <span class="hearts">${hearts}</span></div>
+  <span class="ex-label">${ex.label||{mcq:'Multiple choice',fib:'Fill the blank',arrange:'Arrange the code',type:'Type the code'}[ex.t]}</span>
+  <div class="ex-q">${esc(ex.q)}</div>
+  ${ex.code?`<div class="codeblock">${highlight(ex.code,L.course.id==='py'?'py':'js')}</div>`:''}
+  <div id="ex-body"></div>
+  <button class="btn ghost small" id="hint" style="margin-top:4px">💡 Hint · 10 🪙</button>
+  <div id="verdict-slot"></div>`;
+ L.layer.querySelector('#quit').onclick=()=>{Haptic.tap();sheet(`<div style="text-align:center"><h2 style="font-family:var(--disp);font-size:18px;margin-bottom:8px">Quit lesson?</h2><p style="color:var(--dim);font-size:13px;margin-bottom:16px">Progress in this lesson will be lost.</p><button class="btn" onclick="closeSheet();popLayer()">Quit</button><button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Keep going</button></div>`)};
+ L.layer.querySelector('#hint').onclick=()=>{if(S.coins<10)return toast('🪙','Not enough coins');S.coins-=10;Store.save();Sfx.coin();toast('💡',hintFor(ex))};
+ const body=L.layer.querySelector('#ex-body');
+ ({mcq:buildMCQ,fib:buildFIB,arrange:buildARR,type:buildTYPE})[ex.t](body,ex);
+ L.layer.scrollTop=0;
+}
+function hintFor(ex){if(ex.t==='mcq')return 'Think: '+ex.x.split('.')[0]+'.';if(ex.t==='fib')return 'It starts with "'+ex.ans[0]+'".';if(ex.t==='type')return 'Answer has '+ex.ans.length+' characters.';return 'First line: '+ex.lines[0]}
+function norm(s){return s.replace(/\s+/g,' ').replace(/["']/g,'"').trim().toLowerCase()}
+
+function buildMCQ(el,ex){el.innerHTML=ex.c.map((c,i)=>`<button class="opt" data-i="${i}"><span class="key">${'ABCD'[i]}</span><code>${esc(c)}</code></button>`).join('');
+ el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(L.locked)return;L.locked=true;const ok=+b.dataset.i===ex.a;
+  b.classList.add(ok?'right':'wrong');if(!ok)el.querySelector(`[data-i="${ex.a}"]`).classList.add('right');verdict(ok,ex)})}
+function buildFIB(el,ex){const parts=ex.tpl.split('___');
+ el.innerHTML=`<div class="codeblock" style="margin-bottom:8px">${esc(parts[0])}<span class="blank" id="bl">?</span>${esc(parts[1]||'')}</div>
+ <div class="bank">${shuffle(ex.bank).map(t=>`<button class="tok" data-v="${esc(t)}">${esc(t)}</button>`).join('')}</div>`;
+ el.querySelectorAll('.tok').forEach(b=>b.onclick=()=>{if(L.locked)return;L.locked=true;const v=b.dataset.v;
+  el.querySelector('#bl').textContent=v;const ok=v===ex.ans;b.style.borderColor=ok?'var(--green)':'var(--red)';verdict(ok,ex)})}
+function buildARR(el,ex){const sh=shuffle(ex.lines.map((l,i)=>({l,i})));let picked=[];
+ el.innerHTML=`<div id="slots">${ex.lines.map(()=>`<div class="arr-slot"></div>`).join('')}</div>
+ <div class="bank arr-list" id="bank">${sh.map((o,k)=>`<button class="tok" data-i="${o.i}" data-k="${k}"><code>${esc(o.l)}</code></button>`).join('')}</div>
+ <button class="btn ghost small" id="undo">↩ Undo</button>`;
+ const slots=el.querySelectorAll('.arr-slot');
+ const refresh=()=>{slots.forEach((s,i)=>s.textContent=picked[i]!=null?ex.lines[picked[i]]:'')};
+ el.querySelectorAll('#bank .tok').forEach(b=>b.onclick=()=>{if(L.locked||b.classList.contains('used'))return;Haptic.tap();Sfx.tap();
+  picked.push(+b.dataset.i);b.classList.add('used');refresh();
+  if(picked.length===ex.lines.length){L.locked=true;const ok=picked.every((v,i)=>v===i);
+   slots.forEach(s=>s.style.borderColor=ok?'var(--green)':'var(--red)');verdict(ok,ex)}});
+ el.querySelector('#undo').onclick=()=>{if(L.locked||!picked.length)return;const last=picked.pop();
+  el.querySelector(`#bank .tok[data-i="${last}"]`).classList.remove('used');refresh()}}
+function buildTYPE(el,ex){el.innerHTML=`<input class="type-in" id="ti" placeholder="Type your answer…" autocomplete="off" spellcheck="false">
+ <button class="btn" style="margin-top:12px" id="chk">Check</button>`;
+ const inp=el.querySelector('#ti');inp.focus();
+ const check=()=>{if(L.locked)return;L.locked=true;const ok=norm(inp.value)===norm(ex.ans);
+  inp.style.borderColor=ok?'var(--green)':'var(--red)';verdict(ok,ex)};
+ el.querySelector('#chk').onclick=check;inp.onkeydown=e=>{if(e.key==='Enter')check()}}
+
+function verdict(ok,ex){
+ S.stats.answers++;if(ok){S.stats.correct++;L.combo++;Sfx.ok();Haptic.ok();
+  if(L.combo>=3){const c=document.createElement('div');c.className='combo';c.textContent=`${L.combo}× COMBO!`;document.body.appendChild(c);setTimeout(()=>c.remove(),1000)}}
+ else{L.wrong++;L.combo=0;Sfx.no();Haptic.no();if(L.mode!=='daily')Gamify.loseLife()}
+ Store.save();
+ const slot=L.layer.querySelector('#verdict-slot');
+ slot.innerHTML=`<div class="verdict ${ok?'ok':'no'}">
+  <h4 style="color:${ok?'var(--green)':'var(--red)'}">${ok?['Nice!','Correct!','Brilliant!','You got it!'][Math.floor(Math.random()*4)]:'Not quite'}</h4>
+  <p>${esc(ex.x)}</p><button class="btn" id="next">${L.i+1<L.exs.length?'Continue':'Finish'}</button></div>`;
+ slot.querySelector('#next').onclick=()=>{L.locked=false;L.i++;
+  if(L.i<L.exs.length){if(S.lives<=0&&L.mode!=='daily'){popLayer();openLesson(L.course,L.lesson)}else renderEx()}
+  else finishLesson()}}
+
+function finishLesson(){
+ const perfect=L.wrong===0;
+ let xp=L.exs.length*5+(perfect?15:0),coins=10+(perfect?10:0);
+ if(L.mode==='daily'){xp*=2;coins+=20;S.stats.challenges++;S.lastDaily=todayKey()}
+ else{const arr=S.prog[L.course.id]=S.prog[L.course.id]||[];
+  if(!arr.includes(L.lesson.id)){arr.push(L.lesson.id);S.stats.lessons++;if(perfect)S.stats.perfect++}
+  if(arr.length===allLessons(L.course).length&&!S.certs.includes(L.course.id)){S.certs.push(L.course.id);setTimeout(()=>showCert(L.course),600)}}
+ Gamify.addXP(xp);S.coins+=coins;Store.save();Sfx.win();Haptic.win();confetti(80);
+ L.layer.innerHTML=`<div class="done-wrap">
+  <div class="trophy">${perfect?'🏆':'🎉'}</div>
+  <h2>${perfect?'Flawless!':'Lesson complete!'}</h2>
+  <p style="color:var(--dim);font-size:13px">${L.mode==='daily'?'Daily challenge crushed — 2× XP applied':esc(L.lesson?.name||'')} · ${L.exs.length-L.wrong}/${L.exs.length} correct</p>
+  <div class="reward-row">
+   <div class="reward"><div class="big-num" style="color:var(--violet-soft)">+${xp}</div><div class="lbl">XP</div></div>
+   <div class="reward"><div class="big-num" style="color:var(--gold)">+${coins}</div><div class="lbl">Coins</div></div>
+   ${perfect?'<div class="reward"><div class="big-num">💯</div><div class="lbl">Perfect</div></div>':''}
+  </div>
+  <button class="btn" id="dn">Continue</button></div>`;
+ L.layer.querySelector('#dn').onclick=()=>{popLayer();checkAch();go(L.mode==='daily'?'home':curTab)};
+ checkAch();
+}
+function startDaily(){
+ if(S.lastDaily===todayKey())return toast('🎯','Daily challenge already done — come back tomorrow!');
+ const r=rng(parseInt(todayKey().replace(/-/g,'')));
+ const pool=[...EX_POOL];const pick=[];for(let i=0;i<5;i++)pick.push(pool.splice(Math.floor(r()*pool.length),1)[0]);
+ openLesson({id:'daily',name:'Daily'},{id:'daily',name:'Daily Challenge',ex:pick},'daily');
 }
 
-/* ---------------- Rendering ---------------- */
-function topbar({back=null, title='', showFree=true}={}){
-  return `
-    <div class="topbar">
-      ${back ? `<button class="back" data-action="${back}" aria-label="Back">←</button>` : `<span style="width:34px"></span>`}
-      <div class="wordmark">${title || `BG CODE<span class="dot">.</span>TUTOR`}</div>
-      ${showFree ? `<span class="free-badge">100% FREE</span>` : ''}
-    </div>`;
+/* ================= PRACTICE / PLAYGROUND ================= */
+const STARTER={py:'# BG Python Playground\nname = "BG"\nfor i in range(3):\n  print("Hello " + name + " x" + str(i + 1))',
+ js:'// BG JavaScript Playground\nconst name = "BG"\nfor (let i = 1; i <= 3; i++) {\n  console.log(`Round ${i}: hi ${name}`)\n}'};
+function renderPractice(){
+ $('#view').innerHTML=`<div class="hello"><span class="eyebrow">Practice arena</span><h1>Sharpen your skills</h1></div>
+ <div class="mini-grid" style="margin-top:0">
+  <button class="card stat-cell" id="p-daily"><div style="font-size:24px">🎯</div><div class="big-num" style="font-size:15px;margin-top:6px">Daily Challenge</div><div class="lbl" style="margin-top:3px">${S.lastDaily===todayKey()?'Done ✅':'2× XP · 5 Qs'}</div></button>
+  <button class="card stat-cell" id="p-speed"><div style="font-size:24px">⚡</div><div class="big-num" style="font-size:15px;margin-top:6px">Speed Round</div><div class="lbl" style="margin-top:3px">8 random Qs</div></button>
+  <button class="card stat-cell" id="p-bug"><div style="font-size:24px">🐞</div><div class="big-num" style="font-size:15px;margin-top:6px">Bug Hunt</div><div class="lbl" style="margin-top:3px">Debug drills</div></button>
+  <button class="card stat-cell" id="p-out"><div style="font-size:24px">🔮</div><div class="big-num" style="font-size:15px;margin-top:6px">Output Oracle</div><div class="lbl" style="margin-top:3px">Predict results</div></button>
+ </div>
+ <div class="sec-h"><h3>Code Playground</h3><span class="eyebrow">runs on-device</span></div>
+ <div class="pg-head"><div class="lang-pick">
+   <button class="chip on" data-lang="py">🐍 Python</button><button class="chip" data-lang="js">⚡ JavaScript</button></div></div>
+ <div class="editor-wrap"><pre id="hl"></pre><textarea id="ed" spellcheck="false"></textarea></div>
+ <div style="display:flex;gap:10px;margin-top:12px">
+  <button class="btn" id="run" style="flex:1">▶ Run code</button>
+  <button class="btn ghost" id="clr" style="width:auto;padding:15px 18px">🧹</button>
+  <button class="btn ghost" id="ai" style="width:auto;padding:15px 18px">🤖</button></div>
+ <div class="console" id="con"><span class="dim">Output appears here…</span></div>`;
+ let lang='py';const ed=$('#ed'),hl=$('#hl');
+ const paint=()=>{hl.innerHTML=highlight(ed.value,lang)+'\n'};
+ ed.value=STARTER[lang];paint();
+ ed.oninput=paint;ed.onscroll=()=>{hl.scrollTop=ed.scrollTop;hl.scrollLeft=ed.scrollLeft};
+ ed.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();const s=ed.selectionStart;ed.setRangeText('  ',s,ed.selectionEnd,'end');paint()}};
+ $$('.lang-pick .chip').forEach(b=>b.onclick=()=>{Haptic.tap();$$('.lang-pick .chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');lang=b.dataset.lang;ed.value=STARTER[lang];paint()});
+ $('#run').onclick=()=>{Haptic.tap();Sfx.tap();const r=lang==='py'?runPY(ed.value):runJS(ed.value);
+  $('#con').innerHTML=esc(r.out||'')+(r.err?`\n<span class="err">✖ ${esc(r.err)}</span>`:'\n<span class="dim">✓ finished</span>')};
+ $('#clr').onclick=()=>{ed.value='';paint();$('#con').innerHTML='<span class="dim">Cleared.</span>'};
+ $('#ai').onclick=()=>openTutor(ed.value,lang);
+ $('#p-daily').onclick=startDaily;
+ $('#p-speed').onclick=()=>practiceRun(shuffle(EX_POOL).slice(0,8),'Speed Round');
+ $('#p-bug').onclick=()=>practiceRun(shuffle(EX_POOL.filter(e=>e.label==='Fix the bug')).slice(0,6),'Bug Hunt');
+ $('#p-out').onclick=()=>practiceRun(shuffle(EX_POOL.filter(e=>e.label==='Predict output')).slice(0,6),'Output Oracle');
+}
+function practiceRun(ex,name){if(!ex.length)return toast('🙈','No drills available');openLesson({id:'pr',name:'Practice'},{id:'pr_'+Date.now(),name,ex},'daily')}
+
+/* ================= AI TUTOR (Claude API when available, offline fallback) ================= */
+function tutorFallback(q,code,lang){q=q.toLowerCase();
+ if(q.includes('error')||q.includes('bug'))return "Debug checklist:\n1. Read the error's line number\n2. Check quotes, brackets & colons pair up\n3. Check spelling of variable names\n4. print() values midway to see what's happening";
+ if(q.includes('loop'))return lang==='py'?"Python loop pattern:\nfor i in range(5):\n  print(i)\n\nrange(5) → 0,1,2,3,4. Indentation defines the body.":"JS loop pattern:\nfor (let i = 0; i < 5; i++) {\n  console.log(i)\n}";
+ if(q.includes('function'))return lang==='py'?"def greet(name):\n  return \"Hi \" + name\n\nprint(greet(\"BG\"))":"function greet(name) {\n  return `Hi ${name}`\n}\nconsole.log(greet('BG'))";
+ if(q.includes('variable'))return "A variable is a labelled box for a value.\nPython: score = 10\nJS: let score = 10\nUse the name to reuse the value anywhere below.";
+ return "I can help with loops, functions, variables, and errors — ask about any of those, or paste code and ask \"why is this broken?\". (Full AI mode activates when this app runs inside Claude.)"}
+function openTutor(code,lang){
+ const l=pushLayer(`<button class="back" id="bk">← Back</button>
+ <div class="hello"><span class="eyebrow">BG Tutor</span><h1>🤖 Ask anything</h1></div>
+ <div class="chat" id="chat"><div class="msg bot">Hey ${esc(S.profile.name)}! I'm your coding tutor. Ask me to explain code, fix a bug, or teach a concept. I'll guide you — not just hand over answers. 💜</div></div>
+ <div class="chat-bar"><input id="ci" placeholder="e.g. explain my loop…"><button id="cs">➤</button></div>`);
+ l.querySelector('#bk').onclick=popLayer;
+ const chat=l.querySelector('#chat'),ci=l.querySelector('#ci');
+ async function send(){const q=ci.value.trim();if(!q)return;ci.value='';
+  chat.insertAdjacentHTML('beforeend',`<div class="msg me">${esc(q)}</div>`);
+  const th=document.createElement('div');th.className='msg bot';th.textContent='…thinking';chat.appendChild(th);th.scrollIntoView();
+  let reply;
+  try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:
+   `You are BG Tutor inside a coding education app. Be encouraging, concise (<120 words), guide with hints before answers. Student's ${lang==='py'?'Python':'JavaScript'} code:\n${code||'(none)'}\n\nQuestion: ${q}`}]})});
+   const d=await res.json();reply=(d.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n')||tutorFallback(q,code,lang)}
+  catch(e){reply=tutorFallback(q,code,lang)}
+  th.textContent=reply;th.scrollIntoView()}
+ l.querySelector('#cs').onclick=send;ci.onkeydown=e=>{if(e.key==='Enter')send()};
 }
 
-function render(){
-  const root = document.getElementById('app');
-  let html = '';
-  switch(ui.screen){
-    case 'loading': html = renderLoading(); break;
-    case 'welcome': html = renderWelcome(); break;
-    case 'dashboard': html = renderDashboard(); break;
-    case 'languages': html = renderLanguages(); break;
-    case 'units': html = renderUnits(); break;
-    case 'lesson': html = renderLessonScreen(); break;
-    case 'quiz': html = renderQuizScreen(); break;
-    case 'settings': html = renderSettings(); break;
-    default: html = renderDashboard();
-  }
-  root.innerHTML = html;
-  mountScreen();
-  window.scrollTo(0,0);
+/* ================= RANKS ================= */
+function renderRanks(){const rows=leaderboard();const meIdx=rows.findIndex(r=>r.me);
+ const top3=rows.slice(0,3),rest=rows.slice(3);
+ $('#view').innerHTML=`<div class="hello"><span class="eyebrow">Weekly league · resets Sunday</span><h1>🏆 Leaderboard</h1></div>
+ <div class="podium">
+  ${[[1,60],[0,84],[2,48]].map(([i,h])=>{const r=top3[i];return`<div class="pod ${i===0?'p1':''}"><span class="avatar">${r.a}</span><div class="nm">${esc(r.n)}</div><div class="xp">${r.xp} XP</div><div class="bar" style="height:${h}px">${i+1}</div></div>`}).join('')}
+ </div>
+ <div class="card">${rest.map((r,i)=>`<div class="lb-row ${r.me?'me':''}"><span class="lb-rank">${i+4}</span><span class="avatar">${r.a}</span><span class="lb-name">${esc(r.n)}${r.me?'<small>That’s you — keep pushing!</small>':''}</span><span class="lb-xp">${r.xp} XP</span></div>`).join('')}</div>
+ <div class="card" style="text-align:center"><span class="eyebrow">Your position</span><div class="big-num" style="font-size:30px;margin:6px 0">#${meIdx+1}</div><p style="font-size:12px;color:var(--dim)">${meIdx>0?`${rows[meIdx-1].xp-rows[meIdx].xp+1} XP to pass ${esc(rows[meIdx-1].n)}`:'You’re on top — defend the crown! 👑'}</p></div>`}
+
+/* ================= PROFILE ================= */
+function renderProfile(){const rank=Gamify.rank(),lvl=Gamify.level();
+ const cells=[...Array(84)].map((_,i)=>{const d=new Date(Date.now()-(83-i)*864e5).toISOString().slice(0,10);const v=S.days[d]||0;
+  return `<i class="${v>60?'h3':v>25?'h2':v>0?'h1':''}" title="${d}: ${v} XP"></i>`}).join('');
+ const THEMES=[['violet','💜',0],['cyan','🩵',3],['sunset','🧡',3],['emerald','💚',3]];
+ $('#view').innerHTML=`
+ <div class="prof-head"><span class="avatar">${S.profile.avatar}</span><h2>${esc(S.profile.name)}</h2>
+  <div class="rank">LEVEL ${lvl} · ${rank[2]} ${rank[1].toUpperCase()}</div>
+  <div class="pbar" style="max-width:220px;margin:12px auto 0"><i style="width:${Gamify.levelPct()}%"></i></div></div>
+ <div class="mini-grid">
+  <div class="card stat-cell"><span class="lbl">Total XP</span><div class="big-num" style="font-size:22px">${S.xp}</div></div>
+  <div class="card stat-cell"><span class="lbl">Lessons done</span><div class="big-num" style="font-size:22px">${S.stats.lessons}</div></div>
+  <div class="card stat-cell"><span class="lbl">Best accuracy</span><div class="big-num" style="font-size:22px">${S.stats.answers?Math.round(S.stats.correct/S.stats.answers*100):0}%</div></div>
+  <div class="card stat-cell"><span class="lbl">Perfect lessons</span><div class="big-num" style="font-size:22px">${S.stats.perfect}</div></div>
+ </div>
+ <div class="sec-h"><h3>Activity · last 12 weeks</h3></div>
+ <div class="card"><div class="heat">${cells}</div></div>
+ <div class="sec-h"><h3>Certificates</h3></div>
+ ${S.certs.length?S.certs.map(id=>{const c=COURSES.find(x=>x.id===id);return`<button class="card course-card" data-cert="${id}" style="width:100%;text-align:left"><span class="course-ico">📜</span><span class="course-meta"><h4>${c.name} — Certified</h4><p>Tap to view & download</p></span></button>`}).join(''):
+  `<div class="card empty"><span class="ico">📜</span>Finish any full course to earn your first certificate.</div>`}
+ <div class="sec-h"><h3>Achievements · ${S.ach.length}/${ACH.length}</h3></div>
+ <div class="ach-grid">${ACH.map(a=>`<div class="ach ${S.ach.includes(a.id)?'':'off'}"><div class="ico">${a.ico}</div><h5>${a.n}</h5><p>${a.d}</p></div>`).join('')}</div>
+ <div class="sec-h"><h3>Themes · unlock with 💎</h3></div>
+ <div class="card" style="display:flex;gap:10px">${THEMES.map(([id,ico,cost])=>{const owned=S.themes.includes(id);
+  return`<button class="chip ${S.theme===id?'':''}" data-th="${id}" style="${S.theme===id?'border-color:var(--violet);color:var(--violet-soft)':''}">${ico} ${owned?(S.theme===id?'On':'Use'):cost+' 💎'}</button>`}).join('')}</div>
+ <div class="sec-h"><h3>Settings</h3></div>
+ <div class="card">
+  <div class="setrow">🔊 Sounds<button class="switch ${S.sound?'on':''}" data-s="sound"><i></i></button></div>
+  <div class="setrow">📳 Haptics<button class="switch ${S.haptics?'on':''}" data-s="haptics"><i></i></button></div>
+  <div class="setrow">✨ Animations<button class="switch ${S.motion?'on':''}" data-s="motion"><i></i></button></div>
+ </div>
+ <div style="display:flex;gap:10px;margin-top:14px">
+  <button class="btn ghost small" id="exp" style="flex:1">⬇ Export data</button>
+  <button class="btn ghost small" id="imp" style="flex:1">⬆ Import</button>
+  <button class="btn ghost small" id="rst" style="flex:1;color:var(--red)">Reset</button></div>
+ <p style="text-align:center;font-size:10px;color:var(--faint);margin-top:20px">BG Code Tutor 2.0 · built by ${esc(S.profile.name)} with 💜 · 100% free forever</p>`;
+ $$('[data-cert]').forEach(b=>b.onclick=()=>showCert(COURSES.find(c=>c.id===b.dataset.cert)));
+ $$('[data-th]').forEach(b=>b.onclick=()=>{const id=b.dataset.th;const T={violet:0,cyan:3,sunset:3,emerald:3};
+  if(!S.themes.includes(id)){if(S.diamonds<T[id])return toast('💎','Not enough diamonds — earn them via achievements');S.diamonds-=T[id];S.themes.push(id);toast('🎨','Theme unlocked!')}
+  S.theme=id;Store.save();applyTheme();renderProfile()});
+ $$('[data-s]').forEach(b=>b.onclick=()=>{const k=b.dataset.s;S[k]=!S[k];Store.save();b.classList.toggle('on');if(k==='motion')applyTheme()});
+ $('#exp').onclick=()=>{const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(JSON.stringify(S));a.download='bg-code-tutor-save.json';a.click();toast('⬇','Save exported')};
+ $('#imp').onclick=()=>{const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=()=>{const f=i.files[0];const r=new FileReader();
+  r.onload=()=>{try{S=Store.d={...Store.def(),...JSON.parse(r.result)};Store.save();applyTheme();go('me');toast('✅','Save imported')}catch(e){toast('⚠️','Invalid file')}};r.readAsText(f)};i.click()};
+ $('#rst').onclick=()=>sheet(`<div style="text-align:center"><h2 style="font-family:var(--disp);font-size:18px;margin-bottom:8px">Reset everything?</h2><p style="color:var(--dim);font-size:13px;margin-bottom:16px">All XP, streaks and progress will be wiped.</p><button class="btn" style="background:linear-gradient(135deg,#F87171,#DC2626)" onclick="localStorage.removeItem('bgct2');location.reload()">Yes, reset</button><button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Cancel</button></div>`);
 }
 
-function renderLoading(){
-  return `<div class="loading-screen"><div class="spinner"></div><p style="color:var(--ink-soft);font-size:13px;">Loading BG Code Tutor…</p></div>`;
-}
+/* ---------- Certificate (canvas → PNG) ---------- */
+function showCert(course){
+ sheet(`<h2 style="font-family:var(--disp);font-size:18px;text-align:center;margin-bottom:14px">📜 Certificate of Completion</h2>
+ <canvas class="cert-canvas" id="cc" width="900" height="560"></canvas>
+ <button class="btn" style="margin-top:14px" id="dl">⬇ Download PNG</button>`,el=>{
+  const cv=el.querySelector('#cc'),x=cv.getContext('2d');
+  const g=x.createLinearGradient(0,0,900,560);g.addColorStop(0,'#140E24');g.addColorStop(1,'#0A0714');x.fillStyle=g;x.fillRect(0,0,900,560);
+  x.strokeStyle='#8B5CF6';x.lineWidth=4;x.strokeRect(24,24,852,512);
+  x.strokeStyle='rgba(139,92,246,.35)';x.lineWidth=1.5;x.strokeRect(38,38,824,484);
+  x.textAlign='center';x.fillStyle='#8E86A8';x.font='700 20px Space Grotesk, sans-serif';
+  x.fillText('BG CODE TUTOR · CERTIFICATE OF COMPLETION',450,110);
+  x.fillStyle='#EDE9FE';x.font='900 58px Unbounded, sans-serif';x.fillText(S.profile.name,450,215);
+  x.fillStyle='#C4B5FD';x.font='500 22px Space Grotesk, sans-serif';
+  x.fillText('has successfully completed the full course',450,270);
+  x.fillStyle='#22D3EE';x.font='700 42px Unbounded, sans-serif';x.fillText(course.ico+'  '+course.name,450,340);
+  x.fillStyle='#8E86A8';x.font='500 18px Space Grotesk, sans-serif';
+  x.fillText('Issued '+new Date().toDateString()+'  ·  '+allLessons(course).length+' lessons  ·  100% complete',450,410);
+  x.fillStyle='#8B5CF6';x.font='700 24px Unbounded, sans-serif';x.fillText('— BG —',450,475);
+  el.querySelector('#dl').onclick=()=>{const a=document.createElement('a');a.download=`BG-Certificate-${course.name}.png`;a.href=cv.toDataURL();a.click()};
+ });confetti(50)}
 
-function renderWelcome(){
-  return `
-    <div class="screen stack" style="padding-top:48px;">
-      <div class="hero-term">
-        <div class="term-dots"><span></span><span></span><span></span></div>
-        <div>$ whoami</div>
-        <div style="color:var(--code-accent)">future_developer<span class="cursor-blink"></span></div>
-      </div>
-      <div style="text-align:center;margin-top:6px;">
-        <h1 style="font-size:26px;">BG CODE TUTOR</h1>
-        <p style="color:var(--ink-soft);margin-top:6px;">Learn coding for free — any language, any level.</p>
-        <span class="free-badge" style="margin-top:10px;display:inline-block;">100% FREE · NO SIGN-UP · NO PAYWALLS</span>
-      </div>
-      <div class="card stack" style="margin-top:10px;">
-        <label for="name-field" class="editor-label">Your name</label>
-        <input id="name-field" class="name-input" placeholder="e.g. Priya" autocomplete="off" maxlength="40">
-        <button class="btn btn-primary btn-block" id="start-btn" disabled data-action="start-learning">Start learning</button>
-        <p style="font-size:12px;color:var(--ink-faint);text-align:center;">No account needed — your name just personalizes the app.</p>
-      </div>
-    </div>`;
-}
+/* ================= ONBOARDING & INIT ================= */
+const AVATARS=['🦊','🐼','🤖','🦄','🐯','🐸','👾','🐙','🦁','🐨','🐳','🚀'];
+function renderOnboarding(){let step=0,av='🤖',goal=10,name='';
+ const draw=()=>{const dots=`<div class="dots">${[0,1,2].map(i=>`<i class="${i===step?'on':''}"></i>`).join('')}</div>`;
+  if(step===0)$('#view').innerHTML=`<div class="ob"><div class="art">🚀</div>
+   <h1>Learn to code,<br><span class="grad">the fun way</span></h1>
+   <p>Bite-size lessons · real code editor · streaks, XP & leagues.<br>Built by BG. 100% free, forever.</p>
+   ${dots}<button class="btn" id="nx">Get started</button></div>`;
+  else if(step===1)$('#view').innerHTML=`<div class="ob"><h1 style="margin-top:20px">Pick your <span class="grad">avatar</span></h1>
+   <div class="av-grid">${AVATARS.map(a=>`<button class="${a===av?'on':''}" data-a="${a}">${a}</button>`).join('')}</div>
+   <input class="name-in" id="nm" placeholder="Your name" maxlength="16" value="${esc(name)}">
+   <p style="margin:0 0 auto"></p>${dots}<button class="btn" id="nx">Continue</button></div>`;
+  else $('#view').innerHTML=`<div class="ob"><h1 style="margin-top:20px">Daily <span class="grad">goal</span>?</h1>
+   <p style="margin-bottom:6px">Consistency beats intensity. Pick a pace:</p>
+   <div class="goal-row">${[[5,'Chill'],[10,'Steady'],[20,'Intense']].map(([m,l])=>`<button class="${goal===m?'on':''}" data-g="${m}">${m} min<small>${l}</small></button>`).join('')}</div>
+   <p style="margin:0 0 auto"></p>${dots}<button class="btn" id="nx">Start learning 🚀</button></div>`;
+  $$('[data-a]').forEach(b=>b.onclick=()=>{av=b.dataset.a;Haptic.tap();Sfx.tap();draw()});
+  $$('[data-g]').forEach(b=>b.onclick=()=>{goal=+b.dataset.g;Haptic.tap();draw()});
+  if($('#nm')){$('#nm').oninput=e=>name=e.target.value}
+  $('#nx').onclick=()=>{Haptic.tap();Sfx.tap();
+   if(step===1&&!name.trim())return toast('✏️','Enter your name first');
+   if(step<2){step++;draw()}else{S.profile={name:name.trim(),avatar:av,goal};Gamify.touchStreak();Store.save();confetti(50);Sfx.win();go('home')}};
+ };draw()}
 
-function renderDashboard(){
-  const name = persisted.user ? persisted.user.name : 'there';
-  const cont = findContinueTarget();
-  let continueCard;
-  if(cont){
-    const lang = findLanguage(cont.langId);
-    if(cont.lessonId){
-      const lesson = findLesson(lang, cont.lessonId);
-      continueCard = `
-        <div class="card card-tap" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${lesson.id}">
-          <p class="editor-label">Continue learning</p>
-          <h3 style="margin-top:6px;">${lang.emoji} ${escapeHtml(lesson.title)}</h3>
-          <p style="color:var(--ink-soft);font-size:13.5px;margin-top:4px;">${escapeHtml(lang.name)} · Beginner</p>
-          <button class="btn btn-accent btn-sm" style="margin-top:12px;" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${lesson.id}">Resume →</button>
-        </div>`;
-    } else {
-      continueCard = `
-        <div class="card card-tap" data-action="open-quiz" data-lang="${lang.id}" data-quiz="${cont.quizId}">
-          <p class="editor-label">Continue learning</p>
-          <h3 style="margin-top:6px;">${lang.emoji} Unit quiz</h3>
-          <p style="color:var(--ink-soft);font-size:13.5px;margin-top:4px;">${escapeHtml(lang.name)} · Beginner</p>
-          <button class="btn btn-accent btn-sm" style="margin-top:12px;" data-action="open-quiz" data-lang="${lang.id}" data-quiz="${cont.quizId}">Take the quiz →</button>
-        </div>`;
-    }
-  } else {
-    continueCard = `<div class="card"><p>🎉 You have completed every lesson here. New units are on the way!</p></div>`;
-  }
-
-  const langRows = LANGUAGES.map(lang=>{
-    const c = langCompletion(lang);
-    return `
-      <div class="card card-tap row between" data-action="open-language" data-lang="${lang.id}" style="padding:14px 16px;">
-        <div class="row" style="gap:12px;">
-          <span style="font-size:22px;">${lang.emoji}</span>
-          <div>
-            <div style="font-weight:600;font-size:14.5px;">${escapeHtml(lang.name)}</div>
-            <div style="font-size:12px;color:var(--ink-faint);">${c.done}/${c.total} complete</div>
-          </div>
-        </div>
-        <div style="width:60px;">
-          <div class="progress-track"><div class="progress-fill" style="width:${c.pct}%"></div></div>
-        </div>
-      </div>`;
-  }).join('');
-
-  const streak = currentStreakDays();
-  const heat = activityHeatmap();
-  const cells = [];
-  for(let i=59;i>=0;i--){
-    const d = new Date(); d.setDate(d.getDate()-i);
-    const key = d.toISOString().slice(0,10);
-    const count = heat[key]||0;
-    let bg = 'var(--border)';
-    if(count===1) bg='var(--accent-soft)';
-    else if(count>=2 && count<4) bg='var(--accent)';
-    else if(count>=4) bg='var(--accent-deep)';
-    cells.push(`<div class="streak-cell" style="background:${bg}" title="${key}: ${count} done"></div>`);
-  }
-
-  return `
-    ${topbar({title:'BG CODE<span class="dot">.</span>TUTOR'})}
-    <div class="screen stack">
-      <div>
-        <h2 style="font-size:21px;">Welcome back, ${escapeHtml(name)} 👋</h2>
-        <p style="color:var(--ink-soft);font-size:13.5px;margin-top:2px;">${streak>0 ? `🔥 ${streak}-day streak — keep it going.` : `Start a lesson today to begin your streak.`}</p>
-      </div>
-      ${continueCard}
-      <div>
-        <p class="editor-label" style="margin-bottom:8px;">Your languages</p>
-        <div class="stack" style="gap:10px;">${langRows}</div>
-        <button class="btn btn-soft btn-block" style="margin-top:10px;" data-action="goto-languages">See all languages →</button>
-      </div>
-      <div class="card streak-card">
-        <p class="editor-label">Your activity</p>
-        <div class="streak-grid">${cells.join('')}</div>
-        <div class="streak-legend">
-          <span class="legend-chip" style="background:var(--border)"></span> none
-          <span class="legend-chip" style="background:var(--accent-soft)"></span> 1
-          <span class="legend-chip" style="background:var(--accent)"></span> 2-3
-          <span class="legend-chip" style="background:var(--accent-deep)"></span> 4+
-        </div>
-      </div>
-      <button class="btn btn-ghost btn-block" data-action="goto-settings">⚙️ Settings</button>
-    </div>`;
-}
-
-function renderLanguages(){
-  const built = LANGUAGES.map(lang=>{
-    const c = langCompletion(lang);
-    return `
-      <div class="card card-tap lang-card" data-action="open-language" data-lang="${lang.id}">
-        <div class="lang-emoji">${lang.emoji}</div>
-        <div style="font-weight:600;margin-top:8px;">${escapeHtml(lang.name)}</div>
-        <div style="font-size:12px;color:var(--ink-faint);margin-top:2px;">${c.done}/${c.total} done</div>
-        <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" style="width:${c.pct}%"></div></div>
-      </div>`;
-  }).join('');
-  const soon = COMING_SOON_LANGUAGES.map(l=>`
-      <div class="card lang-card locked">
-        <div class="lang-emoji">${l.emoji}</div>
-        <div style="font-weight:600;margin-top:8px;">${escapeHtml(l.name)}</div>
-        <span class="soon-tag">COMING SOON</span>
-      </div>`).join('');
-  return `
-    ${topbar({back:'goto-dashboard', title:'Languages'})}
-    <div class="screen stack">
-      <p style="color:var(--ink-soft);font-size:13.5px;">Pick a language to start or continue learning. Every course here is, and always will be, free.</p>
-      <div class="lang-grid">${built}</div>
-      <p class="editor-label" style="margin-top:6px;">More on the way</p>
-      <div class="lang-grid">${soon}</div>
-    </div>`;
-}
-
-function renderUnits(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const unit = findUnit(lang);
-  const lessons = unit.lessons;
-  const quiz = unit.quiz;
-  const allDone = lessons.every(l=> lessonStatus(l.id)==='done');
-  const rows = lessons.map((l,idx)=>{
-    const status = lessonStatus(l.id);
-    const dotClass = status==='done' ? 'done' : 'current';
-    const dotContent = status==='done' ? '✓' : (idx+1);
-    return `
-      <div class="unit-lesson-row card-tap" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${l.id}">
-        <div class="lesson-dot ${dotClass}">${dotContent}</div>
-        <div style="flex:1;">
-          <div style="font-weight:600;font-size:14.5px;">${escapeHtml(l.title)}</div>
-          <div style="font-size:12px;color:var(--ink-faint);">${escapeHtml(l.goal)}</div>
-        </div>
-        <div style="color:var(--ink-faint);">›</div>
-      </div>`;
-  }).join('');
-
-  const quizDone = quizStatus(quiz.id)==='done';
-  const quizRow = `
-    <div class="unit-lesson-row card-tap ${!allDone?'locked':''}" ${allDone ? `data-action="open-quiz" data-lang="${lang.id}" data-quiz="${quiz.id}"` : ''}>
-      <div class="lesson-dot ${quizDone?'done':''}">${quizDone?'✓':'★'}</div>
-      <div style="flex:1;">
-        <div style="font-weight:600;font-size:14.5px;">${escapeHtml(quiz.title)}</div>
-        <div style="font-size:12px;color:var(--ink-faint);">${allDone ? 'Mixed questions — finish the unit' : 'Unlocks after all lessons are complete'}</div>
-      </div>
-      <div style="color:var(--ink-faint);">${allDone ? '›' : '🔒'}</div>
-    </div>`;
-
-  return `
-    ${topbar({back:'goto-languages', title:lang.name})}
-    <div class="screen stack">
-      <div>
-        <p class="editor-label">${escapeHtml(lang.name)} · Beginner</p>
-        <h2 style="margin-top:4px;">${escapeHtml(unit.title)}</h2>
-      </div>
-      <div class="stack" style="gap:10px;">${rows}${quizRow}</div>
-      <div class="card" style="text-align:center;color:var(--ink-soft);font-size:13px;">
-        More units for ${escapeHtml(lang.name)} are coming soon — completely free, as always.
-      </div>
-    </div>`;
-}
-
-function lessonEngineMarkup(lesson, lang){
-  if(lang.engine==='html'){
-    return `<iframe id="html-frame" class="html-frame" title="Live preview" sandbox=""></iframe>`;
-  }
-  return `<div id="output-panel" class="output-panel empty">Run your code to see what happens.</div>`;
-}
-
-function renderLessonScreen(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const lesson = findLesson(lang, ui.currentLessonId);
-  const result = ui.lastResult[lesson.id];
-  const hintsShown = lesson.hints.slice(0, ui.hintIndex);
-  const lessons = allLessonsOf(lang);
-  const idx = lessons.findIndex(l=>l.id===lesson.id);
-  const next = lessons[idx+1];
-  const success = result && result.success;
-
-  return `
-    ${topbar({back:'goto-units', title:lang.name})}
-    <div class="screen stack">
-      <div>
-        <p class="lesson-goal">${escapeHtml(lesson.goal)}</p>
-        <h2 style="margin-top:6px;">${escapeHtml(lesson.title)}</h2>
-      </div>
-      <p class="lesson-explain">${escapeHtml(lesson.explanation)}</p>
-      <div class="example-box">
-        <pre class="example-code">${escapeHtml(lesson.example.code)}</pre>
-        <div class="example-out"><span class="label">Output</span>${escapeHtml(lesson.example.output)}</div>
-      </div>
-      <div class="card" style="background:var(--warm-soft);border-color:#f0d8a3;">
-        <p style="font-size:13.5px;color:var(--warm-deep);"><strong>Your task:</strong> ${escapeHtml(lesson.task)}</p>
-      </div>
-
-      <div class="lesson-grid-cols">
-        <div class="stack" style="gap:8px;">
-          <p class="editor-label">Your code</p>
-          <textarea id="lesson-editor" class="code-editor" spellcheck="false"></textarea>
-        </div>
-        <div class="stack" style="gap:8px;">
-          <p class="editor-label">${lang.engine==='html' ? 'Preview' : 'Output'}</p>
-          ${lessonEngineMarkup(lesson, lang)}
-        </div>
-      </div>
-
-      <div class="row" style="gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-soft" data-action="run-lesson">▶ Run</button>
-        <button class="btn btn-accent" data-action="check-lesson">Check answer</button>
-        <button class="btn btn-ghost" data-action="show-hint" ${ui.hintIndex>=lesson.hints.length ? 'disabled':''}>💡 Hint (${ui.hintIndex}/${lesson.hints.length})</button>
-      </div>
-
-      ${hintsShown.length ? `<div class="hint-list">${hintsShown.map(h=>`<div class="hint-item">${escapeHtml(h)}</div>`).join('')}</div>` : ''}
-
-      ${result ? `<div class="feedback-banner ${result.success?'success':'error'}">${result.success?'✅':'⚠️'} ${escapeHtml(result.message)}</div>` : ''}
-
-      ${success ? `<div class="recap-box"><strong>Recap:</strong> ${escapeHtml(lesson.recap)}</div>` : ''}
-
-      ${success ? (next
-        ? `<button class="btn btn-primary btn-block" data-action="open-lesson" data-lang="${lang.id}" data-lesson="${next.id}">Next lesson →</button>`
-        : `<button class="btn btn-primary btn-block" data-action="goto-units">Back to unit →</button>`)
-        : ''}
-    </div>`;
-}
-
-function renderQuestionMarkup(q, idx, lang){
-  const qid = idx;
-  const answer = ui.quizAnswers[qid];
-  const feedback = ui.quizFeedback[qid];
-  if(q.type==='mcq'){
-    const opts = q.options.map((opt,i)=>{
-      let cls='option-btn';
-      if(feedback){
-        if(i===q.correctIndex) cls+=' correct';
-        else if(answer===i) cls+=' incorrect';
-      } else if(answer===i) cls+=' selected';
-      return `<button class="${cls}" data-action="quiz-select-mcq" data-idx="${i}" ${feedback?'disabled':''}>${escapeHtml(opt)}</button>`;
-    }).join('');
-    return `<div class="stack" style="gap:10px;">${opts}</div>`;
-  }
-  if(q.type==='fill'){
-    return `
-      <input id="quiz-fill-input" class="fill-input" placeholder="Type your answer" ${feedback?'disabled':''}>
-      ${!feedback ? `<button class="btn btn-accent" style="margin-top:10px;" data-action="quiz-submit-fill">Submit</button>` : ''}`;
-  }
-  if(q.type==='code'){
-    const engine = q.engine;
-    return `
-      <div class="stack" style="gap:8px;">
-        <textarea id="quiz-code-editor" class="code-editor" spellcheck="false"></textarea>
-        <div id="quiz-output-panel" class="output-panel empty">Run your code to see what happens.</div>
-        <div class="row" style="gap:10px;">
-          <button class="btn btn-soft" data-action="quiz-run-code">▶ Run</button>
-          ${!feedback ? `<button class="btn btn-accent" data-action="quiz-submit-code">Check answer</button>` : ''}
-        </div>
-      </div>`;
-  }
-  return '';
-}
-
-function renderQuizScreen(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const unit = findUnit(lang);
-  const quiz = unit.quiz;
-  const total = quiz.questions.length;
-  const idx = ui.quizIndex;
-
-  if(idx>=total){
-    const correctCount = Object.values(ui.quizFeedback).filter(f=>f.success).length;
-    const pct = Math.round((correctCount/total)*100);
-    const passed = pct>=60;
-    return `
-      ${topbar({back:'goto-units', title:lang.name})}
-      <div class="screen stack" style="text-align:center;padding-top:30px;">
-        <div style="font-size:42px;">${passed?'🎉':'📘'}</div>
-        <h2>${passed ? 'Unit complete!' : 'Almost there'}</h2>
-        <p style="color:var(--ink-soft);">You scored ${correctCount}/${total} (${pct}%).</p>
-        <div class="card">
-          <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${passed?'var(--accent)':'var(--warm)'}"></div></div>
-        </div>
-        ${passed
-          ? `<button class="btn btn-primary btn-block" data-action="finish-quiz" data-pass="1">Back to ${escapeHtml(lang.name)} →</button>`
-          : `<button class="btn btn-primary btn-block" data-action="retry-quiz">Retry quiz</button>
-             <button class="btn btn-ghost btn-block" data-action="goto-units">Back to lessons</button>`}
-      </div>`;
-  }
-
-  const q = quiz.questions[idx];
-  const feedback = ui.quizFeedback[idx];
-  const dots = quiz.questions.map((_,i)=>{
-    let cls='';
-    if(i===idx) cls='active';
-    else if(ui.quizFeedback[i]) cls='answered';
-    return `<span class="${cls}"></span>`;
-  }).join('');
-
-  return `
-    ${topbar({back:'goto-units', title:quiz.title})}
-    <div class="screen stack">
-      <div class="quiz-dots">${dots}</div>
-      <p style="font-size:16px;font-weight:600;">${escapeHtml(q.prompt)}</p>
-      ${renderQuestionMarkup(q, idx, lang)}
-      ${feedback ? `<div class="feedback-banner ${feedback.success?'success':'error'}">${feedback.success?'✅':'⚠️'} ${escapeHtml(feedback.message)}</div>` : ''}
-      ${feedback ? `<button class="btn btn-primary btn-block" data-action="quiz-next">${idx+1<total?'Next question →':'See results →'}</button>` : ''}
-    </div>`;
-}
-
-function renderSettings(){
-  return `
-    ${topbar({back:'goto-dashboard', title:'Settings'})}
-    <div class="screen stack">
-      <div class="card stack">
-        <p class="editor-label">Your name</p>
-        <input id="settings-name" class="name-input" value="${escapeHtml(persisted.user ? persisted.user.name : '')}">
-        <button class="btn btn-soft" data-action="save-name">Save name</button>
-      </div>
-      <div class="card stack">
-        <p class="editor-label">Your data</p>
-        <p style="font-size:13px;color:var(--ink-soft);">Progress is saved automatically. You can back it up or move it to another device.</p>
-        <button class="btn btn-soft" data-action="export-progress">⬇ Export progress (.json)</button>
-        <label class="btn btn-soft" style="text-align:center;">
-          ⬆ Import progress (.json)
-          <input id="import-input" type="file" accept="application/json" style="display:none;">
-        </label>
-      </div>
-      <div class="card stack">
-        <p class="editor-label">Reset</p>
-        ${ui.confirmingReset
-          ? `<p style="font-size:13.5px;color:var(--error);">This clears all progress and cannot be undone. Are you sure?</p>
-             <div class="row" style="gap:10px;">
-               <button class="btn btn-danger" data-action="confirm-reset">Yes, reset everything</button>
-               <button class="btn btn-ghost" data-action="cancel-reset">Cancel</button>
-             </div>`
-          : `<button class="btn btn-danger" data-action="ask-reset">Reset all progress</button>`}
-      </div>
-      <p style="text-align:center;font-size:12px;color:var(--ink-faint);">BG Code Tutor is completely free — no paywalls, ever.</p>
-    </div>`;
-}
-
-/* ---------------- Mounting / post-render binding ---------------- */
-function mountScreen(){
-  bindGlobalActions();
-  if(ui.screen==='welcome') mountWelcome();
-  if(ui.screen==='lesson') mountLesson();
-  if(ui.screen==='quiz') mountQuiz();
-  if(ui.screen==='settings') mountSettings();
-}
-
-function bindGlobalActions(){
-  document.querySelectorAll('[data-action]').forEach(el=>{
-    el.addEventListener('click', onAction);
-  });
-}
-
-function onAction(e){
-  const el = e.currentTarget;
-  const action = el.getAttribute('data-action');
-  switch(action){
-    case 'start-learning': return handleStartLearning();
-    case 'goto-dashboard': return goto('dashboard');
-    case 'goto-languages': return goto('languages');
-    case 'goto-units': return goto('units', {currentLessonId:null});
-    case 'goto-settings': return goto('settings');
-    case 'open-language': ui.currentLanguageId = el.getAttribute('data-lang'); persisted.currentLanguageId = ui.currentLanguageId; saveState(); return goto('units');
-    case 'open-lesson':
-      ui.currentLanguageId = el.getAttribute('data-lang');
-      ui.currentLessonId = el.getAttribute('data-lesson');
-      ui.hintIndex = 0;
-      return goto('lesson');
-    case 'open-quiz':
-      ui.currentLanguageId = el.getAttribute('data-lang');
-      ui.currentQuizId = el.getAttribute('data-quiz');
-      ui.quizIndex = 0; ui.quizAnswers = {}; ui.quizFeedback = {};
-      return goto('quiz');
-    case 'run-lesson': return handleRunLesson();
-    case 'check-lesson': return handleCheckLesson();
-    case 'show-hint': return handleShowHint();
-    case 'quiz-select-mcq': return handleQuizSelectMcq(el);
-    case 'quiz-submit-fill': return handleQuizSubmitFill();
-    case 'quiz-run-code': return handleQuizRunCode();
-    case 'quiz-submit-code': return handleQuizSubmitCode();
-    case 'quiz-next': return handleQuizNext();
-    case 'retry-quiz': ui.quizIndex=0; ui.quizAnswers={}; ui.quizFeedback={}; return render();
-    case 'finish-quiz': return handleFinishQuiz();
-    case 'save-name': return handleSaveName();
-    case 'export-progress': return handleExportProgress();
-    case 'ask-reset': ui.confirmingReset=true; return render();
-    case 'cancel-reset': ui.confirmingReset=false; return render();
-    case 'confirm-reset': return handleConfirmReset();
-  }
-}
-
-function mountWelcome(){
-  const input = document.getElementById('name-field');
-  const btn = document.getElementById('start-btn');
-  input.focus();
-  input.addEventListener('input', ()=>{
-    btn.disabled = input.value.trim().length===0;
-  });
-  input.addEventListener('keydown', (e)=>{
-    if(e.key==='Enter' && input.value.trim().length>0) handleStartLearning();
-  });
-}
-
-function mountLesson(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const lesson = findLesson(lang, ui.currentLessonId);
-  const editor = document.getElementById('lesson-editor');
-  const draft = ui.codeDraft[lesson.id];
-  editor.value = draft!==undefined ? draft : lesson.starterCode;
-  editor.addEventListener('input', ()=>{ ui.codeDraft[lesson.id] = editor.value; });
-  // Replay last run output if present, otherwise auto-run once so the panel isn't empty
-  let lastRun = ui.codeDraft['__lastrun_'+lesson.id];
-  if(!lastRun){
-    lastRun = executeForLanguage(lang, editor.value);
-    ui.codeDraft['__lastrun_'+lesson.id] = lastRun;
-  }
-  paintLessonOutput(lang, lastRun);
-}
-
-function mountQuiz(){
-  const q = currentQuizQuestion();
-  if(!q) return;
-  if(q.type==='code'){
-    const editor = document.getElementById('quiz-code-editor');
-    if(editor){
-      const key = '__quizcode_'+ui.quizIndex;
-      editor.value = ui.codeDraft[key] !== undefined ? ui.codeDraft[key] : q.starterCode;
-      editor.addEventListener('input', ()=>{ ui.codeDraft[key] = editor.value; });
-      const lastRun = ui.codeDraft['__quizlastrun_'+ui.quizIndex];
-      if(lastRun) paintQuizOutput(q, lastRun);
-    }
-  }
-}
-
-function mountSettings(){
-  const fileInput = document.getElementById('import-input');
-  if(fileInput){
-    fileInput.addEventListener('change', handleImportProgress);
-  }
-}
-
-/* ---------------- Action handlers ---------------- */
-function handleStartLearning(){
-  const input = document.getElementById('name-field');
-  const name = input.value.trim();
-  if(!name) return;
-  persisted.user = {name};
-  saveState();
-  showToast(`Welcome, ${name}! Let's get coding.`);
-  goto('dashboard');
-}
-
-function getLessonOutputEl(){ return document.getElementById('output-panel'); }
-function getHtmlFrameEl(){ return document.getElementById('html-frame'); }
-
-function paintLessonOutput(lang, run){
-  if(lang.engine==='html'){
-    const frame = getHtmlFrameEl();
-    if(frame) frame.srcdoc = run.html || '';
-    return;
-  }
-  const panel = getLessonOutputEl();
-  if(!panel) return;
-  panel.classList.remove('empty');
-  if(lang.engine==='sql'){
-    if(!run.ok){ panel.innerHTML = `<span class="err">${escapeHtml(run.error)}</span>`; return; }
-    if(!run.rows.length){ panel.textContent = '(0 rows)'; return; }
-    const cols = run.columns;
-    let t = '<table class="sql-table"><tr>'+cols.map(c=>`<th>${escapeHtml(c)}</th>`).join('')+'</tr>';
-    run.rows.forEach(r=>{ t += '<tr>'+cols.map(c=>`<td>${escapeHtml(String(r[c]))}</td>`).join('')+'</tr>'; });
-    t += '</table>';
-    panel.innerHTML = t;
-    return;
-  }
-  // js / python
-  if(!run.ok){
-    panel.innerHTML = (run.output ? escapeHtml(run.output)+'\n' : '') + `<span class="err">${escapeHtml(run.error)}</span>`;
-  } else {
-    panel.innerHTML = `<span class="ok">${escapeHtml(run.output) || '(no output — did you forget print/console.log?)'}</span>`;
-  }
-}
-
-function executeForLanguage(lang, code){
-  if(lang.engine==='js') return runJS(code);
-  if(lang.engine==='python') return runPythonLite(code);
-  if(lang.engine==='sql') return runSQLLite(code, SONGS_TABLE);
-  if(lang.engine==='html') return {ok:true, html:code};
-  return {ok:false, error:'Unknown engine'};
-}
-
-function handleRunLesson(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const lesson = findLesson(lang, ui.currentLessonId);
-  const editor = document.getElementById('lesson-editor');
-  const code = editor.value;
-  ui.codeDraft[lesson.id] = code;
-  const run = executeForLanguage(lang, code);
-  ui.codeDraft['__lastrun_'+lesson.id] = run;
-  paintLessonOutput(lang, run);
-}
-
-function handleCheckLesson(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const lesson = findLesson(lang, ui.currentLessonId);
-  const editor = document.getElementById('lesson-editor');
-  const code = editor.value;
-  ui.codeDraft[lesson.id] = code;
-  const run = executeForLanguage(lang, code);
-  ui.codeDraft['__lastrun_'+lesson.id] = run;
-  const result = lesson.validate(code, run);
-  ui.lastResult[lesson.id] = result;
-  if(result.success && lessonStatus(lesson.id)!=='done'){
-    markLessonDone(lesson.id);
-    showToast('Lesson complete! 🎉');
-  }
-  render();
-}
-
-function handleShowHint(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const lesson = findLesson(lang, ui.currentLessonId);
-  if(ui.hintIndex < lesson.hints.length) ui.hintIndex++;
-  render();
-}
-
-/* ---- Quiz logic ---- */
-function currentQuizQuestion(){
-  const lang = findLanguage(ui.currentLanguageId);
-  if(!lang) return null;
-  const unit = findUnit(lang);
-  const quiz = unit.quiz;
-  return quiz.questions[ui.quizIndex];
-}
-function handleQuizSelectMcq(el){
-  const q = currentQuizQuestion();
-  const idx = ui.quizIndex;
-  if(ui.quizFeedback[idx]) return;
-  const chosen = parseInt(el.getAttribute('data-idx'),10);
-  ui.quizAnswers[idx] = chosen;
-  const success = chosen === q.correctIndex;
-  ui.quizFeedback[idx] = {success, message: success ? 'Correct!' : 'Not quite — the highlighted option was correct.'};
-  render();
-}
-function handleQuizSubmitFill(){
-  const idx = ui.quizIndex;
-  const q = currentQuizQuestion();
-  const input = document.getElementById('quiz-fill-input');
-  const val = input.value.trim().toLowerCase();
-  const success = q.accept.some(a=> a.toLowerCase()===val);
-  ui.quizAnswers[idx] = val;
-  ui.quizFeedback[idx] = {success, message: success ? 'Correct!' : `Expected: ${q.accept[0]}`};
-  render();
-}
-function handleQuizRunCode(){
-  const q = currentQuizQuestion();
-  const lang = {engine:q.engine, id:'quiz-'+q.engine};
-  const editor = document.getElementById('quiz-code-editor');
-  const code = editor.value;
-  ui.codeDraft['__quizcode_'+ui.quizIndex] = code;
-  const run = executeForLanguage(lang, code);
-  ui.codeDraft['__quizlastrun_'+ui.quizIndex] = run;
-  paintQuizOutput(q, run);
-}
-function paintQuizOutput(q, run){
-  const panel = document.getElementById('quiz-output-panel');
-  if(!panel) return;
-  panel.classList.remove('empty');
-  if(q.engine==='sql'){
-    if(!run.ok){ panel.innerHTML = `<span class="err">${escapeHtml(run.error)}</span>`; return; }
-    if(!run.rows.length){ panel.textContent='(0 rows)'; return; }
-    const cols = run.columns;
-    let t = '<table class="sql-table"><tr>'+cols.map(c=>`<th>${escapeHtml(c)}</th>`).join('')+'</tr>';
-    run.rows.forEach(r=>{ t += '<tr>'+cols.map(c=>`<td>${escapeHtml(String(r[c]))}</td>`).join('')+'</tr>'; });
-    t += '</table>';
-    panel.innerHTML = t;
-    return;
-  }
-  if(q.engine==='html'){ panel.textContent = '(HTML preview not shown for quiz tasks — check answer to validate)'; return; }
-  if(!run.ok){ panel.innerHTML = (run.output?escapeHtml(run.output)+'\n':'') + `<span class="err">${escapeHtml(run.error)}</span>`; }
-  else panel.innerHTML = `<span class="ok">${escapeHtml(run.output) || '(no output)'}</span>`;
-}
-function handleQuizSubmitCode(){
-  const idx = ui.quizIndex;
-  const q = currentQuizQuestion();
-  const lang = {engine:q.engine, id:'quiz-'+q.engine};
-  const editor = document.getElementById('quiz-code-editor');
-  const code = editor.value;
-  const run = executeForLanguage(lang, code);
-  ui.codeDraft['__quizlastrun_'+ui.quizIndex] = run;
-  const result = q.validate(code, run);
-  ui.quizFeedback[idx] = result;
-  render();
-}
-function handleQuizNext(){
-  ui.quizIndex++;
-  render();
-}
-function handleFinishQuiz(){
-  const lang = findLanguage(ui.currentLanguageId);
-  const unit = findUnit(lang);
-  const quiz = unit.quiz;
-  const correctCount = Object.values(ui.quizFeedback).filter(f=>f.success).length;
-  const pct = Math.round((correctCount/quiz.questions.length)*100);
-  if(pct>=60) markQuizDone(quiz.id, pct);
-  goto('units');
-}
-
-/* ---- Settings handlers ---- */
-function handleSaveName(){
-  const input = document.getElementById('settings-name');
-  const name = input.value.trim();
-  if(!name) return showToast('Name cannot be empty.');
-  persisted.user = {name};
-  saveState();
-  showToast('Name updated.');
-}
-function handleExportProgress(){
-  const blob = new Blob([JSON.stringify(persisted, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'bg-code-tutor-progress.json';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('Progress exported.');
-}
-function handleImportProgress(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    try{
-      const parsed = JSON.parse(reader.result);
-      persisted = Object.assign(defaultState(), parsed);
-      saveState();
-      showToast('Progress imported.');
-      render();
-    }catch(err){
-      showToast('That file could not be read as valid progress data.');
-    }
-  };
-  reader.readAsText(file);
-}
-function handleConfirmReset(){
-  persisted = defaultState();
-  ui.confirmingReset = false;
-  saveState();
-  showToast('Progress reset.');
-  goto('welcome');
-}
-
-/* ---------------- Init ---------------- */
-async function init(){
-  render(); // shows loading screen immediately
-  await loadState();
-  ui.screen = persisted.user ? 'dashboard' : 'welcome';
-  ui.currentLanguageId = persisted.currentLanguageId;
-  render();
-}
-init();
+function applyTheme(){document.documentElement.dataset.theme=S.theme==='violet'?'':S.theme;
+ document.body.classList.toggle('no-motion',!S.motion)}
+applyTheme();
+Gamify.tickLives();
+if(S.profile){go('home')}else{renderOnboarding()}
+setInterval(()=>{Gamify.tickLives()},60000);
 </script>
 </body>
 </html>
