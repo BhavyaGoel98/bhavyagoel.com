@@ -1,1270 +1,333 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DriverFind — Your Trusted Driver, On Demand</title>
-<meta name="description" content="DriverFind connects you with document-verified drivers who drive YOUR car. One-time trips, outstation, or permanent hire.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --ink:#0F1B2D; --blue-900:#0B3D91; --blue-600:#1D5BD6; --blue-100:#E3EDFF; --blue-50:#F2F7FF;
-  --paper:#FFFFFF; --bg:#F7F9FC; --line:#D9E2F0; --amber:#F5A623; --gold:#B8860B; --gold-bg:#FFF7E0;
-  --green:#0E9F6E; --red:#D94848; --radius:14px; --shadow:0 6px 24px rgba(11,61,145,.08);
-  --font-display:'Archivo',system-ui,sans-serif; --font-body:'Inter',system-ui,sans-serif; --font-mono:'JetBrains Mono',ui-monospace,monospace;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
-button{font-family:inherit;cursor:pointer}
-input,select,textarea{font-family:inherit;font-size:1rem}
-:focus-visible{outline:3px solid var(--blue-600);outline-offset:2px;border-radius:4px}
-@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-
-.roadline{height:6px;background:linear-gradient(90deg,var(--blue-900) 0 100%);position:relative;overflow:hidden}
-.roadline::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 26px,#FFD34D 26px 54px);height:2px;top:2px;animation:lane 2.4s linear infinite}
-@keyframes lane{from{transform:translateX(0)}to{transform:translateX(-54px)}}
-
-header{background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
-.header-inner{max-width:1080px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:900;font-size:1.25rem;letter-spacing:-.02em;color:var(--blue-900)}
-.logo .wheel{width:34px;height:34px;border-radius:50%;border:4px solid var(--blue-900);position:relative;flex:none}
-.logo .wheel::before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--blue-900)}
-.logo .wheel::after{content:"";position:absolute;left:50%;top:-4px;width:4px;height:14px;background:var(--blue-900);transform:translateX(-50%)}
-.logo span b{color:var(--blue-600)}
-.pro-pill{font-family:var(--font-mono);font-size:.62rem;font-weight:700;background:linear-gradient(135deg,#B8860B,#F5A623);color:#fff;padding:3px 9px;border-radius:999px;letter-spacing:.1em;vertical-align:middle;margin-left:6px;display:none}
-.mode-tabs{display:flex;background:var(--blue-50);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
-.mode-tabs button{border:none;background:transparent;padding:8px 16px;border-radius:999px;font-weight:600;font-size:.9rem;color:var(--blue-900);transition:background .2s,color .2s;white-space:nowrap}
-.mode-tabs button.active{background:var(--blue-900);color:#fff}
-.acct{display:flex;align-items:center;gap:8px}
-.acct .chip{display:flex;align-items:center;gap:8px;background:var(--blue-50);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.82rem;font-weight:700;color:var(--blue-900);max-width:220px}
-.acct .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.acct .chip .role{font-family:var(--font-mono);font-size:.58rem;background:var(--blue-900);color:#fff;padding:2px 7px;border-radius:999px;letter-spacing:.08em;flex:none}
-.acct .out{border:none;background:transparent;color:var(--red);font-weight:700;font-size:.78rem;padding:4px}
-.btn-signin{border:1.5px solid var(--blue-900);background:#fff;color:var(--blue-900);border-radius:999px;padding:7px 16px;font-weight:700;font-size:.85rem}
-@media(max-width:720px){
-  .header-inner{justify-content:center}
-  .mode-tabs{order:3;width:100%;justify-content:center}
-  .mode-tabs button{flex:1;text-align:center;padding:9px 8px;font-size:.85rem}
-}
-
-.hero{background:var(--paper);padding:44px 18px 36px;text-align:center;border-bottom:1px solid var(--line)}
-.hero .eyebrow{font-family:var(--font-mono);font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-600);margin-bottom:12px}
-.hero h1{font-family:var(--font-display);font-weight:900;font-size:clamp(2rem,6vw,3.4rem);letter-spacing:-.03em;line-height:1.05;max-width:760px;margin:0 auto}
-.hero h1 em{font-style:normal;color:var(--blue-600);position:relative}
-.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:3px;background:repeating-linear-gradient(90deg,var(--amber) 0 10px,transparent 10px 18px)}
-.hero p{max-width:580px;margin:16px auto 0;color:#43526A;font-size:1.02rem}
-.hero .points{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
-.hero .points span{background:var(--blue-50);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.83rem;font-weight:600;color:var(--blue-900)}
-
-main{max-width:1080px;margin:0 auto;padding:28px 18px 80px}
-.view{display:none}
-.view.active{display:block;animation:fadeUp .35s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.section-title{font-family:var(--font-display);font-weight:800;font-size:1.35rem;letter-spacing:-.01em;margin-bottom:4px}
-.section-sub{color:#5A6B85;font-size:.92rem;margin-bottom:18px}
-
-.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-.field label{display:block;font-size:.8rem;font-weight:700;color:var(--blue-900);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
-.field input,.field select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);transition:border-color .15s}
-.field input:focus,.field select:focus{border-color:var(--blue-600);outline:none}
-.field .hint{font-size:.75rem;color:#7A889E;margin-top:4px}
-.seg{display:flex;flex-wrap:wrap;gap:8px}
-.seg button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-weight:600;font-size:.88rem;color:var(--ink);transition:all .15s}
-.seg button.on{border-color:var(--blue-600);background:var(--blue-50);color:var(--blue-900)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:13px 22px;font-weight:700;font-size:.95rem;transition:transform .12s,box-shadow .12s;text-decoration:none}
-.btn:active{transform:scale(.98)}
-.btn-primary{background:var(--blue-900);color:#fff;box-shadow:0 4px 14px rgba(11,61,145,.28)}
-.btn-primary:hover{box-shadow:0 6px 18px rgba(11,61,145,.36)}
-.btn-ghost{background:transparent;color:var(--blue-900);border:1.5px solid var(--line)}
-.btn-wa{background:#25D366;color:#fff}
-.btn-gold{background:linear-gradient(135deg,#B8860B,#F5A623);color:#fff;box-shadow:0 4px 14px rgba(184,134,11,.35)}
-.btn-danger{background:#FDF0F0;color:var(--red);border:1.5px solid #F3C9C9}
-.btn-google{background:#fff;color:#3C4043;border:1.5px solid var(--line);font-weight:600}
-.btn-block{width:100%}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.g-ico{width:18px;height:18px;flex:none}
-
-.vbadge{display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:800;padding:3px 10px;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-mono)}
-.vbadge.v1{background:var(--blue-100);color:var(--blue-900)}
-.vbadge.v2{background:#DFF5EC;color:#06603F}
-.vbadge.v3{background:linear-gradient(135deg,#FFF3D6,#FFE7A8);color:#7A5800;border:1px solid #EFC868}
-
-.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 16px}
-.filters select{padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font-size:.88rem;font-weight:600;color:var(--blue-900)}
-.result-count{margin-left:auto;font-family:var(--font-mono);font-size:.8rem;color:#5A6B85}
-@media(max-width:640px){.result-count{margin-left:0;width:100%}}
-
-.driver-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
-.lic{background:linear-gradient(160deg,#FDFEFF 0%,#F1F6FF 100%);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);position:relative;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
-.lic:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(11,61,145,.14)}
-.lic.gold{border-color:#EFC868;background:linear-gradient(160deg,#FFFDF6 0%,#FFF6E0 100%)}
-.lic-head{background:var(--blue-900);color:#fff;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.lic.gold .lic-head{background:linear-gradient(135deg,#8A6508,#B8860B)}
-.lic-head .t{font-family:var(--font-mono);font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.lic-head .avail{font-size:.66rem;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap}
-.avail.on{background:#0E9F6E;color:#fff}
-.avail.off{background:#3A4A63;color:#B9C6DB}
-.lic-body{display:flex;gap:14px;padding:16px;align-items:flex-start}
-.lic-photo{width:72px;height:88px;border-radius:8px;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(11,61,145,.2);background:var(--blue-100);flex:none;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:1.6rem;color:var(--blue-900)}
-.lic-info{flex:1;min-width:0}
-.lic-info h3{font-family:var(--font-display);font-weight:800;font-size:1.1rem;letter-spacing:-.01em}
-.lic-info .meta{font-size:.8rem;color:#5A6B85;margin-top:2px}
-.stars{color:var(--amber);font-size:.85rem;letter-spacing:1px;margin-top:4px}
-.stars small{color:#5A6B85;font-family:var(--font-mono);font-size:.72rem;margin-left:6px}
-.lic-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.lic-tags span{background:#fff;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:.7rem;font-weight:700;color:var(--blue-900);text-transform:uppercase;letter-spacing:.04em}
-.lic-foot{border-top:1.5px dashed var(--line);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto}
-.price .amt{font-family:var(--font-display);font-weight:900;font-size:1.25rem;color:var(--blue-900)}
-.price .strike{text-decoration:line-through;color:#93A2B8;font-size:.85rem;font-weight:600;margin-right:6px}
-.price .per{font-size:.72rem;color:#5A6B85;font-weight:600}
-.price .save{display:block;font-size:.68rem;font-weight:800;color:var(--green)}
-.lic-foot .btn{padding:9px 16px;font-size:.85rem}
-.lic-no{position:absolute;right:14px;bottom:56px;font-family:var(--font-mono);font-size:.6rem;color:#A9B7CC;letter-spacing:.1em}
-.match-badge{position:absolute;top:44px;right:12px;background:var(--amber);color:#5A3A00;font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:999px;letter-spacing:.05em}
-.lic.locked .lic-body,.lic.locked .lic-foot,.lic.locked .lic-no{filter:blur(4px);pointer-events:none;user-select:none}
-.lock-overlay{position:absolute;inset:36px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(255,251,240,.55);z-index:2;text-align:center;padding:14px}
-.lock-overlay .l-ico{font-size:1.7rem}
-.lock-overlay b{font-family:var(--font-display);color:#7A5800}
-.lock-overlay p{font-size:.78rem;color:#8A7440;max-width:230px}
-
-.pro-banner{background:linear-gradient(135deg,#0B3D91 0%,#1D5BD6 60%,#B8860B 140%);border-radius:var(--radius);color:#fff;padding:24px;margin:26px 0;display:flex;flex-wrap:wrap;gap:18px;align-items:center;box-shadow:0 10px 30px rgba(11,61,145,.25);position:relative;overflow:hidden}
-.pro-banner::after{content:"PRO";position:absolute;right:-14px;bottom:-34px;font-family:var(--font-display);font-weight:900;font-size:7rem;color:rgba(255,255,255,.07);letter-spacing:-.04em;pointer-events:none}
-.pro-banner h3{font-family:var(--font-display);font-weight:900;font-size:1.4rem;letter-spacing:-.01em}
-.pro-banner h3 span{background:linear-gradient(135deg,#FFD34D,#F5A623);-webkit-background-clip:text;background-clip:text;color:transparent}
-.pro-banner ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:8px}
-.pro-banner li{font-size:.85rem;font-weight:600;opacity:.95}
-.pro-banner .cta{margin-left:auto;text-align:center}
-.pro-banner .cta .pr{font-family:var(--font-display);font-weight:900;font-size:1.5rem}
-.pro-banner .cta .pr small{font-size:.75rem;font-weight:600;opacity:.85}
-@media(max-width:720px){.pro-banner .cta{margin-left:0;width:100%}}
-.pro-active-strip{background:var(--gold-bg);border:1px solid #EFC868;border-radius:12px;padding:12px 18px;margin:22px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:.88rem;font-weight:600;color:#7A5800}
-.pro-active-strip .btn{margin-left:auto;padding:7px 14px;font-size:.78rem}
-
-.modal-bg{position:fixed;inset:0;background:rgba(15,27,45,.6);display:none;align-items:center;justify-content:center;z-index:200;padding:18px}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:18px;max-width:440px;width:100%;padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:fadeUp .25s ease;max-height:92vh;overflow:auto}
-.modal h3{font-family:var(--font-display);font-weight:900;font-size:1.3rem;margin-bottom:6px}
-.plan-opt{border:2px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .15s}
-.plan-opt.sel{border-color:var(--gold);background:var(--gold-bg)}
-.plan-opt .pn{font-weight:800}
-.plan-opt .pd{font-size:.78rem;color:#5A6B85}
-.plan-opt .pp{font-family:var(--font-display);font-weight:900;font-size:1.15rem;color:var(--blue-900)}
-.plan-opt .pp small{font-size:.7rem;color:#5A6B85;font-weight:600}
-.badge-save{background:var(--green);color:#fff;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
-.auth-toggle{display:flex;background:var(--blue-50);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px;margin:14px 0}
-.auth-toggle button{flex:1;border:none;background:transparent;padding:8px;border-radius:999px;font-weight:700;font-size:.85rem;color:var(--blue-900)}
-.auth-toggle button.on{background:var(--blue-900);color:#fff}
-.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:#93A2B8;font-size:.75rem;font-weight:700}
-.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
-.auth-err{color:var(--red);font-size:.8rem;font-weight:600;margin-top:10px;min-height:1.1em}
-.fb-status{font-family:var(--font-mono);font-size:.62rem;font-weight:700;letter-spacing:.06em;padding:3px 9px;border-radius:999px;display:inline-block;margin-top:10px}
-.fb-status.on{background:#DFF5EC;color:#06603F}
-.fb-status.off{background:#FDF0F0;color:var(--red)}
-
-/* Payment page */
-.pay-qr{display:block;width:min(280px,80%);margin:14px auto;border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow)}
-.pay-amt{text-align:center;font-family:var(--font-display);font-weight:900;font-size:2rem;color:var(--blue-900)}
-.pay-amt small{font-size:.8rem;color:#5A6B85;font-weight:600;display:block}
-.upi-row{display:flex;gap:8px;align-items:center;background:var(--blue-50);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:12px}
-.upi-row code{font-family:var(--font-mono);font-size:.82rem;font-weight:700;color:var(--blue-900);flex:1;overflow:hidden;text-overflow:ellipsis}
-.upi-row .btn{padding:7px 12px;font-size:.75rem}
-
-.vmeter{background:var(--blue-50);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:18px 0}
-.vmeter .vm-track{height:10px;background:#DCE6F5;border-radius:999px;overflow:hidden;margin:10px 0 8px}
-.vmeter .vm-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue-600),var(--green) 60%,var(--gold));transition:width .4s ease;width:0}
-.vm-labels{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.62rem;font-weight:700;color:#5A6B85;letter-spacing:.04em;text-transform:uppercase}
-.vm-current{font-weight:800;font-size:.95rem;margin-top:6px}
-.doc-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:16px}
-.doc{border:1.5px solid var(--line);border-radius:12px;padding:14px;background:#fff;display:flex;gap:12px;align-items:center;transition:border-color .15s}
-.doc.done{border-color:var(--green);background:#F3FBF8}
-.doc .d-ico{font-size:1.5rem;flex:none;width:44px;height:44px;border-radius:10px;background:var(--blue-50);display:flex;align-items:center;justify-content:center}
-.doc.done .d-ico{background:#DFF5EC}
-.doc .d-info{flex:1;min-width:0}
-.doc .d-info b{font-size:.9rem;display:block}
-.doc .d-info small{font-size:.72rem;color:#5A6B85;display:block;line-height:1.4}
-.doc .d-req{font-family:var(--font-mono);font-size:.58rem;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:6px;margin-top:4px;display:inline-block}
-.d-req.must{background:#FDECEC;color:var(--red)}
-.d-req.t2{background:#DFF5EC;color:#06603F}
-.d-req.t3{background:var(--gold-bg);color:#7A5800}
-.doc .btn{padding:8px 12px;font-size:.76rem;flex:none}
-.doc .thumb{width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid var(--line);flex:none}
-.ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-
-.req{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--blue-600);border-radius:12px;padding:16px 18px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;box-shadow:var(--shadow)}
-.req .route{font-weight:700;font-size:1rem}
-.req .route .arrow{color:var(--blue-600);margin:0 6px}
-.req .rmeta{font-size:.8rem;color:#5A6B85;width:100%}
-.req .rmeta b{color:var(--blue-900)}
-.req .rtype{font-family:var(--font-mono);font-size:.68rem;font-weight:700;background:var(--blue-100);color:var(--blue-900);padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.08em}
-.req .btn{margin-left:auto;padding:8px 14px;font-size:.82rem}
-@media(max-width:560px){.req .btn{margin-left:0;width:100%}}
-
-.dash-top{display:flex;flex-wrap:wrap;gap:16px;align-items:stretch;margin-bottom:22px}
-.dash-top .lic{max-width:400px;flex:1;min-width:300px}
-.toggle-card{flex:1;min-width:260px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-.switch{position:relative;display:inline-block;width:58px;height:32px;vertical-align:middle}
-.switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;inset:0;background:#C6D2E4;border-radius:999px;transition:.2s}
-.slider::before{content:"";position:absolute;height:24px;width:24px;left:4px;top:4px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.25)}
-.switch input:checked + .slider{background:var(--green)}
-.switch input:checked + .slider::before{transform:translateX(26px)}
-.stat-row{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
-.stat{flex:1;min-width:100px;background:var(--blue-50);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
-.stat .n{font-family:var(--font-display);font-weight:900;font-size:1.3rem;color:var(--blue-900)}
-.stat .l{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#5A6B85}
-
-.photo-drop{border:2px dashed var(--line);border-radius:12px;padding:18px;text-align:center;color:#5A6B85;font-size:.85rem;cursor:pointer;transition:border-color .15s;background:#fff}
-.photo-drop:hover{border-color:var(--blue-600)}
-.photo-drop img{width:80px;height:96px;object-fit:cover;border-radius:8px;display:block;margin:0 auto 8px}
-
-.steps-nav{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-.steps-nav .st{font-family:var(--font-mono);font-size:.7rem;font-weight:700;letter-spacing:.08em;padding:7px 14px;border-radius:999px;background:#fff;border:1.5px solid var(--line);color:#5A6B85}
-.steps-nav .st.on{background:var(--blue-900);color:#fff;border-color:var(--blue-900)}
-.steps-nav .st.done{background:#DFF5EC;color:#06603F;border-color:#B7E4D2}
-
-.gate{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.gate .g-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:26px;text-align:center;box-shadow:var(--shadow)}
-.gate .g-card .gi{font-size:2.2rem;margin-bottom:8px}
-.gate .g-card h3{font-family:var(--font-display);font-weight:800;margin-bottom:6px}
-.gate .g-card p{font-size:.85rem;color:#5A6B85;margin-bottom:16px}
-
-.empty{text-align:center;padding:48px 20px;color:#5A6B85}
-.empty .big{font-size:2.4rem;margin-bottom:10px}
-.empty h4{font-family:var(--font-display);font-weight:800;color:var(--ink);margin-bottom:6px}
-#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:12px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;z-index:300;max-width:92vw;text-align:center}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:34px}
-.how .step{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
-.how .step .k{font-family:var(--font-mono);font-weight:700;font-size:.7rem;color:var(--blue-600);letter-spacing:.12em;text-transform:uppercase}
-.how .step h4{font-family:var(--font-display);font-weight:800;margin:6px 0 4px}
-.how .step p{font-size:.85rem;color:#5A6B85}
-footer{border-top:1px solid var(--line);background:var(--paper);padding:26px 18px;text-align:center;color:#5A6B85;font-size:.82rem}
-footer b{color:var(--blue-900)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#103a8c">
+  <title>DriverFind</title>
+  <meta name="description" content="DriverFind helps riders find registered drivers and lets drivers create a portable Driver ID.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#10223f;--muted:#61718b;--blue:#1647a3;--blue2:#2368e8;--blue50:#f2f6ff;--line:#dce5f4;--paper:#fff;--bg:#f7f9fd;--green:#087b52;--greenbg:#e5f8ef;--amber:#9b6500;--amberbg:#fff4d8;--red:#bd3333;--shadow:0 12px 32px rgba(17,56,126,.09);--radius:18px;--display:Archivo,system-ui,sans-serif;--body:Inter,system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--ink);background:var(--bg);font-family:var(--body);line-height:1.5;-webkit-font-smoothing:antialiased} button,input,select,textarea{font:inherit} button{cursor:pointer} a{color:inherit} :focus-visible{outline:3px solid #82a7f7;outline-offset:2px}
+    .road{height:6px;background:#103a8c;position:relative;overflow:hidden}.road:after{content:'';position:absolute;inset:2px 0;background:repeating-linear-gradient(90deg,transparent 0 25px,#ffd245 25px 52px);animation:drive 2.2s linear infinite}@keyframes drive{to{transform:translateX(-52px)}}
+    header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.bar{max-width:1160px;margin:auto;min-height:72px;padding:12px 20px;display:flex;align-items:center;gap:18px;justify-content:space-between}.brand{border:0;background:none;padding:0;display:flex;align-items:center;gap:10px;color:#103a8c;font-family:var(--display);font-size:1.25rem;font-weight:900;letter-spacing:-.04em}.brand b{color:var(--blue2)}.brandmark{width:36px;height:36px;border-radius:50%;border:4px solid currentColor;position:relative;display:grid;place-items:center}.brandmark:before{content:'';width:9px;height:9px;border-radius:50%;background:currentColor}.brandmark:after{content:'';position:absolute;width:4px;height:13px;background:currentColor;top:-5px;border-radius:4px}.logo-image{width:36px;height:36px;overflow:hidden;border-radius:9px;display:block;background:#103a8c}.logo-image img{width:78px;height:78px;max-width:none;object-fit:cover;transform:translate(-21px,-13px);display:block}.tabs{display:flex;gap:4px;padding:4px;border:1px solid var(--line);background:var(--blue50);border-radius:999px}.tabs button{border:0;color:#244673;background:transparent;border-radius:999px;padding:8px 15px;font-weight:700;font-size:.88rem}.tabs button.active{background:var(--blue);color:#fff;box-shadow:0 2px 7px #0d367f33}.account{display:flex;align-items:center;gap:8px}.user-pill{max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--blue50);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:.82rem;font-weight:700;color:#193b75}.hide{display:none!important}
+    .btn{border:0;border-radius:11px;padding:11px 15px;font-weight:750;display:inline-flex;gap:8px;align-items:center;justify-content:center;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s}.btn:active{transform:scale(.98)}.primary{background:var(--blue);color:#fff;box-shadow:0 5px 14px #173d8d3a}.primary:hover{background:#103a8c;box-shadow:0 7px 18px #173d8d42}.soft{background:var(--blue50);color:var(--blue);border:1px solid #cddcf7}.outline{background:#fff;color:var(--blue);border:1.5px solid #9eb8ed}.danger{background:#fff1f1;color:var(--red);border:1px solid #f1c5c5}.google{background:#fff;color:#27354b;border:1px solid var(--line)}.full{width:100%}.tiny{padding:7px 10px;border-radius:8px;font-size:.78rem}
+    main{max-width:1160px;margin:auto;padding:30px 20px 72px}.hero{background:radial-gradient(circle at 15% 0,#e3edff 0,transparent 28%),linear-gradient(135deg,#fff 20%,#f0f5ff);border:1px solid var(--line);border-radius:26px;padding:46px 36px;position:relative;overflow:hidden}.eyebrow{font:700 .72rem var(--mono);text-transform:uppercase;letter-spacing:.11em;color:var(--blue2)}h1,h2,h3{font-family:var(--display);letter-spacing:-.035em;line-height:1.08;margin:0}h1{font-size:clamp(2.2rem,6vw,4rem);max-width:760px;margin-top:10px}h1 em{color:var(--blue2);font-style:normal}.hero p{max-width:650px;color:#52647e;font-size:1.02rem;margin:17px 0 0}.trust-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.trust-row span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:#34527d;font-size:.8rem;font-weight:700}.notice{margin-top:18px;border-radius:12px;padding:11px 13px;font-size:.86rem;display:flex;align-items:flex-start;gap:9px}.notice.info{background:var(--blue50);color:#385782;border:1px solid #d6e2f8}.notice.warning{background:var(--amberbg);color:#77530a;border:1px solid #f0d793}.notice.error{background:#fff0f0;color:#9b2b2b;border:1px solid #efc1c1}.notice.success{background:var(--greenbg);color:#086344;border:1px solid #bfe9d5}
+    .section{margin-top:28px}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 14px}.section-heading h2{font-size:1.45rem}.section-heading p{margin:4px 0 0;color:var(--muted);font-size:.9rem}.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:23px}.grid{display:grid;gap:16px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field{min-width:0}.field label{display:block;font-size:.76rem;letter-spacing:.055em;text-transform:uppercase;color:#244578;font-weight:800;margin:0 0 6px}.field input,.field select{width:100%;border:1.5px solid #cfdbea;border-radius:10px;padding:11px 12px;color:var(--ink);background:#fff}.field input:focus,.field select:focus{border-color:var(--blue2);outline:0;box-shadow:0 0 0 3px #2d6fe51c}.hint{display:block;font-size:.76rem;color:#75859c;margin-top:5px}.stack{display:grid;gap:12px}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px}.divider{height:1px;background:var(--line);margin:21px 0}
+    .places{position:relative}.suggestions{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:8;background:#fff;border:1px solid #cbd9ef;border-radius:12px;box-shadow:0 14px 26px #102d6c20;overflow:hidden}.suggestions:empty{display:none}.suggestions button{display:block;border:0;border-bottom:1px solid #eef2f8;background:#fff;text-align:left;padding:10px 12px;width:100%;font-size:.85rem;color:#2c405e}.suggestions button:last-child{border:0}.suggestions button:hover,.suggestions button:focus{background:var(--blue50);outline:0}.suggestions .place-main{display:block;font-weight:700}.suggestions .place-detail{display:block;color:#71829a;font-size:.75rem;margin-top:2px}.map-state{font:600 .75rem var(--mono);color:#59718e;margin-top:5px}.map-state.ok{color:var(--green)}.map-state.bad{color:var(--amber)}
+    .trip-types{display:flex;gap:7px;flex-wrap:wrap}.trip-types button{border:1.5px solid var(--line);background:#fff;color:#3b526f;border-radius:999px;padding:8px 12px;font-size:.83rem;font-weight:700}.trip-types button.selected{border-color:var(--blue2);color:#103a8c;background:var(--blue50)}.results-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0 14px}.results-tools input{max-width:320px;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px}.count{font:700 .78rem var(--mono);color:#627793}.driver-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}.driver{border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 7px 21px #153e8520}.driver-top{background:#103a8c;color:#fff;padding:9px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;font:700 .66rem var(--mono);text-transform:uppercase;letter-spacing:.07em}.status{border-radius:999px;padding:3px 7px;background:#edf2fb;color:#385277;font:700 .64rem var(--mono);text-transform:uppercase;letter-spacing:.04em}.status.online{background:#078052;color:#fff}.status.pending{background:#ffda72;color:#604400}.driver-body{padding:16px;display:flex;gap:12px}.avatar{height:52px;width:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;color:#103a8c;background:#dce9ff;font:800 1.05rem var(--display)}.driver h3{font-size:1.14rem}.driver p{color:#63738b;font-size:.82rem;margin:3px 0}.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.tag{border:1px solid #d7e2f2;border-radius:999px;padding:3px 7px;font-size:.7rem;color:#4a617e;background:#f8faff}.driver-foot{margin-top:auto;border-top:1px solid #e7edf7;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px}.driver-id{font:700 .68rem var(--mono);color:#496382}.empty{grid-column:1/-1;border:1px dashed #b9c9e0;border-radius:15px;padding:32px;text-align:center;background:#fbfcff;color:#60748f}.empty b{font-family:var(--display);color:var(--ink);font-size:1.08rem}
+    .driver-id-card{background:linear-gradient(135deg,#0d367f,#225fc7);color:#fff;border-radius:19px;overflow:hidden;box-shadow:0 14px 27px #103a8c38;max-width:650px}.id-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#092a66;font:700 .68rem var(--mono);letter-spacing:.07em;text-transform:uppercase}.id-content{padding:20px;display:flex;gap:18px;align-items:center}.id-avatar{width:73px;height:73px;flex:0 0 73px;background:#dae8ff;color:#103a8c;border:3px solid #fff;border-radius:14px;display:grid;place-items:center;font:900 1.45rem var(--display)}.id-content h2{font-size:1.5rem}.id-content p{font-size:.84rem;color:#dbe8ff;margin:4px 0}.id-number{font:700 .76rem var(--mono);letter-spacing:.04em;background:#fff1;padding:8px 12px;margin:0 16px 16px;border-radius:8px}.id-bottom{font-size:.75rem;color:#d8e5ff;padding:0 16px 17px}.availability{display:flex;gap:8px;align-items:center;background:#f3f7ff;padding:12px;border:1px solid #dce7f8;border-radius:12px;color:#294b7c}.availability input{height:19px;width:19px;accent-color:var(--blue)}
+    .area-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.area-chip{background:var(--blue50);color:#254a86;border:1px solid #cfdef6;border-radius:999px;padding:5px 7px 5px 10px;font-size:.76rem;font-weight:700}.area-chip button{margin-left:4px;border:0;background:none;color:#4b69a1;font-weight:900;padding:0 2px}.checkline{display:flex;gap:9px;align-items:flex-start;color:#50637e;font-size:.84rem}.checkline input{accent-color:var(--blue);height:17px;width:17px;flex:none;margin-top:2px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .modal-backdrop{position:fixed;inset:0;background:#0e1f3d91;z-index:50;display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.open{display:flex}.modal{width:min(100%,470px);max-height:calc(100vh - 36px);overflow:auto;background:#fff;border-radius:20px;box-shadow:0 20px 48px #07183391;padding:24px;position:relative}.modal h2{font-size:1.5rem}.modal .sub{margin:8px 0 18px;color:#62728a;font-size:.88rem}.modal-close{border:0;background:#edf3fc;color:#335683;border-radius:50%;width:30px;height:30px;font-size:1.25rem;position:absolute;right:15px;top:15px}.auth-switch{display:flex;background:#f2f6ff;padding:4px;border:1px solid var(--line);border-radius:11px;margin:18px 0}.auth-switch button{width:50%;border:0;border-radius:8px;background:transparent;padding:8px;color:#526e98;font-weight:800}.auth-switch button.active{background:#103a8c;color:#fff}.or{display:flex;align-items:center;gap:10px;color:#74839a;font-size:.72rem;font-weight:700;margin:15px 0}.or:before,.or:after{content:'';height:1px;background:var(--line);flex:1}.form-error{color:#a82d2d;background:#fff1f1;border:1px solid #f3c2c2;border-radius:9px;padding:8px 10px;font-size:.82rem;margin-top:10px}.loading{opacity:.62;pointer-events:none}.toast{position:fixed;z-index:80;bottom:22px;left:50%;transform:translate(-50%,20px);background:#11294f;color:#fff;border-radius:999px;padding:11px 16px;box-shadow:0 8px 25px #071a3e44;font-size:.86rem;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+    footer{padding:24px 20px;border-top:1px solid var(--line);background:#fff;color:#657795}.footer-inner{max-width:1160px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:.8rem}.footer-brand{display:flex;align-items:center;gap:8px;color:#103a8c;font:800 1rem var(--display);letter-spacing:-.03em}.footer-logo{width:30px;height:30px;overflow:hidden;border-radius:8px;display:block;background:#103a8c}.footer-logo img{width:66px;height:66px;max-width:none;object-fit:cover;transform:translate(-18px,-11px);display:block}.footer-tagline{margin:0;font-weight:600;color:#526985}.footer-copy{font-size:.75rem;color:#7b8ca4}@media(max-width:600px){.footer-inner{justify-content:center;text-align:center}.footer-tagline{width:100%;order:3}}
+    @media (max-width:760px){.bar{min-height:unset;justify-content:center}.tabs{order:3;width:100%;justify-content:center}.tabs button{flex:1}.account{margin-left:auto}.user-pill{display:none}.hero{padding:35px 22px}.two,.three{grid-template-columns:1fr}.id-content{gap:12px}.section-heading{align-items:start;flex-direction:column}.driver-foot{align-items:flex-start;flex-direction:column}.btn.full-mobile{width:100%}}@media(max-width:450px){main{padding:20px 13px 55px}.bar{padding:10px 13px}.brand{font-size:1.05rem}.account .outline{padding:8px 10px}.hero{border-radius:18px}}
+  </style>
 </head>
 <body>
+  <div class="road" aria-hidden="true"></div>
+  <header>
+    <div class="bar">
+      <button class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="DriverFind home">
+        <span class="brandmark hide" id="brandmark" aria-hidden="true"></span><span class="logo-image" id="logo-image-frame"><img id="custom-logo" src="assets/driverfind-logo.png" alt="DriverFind logo"></span><span>Driver<b>Find</b></span>
+      </button>
+      <nav class="tabs" aria-label="Choose your journey">
+        <button id="rider-tab" class="active" type="button" onclick="setView('rider')">I need a driver</button>
+        <button id="driver-tab" type="button" onclick="setView('driver')">I am a driver</button>
+      </nav>
+      <div class="account">
+        <span id="user-pill" class="user-pill hide"></span>
+        <button id="sign-in" class="btn outline tiny" type="button" onclick="openAuth('login')">Sign in</button>
+        <button id="sign-out" class="btn soft tiny hide" type="button" onclick="signOutUser()">Sign out</button>
+      </div>
+    </div>
+  </header>
 
-<div class="roadline" aria-hidden="true"></div>
+  <main>
+    <section class="hero">
+      <h1>Find Trusted Drivers for you and your Loved Ones</h1>
+    </section>
 
-<header>
-  <div class="header-inner">
-    <div class="logo"><div class="wheel" aria-hidden="true"></div><span>Driver<b>Find</b><span class="pro-pill" id="header-pro">PRO</span></span></div>
-    <nav class="mode-tabs" role="tablist" aria-label="Choose mode">
-      <button id="tab-rider" class="active" role="tab" aria-selected="true" onclick="setMode('rider')">🧑‍💼 I need a driver</button>
-      <button id="tab-driver" role="tab" aria-selected="false" onclick="setMode('driver')">🪪 I am a driver</button>
-    </nav>
-    <div class="acct" id="acct-area"></div>
-  </div>
-</header>
-
-<section class="hero" id="hero">
-  <div class="eyebrow">Document-verified drivers · No middleman · No commission</div>
-  <h1>Your car. <em>Our driver.</em><br>Fully verified.</h1>
-  <p>Every DriverFind driver ID is built on real documents — licence, Aadhaar, PAN, police verification, medical fitness and references. You always know exactly who is behind your wheel.</p>
-  <div class="points">
-    <span>🪪 ID Verified</span><span>🛡️ Police Verified</span><span>🥇 Gold Verified</span><span>💬 Direct WhatsApp</span>
-  </div>
-</section>
-
-<main>
-
-  <!-- ============ RIDER VIEW ============ -->
-  <section id="view-rider" class="view active" role="tabpanel">
-    <div id="pro-area"></div>
-
-    <div class="card">
-      <h2 class="section-title">Post your trip</h2>
-      <p class="section-sub">Tell us where you're going and what you drive — we'll match verified drivers serving your area.</p>
-      <div class="form-grid">
-        <div class="field"><label for="r-pickup">Pickup area</label><input id="r-pickup" placeholder="e.g. Rohini, Delhi"></div>
-        <div class="field"><label for="r-dest">Destination</label><input id="r-dest" placeholder="e.g. Gurgaon Cyber City"></div>
-        <div class="field"><label for="r-when">Date &amp; time</label><input id="r-when" type="datetime-local"></div>
-        <div class="field"><label for="r-car">Your car</label>
-          <select id="r-car"><option value="Hatchback">Hatchback</option><option value="Sedan" selected>Sedan</option><option value="SUV">SUV</option><option value="Luxury">Luxury / Premium</option></select>
+    <section id="rider-view" class="section">
+      <div class="section-heading"><div><h2>Where do you need a driver?</h2><p>Start typing a location, then choose an option to get a cleaner area match.</p></div></div>
+      <div class="card">
+        <div class="grid two">
+          <div class="field places"><label for="pickup">Pickup location</label><input id="pickup" autocomplete="off" placeholder="Start typing an area or address"><div id="pickup-suggestions" class="suggestions"></div></div>
+          <div class="field places"><label for="destination">Destination (optional)</label><input id="destination" autocomplete="off" placeholder="Where are you going?"><div id="destination-suggestions" class="suggestions"></div></div>
+          <div class="field"><label>Type of trip</label><div id="trip-types" class="trip-types"><button class="selected" data-type="One-time" type="button">One-time</button><button data-type="Regular" type="button">Regular</button><button data-type="Outstation" type="button">Outstation</button><button data-type="Permanent" type="button">Permanent</button></div></div>
+          <div class="field"><label for="car">Transmission needed</label><select id="car"><option value="Any">Any transmission</option><option>Manual</option><option>Automatic</option></select></div>
         </div>
-        <div class="field"><label for="r-trans">Your car's transmission</label>
-          <select id="r-trans"><option value="Manual">Manual</option><option value="Automatic">Automatic</option></select>
+        <div class="actions"><button class="btn primary" type="button" onclick="searchDrivers()">Search drivers</button><button class="btn soft" type="button" onclick="postRequest()">Post this request</button></div>
+        <div class="notice info">Posting a request needs a free sign-in. The public list has no generated profiles; it updates from Firestore as real drivers register.</div>
+      </div>
+      <div id="results-section" class="hide">
+        <div class="results-tools"><input id="driver-filter" placeholder="Filter by name or area" oninput="renderDrivers()"><span id="result-count" class="count"></span></div>
+        <div id="driver-list" class="driver-list"></div>
+      </div>
+    </section>
+
+    <section id="driver-view" class="section hide">
+      <div class="section-heading"><div><h2>Your DriverFind ID</h2><p>Create one clear, stable ID. Your account works on any device once Firebase is configured.</p></div></div>
+      <div id="driver-signed-out" class="card">
+        <h3 style="font-size:1.35rem">Sign in before creating your Driver ID</h3>
+        <p style="color:var(--muted);margin:9px 0 0">Your ID is tied to a Firebase account, not to this browser. Use email/password or Google.</p>
+        <div class="actions"><button class="btn primary" onclick="openAuth('signup')">Create account</button><button class="btn outline" onclick="openAuth('login')">Log in to my Driver ID</button></div>
+      </div>
+      <div id="driver-form-wrap" class="card hide">
+        <div class="grid two">
+          <div class="field"><label for="driver-name">Full name</label><input id="driver-name" autocomplete="name" placeholder="Name shown to riders"></div>
+          <div class="field"><label for="driver-phone">WhatsApp mobile number</label><input id="driver-phone" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit Indian number"><span class="hint">Shown only when a signed-in rider taps Contact.</span></div>
+          <div class="field"><label for="driver-experience">Driving experience</label><select id="driver-experience"><option value="1">1 year</option><option value="2">2 years</option><option value="3">3 years</option><option value="5" selected>5 years</option><option value="8">8+ years</option><option value="10">10+ years</option></select></div>
+          <div class="field"><label for="driver-transmission">Transmission</label><select id="driver-transmission"><option>Both</option><option>Manual</option><option>Automatic</option></select></div>
         </div>
+        <div class="divider"></div>
+        <div class="field places"><label for="area-picker">Areas you serve</label><input id="area-picker" autocomplete="off" placeholder="Type a locality, choose a Google result, then Add"><div id="area-suggestions" class="suggestions"></div><span class="hint">Add at least one area. Better areas make better matches.</span></div>
+        <div id="area-chips" class="area-chips"></div>
+        <div class="toolbar"><button class="btn soft tiny" type="button" onclick="addTypedArea()">+ Add typed area</button></div>
+        <div class="divider"></div>
+        <label class="checkline"><input id="contact-consent" type="checkbox"><span>I agree that signed-in riders can request my WhatsApp number to contact me about driving work. I can delete my Driver ID at any time.</span></label>
+        <div class="actions"><button class="btn primary" type="button" onclick="saveDriverProfile()">Create my Driver ID</button></div>
       </div>
-      <div class="field" style="margin-top:14px"><label>Trip type</label>
-        <div class="seg" id="r-type">
-          <button class="on" data-v="One-time" onclick="pickType(this)">One-time trip</button>
-          <button data-v="Regular" onclick="pickType(this)">Regular (daily)</button>
-          <button data-v="Outstation" onclick="pickType(this)">Outstation</button>
-          <button data-v="Permanent" onclick="pickType(this)">Permanent hire</button>
-        </div>
-        <div class="hint" id="type-hint">A single point-to-point or hourly trip. Priced per trip.</div>
-      </div>
-      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="findDrivers()">🔍 Find my driver</button>
-        <button class="btn btn-ghost" onclick="postRequest()">📣 Post request for drivers</button>
-      </div>
-    </div>
-
-    <div id="results-wrap" style="display:none">
-      <div class="filters">
-        <select id="f-sort" onchange="renderDrivers()">
-          <option value="match">Sort: Best match</option><option value="price">Sort: Lowest price</option>
-          <option value="rating">Sort: Highest rating</option><option value="exp">Sort: Most experience</option>
-        </select>
-        <select id="f-verif" onchange="renderDrivers()">
-          <option value="0">Verification: Any</option><option value="1">🪪 ID Verified+</option>
-          <option value="2">🛡️ Police Verified+</option><option value="3">🥇 Gold Verified only</option>
-        </select>
-        <select id="f-trans" onchange="renderDrivers()">
-          <option value="">Transmission: Any</option><option value="Manual">Manual</option><option value="Automatic">Automatic</option>
-        </select>
-        <select id="f-rating" onchange="renderDrivers()">
-          <option value="0">Rating: Any</option><option value="4">4★ &amp; above</option><option value="4.5">4.5★ &amp; above</option>
-        </select>
-        <span class="result-count" id="result-count"></span>
-      </div>
-      <div class="driver-grid" id="driver-grid"></div>
-    </div>
-
-    <div class="how">
-      <div class="step"><div class="k">Step 01</div><h4>Post your trip</h4><p>Pickup, destination, your car's details and when you need the driver.</p></div>
-      <div class="step"><div class="k">Step 02</div><h4>Check the badge</h4><p>Every driver carries a verification tier earned by real documents — up to Gold.</p></div>
-      <div class="step"><div class="k">Step 03</div><h4>Connect on WhatsApp</h4><p>Talk directly. No commission. Pro members save 15% on every hire.</p></div>
-    </div>
-  </section>
-
-  <!-- ============ DRIVER VIEW ============ -->
-  <section id="view-driver" class="view" role="tabpanel">
-
-    <!-- Auth gate -->
-    <div id="driver-gate" class="gate" style="display:none">
-      <div class="g-card">
-        <div class="gi">🔑</div>
-        <h3>Login to my Driver ID</h3>
-        <p>Already registered? Sign in with your email &amp; password or Google to open your dashboard.</p>
-        <button class="btn btn-primary btn-block" onclick="openAuth('driver','login')">Login</button>
-      </div>
-      <div class="g-card">
-        <div class="gi">🪪</div>
-        <h3>Create a new Driver ID</h3>
-        <p>Set up your account with a password (or Google), then complete document verification.</p>
-        <button class="btn btn-gold btn-block" onclick="openAuth('driver','signup')">Create Driver ID</button>
-      </div>
-    </div>
-
-    <!-- Registration -->
-    <div id="driver-reg" style="display:none">
-      <div class="steps-nav">
-        <span class="st done" id="stn-0">✓ ACCOUNT</span>
-        <span class="st on" id="stn-1">STEP 1 · DETAILS</span>
-        <span class="st" id="stn-2">STEP 2 · DOCUMENTS</span>
-        <span class="st" id="stn-3">STEP 3 · DRIVER ID</span>
-      </div>
-
-      <div class="card" id="reg-step-1">
-        <h2 class="section-title">Driver details</h2>
-        <p class="section-sub">Account created ✓ — your Driver ID will be linked to <b id="reg-email"></b>. Now tell riders about yourself.</p>
-        <div class="form-grid">
-          <div class="field"><label for="d-name">Full name (as on licence)</label><input id="d-name" placeholder="e.g. Ramesh Kumar"></div>
-          <div class="field"><label for="d-phone">Phone (WhatsApp)</label><input id="d-phone" type="tel" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"></div>
-          <div class="field"><label for="d-area">Areas you serve</label><input id="d-area" placeholder="e.g. Rohini, Pitampura, Delhi"><div class="hint">Comma-separated. Used for matching requests to you.</div></div>
-          <div class="field"><label for="d-exp">Driving experience (years)</label><input id="d-exp" type="number" min="1" max="40" value="5"></div>
-          <div class="field"><label for="d-lic">Licence type</label>
-            <select id="d-lic"><option>LMV (Light Motor Vehicle)</option><option>LMV + Commercial badge</option><option>HMV (Heavy)</option></select>
-          </div>
-          <div class="field"><label for="d-trans">Transmission you drive</label>
-            <select id="d-trans"><option value="Both" selected>Manual + Automatic</option><option value="Manual">Manual only</option><option value="Automatic">Automatic only</option></select>
+      <div id="driver-dashboard" class="hide">
+        <div class="grid two">
+          <div class="driver-id-card" id="id-preview"></div>
+          <div class="card">
+            <h3 style="font-size:1.25rem">Profile controls</h3>
+            <p style="margin:7px 0 16px;color:var(--muted);font-size:.88rem">Availability changes appear in the live search. Verification stays pending until reviewed by an authorised admin process.</p>
+            <label class="availability"><input id="availability-toggle" type="checkbox" onchange="changeAvailability(this.checked)"><span><b id="availability-label">Available for work</b><br><small>Your listing is visible to riders when this is on.</small></span></label>
+            <div class="toolbar"><button class="btn soft tiny" onclick="editDriverProfile()">Edit profile</button><button class="btn outline tiny" onclick="copyDriverId()">Copy Driver ID</button><button class="btn danger tiny" onclick="confirmDeleteDriver()">Delete Driver ID</button></div>
           </div>
         </div>
-        <div class="field" style="margin-top:14px"><label>Profile photo (shown on your card)</label>
-          <div class="photo-drop" onclick="document.getElementById('d-photo').click()">
-            <div id="photo-preview">📷 Tap to add your photo</div>
-          </div>
-          <input id="d-photo" type="file" accept="image/*" style="display:none" onchange="loadProfilePhoto(this)">
-        </div>
-        <button class="btn btn-primary btn-block" style="margin-top:20px" onclick="goStep2()">Continue to document verification →</button>
       </div>
+    </section>
+  </main>
 
-      <div class="card" id="reg-step-2" style="display:none">
-        <h2 class="section-title">Document verification</h2>
-        <p class="section-sub">Upload clear photos or scans. <b>4 documents are mandatory</b> to issue your Driver ID. Upload more to unlock higher trust tiers — Gold Verified drivers get shown to premium (Pro) customers and earn more.</p>
-
-        <div class="vmeter">
-          <div class="vm-current" id="vm-current">Not verified yet</div>
-          <div class="vm-track"><div class="vm-fill" id="vm-fill"></div></div>
-          <div class="vm-labels"><span>Start</span><span>🪪 ID Verified</span><span>🛡️ Police</span><span>🥇 Gold</span></div>
-        </div>
-
-        <div class="doc-list" id="doc-list"></div>
-
-        <h3 class="section-title" style="font-size:1.05rem;margin-top:24px">Personal references <span class="vbadge v2" style="vertical-align:middle">FOR POLICE TIER</span></h3>
-        <p class="section-sub">Two people who can vouch for you (previous employer, neighbour, or community elder).</p>
-        <div class="ref-grid">
-          <div class="field"><label for="ref1-name">Reference 1 — name</label><input id="ref1-name" placeholder="Full name" oninput="refreshVerification()"></div>
-          <div class="field"><label for="ref1-phone">Reference 1 — phone</label><input id="ref1-phone" maxlength="10" inputmode="numeric" placeholder="10-digit mobile" oninput="refreshVerification()"></div>
-          <div class="field"><label for="ref2-name">Reference 2 — name</label><input id="ref2-name" placeholder="Full name" oninput="refreshVerification()"></div>
-          <div class="field"><label for="ref2-phone">Reference 2 — phone</label><input id="ref2-phone" maxlength="10" inputmode="numeric" placeholder="10-digit mobile" oninput="refreshVerification()"></div>
-        </div>
-
-        <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-ghost" onclick="backStep1()">← Back to details</button>
-          <button class="btn btn-primary" id="btn-issue" style="flex:1" onclick="issueDriverId()" disabled>🪪 Issue my Driver ID</button>
-        </div>
-        <p class="hint" id="issue-hint" style="margin-top:8px;color:var(--red);font-size:.8rem"></p>
-        <button class="btn btn-danger btn-block" style="margin-top:10px" onclick="openDeleteModal('draft')">🗑️ Discard application &amp; erase uploaded documents</button>
-      </div>
-
-      <input id="doc-file" type="file" accept="image/*,.pdf" style="display:none" onchange="handleDocFile(this)">
-    </div>
-
-    <!-- Dashboard -->
-    <div id="driver-dash" style="display:none">
-      <div class="dash-top">
-        <div id="my-card" style="flex:1;min-width:300px;max-width:400px"></div>
-        <div class="toggle-card">
-          <h3 class="section-title" style="font-size:1.1rem">Availability</h3>
-          <p class="section-sub" style="margin-bottom:12px">Turn OFF when you're on a trip — you'll disappear from rider searches.</p>
-          <label class="switch"><input type="checkbox" id="avail-toggle" onchange="toggleAvail(this)"><span class="slider"></span></label>
-          <b id="avail-label" style="margin-left:12px;vertical-align:middle"></b>
-          <div class="stat-row">
-            <div class="stat"><div class="n" id="stat-matches">0</div><div class="l">Matching requests</div></div>
-            <div class="stat"><div class="n" id="stat-total">0</div><div class="l">Open requests</div></div>
-            <div class="stat"><div class="n" id="stat-docs">0/9</div><div class="l">Docs verified</div></div>
-          </div>
-          <button class="btn btn-danger btn-block" style="margin-top:16px" onclick="openDeleteModal('issued')">🗑️ Delete my Driver ID</button>
-        </div>
-      </div>
-      <div class="card" id="dash-verify" style="margin-bottom:22px"></div>
-      <h2 class="section-title">Requests in your areas</h2>
-      <p class="section-sub">Riders looking for a driver where you operate. Reply on WhatsApp to close the deal.</p>
-      <div id="req-list"></div>
-    </div>
-  </section>
-</main>
-
-<!-- ============ AUTH MODAL ============ -->
-<div class="modal-bg" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
-  <div class="modal">
-    <h3 id="auth-title">Sign in</h3>
-    <p style="font-size:.85rem;color:#5A6B85" id="auth-sub"></p>
-    <div class="auth-toggle">
-      <button id="at-login" class="on" onclick="setAuthMode('login')">Login</button>
-      <button id="at-signup" onclick="setAuthMode('signup')">Create account</button>
-    </div>
-    <div class="field" id="f-au-name" style="margin-bottom:12px;display:none"><label for="au-name">Full name</label><input id="au-name" placeholder="Your name" autocomplete="name"></div>
-    <div class="field" style="margin-bottom:12px"><label for="au-email">Email</label><input id="au-email" type="email" placeholder="you@example.com" autocomplete="email"></div>
-    <div class="field" style="margin-bottom:12px"><label for="au-pass">Password</label><input id="au-pass" type="password" placeholder="Minimum 6 characters" autocomplete="current-password"></div>
-    <div class="field" id="f-au-pass2" style="margin-bottom:12px;display:none"><label for="au-pass2">Confirm password</label><input id="au-pass2" type="password" placeholder="Repeat password"></div>
-    <button class="btn btn-primary btn-block" id="btn-auth-submit" onclick="submitAuth()">Login</button>
-    <div class="divider">OR</div>
-    <button class="btn btn-google btn-block" onclick="googleAuth()">
-      <svg class="g-ico" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C41.1 34.9 44 30 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-      Continue with Google
-    </button>
-    <p class="auth-err" id="auth-err"></p>
-    <span class="fb-status" id="fb-status">Checking Firebase…</span>
-    <button class="btn btn-ghost btn-block" style="margin-top:12px" onclick="closeAuth()">Cancel</button>
-  </div>
-</div>
-
-<!-- ============ PRO MODAL (plan → payment) ============ -->
-<div class="modal-bg" id="pro-modal" role="dialog" aria-modal="true" aria-labelledby="pro-title">
-  <div class="modal">
-    <!-- Step 1: plan -->
-    <div id="pro-step-plan">
-      <h3 id="pro-title">🥇 DriverFind <span style="color:var(--gold)">Pro</span></h3>
-      <p style="font-size:.88rem;color:#5A6B85">Serious about safety? Pro puts the most-verified drivers at your fingertips — and saves you money on every hire.</p>
-      <ul style="list-style:none;margin:14px 0;font-size:.88rem;display:grid;gap:8px">
-        <li>✅ <b>15% off</b> every driver price — trips, outstation &amp; monthly hires</li>
-        <li>✅ Exclusive access to <b>🥇 Gold Verified</b> drivers (9-document check)</li>
-        <li>✅ Priority matching — your requests shown first to drivers</li>
-        <li>✅ Pro badge so drivers respond faster</li>
-      </ul>
-      <div class="plan-opt sel" id="plan-m" onclick="selPlan('m')">
-        <div><div class="pn">Monthly</div><div class="pd">Cancel anytime</div></div>
-        <div class="pp">₹199<small>/mo</small></div>
-      </div>
-      <div class="plan-opt" id="plan-y" onclick="selPlan('y')">
-        <div><div class="pn">Yearly <span class="badge-save">SAVE 16%</span></div><div class="pd">Best for regular hirers</div></div>
-        <div class="pp">₹1,999<small>/yr</small></div>
-      </div>
-      <button class="btn btn-gold btn-block" style="margin-top:18px" onclick="goToPayment()">Continue to payment →</button>
-      <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="closePro()">Maybe later</button>
-    </div>
-
-    <!-- Step 2: payment -->
-    <div id="pro-step-pay" style="display:none">
-      <h3>Scan &amp; pay with any UPI app</h3>
-      <div class="pay-amt" id="pay-amt">₹199 <small id="pay-plan-label">DriverFind Pro · Monthly</small></div>
-      <img class="pay-qr" id="pay-qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAggAAALSCAMAAACPh9kYAAAA/1BMVEVmXVaYal2jn5re3t9hTS1YLyiYXigjJxqgi2w5gfC7w8l7gYRHiPPkOC3SpyWzvMqwlibPqp2ZKEvzxhnYz6qLKTJ5fYK1x7ZhnWgadO7ammHeXiLkZ1UipVcljaA0UTDt0mA5PEFiqDlqLUU+WEfFboQipz1/y5SHf4X2+PwAAAA2ODfn5+hGR0fW19eGh4cnKCenqKjGx8cWFxd3d3dVVlZnZ2eWl5e2trcsqE78vAA+QUAse+48QTzpQzTd4eYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACX8H5oAAAAQHRSTlP/////////////////////////////////////////////////////////////////////////////////////73leyQAAN0ZJREFUeNrtnQl7ozjarvGWeJLqVKUqtXRPz/595xwHLYC1MOV25///qyMBEhhZNnacVMV+nmum2gFJCOnmlfQiiWQBQUYJigACCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAQIIEECAAAIEECCAAAEECCBAAAECCBBAgAACBAEECCBAAAECCBBAgAACBBAggAABBAggQAABAggQQIAAAgQQIIAAAQQIIEAAAXrrIEyKUo+1UornDKV9qSBMciGpEprT6+VymVFeoMAvEISJVkmipNL5WMjsOsuul5kCCpcGAsm/qC/8ixCccyFEep1dGxZSOn5CoV8SCPeJ+vLl9ssXYXoIOU+VMByY1iGlQo1R6pcDwng0UipRSpd5+fAwnmueXl9bk7CWIpmj2C8FhHFiRgoiobdFXpZlrnme02WWZf9KU5okV3M0D5cBwlgko9FUScn5+F7nec5FwQ0I1yua0UTMpwIFfwkg6GSejMz/hBjp4n4+H+dq/kB0urymckWlGk3XHCV/hBibvCUQHpJ8lFAhFNdCjcaj+WguRqPxWCcZlZSu6HSapnrHeGPyRH5oeU9+Vg7oSpK3A8JTMi742Dz4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" alt="UPI payment QR code — scan with any UPI app">
-      <div class="upi-row">
-        <code id="upi-id">preeti.aggarwals7@oksbi</code>
-        <button class="btn btn-ghost" onclick="copyUpi()">📋 Copy</button>
-      </div>
-      <a class="btn btn-primary btn-block" id="upi-deeplink" style="margin-top:12px" href="#">📲 Open in UPI app</a>
-      <button class="btn btn-gold btn-block" style="margin-top:8px" onclick="activatePro()">✅ I've paid — Activate Pro</button>
-      <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="backToPlan()">← Change plan</button>
-      <p style="font-size:.7rem;color:#93A2B8;text-align:center;margin-top:10px">After paying, tap "I've paid". Membership activates on this device.</p>
+  <div id="auth-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="auth-title" onclick="closeWhenBackdrop(event,'auth-modal')">
+    <div class="modal"><button class="modal-close" aria-label="Close" onclick="closeModal('auth-modal')">×</button><h2 id="auth-title">Welcome to DriverFind</h2><p class="sub">Use the same account to sign in on every device.</p>
+      <div class="auth-switch"><button id="auth-login-tab" class="active" onclick="setAuthMode('login')">Sign in</button><button id="auth-signup-tab" onclick="setAuthMode('signup')">Create account</button></div>
+      <div id="auth-name-wrap" class="field hide"><label for="auth-name">Your name</label><input id="auth-name" autocomplete="name" placeholder="Your full name"></div>
+      <div class="field" style="margin-top:12px"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+      <div class="field" style="margin-top:12px"><label for="auth-password">Password</label><input id="auth-password" type="password" autocomplete="current-password" placeholder="At least 6 characters"></div>
+      <button id="auth-submit" class="btn primary full" style="margin-top:17px" onclick="emailAuth()">Sign in</button>
+      <div class="or">or</div><button class="btn google full" onclick="googleAuth()"><span style="font-size:1.1rem">G</span> Continue with Google</button>
+      <div id="auth-error" class="form-error hide"></div>
     </div>
   </div>
-</div>
 
-<!-- ============ DELETE MODAL ============ -->
-<div class="modal-bg" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-title">
-  <div class="modal">
-    <h3 id="delete-title" style="color:var(--red)">🗑️ <span id="delete-title-text">Delete your Driver ID?</span></h3>
-    <p style="font-size:.88rem;color:#5A6B85" id="delete-body"></p>
-    <div style="background:#FDF0F0;border:1px solid #F3C9C9;border-radius:10px;padding:12px 14px;margin-top:14px;font-size:.82rem;color:var(--red)">
-      ⚠️ This cannot be undone. You'll need to re-upload every document to register again.
-    </div>
-    <div class="field" style="margin-top:16px">
-      <label for="delete-confirm-input">Type <b>DELETE</b> to confirm</label>
-      <input id="delete-confirm-input" placeholder="Type DELETE here" oninput="checkDeleteInput()" autocomplete="off">
-    </div>
-    <button class="btn btn-danger btn-block" id="btn-confirm-delete" style="margin-top:16px" disabled onclick="confirmDelete()">Yes, permanently delete</button>
-    <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="closeDeleteModal()">Cancel, keep my ID</button>
+  <div id="delete-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="delete-title" onclick="closeWhenBackdrop(event,'delete-modal')">
+    <div class="modal"><button class="modal-close" aria-label="Close" onclick="closeModal('delete-modal')">×</button><h2 id="delete-title">Delete your Driver ID?</h2><p class="sub">This removes your public profile and private contact record from Firestore. Type <b>DELETE</b> to unlock the action.</p><div class="field"><label for="delete-check">Confirmation</label><input id="delete-check" autocomplete="off" placeholder="Type DELETE" oninput="toggleDeleteButton()"></div><div class="actions"><button id="delete-button" class="btn danger" disabled onclick="deleteDriverProfile()">Permanently delete</button><button class="btn outline" onclick="closeModal('delete-modal')">Cancel</button></div></div>
   </div>
-</div>
 
-<footer><b>DriverFind</b> — Your Trusted Driver, On Demand · Every Driver ID backed by documents · Data stored locally + Firebase Auth</footer>
-<div class="roadline" aria-hidden="true"></div>
-<div id="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand"><span class="footer-logo"><img src="assets/driverfind-logo.png" alt=""></span><span>DriverFind</span></div>
+      <p class="footer-tagline">Find Trusted Drivers for you and your Loved Ones</p>
+      <span class="footer-copy">© 2026 DriverFind</span>
+    </div>
+  </footer>
 
-<!-- ============ FIREBASE (best-effort, graceful offline fallback) ============ -->
-<script type="module">
-window.FB = { mode:'loading' };
-try {
-  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js");
-  const { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } =
-    await import("https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js");
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBUd9ygqwEQ75Ay-3hAa1wiVCfwTbx6yZY",
-    authDomain: "driverfind-f0c8c.firebaseapp.com",
-    projectId: "driverfind-f0c8c",
-    storageBucket: "driverfind-f0c8c.firebasestorage.app",
-    messagingSenderId: "940047403547",
-    appId: "1:940047403547:web:0e2b306f3326caf01b06be",
-    measurementId: "G-MS3CFCDGKG"
-  };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // Analytics (best-effort; fails silently on file:// or blockers)
-  try {
-    const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js");
-    getAnalytics(app);
-  } catch(e){}
-
-  window.FB = {
-    mode: 'ready',
-    async signup(email, pass){ const c = await createUserWithEmailAndPassword(auth, email, pass); return c.user; },
-    async login(email, pass){ const c = await signInWithEmailAndPassword(auth, email, pass); return c.user; },
-    async google(){ const c = await signInWithPopup(auth, new GoogleAuthProvider()); return c.user; },
-    async signout(){ try{ await signOut(auth); }catch(e){} }
-  };
-} catch(e){
-  window.FB = { mode:'offline' };
-}
-document.dispatchEvent(new Event('fb-ready'));
-</script>
-
-<script>
-/* =========================================================
-   DriverFind v3 — accounts (email+password / Google),
-   driver ID login, verification tiers, Pro + UPI payment.
-   ========================================================= */
-
-/* ---------- Storage ---------- */
-const mem = {};
-const store = {
-  get(k, fb){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; }catch(e){ return mem[k] !== undefined ? mem[k] : fb; } },
-  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ mem[k] = v; } }
-};
-const K = { DRIVERS:'df_drivers_v3', REQUESTS:'df_requests', PRO:'df_pro', ACCOUNTS:'df_accounts', SESSION:'df_session' };
-const UPI_ID = 'preeti.aggarwals7@oksbi';
-const UPI_NAME = 'DriverFind';
-
-/* ---------- Password hashing (SHA-256 with per-account salt) ---------- */
-async function sha256(text){
-  if(window.crypto && crypto.subtle){
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
-  // Tiny fallback hash (non-crypto contexts)
-  let h1=0x811c9dc5;
-  for(let i=0;i<text.length;i++){ h1^=text.charCodeAt(i); h1=Math.imul(h1,0x01000193)>>>0; }
-  return 'fnv_'+h1.toString(16)+'_'+text.length;
-}
-
-/* ---------- Session / accounts ---------- */
-function session(){ return store.get(K.SESSION, null); }
-function setSession(s){ store.set(K.SESSION, s); renderAcct(); }
-function findAccount(email){ return store.get(K.ACCOUNTS,[]).find(a=>a.email.toLowerCase()===email.toLowerCase()); }
-async function createLocalAccount(name, email, pass, role, provider){
-  const accounts = store.get(K.ACCOUNTS, []);
-  const salt = Math.random().toString(36).slice(2,10);
-  const acc = { uid:'u'+Date.now()+Math.random().toString(36).slice(2,6), name, email, salt,
-                passHash: pass ? await sha256(salt+pass) : null, role, provider };
-  accounts.push(acc);
-  store.set(K.ACCOUNTS, accounts);
-  return acc;
-}
-function logout(){
-  if(window.FB && FB.mode==='ready') FB.signout();
-  setSession(null);
-  toast('Signed out');
-  renderDriverSide();
-  renderProArea();
-}
-
-/* ---------- Header account area ---------- */
-function renderAcct(){
-  const s = session();
-  const area = document.getElementById('acct-area');
-  if(s){
-    area.innerHTML = `<div class="chip"><span class="role">${s.role==='driver'?'DRIVER':'RIDER'}</span><span title="${esc(s.email)}">${esc(s.name||s.email)}</span><button class="out" onclick="logout()" aria-label="Sign out">Logout</button></div>`;
-  } else {
-    area.innerHTML = `<button class="btn-signin" onclick="openAuth('rider','login')">🔑 Sign in</button>`;
-  }
-}
-
-/* ---------- Auth modal ---------- */
-let authRole='rider', authMode='login', afterAuthCb=null;
-function openAuth(role, mode, cb){
-  authRole = role; afterAuthCb = cb || null;
-  setAuthMode(mode||'login');
-  $('auth-sub').textContent = role==='driver'
-    ? 'Driver accounts link your Driver ID, documents and dashboard.'
-    : 'Rider accounts let you post requests and buy DriverFind Pro.';
-  $('auth-err').textContent='';
-  const st = $('fb-status');
-  const fbReady = window.FB && FB.mode==='ready';
-  st.textContent = fbReady ? '● Firebase connected — Google sign-in available' : '● Offline mode — email & password stored securely in this browser';
-  st.className = 'fb-status ' + (fbReady?'on':'off');
-  $('auth-modal').classList.add('open');
-  setTimeout(()=>$(authMode==='signup'?'au-name':'au-email').focus(), 60);
-}
-function closeAuth(){ $('auth-modal').classList.remove('open'); afterAuthCb=null; }
-function setAuthMode(m){
-  authMode=m;
-  $('at-login').classList.toggle('on', m==='login');
-  $('at-signup').classList.toggle('on', m==='signup');
-  $('f-au-name').style.display = m==='signup'?'block':'none';
-  $('f-au-pass2').style.display = m==='signup'?'block':'none';
-  $('btn-auth-submit').textContent = m==='signup' ? (authRole==='driver'?'Create account & continue':'Create account') : 'Login';
-  $('auth-title').textContent = (m==='signup'?'Create ':'')+(authRole==='driver'?'Driver account':'Rider account')+(m==='login'?' login':'');
-  $('auth-err').textContent='';
-}
-
-async function submitAuth(){
-  const email=$('au-email').value.trim(), pass=$('au-pass').value;
-  const err = m => { $('auth-err').textContent = m; };
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err('Enter a valid email address');
-  if(pass.length<6) return err('Password must be at least 6 characters');
-
-  if(authMode==='signup'){
-    const name=$('au-name').value.trim();
-    if(!name) return err('Enter your name');
-    if(pass !== $('au-pass2').value) return err('Passwords do not match');
-    if(findAccount(email)) return err('An account with this email already exists — try Login');
-    const acc = await createLocalAccount(name, email, pass, authRole, 'password');
-    if(window.FB && FB.mode==='ready'){ FB.signup(email, pass).catch(()=>{}); }   // mirror to Firebase, best-effort
-    finishAuth(acc);
-  } else {
-    let acc = findAccount(email);
-    if(acc && acc.passHash){
-      const ok = (await sha256(acc.salt+pass)) === acc.passHash;
-      if(!ok) return err('Incorrect password');
-      finishAuth(acc);
-    } else if(window.FB && FB.mode==='ready'){
-      try{
-        const u = await FB.login(email, pass);
-        acc = acc || await createLocalAccount(u.displayName||email.split('@')[0], email, pass, authRole, 'password');
-        finishAuth(acc);
-      }catch(e){ err('No account found with these credentials'); }
-    } else {
-      err('No account found with this email' + (acc? ' and password':'') );
-    }
-  }
-}
-
-async function googleAuth(){
-  if(!(window.FB && FB.mode==='ready')){
-    $('auth-err').textContent = 'Google sign-in needs the page online (Firebase). Use email & password for now.';
-    return;
-  }
-  try{
-    const u = await FB.google();
-    let acc = findAccount(u.email);
-    if(!acc) acc = await createLocalAccount(u.displayName||u.email.split('@')[0], u.email, null, authRole, 'google');
-    finishAuth(acc);
-  }catch(e){
-    $('auth-err').textContent = 'Google sign-in was cancelled or blocked (check authorized domains in Firebase console).';
-  }
-}
-
-function finishAuth(acc){
-  setSession({ uid:acc.uid, name:acc.name, email:acc.email, role:authRole, provider:acc.provider });
-  closeAuth();
-  toast('👋 Welcome, '+acc.name.split(' ')[0]+'!');
-  if(afterAuthCb){ const cb=afterAuthCb; afterAuthCb=null; cb(); }
-  renderDriverSide();
-  renderProArea();
-}
-
-/* ---------- Document schema & tiers ---------- */
-const DOCS = [
-  {key:'dl',      ico:'🪪', name:'Driving Licence (front)',            tier:1, why:'Proves legal right to drive. Number cross-checked with name.'},
-  {key:'aadhaar', ico:'🆔', name:'Aadhaar Card',                        tier:1, why:'Government identity — confirms who the driver really is.'},
-  {key:'pan',     ico:'🧾', name:'PAN Card',                            tier:1, why:'Second identity anchor; prevents duplicate/fake profiles.'},
-  {key:'selfie',  ico:'🤳', name:'Selfie holding your licence',         tier:1, why:'Liveness check — the person registering matches the documents.'},
-  {key:'pcc',     ico:'🛡️', name:'Police Verification Certificate',     tier:2, why:'Clean criminal-record check from local police station.'},
-  {key:'address', ico:'🏠', name:'Address proof (bill / rent agreement)',tier:2, why:'Verified residence — drivers are traceable, not anonymous.'},
-  {key:'medical', ico:'🩺', name:'Medical fitness certificate',         tier:3, why:'Eyesight + fitness certified by a registered doctor.'},
-  {key:'exp',     ico:'📜', name:'Experience / employer letter',        tier:3, why:'Past employer vouches for driving history and conduct.'},
-  {key:'badge',   ico:'🏅', name:'Commercial badge (if held)',          tier:3, why:'Optional professional badge — counts toward Gold.'},
-];
-const TIER_NAMES = {0:'Unverified', 1:'🪪 ID Verified', 2:'🛡️ Police Verified', 3:'🥇 Gold Verified'};
-const TIER_CLASS = {1:'v1', 2:'v2', 3:'v3'};
-function computeTier(docs, hasRefs){
-  const has = k => !!(docs && docs[k]);
-  if(!['dl','aadhaar','pan','selfie'].every(has)) return 0;
-  if(!(has('pcc') && has('address') && hasRefs)) return 1;
-  return ['medical','exp','badge'].filter(has).length >= 2 ? 3 : 2;
-}
-
-/* ---------- Seed data ---------- */
-function seed(){
-  if(store.get(K.DRIVERS)) return;
-  const mk=(id,name,phone,areas,exp,lic,trans,rating,trips,avail,tier)=>({id,name,phone,areas,exp,lic,trans,rating,trips,avail,tier,photo:null,docs:{},refs:tier>=2,owner:null});
-  store.set(K.DRIVERS, [
-    mk('d1','Ramesh Kumar','9810000001','Rohini, Pitampura, Delhi',12,'LMV + Commercial badge','Both',4.8,640,true,3),
-    mk('d2','Suresh Yadav','9810000002','Dwarka, Janakpuri, Delhi',8,'LMV (Light Motor Vehicle)','Manual',4.6,412,true,2),
-    mk('d3','Amit Sharma','9810000003','Gurgaon, Cyber City, Sohna Road',6,'LMV (Light Motor Vehicle)','Both',4.9,530,true,3),
-    mk('d4','Vikas Singh','9810000004','Noida, Greater Noida, Ghaziabad',10,'LMV + Commercial badge','Automatic',4.4,301,true,2),
-    mk('d5','Mohd. Irfan','9810000005','Karol Bagh, Connaught Place, Delhi',15,'LMV + Commercial badge','Both',4.7,820,true,3),
-    mk('d6','Deepak Verma','9810000006','Rohini, Shalimar Bagh, Delhi',4,'LMV (Light Motor Vehicle)','Manual',4.2,150,true,1),
-    mk('d7','Harish Chandra','9810000007','South Delhi, Saket, Hauz Khas',9,'LMV (Light Motor Vehicle)','Both',4.5,388,false,2),
-    mk('d8','Pawan Gupta','9810000008','Faridabad, Badarpur, Delhi',7,'LMV (Light Motor Vehicle)','Automatic',4.3,264,true,1),
-  ]);
-  if(!store.get(K.REQUESTS)){
-    store.set(K.REQUESTS, [
-      {id:'r1', pickup:'Rohini, Delhi', dest:'IGI Airport T3', when:'', car:'Sedan', trans:'Manual', type:'One-time', rider:'Anita S.', ts:Date.now()-86400000},
-      {id:'r2', pickup:'Gurgaon', dest:'Jaipur', when:'', car:'SUV', trans:'Automatic', type:'Outstation', rider:'Rohit M.', ts:Date.now()-43200000},
-    ]);
-  }
-}
-
-/* ---------- Helpers ---------- */
-const $ = id => document.getElementById(id);
-function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2800); }
-function tokens(s){ return (s||'').toLowerCase().split(/[,\s]+/).filter(w=>w.length>2); }
-function overlap(a,b){ const ta=tokens(a), tb=tokens(b); return ta.filter(x=>tb.some(y=>y.includes(x)||x.includes(y))).length; }
-function esc(s){ return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function initials(n){ return (n||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
-function starStr(r){ const full=Math.round(r); return '★'.repeat(full)+'☆'.repeat(5-full); }
-function vbadgeHtml(t){ return t>0 ? '<span class="vbadge '+TIER_CLASS[t]+'">'+TIER_NAMES[t]+'</span>' : ''; }
-function compressImage(file, maxW, cb){
-  const r = new FileReader();
-  r.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      const scale = Math.min(1, maxW / img.width);
-      const c = document.createElement('canvas');
-      c.width = Math.round(img.width*scale); c.height = Math.round(img.height*scale);
-      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      cb(c.toDataURL('image/jpeg',.72));
+  <script type="module">
+    /*
+      DriverFind static build
+      1) Firebase config is included below. It is okay for the web API key to be public,
+         but protect services with Firebase rules (provided in firestore.rules).
+      2) Replace googleMapsApiKey before publishing. It must be a separate Google Maps key,
+         not the Firebase Web API key. Restrict it to your GitHub Pages domain.
+    */
+    const APP_CONFIG = {
+      googleMapsApiKey: '', // PASTE A RESTRICTED GOOGLE MAPS / PLACES API KEY HERE
+      country: 'in'
     };
-    img.onerror = () => cb(null);
-    img.src = e.target.result;
-  };
-  r.readAsDataURL(file);
-}
+    const firebaseConfig = {
+      apiKey: 'AIzaSyBUd9ygqwEQ75Ay-3hAa1wiVCfwTbx6yZY',
+      authDomain: 'driverfind-f0c8c.firebaseapp.com',
+      projectId: 'driverfind-f0c8c',
+      storageBucket: 'driverfind-f0c8c.firebasestorage.app',
+      messagingSenderId: '940047403547',
+      appId: '1:940047403547:web:0e2b306f3326caf01b06be'
+    };
 
-/* ---------- Pricing ---------- */
-const BASE = { 'One-time':{amt:599, per:'/trip (up to 4 hrs)'}, 'Regular':{amt:750, per:'/day'}, 'Outstation':{amt:1499, per:'/day + stay'}, 'Permanent':{amt:18000, per:'/month'} };
-const CAR_X = { Hatchback:1, Sedan:1.05, SUV:1.15, Luxury:1.35 };
-const PRO_DISCOUNT = 0.15;
-function isPro(){ const p = store.get(K.PRO); return p && p.active; }
-function priceFor(driver, type, car){
-  const b = BASE[type] || BASE['One-time'];
-  const expX = 1 + Math.min(Math.max(driver.exp-3,0),12)*0.03;
-  const tierX = 1 + (driver.tier>=3 ? 0.08 : driver.tier>=2 ? 0.04 : 0);
-  const full = Math.round(b.amt*expX*tierX*(CAR_X[car]||1)/10)*10;
-  const final = isPro() ? Math.round(full*(1-PRO_DISCOUNT)/10)*10 : full;
-  return { full, final, per:b.per };
-}
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
+    import {
+      getAuth, GoogleAuthProvider, onAuthStateChanged, createUserWithEmailAndPassword,
+      signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult,
+      updateProfile, signOut
+    } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
+    import {
+      getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, addDoc,
+      onSnapshot, serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js';
 
-/* ---------- Mode switching ---------- */
-function setMode(m){
-  const rider = m==='rider';
-  $('view-rider').classList.toggle('active', rider);
-  $('view-driver').classList.toggle('active', !rider);
-  $('tab-rider').classList.toggle('active', rider);
-  $('tab-driver').classList.toggle('active', !rider);
-  $('tab-rider').setAttribute('aria-selected', rider);
-  $('tab-driver').setAttribute('aria-selected', !rider);
-  if(!rider) renderDriverSide();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+    const state = { app:null, auth:null, db:null, user:null, myDriver:null, drivers:[], servingAreas:[], tripType:'One-time', mapsReady:false, places:null, listener:null, mineListener:null, authMode:'login', toastTimer:null };
+    const $ = id => document.getElementById(id);
+    const safe = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const initials = name => String(name || '?').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    const normal = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+    const words = value => new Set(normal(value).split(' ').filter(x=>x.length > 2));
+    const matchScore = (needle, haystack) => { const a=words(needle), b=words(haystack); if(!a.size) return 0; let hit=0; a.forEach(w=>{if(b.has(w))hit++}); return hit/a.size; };
+    const compactError = error => {
+      const code = error?.code || '';
+      const known = {
+        'auth/invalid-credential':'Email or password is incorrect.', 'auth/email-already-in-use':'That email already has an account. Try signing in.',
+        'auth/invalid-email':'Enter a valid email address.', 'auth/weak-password':'Use a password with at least 6 characters.',
+        'auth/popup-closed-by-user':'The Google sign-in window was closed.', 'auth/unauthorized-domain':'This GitHub Pages domain has not been added to Firebase Authentication.',
+        'permission-denied':'Firestore rejected this action. Publish the supplied security rules first.'
+      };
+      return known[code] || error?.message || 'Something went wrong. Please try again.';
+    };
+    function toast(message){ const t=$('toast'); t.textContent=message; t.classList.add('show'); clearTimeout(state.toastTimer); state.toastTimer=setTimeout(()=>t.classList.remove('show'),3800); }
+    function setStatus(message, kind='info'){ console[kind==='error'?'error':'info']('[DriverFind]',message); }
+    function setLoading(element, loading){ element?.classList.toggle('loading', loading); }
+    function datePart(){ return new Date().getFullYear(); }
+    function stableDriverId(uid){ return `DF-${datePart()}-${uid.slice(0,6).toUpperCase()}`; }
 
-/* ---------- Trip type ---------- */
-const HINTS = {
-  'One-time':'A single point-to-point or hourly trip. Priced per trip.',
-  'Regular':'Daily pick-and-drop (office/school). Priced per day.',
-  'Outstation':'Multi-day travel outside the city. Per day + driver stay.',
-  'Permanent':'Full-time driver for your household. Priced per month.'
-};
-let tripType='One-time';
-function pickType(btn){
-  document.querySelectorAll('#r-type button').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  tripType = btn.dataset.v;
-  $('type-hint').textContent = HINTS[tripType];
-  if($('results-wrap').style.display!=='none') renderDrivers();
-}
+    window.setView = view => {
+      const rider = view === 'rider';
+      $('rider-view').classList.toggle('hide', !rider); $('driver-view').classList.toggle('hide', rider);
+      $('rider-tab').classList.toggle('active', rider); $('driver-tab').classList.toggle('active', !rider);
+      if(!rider) renderDriverArea();
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+    document.querySelectorAll('#trip-types button').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('#trip-types button').forEach(x=>x.classList.remove('selected'));
+      button.classList.add('selected'); state.tripType=button.dataset.type;
+    }));
 
-/* ============================================================
-   PRO PLAN + PAYMENT
-   ============================================================ */
-let proPlan='m';
-const PLAN_INFO = { m:{amt:199, label:'DriverFind Pro · Monthly'}, y:{amt:1999, label:'DriverFind Pro · Yearly'} };
-function renderProArea(){
-  const area = $('pro-area');
-  const p = store.get(K.PRO);
-  $('header-pro').style.display = isPro() ? 'inline-block' : 'none';
-  if(isPro()){
-    area.innerHTML = `<div class="pro-active-strip">🥇 <b>DriverFind Pro active</b> — 15% off every price · Gold Verified drivers unlocked · ${p.plan==='y'?'Yearly':'Monthly'} plan
-      <button class="btn btn-danger" onclick="cancelPro()">Cancel Pro</button></div>`;
-  } else {
-    area.innerHTML = `<div class="pro-banner">
-      <div style="flex:1;min-width:240px">
-        <h3>Upgrade to <span>DriverFind Pro</span></h3>
-        <ul><li>💸 15% off every driver</li><li>🥇 Gold Verified drivers unlocked</li><li>⚡ Priority matching</li></ul>
-      </div>
-      <div class="cta">
-        <div class="pr">₹199<small>/mo</small></div>
-        <button class="btn btn-gold" style="margin-top:8px" onclick="openPro()">Go Pro</button>
-      </div>
-    </div>`;
-  }
-}
-function openPro(){
-  if(!session()){
-    toast('Create your rider account first to buy Pro');
-    openAuth('rider','signup', openPro);
-    return;
-  }
-  $('pro-step-plan').style.display='block';
-  $('pro-step-pay').style.display='none';
-  $('pro-modal').classList.add('open');
-}
-function closePro(){ $('pro-modal').classList.remove('open'); }
-function selPlan(p){ proPlan=p; $('plan-m').classList.toggle('sel',p==='m'); $('plan-y').classList.toggle('sel',p==='y'); }
-function goToPayment(){
-  const info = PLAN_INFO[proPlan];
-  $('pay-amt').firstChild.textContent = '₹'+info.amt.toLocaleString('en-IN')+' ';
-  $('pay-plan-label').textContent = info.label;
-  $('upi-deeplink').href = 'upi://pay?pa='+encodeURIComponent(UPI_ID)+'&pn='+encodeURIComponent(UPI_NAME)+'&am='+info.amt+'&cu=INR&tn='+encodeURIComponent(info.label);
-  $('pro-step-plan').style.display='none';
-  $('pro-step-pay').style.display='block';
-}
-function backToPlan(){ $('pro-step-pay').style.display='none'; $('pro-step-plan').style.display='block'; }
-function copyUpi(){
-  const done = ()=>toast('📋 UPI ID copied: '+UPI_ID);
-  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(UPI_ID).then(done).catch(()=>fallbackCopy(done)); }
-  else fallbackCopy(done);
-}
-function fallbackCopy(done){
-  const ta=document.createElement('textarea'); ta.value=UPI_ID; document.body.appendChild(ta); ta.select();
-  try{ document.execCommand('copy'); done(); }catch(e){ toast('Copy failed — UPI ID: '+UPI_ID); }
-  ta.remove();
-}
-function activatePro(){
-  const s = session();
-  store.set(K.PRO, {active:true, plan:proPlan, since:Date.now(), by:s?s.email:null});
-  closePro();
-  renderProArea();
-  renderDrivers();
-  toast('🥇 Welcome to DriverFind Pro — 15% discount is now live');
-}
-function cancelPro(){
-  store.set(K.PRO, {active:false});
-  renderProArea();
-  renderDrivers();
-  toast('Pro membership cancelled');
-}
-
-/* ============================================================
-   RIDER: search & results
-   ============================================================ */
-let lastSearch = null;
-function findDrivers(){
-  const pickup = $('r-pickup').value.trim();
-  if(!pickup){ toast('Enter a pickup area to match drivers'); $('r-pickup').focus(); return; }
-  lastSearch = { pickup, dest:$('r-dest').value.trim(), car:$('r-car').value, trans:$('r-trans').value, type:tripType };
-  $('results-wrap').style.display='block';
-  renderDrivers();
-  $('results-wrap').scrollIntoView({behavior:'smooth'});
-}
-
-function driverCardHtml(d, wa, locked){
-  const priceHtml = isPro()
-    ? `<span class="strike">₹${d.price.full.toLocaleString('en-IN')}</span><span class="amt">₹${d.price.final.toLocaleString('en-IN')}</span> <span class="per">${d.price.per}</span><span class="save">PRO saves ₹${(d.price.full-d.price.final).toLocaleString('en-IN')}</span>`
-    : `<span class="amt">₹${d.price.full.toLocaleString('en-IN')}</span> <span class="per">${d.price.per}</span>`;
-  return `
-  <article class="lic ${d.tier===3?'gold':''} ${locked?'locked':''}">
-    <div class="lic-head"><span class="t">DriverFind${d.tier===3?' · Gold':''}</span>${vbadgeHtml(d.tier)}<span class="avail on">AVAILABLE</span></div>
-    ${d.match>0 && !locked ? '<span class="match-badge">AREA MATCH</span>' : ''}
-    ${locked ? `<div class="lock-overlay"><div class="l-ico">🔒</div><b>Gold Verified · Pro only</b><p>This driver passed the full 9-document check. Unlock with DriverFind Pro.</p><button class="btn btn-gold" style="padding:8px 18px;font-size:.8rem" onclick="openPro()">Unlock with Pro</button></div>` : ''}
-    <div class="lic-body">
-      ${d.photo ? '<img class="lic-photo" src="'+d.photo+'" alt="Photo of '+esc(d.name)+'">' : '<div class="lic-photo" aria-hidden="true">'+initials(d.name)+'</div>'}
-      <div class="lic-info">
-        <h3>${esc(d.name)}</h3>
-        <div class="meta">${d.exp} yrs experience · ${esc(d.lic)}</div>
-        <div class="stars" aria-label="Rating ${d.rating} out of 5">${starStr(d.rating)}<small>${d.rating.toFixed(1)} · ${d.trips} trips</small></div>
-        <div class="lic-tags"><span>${d.trans==='Both'?'Manual + Auto':d.trans}</span><span>${esc(d.areas.split(',')[0])}</span></div>
-      </div>
-    </div>
-    <div class="lic-no">DF-ID-${d.id.toUpperCase()}-${d.phone.slice(-4)}</div>
-    <div class="lic-foot">
-      <div class="price">${priceHtml}</div>
-      <a class="btn btn-wa" href="${wa}" target="_blank" rel="noopener">💬 WhatsApp</a>
-    </div>
-  </article>`;
-}
-
-function renderDrivers(){
-  if(!lastSearch) return;
-  const drivers = store.get(K.DRIVERS, []);
-  const fTrans=$('f-trans').value, fRating=parseFloat($('f-rating').value), fVerif=parseInt($('f-verif').value), sort=$('f-sort').value;
-
-  let list = drivers.filter(d=>d.avail && d.tier>=1)
-    .map(d=>({ ...d, match: overlap(lastSearch.pickup, d.areas), price: priceFor(d, lastSearch.type, lastSearch.car) }))
-    .filter(d=> d.rating >= fRating )
-    .filter(d=> d.tier >= fVerif )
-    .filter(d=> !fTrans || d.trans==='Both' || d.trans===fTrans )
-    .filter(d=> lastSearch.trans!=='Automatic' || d.trans!=='Manual' )
-    .filter(d=> lastSearch.trans!=='Manual' || d.trans!=='Automatic' );
-
-  if(sort==='match') list.sort((a,b)=> b.match-a.match || b.tier-a.tier || b.rating-a.rating);
-  if(sort==='price') list.sort((a,b)=> a.price.final-b.price.final);
-  if(sort==='rating') list.sort((a,b)=> b.rating-a.rating);
-  if(sort==='exp') list.sort((a,b)=> b.exp-a.exp);
-
-  const lockedCount = isPro() ? 0 : list.filter(d=>d.tier===3).length;
-  $('result-count').textContent = list.length+' verified driver'+(list.length===1?'':'s')+(lockedCount ? ' · '+lockedCount+' Gold locked (Pro)' : '');
-
-  const grid = $('driver-grid');
-  if(!list.length){
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="big">🚗💨</div><h4>No verified drivers match yet</h4><p>Try widening the area name (e.g. just "Delhi"), relax the verification filter, or post your request.</p></div>';
-    return;
-  }
-  grid.innerHTML = list.map(d=>{
-    const locked = d.tier===3 && !isPro();
-    const wa = 'https://wa.me/91'+d.phone+'?text='+encodeURIComponent(
-      'Hi '+d.name+', I found you on DriverFind. I need a '+lastSearch.type.toLowerCase()+' driver.\nPickup: '+lastSearch.pickup+(lastSearch.dest?'\nDestination: '+lastSearch.dest:'')+'\nCar: '+lastSearch.car+' ('+lastSearch.trans+')'+(isPro()?'\n(I am a DriverFind Pro member)':''));
-    return driverCardHtml(d, locked?'#':wa, locked);
-  }).join('');
-}
-
-function postRequest(){
-  const s = session();
-  if(!s){ toast('Sign in to post a request'); openAuth('rider','signup', postRequest); return; }
-  const pickup=$('r-pickup').value.trim(), dest=$('r-dest').value.trim();
-  if(!pickup || !dest){ toast('Add pickup and destination before posting'); return; }
-  const reqs = store.get(K.REQUESTS, []);
-  reqs.unshift({ id:'r'+Date.now(), pickup, dest, when:$('r-when').value, car:$('r-car').value, trans:$('r-trans').value, type:tripType, rider:s.name, pro:isPro(), ts:Date.now() });
-  store.set(K.REQUESTS, reqs);
-  toast('✅ Request posted — drivers in "'+pickup+'" will see it'+(isPro()?' (priority)':''));
-}
-
-/* ============================================================
-   DRIVER: gate → registration → dashboard
-   ============================================================ */
-let profilePhoto = null;
-let regDocs = {};
-let currentDocKey = null;
-
-function getMe(){
-  const s = session();
-  if(!s || s.role!=='driver') return null;
-  return store.get(K.DRIVERS,[]).find(d=>d.owner===s.uid);
-}
-function saveMe(me){ store.set(K.DRIVERS, store.get(K.DRIVERS,[]).map(d=>d.id===me.id?me:d)); }
-
-function loadProfilePhoto(input){
-  const f = input.files && input.files[0];
-  if(!f) return;
-  compressImage(f, 500, data=>{
-    if(!data){ toast('Could not read that image'); return; }
-    profilePhoto = data;
-    $('photo-preview').innerHTML = '<img src="'+data+'" alt="Your photo preview">Looking sharp — tap to change';
-  });
-}
-
-function goStep2(){
-  const name=$('d-name').value.trim(), phone=$('d-phone').value.trim(), areas=$('d-area').value.trim();
-  if(!name){ toast('Enter your name'); $('d-name').focus(); return; }
-  if(!/^\d{10}$/.test(phone)){ toast('Enter a valid 10-digit phone number'); $('d-phone').focus(); return; }
-  if(!areas){ toast('Add at least one area you serve'); $('d-area').focus(); return; }
-  $('reg-step-1').style.display='none';
-  $('reg-step-2').style.display='block';
-  $('stn-1').classList.remove('on'); $('stn-1').classList.add('done'); $('stn-1').textContent='✓ STEP 1 · DETAILS';
-  $('stn-2').classList.add('on');
-  renderDocList();
-  refreshVerification();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function backStep1(){
-  $('reg-step-2').style.display='none';
-  $('reg-step-1').style.display='block';
-  $('stn-2').classList.remove('on');
-  $('stn-1').classList.remove('done'); $('stn-1').classList.add('on'); $('stn-1').textContent='STEP 1 · DETAILS';
-}
-
-function renderDocList(){
-  $('doc-list').innerHTML = DOCS.map(d=>{
-    const done = !!regDocs[d.key];
-    const reqTag = d.tier===1 ? '<span class="d-req must">MANDATORY</span>'
-                 : d.tier===2 ? '<span class="d-req t2">POLICE TIER</span>'
-                 : '<span class="d-req t3">GOLD TIER</span>';
-    return `<div class="doc ${done?'done':''}" id="doc-${d.key}">
-      <div class="d-ico">${done?'✅':d.ico}</div>
-      <div class="d-info"><b>${d.name}</b><small>${d.why}</small>${reqTag}</div>
-      ${done ? (regDocs[d.key].data && regDocs[d.key].data.startsWith('data:image') ? '<img class="thumb" src="'+regDocs[d.key].data+'" alt="">' : '<span style="font-size:.7rem;color:var(--green);font-weight:700">📄 PDF</span>') : ''}
-      <button class="btn ${done?'btn-ghost':'btn-primary'}" onclick="uploadDoc('${d.key}')">${done?'Replace':'Upload'}</button>
-    </div>`;
-  }).join('');
-}
-
-function uploadDoc(key){ currentDocKey = key; $('doc-file').value=''; $('doc-file').click(); }
-function handleDocFile(input){
-  const f = input.files && input.files[0];
-  if(!f || !currentDocKey) return;
-  const finish = data => {
-    if(!data){ toast('Could not read that file'); return; }
-    regDocs[currentDocKey] = { data, name:f.name, ts:Date.now() };
-    const me = getMe();
-    if(me && $('driver-dash').style.display!=='none'){
-      me.docs = me.docs || {};
-      me.docs[currentDocKey] = regDocs[currentDocKey];
-      me.tier = computeTier(me.docs, me.refs);
-      saveMe(me);
-      renderDriverSide();
-      toast('📄 Document verified — tier updated');
-    } else {
-      renderDocList();
-      refreshVerification();
-      toast('📄 '+f.name+' attached');
+    function isFirebaseUsable(){ return !!(state.auth && state.db); }
+    function requireLogin(next){ if(state.user) return true; window.afterAuth=next; openAuth('signup'); toast('Create a free account to continue.'); return false; }
+    function updateAccountBar(){
+      const logged=!!state.user; $('sign-in').classList.toggle('hide',logged); $('sign-out').classList.toggle('hide',!logged); $('user-pill').classList.toggle('hide',!logged);
+      if(logged) $('user-pill').textContent=state.user.displayName || state.user.email || 'Signed in';
+      renderDriverArea();
     }
-  };
-  if(f.type==='application/pdf'){
-    if(f.size > 800*1024){ toast('PDF too large — keep under 800 KB'); return; }
-    const r = new FileReader();
-    r.onload = e => finish(e.target.result);
-    r.readAsDataURL(f);
-  } else {
-    compressImage(f, 900, finish);
-  }
-}
 
-function hasRefsFilled(){
-  return $('ref1-name').value.trim() && /^\d{10}$/.test($('ref1-phone').value.trim())
-      && $('ref2-name').value.trim() && /^\d{10}$/.test($('ref2-phone').value.trim());
-}
+    /* ---------- Firebase setup and cloud data ---------- */
+    function watchPublicDrivers(){
+      state.listener?.();
+      state.listener=onSnapshot(collection(state.db,'drivers'), snapshot => {
+        state.drivers=snapshot.docs.map(d=>({ownerId:d.id,...d.data()})).filter(d=>d.visible === true);
+        renderDrivers();
+      }, error => { console.error(error); setStatus('Firebase is connected, but the Driver list is blocked by Firestore rules. Publish firestore.rules.', 'error'); });
+    }
+    function watchMyDriver(uid){
+      state.mineListener?.();
+      state.mineListener=onSnapshot(doc(state.db,'drivers',uid), snapshot => { state.myDriver=snapshot.exists()?{ownerId:uid,...snapshot.data()}:null; renderDriverArea(); }, error => console.error(error));
+    }
+    async function ensureUser(user){
+      const ref=doc(state.db,'users',user.uid); const existing=await getDoc(ref);
+      if(!existing.exists()) await setDoc(ref,{displayName:user.displayName || user.email?.split('@')[0] || 'DriverFind user',email:user.email || '',createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+      else await updateDoc(ref,{displayName:user.displayName || existing.data().displayName || '',updatedAt:serverTimestamp()});
+    }
+    async function initialiseFirebase(){
+      try {
+        state.app=initializeApp(firebaseConfig); state.auth=getAuth(state.app); state.db=getFirestore(state.app);
+        await getRedirectResult(state.auth).catch(error=>{ if(error.code!=='auth/null-user') showAuthError(compactError(error)); });
+        onAuthStateChanged(state.auth, async user => {
+          state.user=user || null; updateAccountBar();
+          if(user){ try { await ensureUser(user); watchMyDriver(user.uid); } catch(error){ console.error(error); setStatus('Signed in, but Firestore is not ready. Create a Firestore database and publish firestore.rules.', 'error'); } }
+          else { state.mineListener?.(); state.mineListener=null; state.myDriver=null; renderDriverArea(); }
+          if(window.afterAuth && user){ const next=window.afterAuth; window.afterAuth=null; next(); }
+        });
+        watchPublicDrivers();
+        setStatus('✓ Firebase connected. Accounts and live driver profiles are stored in the cloud.', 'success');
+      } catch(error) {
+        console.error(error); setStatus('Firebase could not start: '+compactError(error)+' Check the config and GitHub Pages URL.', 'error');
+      }
+    }
 
-function refreshVerification(){
-  const tier = computeTier(regDocs, hasRefsFilled());
-  const doneCount = DOCS.filter(d=>regDocs[d.key]).length;
-  const pct = tier===0 ? Math.min(30, doneCount*8) : tier===1 ? 42 : tier===2 ? 72 : 100;
-  $('vm-fill').style.width = pct+'%';
-  $('vm-current').innerHTML = 'Current tier: <b>'+TIER_NAMES[tier]+'</b> · '+doneCount+'/9 documents';
-  const canIssue = tier>=1;
-  $('btn-issue').disabled = !canIssue;
-  $('issue-hint').textContent = canIssue ? '' : 'Driver ID needs all 4 mandatory documents: Licence, Aadhaar, PAN and the licence selfie.';
-}
+    /* ---------- Authentication ---------- */
+    window.openAuth = mode => { state.authMode=mode; $('auth-modal').classList.add('open'); setAuthMode(mode); $('auth-error').classList.add('hide'); setTimeout(()=>$('auth-email').focus(),80); };
+    window.setAuthMode = mode => { state.authMode=mode; const signup=mode==='signup'; $('auth-login-tab').classList.toggle('active',!signup); $('auth-signup-tab').classList.toggle('active',signup); $('auth-name-wrap').classList.toggle('hide',!signup); $('auth-submit').textContent=signup?'Create account':'Sign in'; $('auth-title').textContent=signup?'Create your free account':'Welcome back'; $('auth-password').autocomplete=signup?'new-password':'current-password'; };
+    window.closeModal=id => $(id).classList.remove('open');
+    window.closeWhenBackdrop=(event,id)=>{ if(event.target.id===id) closeModal(id); };
+    function showAuthError(message){ const box=$('auth-error'); box.textContent=message; box.classList.remove('hide'); }
+    window.emailAuth=async()=>{
+      if(!isFirebaseUsable()) return showAuthError('Firebase is not available. Check the setup message on the page.');
+      const email=$('auth-email').value.trim(), password=$('auth-password').value, name=$('auth-name').value.trim();
+      if(!email || !password) return showAuthError('Enter your email and password.');
+      if(state.authMode==='signup' && !name) return showAuthError('Enter the name you want riders to see.');
+      setLoading($('auth-submit'),true); $('auth-error').classList.add('hide');
+      try { if(state.authMode==='signup'){ const credential=await createUserWithEmailAndPassword(state.auth,email,password); await updateProfile(credential.user,{displayName:name}); await ensureUser(credential.user); } else await signInWithEmailAndPassword(state.auth,email,password); closeModal('auth-modal'); toast(state.authMode==='signup'?'Account created. Welcome to DriverFind.':'Signed in successfully.'); }
+      catch(error){ showAuthError(compactError(error)); } finally { setLoading($('auth-submit'),false); }
+    };
+    window.googleAuth=async()=>{
+      if(!isFirebaseUsable()) return showAuthError('Firebase is not available. Check the setup message on the page.');
+      $('auth-error').classList.add('hide');
+      try { await signInWithPopup(state.auth,new GoogleAuthProvider()); closeModal('auth-modal'); }
+      catch(error){ if(error.code==='auth/popup-blocked'){ await signInWithRedirect(state.auth,new GoogleAuthProvider()); return; } showAuthError(compactError(error)); }
+    };
+    window.signOutUser=async()=>{ try{await signOut(state.auth);toast('Signed out.');}catch(error){toast(compactError(error));} };
 
-function issueDriverId(){
-  const s = session();
-  if(!s){ openAuth('driver','signup'); return; }
-  const tier = computeTier(regDocs, hasRefsFilled());
-  if(tier<1){ refreshVerification(); return; }
-  const drivers = store.get(K.DRIVERS, []);
-  const me = {
-    id:'d'+Date.now(),
-    owner: s.uid, email: s.email,
-    name:$('d-name').value.trim(), phone:$('d-phone').value.trim(), areas:$('d-area').value.trim(),
-    exp: Math.max(1, parseInt($('d-exp').value)||1),
-    lic: $('d-lic').value, trans: $('d-trans').value,
-    rating: 5.0, trips: 0, avail: true,
-    photo: profilePhoto, docs: regDocs, refs: hasRefsFilled(), tier
-  };
-  drivers.push(me);
-  store.set(K.DRIVERS, drivers);
-  toast('🪪 Driver ID issued — '+TIER_NAMES[tier]);
-  renderDriverSide();
-}
+    /* ---------- Google Places location choices ---------- */
+    function setMapsState(text,kind=''){ console[kind==='bad'?'error':'info']('[DriverFind Maps]',text); }
+    async function loadGoogleMaps(){
+      if(!APP_CONFIG.googleMapsApiKey) return;
+      try {
+        await new Promise((resolve,reject)=>{ const script=document.createElement('script'); script.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(APP_CONFIG.googleMapsApiKey)}&v=weekly&libraries=places&loading=async`; script.async=true; script.onload=resolve; script.onerror=reject; document.head.append(script); });
+        const library=await google.maps.importLibrary('places'); state.places=library; state.mapsReady=true; setMapsState('✓ Google Places suggestions are active.','ok');
+      } catch(error){ console.error(error); setMapsState('Google Places could not load. Check the Maps key, enabled APIs, billing, and referrer restriction.','bad'); }
+    }
+    function clearSuggestions(element){ element.innerHTML=''; }
+    function attachPlaces(inputId,listId,onPick){
+      const input=$(inputId), list=$(listId); let timer, token=null;
+      input.addEventListener('input',()=>{ clearTimeout(timer); clearSuggestions(list); const text=input.value.trim(); if(!state.mapsReady || text.length<3) return; timer=setTimeout(async()=>{
+        try{ token=token || new state.places.AutocompleteSessionToken(); const response=await state.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({input:text,includedRegionCodes:[APP_CONFIG.country],sessionToken:token}); const choices=response.suggestions?.slice(0,5)||[]; choices.forEach(choice=>{ const prediction=choice.placePrediction; if(!prediction) return; const button=document.createElement('button'); button.type='button'; button.innerHTML=`<span class="place-main">${safe(prediction.text?.text || '')}</span><span class="place-detail">${safe(prediction.secondaryText?.text || 'Google Maps location')}</span>`; button.addEventListener('mousedown',async event=>{ event.preventDefault(); try { const place=prediction.toPlace(); await place.fetchFields({fields:['displayName','formattedAddress','location']}); const label=place.formattedAddress || prediction.text?.text || input.value; input.value=label; input.dataset.location=JSON.stringify({label,lat:place.location?.lat?.() ?? null,lng:place.location?.lng?.() ?? null,placeId:place.id || prediction.placeId || null}); clearSuggestions(list); onPick?.(JSON.parse(input.dataset.location)); token=null; }catch(error){ console.error(error); toast('Could not use that location. You can type it manually.'); }}); list.append(button); });
+        }catch(error){ console.error(error); }
+      },260); });
+      input.addEventListener('blur',()=>setTimeout(()=>clearSuggestions(list),160));
+    }
+    function locationFromInput(id){ const input=$(id); try{ return JSON.parse(input.dataset.location); }catch{ return {label:input.value.trim(),lat:null,lng:null,placeId:null}; } }
 
-/* ---------- Delete Driver ID (with confirmation) ---------- */
-let deleteMode = null;
-function openDeleteModal(mode){
-  deleteMode = mode;
-  const titleEl = $('delete-title-text'), bodyEl = $('delete-body');
-  if(mode==='draft'){
-    titleEl.textContent = 'Discard this application?';
-    bodyEl.textContent = 'This erases every document you\'ve uploaded so far in this application and takes you back to Step 1. Nothing has been submitted yet, so no live Driver ID is affected.';
-  } else {
-    titleEl.textContent = 'Delete your Driver ID?';
-    bodyEl.textContent = 'This permanently erases your profile, your verification tier, and every document you uploaded — Licence, Aadhaar, PAN, PCC, medical certificate, everything. Riders will no longer be able to find or contact you. Your login account stays, so you can register again later.';
-  }
-  $('delete-confirm-input').value = '';
-  $('btn-confirm-delete').disabled = true;
-  $('delete-modal').classList.add('open');
-  setTimeout(()=>$('delete-confirm-input').focus(), 50);
-}
-function closeDeleteModal(){ $('delete-modal').classList.remove('open'); deleteMode = null; }
-function checkDeleteInput(){
-  $('btn-confirm-delete').disabled = $('delete-confirm-input').value.trim().toUpperCase() !== 'DELETE';
-}
-function confirmDelete(){
-  if($('delete-confirm-input').value.trim().toUpperCase() !== 'DELETE') return;
-  if(deleteMode==='draft'){
-    profilePhoto = null; regDocs = {};
-    $('photo-preview').innerHTML = '📷 Tap to add your photo';
-    document.querySelectorAll('#reg-step-2 input').forEach(i=>{ if(i.type!=='file') i.value=''; });
-    backStep1();
-    $('d-name').value=''; $('d-phone').value=''; $('d-area').value='';
-    toast('🗑️ Application discarded — all uploaded documents erased');
-  } else {
-    const me = getMe();
-    if(me) store.set(K.DRIVERS, store.get(K.DRIVERS,[]).filter(d=>d.id!==me.id));
-    profilePhoto = null; regDocs = {};
-    $('photo-preview').innerHTML = '📷 Tap to add your photo';
-    toast('🗑️ Driver ID permanently deleted — all documents erased');
-    renderDriverSide();
-  }
-  closeDeleteModal();
-}
+    /* ---------- Rider search and requests ---------- */
+    window.searchDrivers=()=>{ const pickup=$('pickup').value.trim(); if(!pickup){ $('pickup').focus(); toast('Enter a pickup location first.'); return; } $('results-section').classList.remove('hide'); renderDrivers(); $('results-section').scrollIntoView({behavior:'smooth',block:'start'}); };
+    window.renderDrivers=()=>{
+      const list=$('driver-list'); if(!list) return; const pickup=$('pickup').value.trim(), filter=$('driver-filter').value.trim(), transmission=$('car').value;
+      let drivers=[...state.drivers].filter(d=>d.availability); if(transmission!=='Any') drivers=drivers.filter(d=>d.transmission==='Both'||d.transmission===transmission);
+      const term=[pickup,filter].filter(Boolean).join(' '); drivers=drivers.map(d=>({...d,_match:matchScore(term,[d.name,...(d.areas||[])].join(' '))})).filter(d=>!filter || normal([d.name,...(d.areas||[])].join(' ')).includes(normal(filter))).sort((a,b)=>b._match-a._match || String(b.updatedAt?.seconds||0).localeCompare(String(a.updatedAt?.seconds||0)));
+      $('result-count').textContent=`${drivers.length} registered driver${drivers.length===1?'':'s'} found`;
+      if(!drivers.length){ list.innerHTML='<div class="empty"><div style="font-size:1.8rem">🚗</div><b>No registered drivers match yet</b><p>Try a broader area, change transmission, or post your request. The app contains no placeholder drivers.</p></div>'; return; }
+      list.innerHTML=drivers.map(driver=>`<article class="driver"><div class="driver-top"><span>DriverFind profile</span><span class="status ${driver.verificationStatus==='approved'?'online':'pending'}">${driver.verificationStatus==='approved'?'Approved':'Registration pending'}</span></div><div class="driver-body"><div class="avatar">${safe(initials(driver.name))}</div><div><h3>${safe(driver.name)}</h3><p>${safe(driver.experience)} years experience · ${safe(driver.transmission)}</p><div class="tagrow">${(driver.areas||[]).slice(0,3).map(area=>`<span class="tag">${safe(area)}</span>`).join('')}</div></div></div><div class="driver-foot"><span class="driver-id">${safe(driver.driverId || 'DRIVER ID PENDING')}</span><button class="btn primary tiny" onclick="contactDriver('${safe(driver.ownerId)}','${safe(driver.name)}')">Contact</button></div></article>`).join('');
+    };
+    window.postRequest=async()=>{
+      if(!requireLogin(window.postRequest)) return; const pickup=locationFromInput('pickup'), destination=locationFromInput('destination'); if(!pickup.label) return toast('Enter a pickup location first.');
+      try{ await addDoc(collection(state.db,'requests'),{createdBy:state.user.uid,riderName:state.user.displayName||state.user.email?.split('@')[0]||'Rider',pickup,destination,tripType:state.tripType,transmission:$('car').value,status:'open',createdAt:serverTimestamp()}); toast('Request posted. Registered drivers can now see it.'); }catch(error){ toast(compactError(error)); }
+    };
+    window.contactDriver=async ownerId=>{
+      if(!requireLogin(()=>window.contactDriver(ownerId))) return;
+      // Open synchronously so mobile browsers do not block the eventual WhatsApp tab.
+      const contactWindow=window.open('about:blank','_blank');
+      try{ const snapshot=await getDoc(doc(state.db,'driverContacts',ownerId)); if(!snapshot.exists()){ contactWindow?.close(); return toast('This driver has not enabled contact details.'); } const data=snapshot.data(); const url=`https://wa.me/91${encodeURIComponent(data.phone)}?text=${encodeURIComponent('Hello, I found your DriverFind profile and would like to discuss a driving requirement.')}`; if(contactWindow){ contactWindow.opener=null; contactWindow.location.href=url; } else window.location.href=url; }catch(error){contactWindow?.close();toast(compactError(error));}
+    };
 
-function toggleAvail(cb){
-  const me = getMe(); if(!me) return;
-  me.avail = cb.checked;
-  saveMe(me);
-  $('avail-label').textContent = me.avail ? 'You are ONLINE' : 'You are OFFLINE';
-  $('avail-label').style.color = me.avail ? 'var(--green)' : 'var(--red)';
-  renderMyCard(me);
-}
+    /* ---------- Driver ID ---------- */
+    function renderDriverArea(){
+      const logged=!!state.user, me=state.myDriver; $('driver-signed-out').classList.toggle('hide',logged); $('driver-form-wrap').classList.toggle('hide',!logged||!!me); $('driver-dashboard').classList.toggle('hide',!logged||!me);
+      if(logged && !me && !$('driver-name').value) $('driver-name').value=state.user.displayName || '';
+      if(me){ const online=!!me.availability; $('availability-toggle').checked=online; $('availability-label').textContent=online?'Available for work':'Not visible to riders'; $('id-preview').innerHTML=`<div class="id-head"><span>DriverFind ID</span><span>${me.verificationStatus==='approved'?'APPROVED':'REGISTRATION PENDING'}</span></div><div class="id-content"><div class="id-avatar">${safe(initials(me.name))}</div><div><h2>${safe(me.name)}</h2><p>${safe(me.experience)} years experience · ${safe(me.transmission)}</p><p>${safe((me.areas||[]).slice(0,2).join(' · '))}</p></div></div><div class="id-number" id="driver-id-value">${safe(me.driverId)}</div><div class="id-bottom">Issued to your Firebase account · Control availability at any time</div>`; }
+      renderAreaChips();
+    }
+    function renderAreaChips(){ $('area-chips').innerHTML=state.servingAreas.map((area,index)=>`<span class="area-chip">${safe(area)}<button type="button" aria-label="Remove ${safe(area)}" onclick="removeArea(${index})">×</button></span>`).join(''); }
+    window.removeArea=index=>{state.servingAreas.splice(index,1);renderAreaChips();};
+    window.addTypedArea=()=>{ const input=$('area-picker'), value=input.value.trim(); if(!value) return toast('Type an area first.'); addArea(value); input.value=''; };
+    function addArea(label){ const clean=label.replace(/\s+/g,' ').trim(); if(!clean) return; if(state.servingAreas.some(area=>normal(area)===normal(clean))) return toast('That area is already added.'); state.servingAreas.push(clean); renderAreaChips(); }
+    window.saveDriverProfile=async()=>{
+      if(!requireLogin(window.saveDriverProfile)) return; const name=$('driver-name').value.trim(), phone=$('driver-phone').value.replace(/\D/g,''), experience=$('driver-experience').value, transmission=$('driver-transmission').value, consent=$('contact-consent').checked;
+      if(!name) return toast('Enter your name.'); if(!/^\d{10}$/.test(phone)) return toast('Enter a valid 10-digit WhatsApp number.'); if(!state.servingAreas.length) return toast('Add at least one service area.'); if(!consent) return toast('Please confirm the contact consent.');
+      try { const ref=doc(state.db,'drivers',state.user.uid); const prior=await getDoc(ref); const data={ownerId:state.user.uid,driverId:prior.exists()?prior.data().driverId:stableDriverId(state.user.uid),name,areas:state.servingAreas,experience:Number(experience),transmission,availability:prior.exists()?!!prior.data().availability:true,visible:true,verificationStatus:prior.exists()?prior.data().verificationStatus:'pending',updatedAt:serverTimestamp()}; if(!prior.exists()) data.createdAt=serverTimestamp(); await setDoc(ref,data,{merge:true}); await setDoc(doc(state.db,'driverContacts',state.user.uid),{ownerId:state.user.uid,phone,updatedAt:serverTimestamp()},{merge:true}); toast(prior.exists()?'Driver profile updated.':'Driver ID created successfully.'); } catch(error){console.error(error);toast(compactError(error));}
+    };
+    window.changeAvailability=async available=>{ if(!state.myDriver) return; try{ await updateDoc(doc(state.db,'drivers',state.user.uid),{availability:available,updatedAt:serverTimestamp()}); toast(available?'You are visible to riders.':'Your listing is hidden from riders.'); }catch(error){toast(compactError(error));} };
+    window.editDriverProfile=()=>{ const me=state.myDriver; if(!me) return; $('driver-name').value=me.name||''; $('driver-phone').value=''; $('driver-experience').value=String(me.experience||5); $('driver-transmission').value=me.transmission||'Both'; $('contact-consent').checked=true; state.servingAreas=[...(me.areas||[])]; state.myDriver=null; renderDriverArea(); toast('Edit your profile, then save it. Re-enter your WhatsApp number to update it.'); };
+    window.copyDriverId=async()=>{ const id=state.myDriver?.driverId; if(!id) return; try{await navigator.clipboard.writeText(id);toast('Driver ID copied.');}catch{toast('Your Driver ID: '+id);} };
+    window.confirmDeleteDriver=()=>{ $('delete-check').value=''; $('delete-button').disabled=true; $('delete-modal').classList.add('open'); };
+    window.toggleDeleteButton=()=>{$('delete-button').disabled=$('delete-check').value.trim().toUpperCase()!=='DELETE';};
+    window.deleteDriverProfile=async()=>{ if($('delete-check').value.trim().toUpperCase()!=='DELETE') return; try{ await Promise.all([deleteDoc(doc(state.db,'drivers',state.user.uid)),deleteDoc(doc(state.db,'driverContacts',state.user.uid))]); closeModal('delete-modal'); toast('Your Driver ID and contact record were deleted.'); }catch(error){toast(compactError(error));} };
 
-/* ---------- Dashboard rendering ---------- */
-function renderMyCard(me){
-  $('my-card').innerHTML = `
-  <article class="lic ${me.tier===3?'gold':''}" style="height:100%">
-    <div class="lic-head"><span class="t">Your Driver ID</span>${vbadgeHtml(me.tier)}<span class="avail ${me.avail?'on':'off'}">${me.avail?'AVAILABLE':'OFFLINE'}</span></div>
-    <div class="lic-body">
-      ${me.photo ? '<img class="lic-photo" src="'+me.photo+'" alt="Your photo">' : '<div class="lic-photo" aria-hidden="true">'+initials(me.name)+'</div>'}
-      <div class="lic-info">
-        <h3>${esc(me.name)}</h3>
-        <div class="meta">${me.exp} yrs experience · ${esc(me.lic)}</div>
-        <div class="stars">${starStr(me.rating)}<small>${me.rating.toFixed(1)} · ${me.trips} trips</small></div>
-        <div class="lic-tags"><span>${me.trans==='Both'?'Manual + Auto':me.trans}</span><span>${esc(me.areas.split(',')[0])}</span></div>
-      </div>
-    </div>
-    <div class="lic-no">DF-ID-${me.id.toUpperCase().slice(0,10)}-${me.phone.slice(-4)}</div>
-    <div class="lic-foot"><div class="price"><span class="per">Linked account</span> <span class="amt" style="font-size:.8rem;font-family:var(--font-mono)">${esc(me.email||'+91 '+me.phone)}</span></div></div>
-  </article>`;
-}
-
-function renderDashVerify(me){
-  const missing = DOCS.filter(d=>!(me.docs && me.docs[d.key]));
-  const doneCount = 9 - missing.length;
-  $('stat-docs').textContent = doneCount+'/9';
-  if(me.tier>=3 && missing.length===0){
-    $('dash-verify').innerHTML = '<h3 class="section-title" style="font-size:1.05rem">🥇 Fully Gold Verified</h3><p class="section-sub" style="margin:0">All 9 documents on file. You appear to Pro customers and command premium rates.</p>';
-    return;
-  }
-  const nextTier = me.tier>=2 ? '🥇 Gold Verified (premium Pro customers + higher rates)' : me.tier>=1 ? '🛡️ Police Verified (more rider trust)' : '🪪 ID Verified';
-  $('dash-verify').innerHTML = `
-    <h3 class="section-title" style="font-size:1.05rem">Level up your verification</h3>
-    <p class="section-sub">Current: <b>${TIER_NAMES[me.tier]}</b> → Next: <b>${nextTier}</b>. Upload the remaining documents:</p>
-    <div class="doc-list">${missing.map(d=>`
-      <div class="doc">
-        <div class="d-ico">${d.ico}</div>
-        <div class="d-info"><b>${d.name}</b><small>${d.why}</small>
-          ${d.tier===1?'<span class="d-req must">MANDATORY</span>':d.tier===2?'<span class="d-req t2">POLICE TIER</span>':'<span class="d-req t3">GOLD TIER</span>'}
-        </div>
-        <button class="btn btn-primary" onclick="uploadDoc('${d.key}')">Upload</button>
-      </div>`).join('')}
-    </div>
-    ${!me.refs ? '<p class="hint" style="margin-top:12px">🛡️ Police tier also needs 2 personal references — provided during registration.</p>' : ''}`;
-}
-
-function renderDriverSide(){
-  const s = session();
-  const me = getMe();
-  const isDriverSession = s && s.role==='driver';
-
-  $('driver-gate').style.display = isDriverSession ? 'none' : 'grid';
-  $('driver-reg').style.display  = (isDriverSession && !me) ? 'block' : 'none';
-  $('driver-dash').style.display = (isDriverSession && me) ? 'block' : 'none';
-
-  if(isDriverSession && !me){
-    // fresh registration for this account
-    $('reg-email').textContent = s.email;
-    if(!$('d-name').value) $('d-name').value = s.name || '';
-    $('reg-step-1').style.display='block';
-    $('reg-step-2').style.display='none';
-    $('stn-1').className='st on'; $('stn-1').textContent='STEP 1 · DETAILS';
-    $('stn-2').className='st';
-    return;
-  }
-  if(!me) return;
-
-  renderMyCard(me);
-  renderDashVerify(me);
-  $('avail-toggle').checked = me.avail;
-  $('avail-label').textContent = me.avail ? 'You are ONLINE' : 'You are OFFLINE';
-  $('avail-label').style.color = me.avail ? 'var(--green)' : 'var(--red)';
-
-  const reqs = store.get(K.REQUESTS, []);
-  const matched = reqs.map(r=>({ ...r, m: overlap(r.pickup, me.areas) })).sort((a,b)=> (b.pro?1:0)-(a.pro?1:0) || b.m-a.m || b.ts-a.ts);
-  const mine = matched.filter(r=>r.m>0);
-  $('stat-matches').textContent = mine.length;
-  $('stat-total').textContent = reqs.length;
-
-  const list = mine.length ? mine : matched;
-  const showingAll = !mine.length && matched.length;
-  $('req-list').innerHTML = (showingAll ? '<p class="section-sub">No requests in your exact areas yet — showing all open requests:</p>' : '') +
-    (list.length ? list.map(r=>{
-      const wa = 'https://wa.me/?text='+encodeURIComponent('Hi'+(r.rider?' '+r.rider:'')+'! I am '+me.name+', a verified driver on DriverFind ('+me.exp+' yrs exp). I can take your '+r.type.toLowerCase()+' trip: '+r.pickup+' → '+r.dest+'. My number: +91 '+me.phone);
-      return `<div class="req">
-        <span class="rtype">${r.type}</span>
-        ${r.pro?'<span class="vbadge v3">PRO RIDER</span>':''}
-        <span class="route">${esc(r.pickup)}<span class="arrow">➜</span>${esc(r.dest)}</span>
-        <a class="btn btn-wa" href="${wa}" target="_blank" rel="noopener">💬 Respond</a>
-        <div class="rmeta">${r.rider?'Posted by <b>'+esc(r.rider)+'</b> · ':''}Car: <b>${esc(r.car)} · ${esc(r.trans)}</b>${r.when ? ' · When: <b>'+esc(r.when.replace('T',' '))+'</b>' : ''}${r.m>0?' · <b style="color:var(--green)">In your area</b>':''}</div>
-      </div>`;
-    }).join('')
-    : '<div class="empty"><div class="big">🛣️</div><h4>No open requests yet</h4><p>Stay ONLINE — new rider requests will appear here automatically.</p></div>');
-}
-
-/* ---------- Modals: backdrop & Escape ---------- */
-['pro-modal','delete-modal','auth-modal'].forEach(id=>{
-  $(id).addEventListener('click', e=>{ if(e.target.id===id) $(id).classList.remove('open'); });
-});
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ closePro(); closeDeleteModal(); closeAuth(); }
-});
-document.addEventListener('fb-ready', ()=>{
-  // refresh status label if auth modal is open
-  if($('auth-modal').classList.contains('open')) openAuth(authRole, authMode, afterAuthCb);
-});
-
-/* ---------- Init ---------- */
-seed();
-renderAcct();
-renderProArea();
-renderDriverSide();
-</script>
+    attachPlaces('pickup','pickup-suggestions'); attachPlaces('destination','destination-suggestions'); attachPlaces('area-picker','area-suggestions',place=>{addArea(place.label);$('area-picker').value='';});
+    document.addEventListener('keydown',event=>{ if(event.key==='Escape'){closeModal('auth-modal');closeModal('delete-modal');} });
+    loadGoogleMaps(); initialiseFirebase();
+  </script>
 </body>
 </html>
