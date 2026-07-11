@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0A0714">
+<meta name="theme-color" content="#000000">
 <title>BG Code Tutor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -12,33 +12,33 @@
    BG CODE TUTOR — Design Tokens
    ============================================================ */
 :root{
-  --bg0:#0A0714;          /* void */
-  --bg1:#140E24;          /* panel */
-  --bg2:#1D1533;          /* raised */
+  --bg0:#000000;          /* void */
+  --bg1:#0A0F0A;          /* panel */
+  --bg2:#111B12;          /* raised */
   --glass:rgba(255,255,255,.055);
   --glass-brd:rgba(255,255,255,.09);
-  --violet:#8B5CF6;       /* primary accent */
-  --violet-deep:#6D28D9;
-  --violet-soft:#C4B5FD;
+  --violet:#39FF14;       /* primary accent (neon green) */
+  --violet-deep:#16A34A;
+  --violet-soft:#86EFAC;
   --cyan:#22D3EE;         /* code / info */
   --gold:#FBBF24;         /* coins */
   --flame:#FB7185;        /* streak / lives */
   --green:#34D399;        /* success */
   --red:#F87171;
   --diamond:#7DD3FC;
-  --text:#EDE9FE;
-  --dim:#8E86A8;
-  --faint:#5A527A;
+  --text:#EAF5EA;
+  --dim:#8FA396;
+  --faint:#54615A;
   --r-lg:24px; --r-md:18px; --r-sm:12px;
   --disp:'Unbounded',sans-serif;
   --ui:'Space Grotesk',sans-serif;
   --mono:'JetBrains Mono',monospace;
   --shadow:0 12px 40px rgba(0,0,0,.45);
-  --glow:0 0 24px rgba(139,92,246,.45);
+  --glow:0 0 24px rgba(57,255,20,.4);
 }
 [data-theme="cyan"]{--violet:#22D3EE;--violet-deep:#0891B2;--violet-soft:#A5F3FC;--glow:0 0 24px rgba(34,211,238,.4)}
 [data-theme="sunset"]{--violet:#FB923C;--violet-deep:#EA580C;--violet-soft:#FED7AA;--glow:0 0 24px rgba(251,146,60,.4)}
-[data-theme="emerald"]{--violet:#34D399;--violet-deep:#059669;--violet-soft:#A7F3D0;--glow:0 0 24px rgba(52,211,153,.4)}
+[data-theme="violet"]{--violet:#8B5CF6;--violet-deep:#6D28D9;--violet-soft:#C4B5FD;--glow:0 0 24px rgba(57,255,20,.45)}
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -55,14 +55,14 @@ input,textarea{font-family:var(--ui);color:var(--text)}
   position:relative;width:min(430px,100vw);height:min(932px,100dvh);
   background:var(--bg0);overflow:hidden;display:flex;flex-direction:column;
 }
-@media(min-width:480px){#phone{border-radius:40px;border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 120px rgba(109,40,217,.25)}}
+@media(min-width:480px){#phone{border-radius:40px;border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 120px rgba(22,163,74,.25)}}
 
 #aurora{
   position:absolute;inset:-20% -20% auto -20%;height:60%;pointer-events:none;z-index:0;
   background:
-    radial-gradient(38% 45% at 25% 18%, rgba(139,92,246,.34), transparent 70%),
+    radial-gradient(38% 45% at 25% 18%, rgba(57,255,20,.20), transparent 70%),
     radial-gradient(30% 38% at 78% 8%, rgba(34,211,238,.16), transparent 70%),
-    radial-gradient(26% 30% at 55% 40%, rgba(109,40,217,.22), transparent 70%);
+    radial-gradient(26% 30% at 55% 40%, rgba(22,163,74,.16), transparent 70%);
   filter:blur(10px);animation:aurora 14s ease-in-out infinite alternate;
 }
 @keyframes aurora{to{transform:translateX(4%) translateY(3%) scale(1.06)}}
@@ -99,7 +99,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
   display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
   padding:15px;border-radius:18px;font-size:15px;font-weight:700;letter-spacing:.02em;
   background:linear-gradient(135deg,var(--violet),var(--violet-deep));color:#fff;
-  box-shadow:0 8px 24px rgba(109,40,217,.4);transition:transform .12s,filter .2s;
+  box-shadow:0 8px 24px rgba(22,163,74,.4);transition:transform .12s,filter .2s;
 }
 .btn:active{transform:scale(.965)}
 .btn.ghost{background:var(--glass);border:1px solid var(--glass-brd);box-shadow:none;color:var(--text)}
@@ -118,8 +118,8 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .hello{margin-bottom:16px}
 
 /* ---------- Streak / hero cards ---------- */
-.hero-cta{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(139,92,246,.28),rgba(34,211,238,.10)),var(--glass)}
-.hero-cta .glowring{position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.5),transparent 70%);pointer-events:none}
+.hero-cta{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(57,255,20,.28),rgba(34,211,238,.10)),var(--glass)}
+.hero-cta .glowring{position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(57,255,20,.5),transparent 70%);pointer-events:none}
 .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .mini-grid .card{margin:0}
 .stat-cell{text-align:left}
@@ -139,8 +139,8 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 /* ---------- Learning trail (signature) ---------- */
 .trail-wrap{position:relative;margin-top:8px}
 .trail-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.trail-svg path{fill:none;stroke:rgba(139,92,246,.25);stroke-width:4;stroke-dasharray:2 10;stroke-linecap:round}
-.trail-svg path.lit{stroke:var(--violet);stroke-dasharray:none;filter:drop-shadow(0 0 6px rgba(139,92,246,.8));stroke-width:4.5}
+.trail-svg path{fill:none;stroke:rgba(57,255,20,.25);stroke-width:4;stroke-dasharray:2 10;stroke-linecap:round}
+.trail-svg path.lit{stroke:var(--violet);stroke-dasharray:none;filter:drop-shadow(0 0 6px rgba(57,255,20,.8));stroke-width:4.5}
 .node-row{position:relative;display:flex;padding:14px 0;z-index:1}
 .node{
   width:76px;height:76px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -150,8 +150,8 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .node .st{font-size:9px;font-weight:800;letter-spacing:.06em;color:var(--dim);margin-top:1px}
 .node.done{background:linear-gradient(135deg,var(--violet),var(--violet-deep));border-color:var(--violet-soft);box-shadow:var(--glow)}
 .node.done .st{color:#fff}
-.node.next{border-color:var(--violet);box-shadow:0 0 0 6px rgba(139,92,246,.15),var(--glow);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 5px rgba(139,92,246,.14),var(--glow)}50%{box-shadow:0 0 0 11px rgba(139,92,246,.05),var(--glow)}}
+.node.next{border-color:var(--violet);box-shadow:0 0 0 6px rgba(57,255,20,.15),var(--glow);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 5px rgba(57,255,20,.14),var(--glow)}50%{box-shadow:0 0 0 11px rgba(57,255,20,.05),var(--glow)}}
 .node.lock{opacity:.4}
 .unit-h{margin:20px 0 4px;display:flex;align-items:center;gap:10px}
 .unit-h .line{flex:1;height:1px;background:var(--glass-brd)}
@@ -167,7 +167,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;background:var(--glass);border:1.5px solid var(--glass-brd);font-size:14.5px;font-weight:600;margin-bottom:10px;transition:all .15s;font-family:var(--ui)}
 .opt code{font-family:var(--mono);font-size:13px}
 .opt:active{transform:scale(.98)}
-.opt.pick{border-color:var(--violet);background:rgba(139,92,246,.14)}
+.opt.pick{border-color:var(--violet);background:rgba(57,255,20,.14)}
 .opt.right{border-color:var(--green);background:rgba(52,211,153,.14)}
 .opt.wrong{border-color:var(--red);background:rgba(248,113,113,.12);animation:shake .35s}
 @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
@@ -177,7 +177,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .tok.used{opacity:.25;pointer-events:none}
 .blank{display:inline-block;min-width:76px;border-bottom:2px solid var(--violet);text-align:center;color:var(--violet-soft);font-family:var(--mono);padding:0 4px}
 .arr-list .tok{display:block;width:100%;text-align:left;margin-bottom:8px}
-.arr-slot{min-height:44px;border:1.5px dashed var(--glass-brd);border-radius:12px;margin-bottom:8px;display:flex;align-items:center;padding:0 14px;font-family:var(--mono);font-size:13.5px;color:var(--violet-soft);background:rgba(139,92,246,.06)}
+.arr-slot{min-height:44px;border:1.5px dashed var(--glass-brd);border-radius:12px;margin-bottom:8px;display:flex;align-items:center;padding:0 14px;font-family:var(--mono);font-size:13.5px;color:var(--violet-soft);background:rgba(57,255,20,.06)}
 .type-in{width:100%;padding:14px 16px;border-radius:16px;background:#0D0919;border:1.5px solid var(--glass-brd);font-family:var(--mono);font-size:14.5px;outline:none}
 .type-in:focus{border-color:var(--violet)}
 .verdict{position:sticky;bottom:0;margin:18px -18px -40px;padding:16px 18px calc(20px + env(safe-area-inset-bottom));border-radius:24px 24px 0 0;animation:slideUp .25s}
@@ -201,7 +201,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 /* ---------- Playground ---------- */
 .pg-head{display:flex;gap:8px;align-items:center;margin-bottom:12px}
 .lang-pick{display:flex;gap:6px}
-.lang-pick .chip.on{background:rgba(139,92,246,.2);border-color:var(--violet);color:var(--violet-soft)}
+.lang-pick .chip.on{background:rgba(57,255,20,.2);border-color:var(--violet);color:var(--violet-soft)}
 .editor-wrap{position:relative;border-radius:var(--r-md);border:1px solid var(--glass-brd);background:#0D0919;overflow:hidden}
 .editor-wrap textarea,.editor-wrap pre{
   font-family:var(--mono);font-size:13px;line-height:1.65;padding:14px;margin:0;
@@ -209,7 +209,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 }
 .editor-wrap pre{position:absolute;inset:0;pointer-events:none;color:#C9C3E4}
 .editor-wrap textarea{position:relative;background:transparent;color:transparent;caret-color:var(--cyan);border:none;outline:none;resize:vertical;z-index:1}
-.tk-kw{color:#C084FC}.tk-str{color:#86EFAC}.tk-num{color:#FBBF24}.tk-fn{color:#67E8F9}.tk-cm{color:#5A527A;font-style:italic}
+.tk-kw{color:#39FF14}.tk-str{color:#FDE68A}.tk-num{color:#FBBF24}.tk-fn{color:#67E8F9}.tk-cm{color:#5A527A;font-style:italic}
 .console{font-family:var(--mono);font-size:12.5px;line-height:1.6;background:#07040F;border:1px solid var(--glass-brd);border-radius:var(--r-md);padding:13px 15px;min-height:80px;margin-top:12px;white-space:pre-wrap;color:#B7E6C6}
 .console .err{color:var(--red)}
 .console .dim{color:var(--faint)}
@@ -218,7 +218,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .lb-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(255,255,255,.05)}
 .lb-row:last-child{border:none}
 .lb-rank{font-family:var(--disp);font-size:14px;font-weight:700;width:28px;color:var(--dim)}
-.lb-row.me{background:rgba(139,92,246,.12);border-radius:14px;padding:12px 10px;border:1px solid rgba(139,92,246,.3)}
+.lb-row.me{background:rgba(57,255,20,.12);border-radius:14px;padding:12px 10px;border:1px solid rgba(57,255,20,.3)}
 .avatar{width:40px;height:40px;border-radius:14px;background:var(--bg2);border:1px solid var(--glass-brd);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .lb-name{flex:1;font-size:14px;font-weight:700}
 .lb-name small{display:block;font-size:11px;color:var(--dim);font-weight:500}
@@ -226,7 +226,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:18px 0 8px}
 .pod{text-align:center;flex:1}
 .pod .avatar{width:56px;height:56px;font-size:28px;margin:0 auto 8px;border-radius:18px}
-.pod .bar{border-radius:14px 14px 0 0;background:linear-gradient(180deg,rgba(139,92,246,.35),rgba(139,92,246,.05));border:1px solid var(--glass-brd);border-bottom:none;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-family:var(--disp);font-weight:700}
+.pod .bar{border-radius:14px 14px 0 0;background:linear-gradient(180deg,rgba(57,255,20,.35),rgba(57,255,20,.05));border:1px solid var(--glass-brd);border-bottom:none;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-family:var(--disp);font-weight:700}
 .pod.p1 .avatar{box-shadow:0 0 22px rgba(251,191,36,.5);border-color:var(--gold)}
 .pod .nm{font-size:12px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pod .xp{font-size:11px;color:var(--dim);margin-bottom:8px}
@@ -234,7 +234,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 /* ---------- Heatmap / achievements / profile ---------- */
 .heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
 .heat i{aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.06)}
-.heat i.h1{background:rgba(139,92,246,.3)}.heat i.h2{background:rgba(139,92,246,.55)}.heat i.h3{background:var(--violet);box-shadow:0 0 6px rgba(139,92,246,.6)}
+.heat i.h1{background:rgba(57,255,20,.3)}.heat i.h2{background:rgba(57,255,20,.55)}.heat i.h3{background:var(--violet);box-shadow:0 0 6px rgba(57,255,20,.6)}
 .ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .ach{text-align:center;padding:14px 6px;border-radius:var(--r-md);background:var(--glass);border:1px solid var(--glass-brd)}
 .ach .ico{font-size:26px}
@@ -254,7 +254,7 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 
 /* ---------- Onboarding ---------- */
 .ob{display:flex;flex-direction:column;min-height:100%;padding:30px 6px 20px}
-.ob .art{font-size:76px;text-align:center;margin:40px 0 26px;filter:drop-shadow(0 0 30px rgba(139,92,246,.5))}
+.ob .art{font-size:76px;text-align:center;margin:40px 0 26px;filter:drop-shadow(0 0 30px rgba(57,255,20,.5))}
 .ob h1{font-family:var(--disp);font-size:26px;text-align:center;line-height:1.25}
 .ob p{text-align:center;color:var(--dim);font-size:14px;line-height:1.6;margin:12px 0 auto}
 .ob .grad{background:linear-gradient(90deg,var(--violet-soft),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -263,12 +263,12 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .dots i.on{width:22px;background:var(--violet)}
 .av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
 .av-grid button{aspect-ratio:1;border-radius:18px;background:var(--glass);border:2px solid var(--glass-brd);font-size:28px;transition:all .15s}
-.av-grid button.on{border-color:var(--violet);background:rgba(139,92,246,.15);box-shadow:var(--glow)}
+.av-grid button.on{border-color:var(--violet);background:rgba(57,255,20,.15);box-shadow:var(--glow)}
 .name-in{width:100%;padding:16px;border-radius:18px;background:var(--glass);border:1.5px solid var(--glass-brd);font-size:16px;font-weight:600;outline:none;text-align:center;margin:14px 0}
 .name-in:focus{border-color:var(--violet)}
 .goal-row{display:flex;gap:10px;margin:14px 0}
 .goal-row button{flex:1;padding:14px 6px;border-radius:16px;background:var(--glass);border:2px solid var(--glass-brd);font-weight:700;font-size:13px}
-.goal-row button.on{border-color:var(--violet);background:rgba(139,92,246,.15)}
+.goal-row button.on{border-color:var(--violet);background:rgba(57,255,20,.15)}
 .goal-row small{display:block;font-weight:500;color:var(--dim);font-size:10px;margin-top:3px}
 
 /* ---------- Modal / toast / confetti ---------- */
@@ -297,12 +297,50 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 .back{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--dim);margin-bottom:14px}
 .week-chart{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:10px}
 .week-chart .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
-.week-chart .bar{width:100%;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--violet),rgba(139,92,246,.15));min-height:4px;transition:height .5s}
+.week-chart .bar{width:100%;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--violet),rgba(57,255,20,.15));min-height:4px;transition:height .5s}
 .week-chart .b.today .bar{background:linear-gradient(180deg,var(--cyan),rgba(34,211,238,.2))}
 .week-chart small{font-size:9px;color:var(--faint);font-weight:700}
 .cert-canvas{width:100%;border-radius:14px;border:1px solid var(--glass-brd)}
 .empty{padding:26px 10px;text-align:center;color:var(--dim);font-size:13px;line-height:1.6}
 .empty .ico{font-size:36px;display:block;margin-bottom:8px}
+
+/* ---------- Mac terminal ---------- */
+.macterm{background:#050505;border:1px solid #1E2A1E;border-radius:14px;overflow:hidden;box-shadow:0 24px 70px rgba(57,255,20,.14);font-family:var(--mono);text-align:left;margin:30px 0 26px}
+.macterm .tbar{display:flex;align-items:center;gap:7px;padding:10px 13px;background:#101010;border-bottom:1px solid #1E2A1E}
+.macterm .tbar i{width:11px;height:11px;border-radius:50%}
+.macterm .tbar i:nth-child(1){background:#FF5F57}.macterm .tbar i:nth-child(2){background:#FEBC2E}.macterm .tbar i:nth-child(3){background:#28C840}
+.macterm .tbar small{margin-left:auto;font-size:10px;color:#3F4F41;font-family:var(--ui);font-weight:600}
+.macterm .tbody{padding:15px;font-size:12.5px;line-height:1.75;min-height:92px;white-space:pre-wrap;color:var(--violet)}
+.macterm .tbody .pr{color:#5F7D63}
+.tcursor{display:inline-block;width:8px;height:14px;background:var(--violet);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.av-grid img{width:100%;height:100%;object-fit:cover;border-radius:15px}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.inline-av{display:inline-flex;width:30px;height:30px;border-radius:10px;overflow:hidden;vertical-align:-7px;background:var(--bg2);align-items:center;justify-content:center}
+.course-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+.course-grid .card{margin:0}
+
+/* ---------- Tablet & laptop ---------- */
+@media(min-width:768px){
+  #phone{width:100vw;height:100dvh;border-radius:0;border:none;box-shadow:none}
+  #view{padding:32px max(28px,calc(50% - 480px)) 130px}
+  .layer{padding:32px max(28px,calc(50% - 390px)) 70px}
+  #tabbar{left:50%;right:auto;transform:translateX(-50%);width:min(580px,94vw)}
+  .mini-grid{grid-template-columns:repeat(4,1fr)}
+  .course-grid{grid-template-columns:repeat(2,1fr)}
+  .ach-grid{grid-template-columns:repeat(6,1fr)}
+  .heat{grid-template-columns:repeat(28,1fr)}
+  .editor-wrap textarea,.editor-wrap pre{min-height:320px;font-size:14px}
+  .chat-bar{left:50%;right:auto;transform:translateX(-50%);width:min(740px,94vw)}
+  #modal-root:not(:empty){align-items:center}
+  .sheet{border-radius:28px;width:min(600px,94vw)}
+  .ob{max-width:600px;margin:0 auto;width:100%}
+  .ex-q{font-size:21px}
+}
+@media(min-width:1200px){
+  .course-grid{grid-template-columns:repeat(3,1fr)}
+  #view{padding-left:max(28px,calc(50% - 560px));padding-right:max(28px,calc(50% - 560px))}
+}
 </style>
 </head>
 <body>
@@ -318,6 +356,13 @@ input,textarea{font-family:var(--ui);color:var(--text)}
 /* ================= CORE: utils / store / audio / haptics ================= */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const avHTML=a=>a&&String(a).startsWith('data:')?`<img src="${a}" alt="avatar">`:(a||'🙂');
+function pickPhoto(cb){const i=document.createElement('input');i.type='file';i.accept='image/*';
+ i.onchange=()=>{const f=i.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(img.width,img.height);
+   const cv=document.createElement('canvas');cv.width=cv.height=160;
+   cv.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,160,160);
+   cb(cv.toDataURL('image/jpeg',.85))};img.src=r.result};r.readAsDataURL(f)};i.click()}
 const todayKey=()=>new Date().toISOString().slice(0,10);
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -332,7 +377,7 @@ const Store={
     days:{},               // date -> xp earned
     ach:[],                // unlocked achievement ids
     certs:[],              // completed course ids
-    themes:['violet'], theme:'violet',
+    themes:['neon'], theme:'neon',
     sound:true, haptics:true, motion:true,
     stats:{answers:0,correct:0,lessons:0,perfect:0,challenges:0},
     tutor:[],
@@ -358,7 +403,7 @@ const Sfx=(()=>{let ctx;const ac=()=>ctx||(ctx=new (window.AudioContext||window.
 })();
 
 function toast(ico,msg){const t=document.createElement('div');t.className='toast';t.innerHTML=`<span>${ico}</span><span>${esc(msg)}</span>`;$('#toast-root').appendChild(t);setTimeout(()=>{t.style.opacity=0;t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},2600)}
-function confetti(n=60){if(!S.motion)return;const cs=['#8B5CF6','#22D3EE','#FBBF24','#34D399','#FB7185'];for(let i=0;i<n;i++){const e=document.createElement('i');e.className='confetti';e.style.cssText=`left:${Math.random()*100}vw;width:${6+Math.random()*6}px;height:${8+Math.random()*8}px;background:${cs[i%5]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.4}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),3600)}}
+function confetti(n=60){if(!S.motion)return;const cs=['#39FF14','#22D3EE','#FBBF24','#34D399','#FB7185'];for(let i=0;i<n;i++){const e=document.createElement('i');e.className='confetti';e.style.cssText=`left:${Math.random()*100}vw;width:${6+Math.random()*6}px;height:${8+Math.random()*8}px;background:${cs[i%5]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.4}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),3600)}}
 function sheet(html,onMount){const r=$('#modal-root');r.innerHTML=`<div class="scrim"></div><div class="sheet"><div class="grab"></div>${html}</div>`;r.querySelector('.scrim').onclick=closeSheet;if(onMount)onMount(r.querySelector('.sheet'))}
 function closeSheet(){$('#modal-root').innerHTML=''}
 
@@ -604,8 +649,308 @@ const COURSES=[
   ]},
  ]},
 ]},
+{id:'ts',name:'TypeScript',ico:'🔷',desc:'JavaScript with superpowers',units:[
+ {name:'Unit 1 · Type Safety',lessons:[
+  {id:'ts1',ico:'🏷️',name:'Types',ex:[
+   M('What does TypeScript add to JavaScript?',['More speed','Static types','New browsers','Databases'],1,'TS catches type errors before your code even runs.'),
+   F('Annotate a string variable','let name: ___ = "BG"',['string','str','text','String()'],'string','Primitive type names are lowercase: string, number, boolean.'),
+   M('What happens here?',['Compiles fine','Type error at compile time','Crashes at runtime only','Logs 20'],1,'A string cannot be assigned to a number — TS blocks it before running.','let age: number = "20"','Fix the bug'),
+   T('Type the TS type for true/false values','boolean','boolean covers exactly true and false.'),
+   M('Which file extension does TypeScript use?',['.tsx only','.ts','.type','.jscript'],1,'.ts for logic, .tsx when JSX is inside.'),
+  ]},
+  {id:'ts2',ico:'📐',name:'Interfaces',ex:[
+   M('An interface describes…',['A loop','The shape of an object','A CSS rule','A server'],1,'Interfaces define which properties an object must have.'),
+   F('Give User a name field','interface User { name: ___ }',['string','name','value','var'],'string','Each field gets a type after the colon.'),
+   A('Arrange a valid interface',['interface User {','  name: string','  age: number','}'],'Keyword, name, then typed fields inside braces.'),
+   M('Which marks a property as optional?',['age?: number','age!: number','optional age','age: number?'],0,'The ? goes right after the property name.'),
+   M('Does { name: "BG" } satisfy interface { name: string }?',['Yes','No — needs more fields','Only at runtime','Only with a class'],0,'It has every required property with the right type.','','Predict output'),
+  ]},
+  {id:'ts3',ico:'🧩',name:'Typed Functions',ex:[
+   F('Annotate the return type','function add(a: number, b: number): ___',['number','int','return','num'],'number','The return type goes after the parameter list.'),
+   M('string | number means the value can be…',['Either a string or a number','Both at once','Neither','An array'],0,'The | creates a union type — one of several options.'),
+   M('What is logged?',['string','"hi"','text','undefined'],0,'typeof reports the runtime type name as a string.','console.log(typeof "hi")','Predict output'),
+   A('Arrange a typed arrow function',['const double =','  (n: number): number =>','    n * 2'],'Parameters get types, then the return type, then =>.'),
+   M('What does the any type do?',['Enables strict mode','Disables type checking for that value','Makes it a number','Deletes the variable'],1,'any opts out of safety — use it as a last resort.'),
+  ]},
+ ]},
+]},
+{id:'java',name:'Java',ico:'☕',desc:'The enterprise workhorse',units:[
+ {name:'Unit 1 · Foundations',lessons:[
+  {id:'java1',ico:'👋',name:'Hello Java',ex:[
+   M('Which method is the program entry point?',['start()','main()','run()','init()'],1,'The JVM always looks for public static void main.'),
+   F('Print a line','System.out.___("Hi");',['println','printf!','log','echo'],'println','System.out.println prints and moves to a new line.'),
+   A('Arrange a minimal program',['public class Main {','  public static void main(String[] args) {','    System.out.println("Hi");','  }','}'],'Class wraps main; main wraps your statements.'),
+   M('What is printed?',['5','23','2 3','Error'],1,'A string plus a number concatenates into "23".','System.out.println("2" + 3);','Predict output'),
+   M('What is wrong?',['Missing semicolon','println misspelled','Needs quotes','Nothing'],0,'Every Java statement ends with a semicolon.','System.out.println("Hi")','Fix the bug'),
+  ]},
+  {id:'java2',ico:'📦',name:'Variables & Types',ex:[
+   M('Which declares a whole number?',['int x = 5;','number x = 5;','let x = 5;','x := 5'],0,'Java is statically typed — the type comes first.'),
+   F('Declare text','___ name = "BG";',['String','string','text','char'],'String','String is a class in Java, so it is capitalized.'),
+   M('Which type holds decimals like 3.14?',['int','double','String','bool'],1,'double is the standard floating-point type.'),
+   T('Type the Java type for true/false','boolean','Lowercase boolean, unlike String.'),
+   M('What is x?',['3.5','3','4','Error'],1,'Integer division drops the decimal part.','int x = 7 / 2;','Predict output'),
+  ]},
+  {id:'java3',ico:'🔁',name:'Flow Control',ex:[
+   F('Complete the loop','for (int i = 0; i < 3; ___) { }',['i++','i+','next','++'],'i++','Same three-part for loop as JavaScript.'),
+   M('What does this print?',['0 1 2','1 2 3','0 1 2 3','3'],0,'i takes 0, 1, 2 before i < 3 fails.','for (int i = 0; i < 3; i++)\n  System.out.println(i);','Predict output'),
+   M('Java if statements require…',['Parentheses around the condition','A colon','the word then','No braces ever'],0,'if (condition) { } — parentheses are mandatory.'),
+   A('Arrange a while loop',['int n = 3;','while (n > 0) {','  System.out.println(n);','  n--;','}'],'Check, print, decrement — classic countdown.'),
+   M('How do you correctly compare two Strings?',['a == b','a.equals(b)','a = b','compare(a b)'],1,'== compares references; .equals() compares content.'),
+  ]},
+ ]},
+]},
+{id:'cpp',name:'C++',ico:'⚙️',desc:'Power close to the metal',units:[
+ {name:'Unit 1 · Foundations',lessons:[
+  {id:'cpp1',ico:'👋',name:'Hello C++',ex:[
+   M('Which header enables input/output?',['#include <stdio>','#include <iostream>','#include <io>','import iostream'],1,'iostream provides std::cout and std::cin.'),
+   F('Print to the screen','std::___ << "Hi";',['cout','print','out','echo'],'cout','cout is the character output stream; << sends data into it.'),
+   M('What is printed?',['5*2','10','52','Error'],1,'The expression is evaluated first: 5 × 2 = 10.','std::cout << 5 * 2;','Predict output'),
+   A('Arrange a full program',['#include <iostream>','int main() {','  std::cout << "Hi";','  return 0;','}'],'Include, main, statements, return 0.'),
+   M('What does "\\n" do in output?',['Ends the program','Prints a new line','Prints the letter n','Clears the screen'],1,'It is the newline character.'),
+  ]},
+  {id:'cpp2',ico:'📦',name:'Variables',ex:[
+   M('Which line declares an integer score?',['int score = 90;','score = 90','var score = 90;','integer score;'],0,'Type first, then name, then value.'),
+   F('Assign the value','int score ___ 90;',['=','==',':=','<-'],'=','Single = assigns; double == compares.'),
+   M('What is x?',['3.5','3','4','7.2'],1,'int ÷ int is integer division in C++ too.','int x = 7 / 2;','Predict output'),
+   T('Type the C++ type for a single character','char','char holds one character in single quotes.'),
+   M('Find the bug',['Missing semicolon','cout misspelled','Wrong header','Nothing'],0,'Statements must end with a semicolon.','int x = 5','Fix the bug'),
+  ]},
+  {id:'cpp3',ico:'🔁',name:'Loops & Input',ex:[
+   F('Complete the loop','for (int i = 0; i < 3; ___) { }',['i++','i+1','inc i','++'],'i++','Identical loop structure to Java and JS.'),
+   M('What prints?',['0 1 2','1 2 3','1 2','3 2 1'],1,'i starts at 1 and runs while i <= 3.','for (int i = 1; i <= 3; i++)\n  std::cout << i << " ";','Predict output'),
+   M('std::cin is used to…',['Print output','Read user input','Include files','End programs'],1,'cin >> x reads a value into x.'),
+   A('Arrange a countdown',['int n = 3;','while (n > 0) {','  std::cout << n;','  n--;','}'],'Initialize, test, output, decrement.'),
+   M('What do x++ and ++x both do?',['Double x','Add 1 to x','Reset x','Compare x'],1,'Both increment — they differ only in when the value is read.'),
+  ]},
+ ]},
+]},
+{id:'go',name:'Go',ico:'🐹',desc:'Simple, fast, concurrent',units:[
+ {name:'Unit 1 · Foundations',lessons:[
+  {id:'go1',ico:'👋',name:'Hello Go',ex:[
+   M('Every Go file starts with…',['import','a package declaration','func main','#include'],1,'package main marks an executable program.'),
+   F('Name the entry function','func ___() { }',['main','start','init','run'],'main','Execution begins at func main in package main.'),
+   M('Which prints a line in Go?',['print()','fmt.Println()','console.log()','System.out'],1,'The fmt package handles formatted I/O.'),
+   A('Arrange a complete program',['package main','import "fmt"','func main() {','  fmt.Println("Hi")','}'],'Package, imports, then main.'),
+   M('What is printed?',['Go1','Go 1','"Go" 1','Error'],1,'Println separates arguments with spaces.','fmt.Println("Go", 1)','Predict output'),
+  ]},
+  {id:'go2',ico:'📦',name:'Variables',ex:[
+   F('Short-declare a variable','name ___ "BG"',[':=','=','==','<-'],':=','The := operator declares and assigns in one step.'),
+   M('Which is also a valid declaration?',['var age int = 5','int age = 5','let age = 5','age := := 5'],0,'The long form: var name type = value.'),
+   M('What is printed?',['5','10','x*2','Error'],1,'x is 5, so x * 2 prints 10.','x := 5\nfmt.Println(x * 2)','Predict output'),
+   T('Type the keyword for an unchangeable value','const','const declares compile-time constants.'),
+   M('What happens to an unused variable in Go?',['Ignored','Warning only','Compile error','Set to zero'],2,'Go refuses to compile with unused variables — it keeps code clean.'),
+  ]},
+  {id:'go3',ico:'🔁',name:'Flow',ex:[
+   M('Go has exactly one loop keyword. Which?',['while','for','loop','repeat'],1,'for handles all loop styles in Go — even while-style.'),
+   F('Complete the loop','for i := 0; i < 3; ___ { }',['i++','i+1','next','inc'],'i++','Go supports i++ as a statement.'),
+   A('Arrange a condition',['if score > 50 {','  fmt.Println("Pass")','}'],'No parentheses needed around Go conditions.'),
+   M('Which if line is idiomatic Go?',['if (x > 5) {','if x > 5 {','if x > 5 then','if x > 5:'],1,'Go drops the parentheses but keeps the braces.'),
+   M('What is printed?',['0 1 2','3','0 3','6'],1,'sum collects 0+1+2 = 3, printed after the loop.','sum := 0\nfor i := 0; i < 3; i++ {\n  sum += i\n}\nfmt.Println(sum)','Predict output'),
+  ]},
+ ]},
+]},
+{id:'rust',name:'Rust',ico:'🦀',desc:'Fearless systems coding',units:[
+ {name:'Unit 1 · Foundations',lessons:[
+  {id:'rust1',ico:'👋',name:'Hello Rust',ex:[
+   M('Which macro prints a line?',['print()','println!()','echo!()','out!()'],1,'println! — the ! marks it as a macro, not a function.'),
+   F('Print Hi','___!("Hi");',['println','printf','print','echo'],'println','Macro name first, then the ! and arguments.'),
+   M('Why does println! end with !?',['Style choice','It is a macro','It is async','It can fail'],1,'! means macro — code that expands at compile time.'),
+   A('Arrange a program',['fn main() {','    println!("Hi");','}'],'fn main is the entry point; statements end with a semicolon.'),
+   M('What is printed?',['{} 5','5','2+3','Error'],1,'{} is a placeholder filled by the next argument: 2+3=5.','println!("{}", 2 + 3);','Predict output'),
+  ]},
+  {id:'rust2',ico:'🔒',name:'let & mut',ex:[
+   T('Type the keyword that declares a variable','let','let binds a name to a value.'),
+   F('Make x changeable','let ___ x = 5;',['mut','var','open','mod'],'mut','Rust variables are immutable unless marked mut.'),
+   M('What happens here?',['x becomes 6','Compile error','Runtime panic','Prints 5'],1,'Without mut, reassignment is a compile-time error.','let x = 5;\nx = 6;','Fix the bug'),
+   M('What is i32?',['32 characters','A 32-bit integer type','An array','A loop'],1,'i32 = signed 32-bit integer, the default int type.'),
+   M('What is printed?',['name','BG','{}','Error'],1,'{} is replaced by the value of name.','let name = "BG";\nprintln!("{}", name);','Predict output'),
+  ]},
+  {id:'rust3',ico:'🎯',name:'Ownership & Flow',ex:[
+   M('After a String moves to another variable, the original is…',['Still usable','Invalid','Copied','Doubled'],1,'Ownership moves — using the old binding is a compile error.'),
+   F('Write the condition','if x ___ 5 { }',['>','=>','>>','>:'],'>','Rust conditions need no parentheses, like Go.'),
+   A('Arrange a loop',['for i in 0..3 {','    println!("{}", i);','}'],'for-in iterates a range directly.'),
+   M('What numbers does 0..3 produce?',['0 1 2 3','0 1 2','1 2 3','3 2 1'],1,'Ranges exclude the end value: 0, 1, 2.'),
+   M('What is printed?',['1 2 3','0 1 2','0..3','3'],0,'1..=3 includes the end thanks to the =.','for i in 1..=3 {\n    println!("{}", i);\n}','Predict output'),
+  ]},
+ ]},
+]},
+{id:'react',name:'React',ico:'⚛️',desc:'Build modern UIs',units:[
+ {name:'Unit 1 · Components',lessons:[
+  {id:'react1',ico:'🧱',name:'Components & JSX',ex:[
+   M('A React component returns…',['CSS','JSX','SQL','JSON only'],1,'JSX looks like HTML but compiles to JavaScript.'),
+   F('Return a heading','function App() {\n  return <___>Hi</___>\n}',['h1','head','H','title'],'h1','Standard HTML tags work directly in JSX.'),
+   M('Component names must be…',['lowercase','Capitalized','ALL CAPS','numbers'],1,'React treats lowercase tags as HTML, Capitalized as components.'),
+   A('Arrange a component',['function App() {','  return <h1>Hello BG</h1>','}'],'A component is just a function that returns JSX.'),
+   M('In JSX, the class attribute is written…',['class','className','cls','style-class'],1,'class is a reserved JS word, so JSX uses className.'),
+  ]},
+  {id:'react2',ico:'📨',name:'Props',ex:[
+   M('Props are…',['Internal state','Inputs passed to a component','CSS rules','Database rows'],1,'Props flow from parent to child like function arguments.'),
+   F('Receive props','function Hi(___) {\n  return <p>{props.name}</p>\n}',['props','args','input','data'],'props','The single parameter conventionally named props.'),
+   M('What renders?',['name','BG','props.name','Error'],1,'name="BG" arrives as props.name.','<Hi name="BG" />','Predict output'),
+   M('Can a child component modify its props?',['Yes freely','No — props are read-only','Only strings','Only with var'],1,'Props are immutable; state is for changing data.'),
+   A('Arrange usage',['function Badge(props) {','  return <b>{props.label}</b>','}','<Badge label="Pro" />'],'Define the component, then use it like a tag.'),
+  ]},
+  {id:'react3',ico:'🔄',name:'State',ex:[
+   F('Create state','const [count, setCount] = ___(0)',['useState','useVar','state','React.var'],'useState','useState returns the value and its setter.'),
+   M('Calling setCount(count + 1) causes…',['Nothing','A re-render with the new value','A page reload','An error'],1,'State updates trigger React to re-render the component.'),
+   M('Why not just use a normal variable for count?',['Too slow','Changes would not re-render the UI','Not allowed syntax','Variables cost memory'],1,'React only reacts to state and props changes.'),
+   A('Arrange a counter',['const [n, setN] = useState(0)','return (','  <button onClick={() => setN(n + 1)}>','    {n}','  </button>',')'],'State first, then a button whose click updates it.'),
+   M('What shows on first render?',['1','0','null','n'],1,'useState(0) makes the initial value 0.','const [n, setN] = useState(0)\nreturn <p>{n}</p>','Predict output'),
+  ]},
+ ]},
+]},
+{id:'node',name:'Node.js',ico:'🟢',desc:'JavaScript on the server',units:[
+ {name:'Unit 1 · Server-side JS',lessons:[
+  {id:'node1',ico:'🌐',name:'What is Node?',ex:[
+   M('Node.js lets JavaScript run…',['Only in Chrome','Outside the browser','Inside CSS','On GPUs only'],1,'Node is a JS runtime for servers, tools, and scripts.'),
+   F('Run a file from the terminal','___ app.js',['node','run','js','exec'],'node','The node command executes a JavaScript file.'),
+   M('npm is…',['A code editor','The Node package manager','A browser','A database'],1,'npm installs and manages third-party packages.'),
+   M('package.json stores…',['Compiled code','Project metadata and dependencies','Images','Browser settings'],1,'It is the manifest of every Node project.'),
+   M('What is printed?',['Hi from Node','console.log','Error — no browser','undefined'],0,'console.log works in Node exactly like in browsers.','console.log("Hi from Node")','Predict output'),
+  ]},
+  {id:'node2',ico:'📦',name:'Modules',ex:[
+   F('Import a core module (CommonJS)','const fs = ___("fs")',['require','import','include','load'],'require','require() loads modules in CommonJS style.'),
+   F('Export a value','module.___ = myFunc',['exports','export','out','public'],'exports','module.exports defines what require() returns.'),
+   A('Arrange import and use',['const os = require("os")','console.log(os.platform())'],'Require first, then call its functions.'),
+   M('Modern ES modules use which keyword?',['require','import','fetch','include'],1,'import/export is the newer standard syntax.'),
+   M('What does require("./utils") load?',['An npm package','A local file named utils','A browser API','Nothing'],1,'./ means a relative path to your own file.'),
+  ]},
+  {id:'node3',ico:'🛰️',name:'Files & Servers',ex:[
+   M('The fs module works with…',['Fonts','The file system','Firebase','Flexbox'],1,'fs reads, writes, and manages files.'),
+   F('Read a text file','fs.readFileSync("a.txt", "___")',['utf8','text','ascii','read'],'utf8','utf8 returns a string instead of raw bytes.'),
+   M('http.createServer() creates…',['A database','A web server','A file','A browser tab'],1,'It handles incoming HTTP requests with your callback.'),
+   A('Arrange a tiny server',['const http = require("http")','const server = http.createServer(handler)','server.listen(3000)'],'Require, create with a handler, then listen on a port.'),
+   M('listen(3000) means the server…',['Waits 3000 ms','Accepts requests on port 3000','Creates 3000 threads','Runs 3000 times'],1,'Ports let many services share one machine.'),
+  ]},
+ ]},
+]},
+{id:'git',name:'Git & GitHub',ico:'🌿',desc:'Version control mastery',units:[
+ {name:'Unit 1 · Essentials',lessons:[
+  {id:'git1',ico:'📸',name:'First Commit',ex:[
+   M('Git is a…',['Code editor','Version control system','Hosting company','Language'],1,'Git tracks every change to your code over time.'),
+   F('Start tracking a folder','git ___',['init','start','new','begin'],'init','git init creates the hidden .git repository.'),
+   F('Stage every change','git add ___',['.','all','*all','-a only'],'.','The dot stages everything in the current folder.'),
+   T('Type the command that shows staged and changed files','git status','git status is the command you will run the most.'),
+   A('Arrange your first commit',['git init','git add .','git commit -m "first commit"'],'Initialize, stage, then commit with a message.'),
+  ]},
+  {id:'git2',ico:'🌱',name:'History & Branches',ex:[
+   M('Which shows the commit history?',['git list','git log','git history','git show all'],1,'git log lists commits, newest first.'),
+   M('A branch is…',['A backup file','A parallel line of development','A GitHub account','A folder'],1,'Branches let you build features without touching main.'),
+   F('Switch to main','git ___ main',['checkout','goto','move','open'],'checkout','git checkout (or the newer git switch) changes branches.'),
+   A('Arrange a feature workflow',['git checkout -b feature','git add .','git commit -m "add feature"','git checkout main'],'Create a branch, commit on it, return to main.'),
+   M('HEAD points to…',['The first commit','Your current commit or branch','GitHub','The remote'],1,'HEAD is where you are right now in history.'),
+  ]},
+  {id:'git3',ico:'☁️',name:'GitHub',ex:[
+   M('GitHub is…',['Git itself','A hosting service for Git repos','A code editor','A language'],1,'GitHub hosts remote copies of Git repositories.'),
+   F('Upload your commits','git ___ origin main',['push','send','up','sync'],'push','push sends local commits to the remote.'),
+   F('Download new remote commits','git ___',['pull','push','grab','down'],'pull','pull fetches and merges remote changes.'),
+   M('git clone does what?',['Deletes a repo','Copies a remote repo to your machine','Renames a branch','Makes a zip'],1,'clone gives you the full history locally.'),
+   A('Arrange sharing a project',['git remote add origin URL','git push -u origin main'],'Connect the remote once, then push.'),
+  ]},
+ ]},
+]},
+{id:'flutter',name:'Flutter',ico:'🐦',desc:'One codebase, every screen',units:[
+ {name:'Unit 1 · Widgets',lessons:[
+  {id:'fl1',ico:'🧱',name:'Widget World',ex:[
+   M('In Flutter, everything on screen is a…',['View','Widget','Div','Fragment'],1,'Buttons, text, padding, even the app itself — all widgets.'),
+   M('Flutter apps are written in…',['Java','Dart','Swift','Kotlin'],1,'Dart is the language behind Flutter.'),
+   F('Show text on screen','Text(___)',['"BG"','BG','text: BG','{BG}'],'"BG"','Text takes the string as its first argument.'),
+   A('Arrange app startup',['import "package:flutter/material.dart";','void main() {','  runApp(MyApp());','}'],'Import material, then runApp boots the widget tree.'),
+   M('What appears on screen?',['Text','Hi','"Hi"','Nothing'],1,'The Text widget renders its string content.','Text("Hi")','Predict output'),
+  ]},
+  {id:'fl2',ico:'📐',name:'Layout',ex:[
+   M('Column arranges children…',['Horizontally','Vertically','In a grid','Randomly'],1,'Column stacks top-to-bottom; Row goes left-to-right.'),
+   M('Which lays out children horizontally?',['Column','Row','Stack','List'],1,'Row is the horizontal counterpart of Column.'),
+   F('Give Column its children','Column(___: [Text("A"), Text("B")])',['children','items','widgets','body'],'children','Multi-child widgets take a children list.'),
+   M('Which widget adds space around a child?',['Margin','Padding','Space','Gap'],1,'Padding(padding: EdgeInsets.all(16), child: ...).'),
+   A('Arrange a two-line layout',['Column(','  children: [','    Text("Hello"),','    Text("BG"),','  ],',')'],'Column, children list, widgets inside.'),
+  ]},
+  {id:'fl3',ico:'🔄',name:'State',ex:[
+   M('Which widget type can change over time?',['StatelessWidget','StatefulWidget','StaticWidget','FixedWidget'],1,'Stateful widgets hold mutable state.'),
+   F('Trigger a rebuild','___(() { count++; });',['setState','rebuild','update','refresh'],'setState','setState tells Flutter to repaint with new values.'),
+   M('A StatelessWidget re-renders when…',['setState is called','Its parent rebuilds with new data','A timer fires','Never'],1,'Stateless widgets depend entirely on their inputs.'),
+   M('What shows after one tap?',['0','1','2','Error'],1,'count starts at 0; setState increments to 1 and rebuilds.','// button tap runs:\nsetState(() { count++; });','Predict output'),
+   A('Arrange the counter tap',['onPressed: () {','  setState(() {','    count++;','  });','}'],'The handler wraps the mutation in setState.'),
+  ]},
+ ]},
+]},
+{id:'ml',name:'Machine Learning',ico:'🧠',desc:'Teach computers to learn',units:[
+ {name:'Unit 1 · Core Ideas',lessons:[
+  {id:'ml1',ico:'💡',name:'What is ML?',ex:[
+   M('Machine learning is…',['Writing explicit rules','Learning patterns from data','Faster hardware','A database'],1,'Instead of coding rules, we show examples and the model finds patterns.'),
+   M('A model is trained on…',['Test data','Training data','Live users first','Random noise'],1,'Training data teaches; test data checks honesty.'),
+   M('Supervised learning uses…',['Unlabeled data','Labeled examples','No data','Only images'],1,'Each example comes with the correct answer attached.'),
+   M('A spam filter is an example of…',['Regression','Classification','Clustering','Compression'],1,'It assigns each email to a category: spam or not.'),
+   M('Predicting a house price is…',['Classification','Regression','Clustering','Translation'],1,'Regression predicts continuous numbers.'),
+  ]},
+  {id:'ml2',ico:'🧪',name:'Training',ex:[
+   M('Features are…',['The answers','The input variables','Errors','The model weights'],1,'Features describe each example: size, age, location…'),
+   M('The label is…',['An input','The answer the model should predict','A chart','The dataset name'],1,'For house prices, the label is the price itself.'),
+   M('Overfitting means the model…',['Is too small','Memorized training data and fails on new data','Trains too fast','Uses no features'],1,'Great training score, poor real-world score — a red flag.'),
+   M('Why split data into train and test sets?',['To save memory','To honestly measure performance on unseen data','To train twice','Tradition'],1,'Testing on training data would be like grading your own exam.'),
+   M('Generally, better models come from…',['More quality data','Fewer examples','Random labels','Longer variable names'],0,'Data quality and quantity usually beat clever tricks.'),
+  ]},
+  {id:'ml3',ico:'🕸️',name:'Models',ex:[
+   M('Neural networks are loosely inspired by…',['Circuits','Brain neurons','Trees','Sorting'],1,'Layers of connected units passing signals — a rough brain analogy.'),
+   M('One epoch is…',['One prediction','One full pass over the training data','One neuron','One error'],1,'Models usually train for many epochs.'),
+   M('Accuracy measures…',['Speed','The percentage of correct predictions','Model size','Data size'],1,'Correct predictions divided by total predictions.'),
+   M('Which is unsupervised learning?',['Spam filtering','Clustering customers into groups','Price prediction','Digit recognition'],1,'Clustering finds structure without any labels.'),
+   M('ChatGPT-style systems are…',['Databases','Large language models','Spreadsheets','Search engines only'],1,'LLMs predict text, trained on huge corpora.'),
+  ]},
+ ]},
+]},
+{id:'ds',name:'Data Science',ico:'📈',desc:'Find truth in numbers',units:[
+ {name:'Unit 1 · Working with Data',lessons:[
+  {id:'ds1',ico:'🔬',name:'The Field',ex:[
+   M('Data science combines…',['Only math','Statistics + programming + domain knowledge','Just Excel','Design only'],1,'All three together turn raw data into decisions.'),
+   M('The most popular data science language is…',['Java','Python','PHP','C'],1,'Python dominates thanks to pandas, NumPy, and scikit-learn.'),
+   M('CSV stands for…',['Code Style Values','Comma Separated Values','Compressed Save','Column Sort View'],1,'A plain-text table: one row per line, commas between cells.'),
+   M('What is the mean of 2, 4, 6?',['3','4','6','12'],1,'(2+4+6) ÷ 3 = 4.','','Predict output'),
+   M('What is the median of 1, 2, 9?',['1','2','4','9'],1,'The median is the middle value when sorted — outliers barely move it.','','Predict output'),
+  ]},
+  {id:'ds2',ico:'🐼',name:'pandas',ex:[
+   M('The main pandas data structure is…',['Array','DataFrame','Dict','Tensor'],1,'A DataFrame is a labeled table of rows and columns.'),
+   F('Import with the standard alias','import pandas as ___',['pd','pan','p','pds'],'pd','pd is the universal convention.'),
+   F('Load a CSV file','df = pd.___("data.csv")',['read_csv','open_csv','load','import_csv'],'read_csv','read_csv parses the file into a DataFrame.'),
+   M('df.head() shows…',['Column types','The first 5 rows','The last row','A chart'],1,'A quick peek at the top of your data.'),
+   M('df.shape returns…',['A chart','(rows, columns)','Memory used','Column names'],1,'e.g. (1000, 8) means 1000 rows, 8 columns.','','Predict output'),
+  ]},
+  {id:'ds3',ico:'📊',name:'Insight',ex:[
+   M('Best chart for a trend over time?',['Pie','Line chart','Venn','Table'],1,'Lines show direction and change across time.'),
+   M('A correlation of 0.9 suggests…',['No relationship','A strong positive relationship','Causation proven','An error'],1,'As one rises, the other strongly tends to rise.'),
+   M('An outlier is…',['The average','An unusually extreme value','A missing cell','A chart type'],1,'Outliers can be errors — or the most interesting story.'),
+   M('Best chart for comparing categories?',['Line','Bar chart','Scatter only','Sparkline'],1,'Bars make category comparisons instantly readable.'),
+   M('Correlation does NOT imply…',['Data','Causation','Numbers','Charts'],1,'Ice cream sales and drownings correlate — summer causes both.'),
+  ]},
+ ]},
+]},
+{id:'sec',name:'Cybersecurity',ico:'🛡️',desc:'Think like a defender',units:[
+ {name:'Unit 1 · Defense Basics',lessons:[
+  {id:'sec1',ico:'🔐',name:'Core Concepts',ex:[
+   M('The CIA triad stands for…',['Code, Input, Access','Confidentiality, Integrity, Availability','Cyber, Internet, Apps','Control, Identify, Audit'],1,'The three pillars every security decision protects.'),
+   M('Encryption…',['Deletes data','Scrambles data so only authorized parties can read it','Speeds up WiFi','Backs up files'],1,'Without the key, ciphertext is meaningless noise.'),
+   M('Two-factor authentication adds…',['A longer password','A second verification step','More usernames','A firewall'],1,'Something you know plus something you have.'),
+   M('The strongest password is…',['Your pet name','Short but clever','Long, random, and unique','password123!'],2,'Length and uniqueness beat cleverness every time.'),
+   M('The HTTPS padlock means…',['The site is honest','The connection is encrypted','No ads','Government approved'],1,'It secures transport — it says nothing about who runs the site.'),
+  ]},
+  {id:'sec2',ico:'🎣',name:'Human Attacks',ex:[
+   M('Phishing is…',['A firewall','Fake messages that steal credentials','A virus scanner','Slow internet'],1,'Attackers impersonate trusted brands to harvest logins.'),
+   M('A classic phishing red flag:',['Perfect grammar','Urgency plus a suspicious link','A short subject','No images'],1,'Act NOW or lose access + an odd URL = walk away.'),
+   M('A password manager helps by…',['Remembering one weak password','Generating and storing unique strong passwords','Blocking ads','Encrypting WiFi'],1,'You remember one master password; it handles the rest.'),
+   M('Reusing one password everywhere means…',['Convenience, no risk','One breach unlocks all your accounts','Faster logins are safer','Nothing'],1,'Credential-stuffing attacks count on exactly this habit.'),
+   M('Malware that locks your files for money is…',['Adware','Ransomware','Firmware','Freeware'],1,'Ransomware encrypts data and demands payment.'),
+  ]},
+  {id:'sec3',ico:'🕷️',name:'Web Security',ex:[
+   M('SQL injection attacks…',['The screen','A database through unsafe input','WiFi routers','Keyboards'],1,'Malicious input becomes part of the SQL query itself.'),
+   M('The main defense against SQL injection:',['Longer passwords','Parameterized queries','More servers','Hiding the database'],1,'Parameters keep data as data — never as executable SQL.'),
+   M('XSS injects…',['Cables','Malicious scripts into web pages','Cookies only','Hardware'],1,'Cross-site scripting runs attacker JS in victim browsers.'),
+   M('A brute force attack…',['Breaks screens','Tries every possible combination','Uses social media','Cuts power'],1,'Long passwords make brute force take centuries.'),
+   M('A firewall…',['Cools servers','Filters network traffic by rules','Writes code','Stores passwords'],1,'It decides which traffic may pass in or out.'),
+  ]},
+ ]},
+]},
 ];
-const SOON=[['TypeScript','🔷'],['Java','☕'],['C++','⚙️'],['Go','🐹'],['Rust','🦀'],['React','⚛️'],['Node.js','🟢'],['Git & GitHub','🌿'],['Flutter','🐦'],['Machine Learning','🧠'],['Data Science','📈'],['Cybersecurity','🛡️']];
+const SOON=[['Swift','🍎'],['Kotlin','🤖'],['C#','🎮'],['Vue','🟩'],['Angular','🅰️'],['Docker','🐳'],['AWS','☁️'],['MongoDB','🍃'],['PostgreSQL','🐘'],['System Design','🏗️'],['DSA','🧮'],['Interview Prep','💼']];
 const allLessons=c=>c.units.flatMap(u=>u.lessons);
 const EX_POOL=COURSES.flatMap(c=>allLessons(c).flatMap(l=>l.ex.map(e=>({...e,course:c.name}))));
 
@@ -733,7 +1078,7 @@ function renderHome(){
  const lb=leaderboard().slice(0,3);
  $('#view').innerHTML=`
  ${statChips()}
- <div class="hello" style="margin-top:16px"><span class="eyebrow">${greet}</span><h1>${esc(S.profile.name)} <span style="filter:none">${S.profile.avatar}</span></h1></div>
+ <div class="hello" style="margin-top:16px"><span class="eyebrow">${greet}</span><h1>${esc(S.profile.name)} <span class="inline-av">${avHTML(S.profile.avatar)}</span></h1></div>
 
  <div class="card hero-cta"><div class="glowring"></div>
    <span class="eyebrow" style="color:var(--violet-soft)">Continue learning</span>
@@ -752,7 +1097,7 @@ function renderHome(){
  <div class="card"><div class="week-chart">${days.map((k,i)=>`<div class="b ${k===todayKey()?'today':''}"><div class="bar" style="height:${Math.max(5,(S.days[k]||0)/maxD*100)}%"></div><small>${'SMTWTFS'[i]}</small></div>`).join('')}</div></div>
 
  <div class="sec-h"><h3>Leaderboard</h3><button data-go="rank">See all →</button></div>
- <div class="card">${lb.map((r,i)=>`<div class="lb-row ${r.me?'me':''}"><span class="lb-rank">${['🥇','🥈','🥉'][i]}</span><span class="avatar">${r.a}</span><span class="lb-name">${esc(r.n)}</span><span class="lb-xp">${r.xp} XP</span></div>`).join('')}</div>
+ <div class="card">${lb.map((r,i)=>`<div class="lb-row ${r.me?'me':''}"><span class="lb-rank">${['🥇','🥈','🥉'][i]}</span><span class="avatar">${avHTML(r.a)}</span><span class="lb-name">${esc(r.n)}</span><span class="lb-xp">${r.xp} XP</span></div>`).join('')}</div>
 
  <div class="sec-h"><h3>Achievements</h3><button data-go="me">All →</button></div>
  <div class="ach-grid">${ACH.slice(0,3).map(a=>`<div class="ach ${S.ach.includes(a.id)?'':'off'}"><div class="ico">${a.ico}</div><h5>${a.n}</h5><p>${a.d}</p></div>`).join('')}</div>
@@ -778,15 +1123,15 @@ function openChest(){const coins=30+Math.floor(Math.random()*40),xp=10+Math.floo
 
 function renderLearn(){
  $('#view').innerHTML=`<div class="hello"><span class="eyebrow">Learning paths</span><h1>Pick your path</h1></div>
- ${COURSES.map(c=>{const tot=allLessons(c).length,d=courseDone(c);return`
+ <div class="course-grid">${COURSES.map(c=>{const tot=allLessons(c).length,d=courseDone(c);return`
   <button class="card course-card" data-c="${c.id}" style="width:100%;text-align:left">
    <span class="course-ico">${c.ico}</span>
    <span class="course-meta"><h4>${c.name}</h4><p>${c.desc}</p>
    <span class="pbar"><i style="width:${d/tot*100}%"></i></span></span>
    <span class="eyebrow" style="flex-shrink:0">${d}/${tot}</span>
-  </button>`}).join('')}
+  </button>`}).join('')}</div>
  <div class="sec-h"><h3>Coming soon</h3><span class="eyebrow">${SOON.length} paths</span></div>
- ${SOON.map(([n,i])=>`<div class="card course-card locked"><span class="course-ico">${i}</span><span class="course-meta"><h4>${n}</h4><p>In development</p></span><span class="soon-tag">SOON</span></div>`).join('')}`;
+ <div class="course-grid">${SOON.map(([n,i])=>`<div class="card course-card locked"><span class="course-ico">${i}</span><span class="course-meta"><h4>${n}</h4><p>In development</p></span><span class="soon-tag">SOON</span></div>`).join('')}</div>`;
  $$('[data-c]').forEach(b=>b.onclick=()=>{Haptic.tap();openTrail(COURSES.find(c=>c.id===b.dataset.c))})}
 
 /* -------- Signature: serpentine glowing trail -------- */
@@ -988,18 +1333,18 @@ function renderRanks(){const rows=leaderboard();const meIdx=rows.findIndex(r=>r.
  const top3=rows.slice(0,3),rest=rows.slice(3);
  $('#view').innerHTML=`<div class="hello"><span class="eyebrow">Weekly league · resets Sunday</span><h1>🏆 Leaderboard</h1></div>
  <div class="podium">
-  ${[[1,60],[0,84],[2,48]].map(([i,h])=>{const r=top3[i];return`<div class="pod ${i===0?'p1':''}"><span class="avatar">${r.a}</span><div class="nm">${esc(r.n)}</div><div class="xp">${r.xp} XP</div><div class="bar" style="height:${h}px">${i+1}</div></div>`}).join('')}
+  ${[[1,60],[0,84],[2,48]].map(([i,h])=>{const r=top3[i];return`<div class="pod ${i===0?'p1':''}"><span class="avatar">${avHTML(r.a)}</span><div class="nm">${esc(r.n)}</div><div class="xp">${r.xp} XP</div><div class="bar" style="height:${h}px">${i+1}</div></div>`}).join('')}
  </div>
- <div class="card">${rest.map((r,i)=>`<div class="lb-row ${r.me?'me':''}"><span class="lb-rank">${i+4}</span><span class="avatar">${r.a}</span><span class="lb-name">${esc(r.n)}${r.me?'<small>That’s you — keep pushing!</small>':''}</span><span class="lb-xp">${r.xp} XP</span></div>`).join('')}</div>
+ <div class="card">${rest.map((r,i)=>`<div class="lb-row ${r.me?'me':''}"><span class="lb-rank">${i+4}</span><span class="avatar">${avHTML(r.a)}</span><span class="lb-name">${esc(r.n)}${r.me?'<small>That’s you — keep pushing!</small>':''}</span><span class="lb-xp">${r.xp} XP</span></div>`).join('')}</div>
  <div class="card" style="text-align:center"><span class="eyebrow">Your position</span><div class="big-num" style="font-size:30px;margin:6px 0">#${meIdx+1}</div><p style="font-size:12px;color:var(--dim)">${meIdx>0?`${rows[meIdx-1].xp-rows[meIdx].xp+1} XP to pass ${esc(rows[meIdx-1].n)}`:'You’re on top — defend the crown! 👑'}</p></div>`}
 
 /* ================= PROFILE ================= */
 function renderProfile(){const rank=Gamify.rank(),lvl=Gamify.level();
  const cells=[...Array(84)].map((_,i)=>{const d=new Date(Date.now()-(83-i)*864e5).toISOString().slice(0,10);const v=S.days[d]||0;
   return `<i class="${v>60?'h3':v>25?'h2':v>0?'h1':''}" title="${d}: ${v} XP"></i>`}).join('');
- const THEMES=[['violet','💜',0],['cyan','🩵',3],['sunset','🧡',3],['emerald','💚',3]];
+ const THEMES=[['neon','💚',0],['violet','💜',3],['cyan','🩵',3],['sunset','🧡',3]];
  $('#view').innerHTML=`
- <div class="prof-head"><span class="avatar">${S.profile.avatar}</span><h2>${esc(S.profile.name)}</h2>
+ <div class="prof-head"><button class="avatar" id="pav" title="Change avatar">${avHTML(S.profile.avatar)}</button><h2>${esc(S.profile.name)}</h2>
   <div class="rank">LEVEL ${lvl} · ${rank[2]} ${rank[1].toUpperCase()}</div>
   <div class="pbar" style="max-width:220px;margin:12px auto 0"><i style="width:${Gamify.levelPct()}%"></i></div></div>
  <div class="mini-grid">
@@ -1029,8 +1374,9 @@ function renderProfile(){const rank=Gamify.rank(),lvl=Gamify.level();
   <button class="btn ghost small" id="imp" style="flex:1">⬆ Import</button>
   <button class="btn ghost small" id="rst" style="flex:1;color:var(--red)">Reset</button></div>
  <p style="text-align:center;font-size:10px;color:var(--faint);margin-top:20px">BG Code Tutor 2.0 · built by ${esc(S.profile.name)} with 💜 · 100% free forever</p>`;
+ $('#pav').onclick=changeAvatar;
  $$('[data-cert]').forEach(b=>b.onclick=()=>showCert(COURSES.find(c=>c.id===b.dataset.cert)));
- $$('[data-th]').forEach(b=>b.onclick=()=>{const id=b.dataset.th;const T={violet:0,cyan:3,sunset:3,emerald:3};
+ $$('[data-th]').forEach(b=>b.onclick=()=>{const id=b.dataset.th;const T={neon:0,violet:3,cyan:3,sunset:3};
   if(!S.themes.includes(id)){if(S.diamonds<T[id])return toast('💎','Not enough diamonds — earn them via achievements');S.diamonds-=T[id];S.themes.push(id);toast('🎨','Theme unlocked!')}
   S.theme=id;Store.save();applyTheme();renderProfile()});
  $$('[data-s]').forEach(b=>b.onclick=()=>{const k=b.dataset.s;S[k]=!S[k];Store.save();b.classList.toggle('on');if(k==='motion')applyTheme()});
@@ -1040,24 +1386,29 @@ function renderProfile(){const rank=Gamify.rank(),lvl=Gamify.level();
  $('#rst').onclick=()=>sheet(`<div style="text-align:center"><h2 style="font-family:var(--disp);font-size:18px;margin-bottom:8px">Reset everything?</h2><p style="color:var(--dim);font-size:13px;margin-bottom:16px">All XP, streaks and progress will be wiped.</p><button class="btn" style="background:linear-gradient(135deg,#F87171,#DC2626)" onclick="localStorage.removeItem('bgct2');location.reload()">Yes, reset</button><button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Cancel</button></div>`);
 }
 
+function changeAvatar(){sheet(`<h2 style="font-family:var(--disp);font-size:17px;text-align:center;margin-bottom:14px">Change avatar</h2>
+ <div class="av-grid">${AVATARS.map(a=>`<button data-a="${a}">${a}</button>`).join('')}</div>
+ <button class="btn ghost" id="upnow">📷 Use a photo from this device</button>`,el=>{
+  el.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{S.profile.avatar=b.dataset.a;Store.save();closeSheet();go('me');toast('✅','Avatar updated')});
+  el.querySelector('#upnow').onclick=()=>pickPhoto(u=>{S.profile.avatar=u;Store.save();closeSheet();go('me');toast('📷','Photo avatar set')})})}
 /* ---------- Certificate (canvas → PNG) ---------- */
 function showCert(course){
  sheet(`<h2 style="font-family:var(--disp);font-size:18px;text-align:center;margin-bottom:14px">📜 Certificate of Completion</h2>
  <canvas class="cert-canvas" id="cc" width="900" height="560"></canvas>
  <button class="btn" style="margin-top:14px" id="dl">⬇ Download PNG</button>`,el=>{
   const cv=el.querySelector('#cc'),x=cv.getContext('2d');
-  const g=x.createLinearGradient(0,0,900,560);g.addColorStop(0,'#140E24');g.addColorStop(1,'#0A0714');x.fillStyle=g;x.fillRect(0,0,900,560);
-  x.strokeStyle='#8B5CF6';x.lineWidth=4;x.strokeRect(24,24,852,512);
-  x.strokeStyle='rgba(139,92,246,.35)';x.lineWidth=1.5;x.strokeRect(38,38,824,484);
-  x.textAlign='center';x.fillStyle='#8E86A8';x.font='700 20px Space Grotesk, sans-serif';
+  const g=x.createLinearGradient(0,0,900,560);g.addColorStop(0,'#0A0F0A');g.addColorStop(1,'#000000');x.fillStyle=g;x.fillRect(0,0,900,560);
+  x.strokeStyle='#39FF14';x.lineWidth=4;x.strokeRect(24,24,852,512);
+  x.strokeStyle='rgba(57,255,20,.35)';x.lineWidth=1.5;x.strokeRect(38,38,824,484);
+  x.textAlign='center';x.fillStyle='#8FA396';x.font='700 20px Space Grotesk, sans-serif';
   x.fillText('BG CODE TUTOR · CERTIFICATE OF COMPLETION',450,110);
-  x.fillStyle='#EDE9FE';x.font='900 58px Unbounded, sans-serif';x.fillText(S.profile.name,450,215);
-  x.fillStyle='#C4B5FD';x.font='500 22px Space Grotesk, sans-serif';
+  x.fillStyle='#EAF5EA';x.font='900 58px Unbounded, sans-serif';x.fillText(S.profile.name,450,215);
+  x.fillStyle='#86EFAC';x.font='500 22px Space Grotesk, sans-serif';
   x.fillText('has successfully completed the full course',450,270);
   x.fillStyle='#22D3EE';x.font='700 42px Unbounded, sans-serif';x.fillText(course.ico+'  '+course.name,450,340);
-  x.fillStyle='#8E86A8';x.font='500 18px Space Grotesk, sans-serif';
+  x.fillStyle='#8FA396';x.font='500 18px Space Grotesk, sans-serif';
   x.fillText('Issued '+new Date().toDateString()+'  ·  '+allLessons(course).length+' lessons  ·  100% complete',450,410);
-  x.fillStyle='#8B5CF6';x.font='700 24px Unbounded, sans-serif';x.fillText('— BG —',450,475);
+  x.fillStyle='#39FF14';x.font='700 24px Unbounded, sans-serif';x.fillText('— BG —',450,475);
   el.querySelector('#dl').onclick=()=>{const a=document.createElement('a');a.download=`BG-Certificate-${course.name}.png`;a.href=cv.toDataURL();a.click()};
  });confetti(50)}
 
@@ -1065,12 +1416,15 @@ function showCert(course){
 const AVATARS=['🦊','🐼','🤖','🦄','🐯','🐸','👾','🐙','🦁','🐨','🐳','🚀'];
 function renderOnboarding(){let step=0,av='🤖',goal=10,name='';
  const draw=()=>{const dots=`<div class="dots">${[0,1,2].map(i=>`<i class="${i===step?'on':''}"></i>`).join('')}</div>`;
-  if(step===0)$('#view').innerHTML=`<div class="ob"><div class="art">🚀</div>
+  if(step===0)$('#view').innerHTML=`<div class="ob">
+   <div class="macterm"><div class="tbar"><i></i><i></i><i></i><small>bg — zsh — 80×6</small></div>
+    <div class="tbody"><span class="pr">bg@codetutor ~ %</span> <span id="tt"></span><span class="tcursor"></span></div></div>
    <h1>Learn to code,<br><span class="grad">the fun way</span></h1>
    <p>Bite-size lessons · real code editor · streaks, XP & leagues.<br>Built by BG. 100% free, forever.</p>
    ${dots}<button class="btn" id="nx">Get started</button></div>`;
   else if(step===1)$('#view').innerHTML=`<div class="ob"><h1 style="margin-top:20px">Pick your <span class="grad">avatar</span></h1>
-   <div class="av-grid">${AVATARS.map(a=>`<button class="${a===av?'on':''}" data-a="${a}">${a}</button>`).join('')}</div>
+   <div class="av-grid">${AVATARS.map(a=>`<button class="${a===av?'on':''}" data-a="${a}">${a}</button>`).join('')}
+    <button class="${String(av).startsWith('data:')?'on':''}" id="obup" style="grid-column:span 4;aspect-ratio:auto;padding:12px;font-size:14px;font-weight:700;font-family:var(--ui);display:flex;align-items:center;justify-content:center;gap:8px">${String(av).startsWith('data:')?`<span class="avatar" style="width:34px;height:34px">${avHTML(av)}</span> Photo selected — tap to change`:'📷 Or use a photo from your gallery / files'}</button></div>
    <input class="name-in" id="nm" placeholder="Your name" maxlength="16" value="${esc(name)}">
    <p style="margin:0 0 auto"></p>${dots}<button class="btn" id="nx">Continue</button></div>`;
   else $('#view').innerHTML=`<div class="ob"><h1 style="margin-top:20px">Daily <span class="grad">goal</span>?</h1>
@@ -1078,6 +1432,9 @@ function renderOnboarding(){let step=0,av='🤖',goal=10,name='';
    <div class="goal-row">${[[5,'Chill'],[10,'Steady'],[20,'Intense']].map(([m,l])=>`<button class="${goal===m?'on':''}" data-g="${m}">${m} min<small>${l}</small></button>`).join('')}</div>
    <p style="margin:0 0 auto"></p>${dots}<button class="btn" id="nx">Start learning 🚀</button></div>`;
   $$('[data-a]').forEach(b=>b.onclick=()=>{av=b.dataset.a;Haptic.tap();Sfx.tap();draw()});
+  if($('#obup'))$('#obup').onclick=()=>pickPhoto(u=>{av=u;Haptic.ok();draw()});
+  if(step===0){const el=$('#tt'),msg='Hello, Learn Coding all languages completely free on BG CODE Tutor';let k=0;
+   const iv=setInterval(()=>{if(!el||!el.isConnected){clearInterval(iv);return}el.textContent=msg.slice(0,++k);if(k>=msg.length)clearInterval(iv)},34)}
   $$('[data-g]').forEach(b=>b.onclick=()=>{goal=+b.dataset.g;Haptic.tap();draw()});
   if($('#nm')){$('#nm').oninput=e=>name=e.target.value}
   $('#nx').onclick=()=>{Haptic.tap();Sfx.tap();
@@ -1085,7 +1442,7 @@ function renderOnboarding(){let step=0,av='🤖',goal=10,name='';
    if(step<2){step++;draw()}else{S.profile={name:name.trim(),avatar:av,goal};Gamify.touchStreak();Store.save();confetti(50);Sfx.win();go('home')}};
  };draw()}
 
-function applyTheme(){document.documentElement.dataset.theme=S.theme==='violet'?'':S.theme;
+function applyTheme(){document.documentElement.dataset.theme=(S.theme==='neon'||!S.theme)?'':S.theme;
  document.body.classList.toggle('no-motion',!S.motion)}
 applyTheme();
 Gamify.tickLives();
