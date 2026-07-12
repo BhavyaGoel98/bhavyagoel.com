@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MunimAI</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Tailwind Directive for custom styles -->
+  <style type="text/css">
+    body {
+      background-color: #FAF7F0;
+      color: #1B2A4A;
+    }
+    .neo-border {
+      border: 2px solid #1B2A4A;
+    }
+    .neo-shadow {
+      box-shadow: 4px 4px 0px #1B2A4A;
+    }
+    .neo-shadow-lg {
+      box-shadow: 8px 8px 0px #1B2A4A;
+    }
+    .neo-shadow-accent {
+      box-shadow: 4px 4px 0px #E8A33D;
+    }
+    .neo-shadow-red {
+      box-shadow: 4px 4px 0px #B3402A;
+    }
+    .ledger-ruled {
+      background-size: 100% 2rem;
+      background-image: linear-gradient(to bottom, transparent 49%, #1B2A4A10 50%, #1B2A4A10 52%, transparent 53%);
+    }
+  </style>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans min-h-screen flex flex-col justify-between selection:bg-[#E8A33D]/20">
+
+  <!-- Alpine.js for lightweight interactive state -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <div x-data="munimApp()" x-init="init()" class="flex flex-col min-h-screen">
+    
+    <!-- App Header -->
+    <header class="bg-white border-b-2 border-[#1B2A4A] sticky top-0 z-30">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        
+        <!-- Brand & Challenge Badge -->
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <div class="w-10 h-10 rounded bg-[#1B2A4A] flex items-center justify-center text-white flex-shrink-0 border-2 border-[#1B2A4A] neo-shadow-accent">
+            <svg viewBox="0 0 64 64" class="w-7 h-7" aria-hidden="true">
+              <path d="M15 48V17l17 16 17-16v31" fill="none" stroke="#E8A33D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-xl font-serif font-bold text-[#1B2A4A] leading-tight flex items-center gap-2">
+              MunimAI <span class="text-xs bg-[#E8A33D] text-[#1B2A4A] px-1.5 py-0.5 rounded font-mono font-bold uppercase border border-[#1B2A4A]">Offline</span>
+            </h1>
+            <p class="text-[10px] text-[#68748A]">
+              Built for <strong class="text-[#1B2A4A]">Raj Shamani × Emergent Builder's Challenge</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Global Language Toggle and Main Navigation -->
+        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-end">
+          
+          <!-- Staff UI Language Toggle -->
+          <div class="flex p-0.5 bg-[#FAF7F0] border-2 border-[#1B2A4A] rounded">
+            <button @click="toggleStaffLang('English')" :class="staffLang === 'English' ? 'bg-[#1B2A4A] text-white' : 'text-[#1B2A4A] hover:bg-[#FAF7F0]'" class="px-2.5 py-1 text-xs font-bold rounded transition-all">
+              EN
+            </button>
+            <button @click="toggleStaffLang('Hindi')" :class="staffLang === 'Hindi' ? 'bg-[#1B2A4A] text-white' : 'text-[#1B2A4A] hover:bg-[#FAF7F0]'" class="px-2.5 py-1 text-xs font-bold rounded transition-all">
+              हिंदी
+            </button>
+          </div>
+
+          <!-- Section Navigation Buttons -->
+          <nav class="flex gap-1.5">
+            <button @click="activeTab = 'dashboard'" :class="activeTab === 'dashboard' ? 'bg-[#E8A33D] text-[#1B2A4A]' : 'bg-white hover:bg-[#FAF7F0]'" class="px-3 py-1.5 text-xs font-bold border-2 border-[#1B2A4A] rounded transition-all neo-shadow active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+              <span x-text="t('Dashboard', 'डैशबोर्ड')"></span>
+            </button>
+            <button @click="activeTab = 'clients'" :class="activeTab === 'clients' ? 'bg-[#E8A33D] text-[#1B2A4A]' : 'bg-white hover:bg-[#FAF7F0]'" class="px-3 py-1.5 text-xs font-bold border-2 border-[#1B2A4A] rounded transition-all neo-shadow active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+              <span x-text="t('Client Files', 'क्लाइंट फोल्डर')"></span>
+            </button>
+            <button @click="activeTab = 'settings'" :class="activeTab === 'settings' ? 'bg-[#E8A33D] text-[#1B2A4A]' : 'bg-white hover:bg-[#FAF7F0]'" class="px-3 py-1.5 text-xs font-bold border-2 border-[#1B2A4A] rounded transition-all neo-shadow active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+              <span x-text="t('Settings', 'सेटिंग्स')"></span>
+            </button>
+            <button @click="activeTab = 'portal'" :class="activeTab === 'portal' ? 'bg-[#B3402A] text-white' : 'bg-white hover:bg-[#FAF7F0] text-[#B3402A]'" class="px-3 py-1.5 text-xs font-bold border-2 border-[#1B2A4A] rounded transition-all neo-shadow active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+              <span x-text="t('Simulate Portal', 'क्लाइंट पोर्टल')"></span>
+            </button>
+          </nav>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="max-w-7xl w-full mx-auto px-4 py-8 flex-1">
+      
+      <!-- ================== 1. DASHBOARD TAB ================== -->
+      <div x-show="activeTab === 'dashboard'" class="space-y-8" x-transition>
+        
+        <!-- Hero Overview Banner -->
+        <section class="bg-white border-2 border-[#1B2A4A] rounded p-6 sm:p-8 neo-shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+          <div class="absolute right-[-20px] top-[-20px] w-32 h-32 rounded-full border-2 border-[#E8A33D]/20 pointer-events-none"></div>
+          <div class="space-y-2 relative z-10">
+            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-[#E8A33D] bg-[#1B2A4A] px-2 py-0.5 rounded border border-[#1B2A4A]">
+              Practice Overview &bull; लाइव रिपोर्ट
+            </span>
+            <h2 class="text-3xl font-serif font-bold" x-text="t('S. L. Goel & Associates', 'एस. एल. गोयल एंड एसोसिएट्स')"></h2>
+            <p class="text-sm text-[#68748A]" x-text="t('Interactive MunimAI offline workspace companion.', 'मुनीमएआई ऑफलाइन कार्यालय और क्लाइंट पोर्टल सिमुलेटर।')"></p>
+          </div>
+          
+          <div class="flex items-center gap-2.5">
+            <button @click="showAddClientModal = true" class="px-4 py-2.5 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-1.5">
+              <i data-lucide="folder-plus" class="w-4 h-4"></i> <span x-text="t('Create Client Folder', 'नया क्लाइंट फोल्डर')"></span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white border-2 border-[#1B2A4A] p-5 rounded neo-shadow">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-mono font-bold text-[#68748A]" x-text="t('ACTIVE CLIENTS', 'सक्रिय करदाता')"></span>
+              <span class="p-1 bg-[#FAF7F0] border border-[#1B2A4A]/20 rounded"><i data-lucide="users" class="w-4 h-4 text-[#E8A33D]"></i></span>
+            </div>
+            <p class="text-3xl font-serif font-bold mt-2" x-text="clients.length"></p>
+          </div>
+          <div class="bg-white border-2 border-[#1B2A4A] p-5 rounded neo-shadow">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-mono font-bold text-[#68748A]" x-text="t('TOTAL OUTSTANDING', 'कुल बकाया शुल्क')"></span>
+              <span class="p-1 bg-[#FAF7F0] border border-[#1B2A4A]/20 rounded"><i data-lucide="credit-card" class="w-4 h-4 text-[#B3402A]"></i></span>
+            </div>
+            <p class="text-3xl font-serif font-bold mt-2 text-[#B3402A]">₹<span x-text="getTotalOutstanding()"></span></p>
+          </div>
+          <div class="bg-white border-2 border-[#1B2A4A] p-5 rounded neo-shadow">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-mono font-bold text-[#68748A]" x-text="t('PENDING DOCUMENTS', 'लंबित दस्तावेज')"></span>
+              <span class="p-1 bg-[#FAF7F0] border border-[#1B2A4A]/20 rounded"><i data-lucide="file-text" class="w-4 h-4 text-[#E8A33D]"></i></span>
+            </div>
+            <p class="text-3xl font-serif font-bold mt-2" x-text="getPendingDocsCount()"></p>
+          </div>
+          <div class="bg-white border-2 border-[#1B2A4A] p-5 rounded neo-shadow">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-mono font-bold text-[#68748A]" x-text="t('COMPLIANCE SCORE', 'अनुपालन स्कोर')"></span>
+              <span class="p-1 bg-[#FAF7F0] border border-[#1B2A4A]/20 rounded"><i data-lucide="check-circle-2" class="w-4 h-4 text-[#2E7D4F]"></i></span>
+            </div>
+            <p class="text-3xl font-serif font-bold mt-2 text-[#2E7D4F]"><span x-text="getComplianceScore()"></span>%</p>
+          </div>
+        </section>
+
+        <!-- Main Dashboard Actions & Lists Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Bulk Follow-up Action Card -->
+          <div class="lg:col-span-4 bg-[#1B2A4A] text-white p-6 rounded border-2 border-[#1B2A4A] neo-shadow-accent space-y-4">
+            <h3 class="font-serif font-bold text-lg text-[#E8A33D] flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-5 h-5 text-[#E8A33D]"></i> <span x-text="t('Smart Follow-ups', 'स्मार्ट फॉलो-अप')"></span>
+            </h3>
+            <p class="text-xs text-[#cbd3e1] leading-relaxed">
+              Scan all files to identify clients with pending checklists and trigger automated bilingual emails or WhatsApp templates with specific required files.
+            </p>
+            <div class="pt-2">
+              <button @click="triggerBulkQueue()" class="w-full py-2.5 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[2px_2px_0_#ffffff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center justify-center gap-1.5">
+                ✦ <span x-text="t('Start Follow-up Queue', 'फॉलो-अप सूची शुरू करें')"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Client Overview List -->
+          <div class="lg:col-span-8 bg-white border-2 border-[#1B2A4A] rounded shadow-[6px_6px_0_#1B2A4A] overflow-hidden">
+            <div class="p-4 border-b-2 border-[#1B2A4A] bg-[#FAF7F0] flex justify-between items-center">
+              <h3 class="font-serif font-bold text-base text-[#1B2A4A]" x-text="t('Active Client Files', 'सक्रिय करदाता फाइलें')"></h3>
+              <span class="text-xs font-bold text-[#68748A]" x-text="clients.length + ' registered'"></span>
+            </div>
+            
+            <div class="divide-y-2 divide-[#1B2A4A]/10">
+              <template x-for="client in clients" :key="client.id">
+                <div class="p-4 flex justify-between items-center hover:bg-[#FAF7F0]/30 transition-all">
+                  <div class="space-y-1">
+                    <strong class="block text-sm text-[#1B2A4A]" x-text="client.name"></strong>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#FAF7F0] border border-[#1B2A4A]/20" x-text="client.business"></span>
+                      <template x-for="srv in client.services">
+                        <span class="text-[9px] font-mono font-bold bg-[#E7EBF4] text-[#1B2A4A] px-1 rounded" x-text="srv"></span>
+                      </template>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center gap-2">
+                    <button @click="viewClientDetails(client)" class="px-3 py-1.5 bg-white hover:bg-[#FAF7F0] border-2 border-[#1B2A4A] text-xs font-bold rounded transition-all neo-shadow">
+                      <span x-text="t('Manage Folder', 'फाइल खोलें')"></span> &rarr;
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================== 2. CLIENT FILES TAB ================== -->
+      <div x-show="activeTab === 'clients'" class="space-y-8" x-transition>
+        
+        <!-- Selected Client detail view or list view -->
+        <div x-show="selectedClient === null" class="space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-serif font-bold" x-text="t('CA Firm Client Directories', 'क्लाइंट फोल्डर डायरेक्टरी')"></h2>
+            <button @click="showAddClientModal = true" class="px-4 py-2 bg-[#1B2A4A] text-white border-2 border-[#1B2A4A] font-bold text-xs rounded neo-shadow-accent flex items-center gap-1.5">
+              + <span x-text="t('New Client File', 'नया फोल्डर जोड़ें')"></span>
+            </button>
+          </div>
+
+          <!-- Clients Table / Directory -->
+          <div class="bg-white border-2 border-[#1B2A4A] rounded shadow-[6px_6px_0_#1B2A4A] overflow-hidden">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#FAF7F0] border-b-2 border-[#1B2A4A] text-xs font-mono font-bold text-[#1B2A4A]">
+                  <th class="p-4" x-text="t('CLIENT NAME', 'करदाता का नाम')"></th>
+                  <th class="p-4" x-text="t('BUSINESS / FIRM', 'व्यवसाय / फर्म')"></th>
+                  <th class="p-4" x-text="t('SERVICES', 'सेवाएं')"></th>
+                  <th class="p-4" x-text="t('FEE BALANCE', 'बकाया फीस')"></th>
+                  <th class="p-4" x-text="t('ACTION', 'कार्रवाई')"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y-2 divide-[#1B2A4A]/10 text-sm">
+                <template x-for="client in clients" :key="client.id">
+                  <tr class="hover:bg-[#FAF7F0]/30 transition-all">
+                    <td class="p-4 font-bold text-[#1B2A4A]" x-text="client.name"></td>
+                    <td class="p-4 text-[#68748A]" x-text="client.business"></td>
+                    <td class="p-4">
+                      <div class="flex gap-1.5 flex-wrap">
+                        <template x-for="srv in client.services">
+                          <span class="text-[10px] font-bold bg-[#FAF7F0] border border-[#1B2A4A]/30 px-1.5 rounded" x-text="srv"></span>
+                        </template>
+                      </div>
+                    </td>
+                    <td class="p-4 font-mono font-bold" :class="client.outstandingFees > 0 ? 'text-[#B3402A]' : 'text-[#2E7D4F]'">
+                      ₹<span x-text="client.outstandingFees"></span>
+                    </td>
+                    <td class="p-4">
+                      <button @click="viewClientDetails(client)" class="px-2.5 py-1 bg-white hover:bg-[#FAF7F0] border-2 border-[#1B2A4A] text-xs font-bold rounded transition-all neo-shadow">
+                        <span x-text="t('Open File', 'फाइल खोलें')"></span>
+                      </button>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CLIENT FILE DETAILS PANEL -->
+        <div x-show="selectedClient !== null" class="space-y-6">
+          <div class="flex items-center justify-between">
+            <button @click="selectedClient = null" class="flex items-center gap-1.5 text-xs font-serif font-bold text-[#68748A] hover:text-[#1B2A4A] italic transition-all">
+              &larr; <span x-text="t('Back to Directory', 'क्लाइंट सूची पर लौटें')"></span>
+            </button>
+            <span class="text-xs text-[#68748A]">
+              <span x-text="t('Preferred Communication Language', 'पसंदीदा संपर्क भाषा')"></span>: <strong class="text-[#1B2A4A]" x-text="selectedClient?.language"></strong>
+            </span>
+          </div>
+
+          <!-- Client details banner card -->
+          <div class="bg-white border-2 border-[#1B2A4A] rounded p-6 shadow-[6px_6px_0_#1B2A4A] flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative">
+            <div class="space-y-2">
+              <h2 class="text-3xl font-serif font-bold text-[#1B2A4A]" x-text="selectedClient?.name"></h2>
+              <p class="text-xs text-[#68748A] font-mono" x-text="selectedClient?.business + ' &bull; GSTIN: ' + (selectedClient?.pan || 'Not Configured')"></p>
+              
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <template x-for="srv in selectedClient?.services">
+                  <span class="text-[10px] font-extrabold bg-[#FAF7F0] border border-[#1B2A4A]/30 text-[#1B2A4A] px-2 py-0.5 rounded" x-text="srv"></span>
+                </template>
+              </div>
+            </div>
+
+            <!-- Follow up trigger CTAs -->
+            <div class="flex flex-wrap gap-2.5 w-full md:w-auto">
+              <button @click="openAIPhoneLogModal()" class="px-4 py-2 bg-white border-2 border-[#1B2A4A] text-[#1B2A4A] hover:bg-[#FAF7F0] text-xs font-bold rounded shadow-[2px_2px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-1.5">
+                <i data-lucide="mic" class="w-4 h-4 text-[#E8A33D]"></i> <span x-text="t('Voice Note', 'वॉइस नोट')"></span>
+              </button>
+              <button @click="openFollowUpModal()" class="px-5 py-2 bg-[#1B2A4A] hover:bg-[#0f1d35] text-white border-2 border-[#1B2A4A] font-bold text-xs rounded flex items-center gap-1.5 shadow-[2px_2px_0_#E8A33D] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+                ✦ <span x-text="t('AI Follow-up', 'एआई फॉलो-अप')"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Document checklist and activity sidebar ledger -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Document Checklist Ledger -->
+            <div class="lg:col-span-8 bg-white border-2 border-[#1B2A4A] rounded shadow-[6px_6px_0_#1B2A4A] overflow-hidden">
+              <div class="p-6 border-b-2 border-[#1B2A4A] bg-[#FAF7F0] flex justify-between items-center">
+                <div>
+                  <h3 class="font-serif font-bold text-lg text-[#1B2A4A]" x-text="t('Smart Document Checklist', 'दस्तावेज़ चेकलिस्ट')"></h3>
+                  <p class="text-xs text-[#68748A]" x-text="t('Manage document verification status.', 'चेकलिस्ट की वर्तमान स्थिति प्रबंधित करें।')"></p>
+                </div>
+                <button @click="showAddCustomChecklistItemModal = true" class="px-3 py-1.5 bg-white border-2 border-[#1B2A4A] hover:bg-[#FAF7F0] text-xs font-bold text-[#1B2A4A] rounded shadow-[2px_2px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+                  + <span x-text="t('Add Item', 'चेकलिस्ट जोड़ें')"></span>
+                </button>
+              </div>
+
+              <!-- Checklist list ledger -->
+              <div class="divide-y-2 divide-[#1B2A4A]/10">
+                <template x-for="item in selectedClient?.checklist" :key="item.id">
+                  <div class="p-6 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                      
+                      <div class="flex items-start gap-3 min-w-0">
+                        <div class="w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs mt-0.5 flex-shrink-0 border-2"
+                             :class="item.status === 'Verified' ? 'bg-[#2E7D4F] border-[#1B2A4A] text-white' : item.status === 'Received' ? 'bg-[#E8A33D] border-[#1B2A4A] text-white' : 'border-[#1B2A4A]'">
+                          <span x-text="item.status === 'Verified' ? '✓' : item.status === 'Received' ? '↓' : ''"></span>
+                        </div>
+                        <div>
+                          <h4 class="font-bold text-[#1B2A4A] text-sm" x-text="item.title"></h4>
+                          <span class="text-[10px] text-[#68748A] font-extrabold uppercase" x-text="item.service"></span>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-2">
+                        <select x-model="item.status" @change="saveToStorage()" class="text-xs font-bold border-2 border-[#1B2A4A] rounded px-2.5 py-1.5 bg-white text-[#1B2A4A] focus:ring-2 focus:ring-[#E8A33D] focus:outline-none">
+                          <option value="Pending">Pending / प्रतीक्षित</option>
+                          <option value="Received">Received / अपलोडेड</option>
+                          <option value="Verified">Verified / सत्यापित</option>
+                        </select>
+                        
+                        <button @click="simulateAIVisionRead(item)" :disabled="item.status !== 'Received'" class="px-3 py-1.5 bg-[#1B2A4A] text-white text-xs font-bold border-2 border-[#1B2A4A] rounded hover:bg-[#0f1d35] flex items-center gap-1.5 shadow-[2px_2px_0_#E8A33D] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-50">
+                          ✦ <span x-text="t('AI vision read', 'एआई विज़न')"></span>
+                        </button>
+                      </div>
+
+                    </div>
+
+                    <!-- AI Verification Output simulation -->
+                    <div x-show="item.aiResult" class="ml-8 p-4 bg-[#F7FCF8] border-2 border-[#2E7D4F] rounded shadow-[3px_3px_0_#2E7D4F] space-y-3">
+                      <div class="flex items-center justify-between border-b-2 border-[#2E7D4F]/30 pb-2">
+                        <span class="text-xs font-bold text-[#2E7D4F] flex items-center gap-1.5 font-serif italic">
+                          <i data-lucide="check-circle-2" class="w-4 h-4"></i> AI Document Read Result
+                        </span>
+                        <span class="text-[10px] font-extrabold uppercase bg-[#E5F3E9] text-[#2E7D4F] border border-[#2E7D4F]/20 px-2 py-0.5 rounded" x-text="item.aiResult?.confidence + '% confidence'"></span>
+                      </div>
+                      <p class="text-xs text-[#1B2A4A]" x-text="item.aiResult?.text"></p>
+                    </div>
+
+                  </div>
+                </template>
+              </div>
+
+            </div>
+
+            <!-- Client Info / Outstanding Fees card & Activity timeline -->
+            <div class="lg:col-span-4 space-y-6">
+              
+              <!-- Outstanding Fees and Reminder Card -->
+              <div class="bg-white border-2 border-[#1B2A4A] p-6 rounded shadow-[4px_4px_0_#1B2A4A] space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-[#FAF7F0]">
+                  <h3 class="font-serif font-bold text-lg text-[#1B2A4A]" x-text="t('Fee Status', 'फीस स्थिति')"></h3>
+                  <i data-lucide="credit-card" class="w-5 h-5 text-[#E8A33D]"></i>
+                </div>
+
+                <div class="space-y-1">
+                  <span class="text-xs text-[#68748A]" x-text="t('OUTSTANDING AMOUNT', 'शेष भुगतान')"></span>
+                  <p class="text-3xl font-serif font-extrabold text-[#B3402A]">₹<span x-text="selectedClient?.outstandingFees"></span></p>
+                </div>
+
+                <button @click="openFeeReminderModal()" class="w-full mt-2 py-2.5 bg-[#FFF0CF] hover:bg-[#ffe5b5] text-[#845b0e] font-bold text-xs rounded border-2 border-[#1B2A4A] shadow-[2px_2px_0_#1B2A4A] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center justify-center gap-1.5">
+                  ₹ <span x-text="t('AI Fee Reminder', 'एआई फीस स्मरणपत्र')"></span>
+                </button>
+              </div>
+
+              <!-- Activity Timeline Log -->
+              <div class="bg-white border-2 border-[#1B2A4A] p-6 rounded shadow-[4px_4px_0_#1B2A4A] space-y-4">
+                <div class="pb-3 border-b-2 border-[#1B2A4A]">
+                  <h3 class="font-serif font-bold text-lg text-[#1B2A4A]" x-text="t('Activity Log', 'गतिविधि इतिहास')"></h3>
+                  <p class="text-[10px] text-[#68748A]" x-text="t('History of follow-ups and uploads.', 'संपर्क इतिहास।')"></p>
+                </div>
+
+                <div class="space-y-4 max-h-60 overflow-y-auto">
+                  <template x-for="log in selectedClient?.logs">
+                    <div class="flex items-start gap-2.5 text-xs">
+                      <span class="w-2 h-2 rounded-full bg-[#E8A33D] mt-1.5"></span>
+                      <div>
+                        <p class="font-bold text-[#1B2A4A]" x-text="log.text"></p>
+                        <span class="text-[10px] text-[#68748A]" x-text="log.date"></span>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================== 3. SETTINGS TAB ================== -->
+      <div x-show="activeTab === 'settings'" class="space-y-8" x-transition>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Firm Master Profile details form -->
+          <div class="lg:col-span-7 bg-white border-2 border-[#1B2A4A] p-6 sm:p-8 rounded shadow-[6px_6px_0_#1B2A4A] space-y-6">
+            <div class="border-b-2 border-[#1B2A4A] pb-3 flex items-center gap-2">
+              <i data-lucide="settings" class="w-5 h-5 text-[#E8A33D]"></i>
+              <h3 class="font-serif font-bold text-[#1B2A4A] text-lg" x-text="t('Firm Profile Details', 'सीए फर्म मास्टर प्रोफाइल')"></h3>
+            </div>
+
+            <form @submit.prevent="saveFirmProfile()" class="space-y-4">
+              <div class="space-y-1">
+                <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Registered Firm Legal Name *', 'फर्म का कानूनी नाम *')"></label>
+                <input type="text" x-model="firm.name" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" required>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Official WhatsApp Number *', 'आधिकारिक व्हाट्सएप नंबर *')"></label>
+                  <input type="text" x-model="firm.whatsapp" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" required>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Preferred Firm UPI ID *', 'यूपीआई आईडी *')"></label>
+                  <input type="text" x-model="firm.upi" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" required>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Firm Email Signature', 'ईमेल हस्ताक्षर')"></label>
+                <input type="text" x-model="firm.signature" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none">
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Firm Address', 'कार्यालय का पता')"></label>
+                <textarea x-model="firm.address" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-xs h-20 bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none"></textarea>
+              </div>
+
+              <div class="pt-4 border-t-2 border-[#FAF7F0] flex justify-end">
+                <button type="submit" class="px-5 py-2.5 bg-[#1B2A4A] hover:bg-[#0f1d35] text-white border-2 border-[#1B2A4A] font-bold text-xs rounded flex items-center gap-1.5 shadow-[2px_2px_0_#E8A33D] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+                  <i data-lucide="save" class="w-4 h-4 text-[#E8A33D]"></i> <span x-text="t('Save Profile', 'प्रोफाइल सहेजें')"></span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Staff Registry -->
+          <div class="lg:col-span-5 bg-white border-2 border-[#1B2A4A] p-6 sm:p-8 rounded shadow-[4px_4px_0_#1B2A4A] space-y-6">
+            <div class="border-b-2 border-[#1B2A4A] pb-3 flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <i data-lucide="users" class="w-5 h-5 text-[#E8A33D]"></i>
+                <h3 class="font-serif font-bold text-[#1B2A4A] text-lg" x-text="t('Office Staff', 'कर्मचारी प्रबंधन')"></h3>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <template x-for="member in staff" :key="member.email">
+                <div class="p-3 bg-[#FAF7F0]/40 border-2 border-[#1B2A4A]/20 rounded flex justify-between items-center text-xs">
+                  <div>
+                    <strong class="block text-sm text-[#1B2A4A]" x-text="member.name"></strong>
+                    <span class="text-[#68748A]" x-text="member.email"></span>
+                  </div>
+                  <span class="px-2.5 py-1 bg-[#FAF7F0] border border-[#1B2A4A]/30 text-[10px] font-extrabold rounded" x-text="member.role"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================== 4. CLIENT SIMULATED PORTAL TAB ================== -->
+      <div x-show="activeTab === 'portal'" class="space-y-6" x-transition>
+        
+        <section class="bg-white border-2 border-[#1B2A4A] rounded p-6 shadow-[6px_6px_0_#B3402A] space-y-4">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b-2 border-[#1B2A4A] pb-4">
+            <div>
+              <h2 class="text-2xl font-serif font-bold text-[#B3402A]" x-text="t('Simulate Client Upload Portal', 'करदाता दस्तावेज़ अपलोड पोर्टल')"></h2>
+              <p class="text-xs text-[#68748A]" x-text="t('Simulates how clients see and upload files.', 'करदाता के मोबाइल का इंटरफ़ेस सिमुलेशन।')"></p>
+            </div>
+            
+            <!-- Language toggle for client view -->
+            <div class="flex gap-1 p-1 bg-[#FAF7F0] border-2 border-[#1B2A4A] rounded flex-shrink-0">
+              <button @click="portalLang = 'English'" :class="portalLang === 'English' ? 'bg-[#1B2A4A] text-white' : 'text-[#68748A] hover:bg-[#FAF7F0]'" class="px-3 py-1 text-[10px] font-extrabold rounded transition-all">
+                EN
+              </button>
+              <button @click="portalLang = 'Hindi'" :class="portalLang === 'Hindi' ? 'bg-[#1B2A4A] text-white' : 'text-[#68748A] hover:bg-[#FAF7F0]'" class="px-3 py-1 text-[10px] font-extrabold rounded transition-all">
+                हिंदी
+              </button>
+            </div>
+          </div>
+
+          <!-- Select simulated client -->
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-bold text-[#1B2A4A]">Simulate as Client:</span>
+            <select x-model="simulatedClientId" class="text-xs font-bold border-2 border-[#1B2A4A] rounded px-3 py-1.5 bg-white text-[#1B2A4A]">
+              <template x-for="c in clients" :key="c.id">
+                <option :value="c.id" x-text="c.name"></option>
+              </template>
+            </select>
+          </div>
+        </section>
+
+        <!-- Simulated Mobile Portal Screen -->
+        <div class="max-w-xl mx-auto bg-white border-2 border-[#1B2A4A] rounded-2xl shadow-[8px_8px_0px_#1B2A4A] overflow-hidden">
+          
+          <!-- Portal Header branding -->
+          <div class="bg-[#1B2A4A] text-white p-5 border-b-2 border-[#1B2A4A]">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-serif font-bold text-sm text-[#E8A33D]" x-text="firm.name"></h4>
+                <span class="text-[9px] text-[#ccd5e5] block tracking-wide uppercase font-extrabold">SECURE CLIENT WORKSPACE PORTAL</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[9px] bg-[#E8A33D] text-[#1B2A4A] font-mono font-bold uppercase">SSL Verified</span>
+            </div>
+          </div>
+
+          <!-- Portal main content list -->
+          <div class="p-6 space-y-6">
+            <div class="space-y-1">
+              <span class="text-[10px] font-extrabold text-[#E8A33D] block uppercase tracking-widest" x-text="tPortal('WELCOME CLIENT', 'नमस्कार')"></span>
+              <h3 class="text-xl font-serif font-bold text-[#1B2A4A]" x-text="tPortal('Welcome back, ' + getSimulatedClient()?.name, getSimulatedClient()?.name + ' जी का स्वागत है')"></h3>
+              <p class="text-xs text-[#68748A] leading-relaxed" x-text="tPortal('Please upload the following documents requested by our office to finalize your tax filings.', 'आपके टैक्स फाइलिंग को अंतिम रूप देने के लिए हमारे कार्यालय द्वारा अनुरोधित निम्नलिखित दस्तावेज़ अपलोड करें।')"></p>
+            </div>
+
+            <!-- Pending uploads checklists -->
+            <div class="space-y-3 pt-2">
+              <template x-for="item in getSimulatedClient()?.checklist" :key="item.id">
+                <div class="p-4 border-2 rounded flex justify-between items-center gap-4 transition-all"
+                     :class="item.status === 'Verified' ? 'bg-[#F7FCF8] border-[#2E7D4F] shadow-[2px_2px_0_#2E7D4F]' : item.status === 'Received' ? 'bg-[#FAF7F0] border-[#E8A33D] shadow-[2px_2px_0_#E8A33D]' : 'bg-white border-[#1B2A4A] shadow-[2px_2px_0_#1B2A4A]'">
+                  
+                  <div class="flex items-center gap-3">
+                    <span class="w-4 h-4 rounded-full flex items-center justify-center border text-[9px] font-bold"
+                          :class="item.status === 'Verified' ? 'bg-[#2E7D4F] text-white border-[#2E7D4F]' : 'border-[#1B2A4A]'">
+                      <span x-text="item.status === 'Verified' ? '✓' : ''"></span>
+                    </span>
+                    <div>
+                      <strong class="block text-xs text-[#1B2A4A]" x-text="item.title"></strong>
+                      <span class="text-[9px] text-[#68748A] font-bold block uppercase" x-text="item.service"></span>
+                    </div>
+                  </div>
+
+                  <!-- Simulated upload trigger button -->
+                  <div>
+                    <button @click="simulatePortalUpload(item)" :disabled="item.status === 'Verified'"
+                            class="px-3 py-1.5 border-2 text-xs font-bold rounded transition-all flex items-center gap-1 shadow-[2px_2px_0_#1B2A4A] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 disabled:opacity-50"
+                            :class="item.status !== 'Pending' ? 'bg-[#2E7D4F] text-white border-[#2E7D4F]' : 'bg-white text-[#1B2A4A] border-[#1B2A4A]'">
+                      <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                      <span x-text="item.status === 'Pending' ? tPortal('Upload', 'अपलोड') : tPortal('Uploaded ✓', 'सफल ✓')"></span>
+                    </button>
+                  </div>
+
+                </div>
+              </template>
+            </div>
+
+            <!-- Outstanding billing call to action if any -->
+            <div x-show="getSimulatedClient()?.outstandingFees > 0" class="p-4 bg-[#FFF0CF] border-2 border-[#1B2A4A] rounded-xl neo-shadow flex items-center justify-between gap-4">
+              <div>
+                <span class="text-[9px] font-extrabold text-[#845b0e] block uppercase">PENDING PROFESSIONAL FEES</span>
+                <p class="text-sm font-serif font-bold text-[#1B2A4A]">Outstanding: ₹<span x-text="getSimulatedClient()?.outstandingFees"></span></p>
+              </div>
+              <button @click="alert('Simulating UPI Payment: ' + firm.upi)" class="px-3 py-1.5 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded">
+                Pay UPI
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Secure portal footer -->
+          <footer class="bg-[#121D33] text-[#cbd3e1] py-6 border-t-2 border-[#1B2A4A] text-center text-[10px]">
+            <p>&copy; 2026 MunimAI Secure Portal. SSL Encrypted.</p>
+          </footer>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Global App Footer Branding for Emerging Challenge -->
+    <footer class="bg-[#121D33] text-[#cbd3e1] py-8 border-t-2 border-[#1B2A4A] text-center text-xs print:hidden">
+      <p class="font-serif font-bold text-sm">MunimAI Offline Workspace Utility</p>
+      <p class="mt-2 opacity-75">
+        Built on <span class="font-bold text-[#E8A33D]">Emergent</span> for the <span class="font-bold text-white">Raj Shamani × Emergent Builder's Challenge</span>.
+      </p>
+    </footer>
+
+    <!-- ================== AI FOLLOW-UP MODAL SIMULATOR ================== -->
+    <div x-show="showFollowUpModal" class="fixed inset-0 bg-[#1B2A4A]/40 backdrop-blur-xs flex items-center justify-center p-4 z-50" x-transition>
+      <div class="bg-[#FAF7F0] border-2 border-[#1B2A4A] max-w-xl w-full rounded shadow-[8px_8px_0_#1B2A4A] overflow-hidden">
+        
+        <div class="bg-[#1B2A4A] text-white p-6 flex justify-between items-center border-b-2 border-[#1B2A4A]">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-[#E8A33D]" x-text="t('AI Follow-up Writer', 'एआई फॉलो-अप लेखक')"></h3>
+            <p class="text-xs text-[#cbd3e1] mt-1" x-text="t('Drafts target pending checklist items.', 'यह आपकी फाइल की सूची के आधार पर संदेश लिखता है।')"></p>
+          </div>
+          <button @click="showFollowUpModal = false" class="text-white text-xl font-bold">&times;</button>
+        </div>
+
+        <div class="p-6 space-y-4 bg-white text-[#1B2A4A]">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Drafting Language', 'भाषा')"></label>
+              <select x-model="followUpLanguage" class="w-full border-2 border-[#1B2A4A] rounded px-2.5 py-1.5 text-xs bg-white">
+                <option value="English">English</option>
+                <option value="Hindi">Hindi / हिंदी</option>
+              </select>
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Message Tone', 'टोने')"></label>
+              <select class="w-full border-2 border-[#1B2A4A] rounded px-2.5 py-1.5 text-xs bg-white">
+                <option>Warm & professional</option>
+                <option>Concise / संक्षेप</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-[#1B2A4A] block" x-text="t('Pre-filled Message Preview', 'मैसेज ड्राफ्ट')"></label>
+            <textarea x-model="followUpDraftText" class="w-full h-44 bg-white border-2 border-[#1B2A4A] rounded p-3 text-xs leading-relaxed font-mono focus:ring-2 focus:ring-[#E8A33D] focus:outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="bg-[#FAF7F0] border-t-2 border-[#1B2A4A] p-4 flex flex-wrap justify-between gap-3">
+          <button @click="sendFollowUpMail()" class="px-4 py-2 border-2 border-[#1B2A4A] hover:bg-[#FAF7F0] font-bold text-xs rounded flex items-center gap-1.5 transition-all">
+            <i data-lucide="mail" class="w-4 h-4 text-[#68748A]"></i> <span x-text="t('Email draft', 'ईमेल भेजें')"></span>
+          </button>
+          
+          <div class="flex gap-2">
+            <button @click="showFollowUpModal = false" class="px-4 py-2 border-2 border-[#1B2A4A] hover:bg-[#FAF7F0] font-bold text-xs rounded transition-all">
+              <span x-text="t('Cancel', 'रद्द करें')"></span>
+            </button>
+            <button @click="sendFollowUpMail()" class="px-5 py-2 bg-white text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-1.5">
+              <i data-lucide="mail" class="w-3.5 h-3.5 text-[#E8A33D]"></i> <span x-text="t('Send via Email', 'ईमेल द्वारा भेजें')"></span>
+            </button>
+            <button @click="sendFollowUpWhatsApp()" class="px-5 py-2 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+              <span x-text="t('Send on WhatsApp ↗', 'WhatsApp पर भेजें ↗')"></span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================== AI PHONE LOG DICTATOR MODAL ================== -->
+    <div x-show="showVoiceModal" class="fixed inset-0 bg-[#1B2A4A]/40 backdrop-blur-xs flex items-center justify-center p-4 z-50" x-transition>
+      <div class="bg-[#FAF7F0] border-2 border-[#1B2A4A] max-w-md w-full rounded shadow-[8px_8px_0_#1B2A4A] overflow-hidden">
+        
+        <div class="bg-[#1B2A4A] text-white p-6 flex justify-between items-center border-b-2 border-[#1B2A4A]">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-[#E8A33D]" x-text="t('Dictate Call Notes', 'कॉल नोट्स बोलकर लिखें')"></h3>
+            <p class="text-xs text-[#cbd3e1] mt-1" x-text="t('Hands-free logs during client calls.', 'कॉल के दौरान बोलकर टिप्पणी दर्ज करें।')"></p>
+          </div>
+          <button @click="showVoiceModal = false" class="text-white text-xl font-bold">&times;</button>
+        </div>
+
+        <div class="p-6 space-y-4 bg-white text-[#1B2A4A]">
+          <div class="flex justify-center py-4">
+            <button @click="toggleRecording()" :class="isRecording ? 'bg-[#B3402A] animate-pulse' : 'bg-[#1B2A4A] hover:bg-[#0f1d35]'" class="w-16 h-16 rounded-full flex items-center justify-center text-white border-2 border-[#1B2A4A] transition-all shadow-[4px_4px_0_#1B2A4A]">
+              <i x-show="!isRecording" data-lucide="mic" class="w-7 h-7"></i>
+              <i x-show="isRecording" data-lucide="mic-off" class="w-7 h-7"></i>
+            </button>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-[#1B2A4A] block" x-text="t('Extracted Transcription Preview', 'टिप्पणी ड्राफ्ट')"></label>
+            <textarea x-model="voiceText" class="w-full h-32 bg-white border-2 border-[#1B2A4A] rounded p-3 text-xs focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" placeholder="Speak now... e.g. Sunil stated he will email Section 80C proof tomorrow."></textarea>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t-2 border-[#FAF7F0] p-4 flex justify-end gap-2 bg-[#FAF7F0]">
+          <button @click="showVoiceModal = false" class="px-4 py-2 border-2 border-[#1B2A4A] hover:bg-[#FAF7F0] font-bold text-xs rounded transition-all">
+            <span x-text="t('Cancel', 'रद्द करें')"></span>
+          </button>
+          <button @click="saveVoiceNote()" :disabled="!voiceText.trim()" class="px-5 py-2 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-50">
+            <span x-text="t('Save Call Note ✓', 'टिप्पणी सहेजें ✓')"></span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================== AI FEE REMINDER MODAL SIMULATOR ================== -->
+    <div x-show="showFeeModal" class="fixed inset-0 bg-[#1B2A4A]/40 backdrop-blur-xs flex items-center justify-center p-4 z-50" x-transition>
+      <div class="bg-[#FAF7F0] border-2 border-[#1B2A4A] max-w-xl w-full rounded shadow-[8px_8px_0_#1B2A4A] overflow-hidden">
+        
+        <div class="bg-[#1B2A4A] text-white p-6 flex justify-between items-center border-b-2 border-[#1B2A4A]">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-[#E8A33D]" x-text="t('AI Fee Reminder', 'एआई फीस स्मरणपत्र')"></h3>
+            <p class="text-xs text-[#cbd3e1] mt-1" x-text="t('Includes direct UPI link in the text.', 'इसमें आपके फर्म का यूपीआई लिंक शामिल है।')"></p>
+          </div>
+          <button @click="showFeeModal = false" class="text-white text-xl font-bold">&times;</button>
+        </div>
+
+        <div class="p-6 space-y-4 bg-white text-[#1B2A4A]">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-[#1B2A4A] block" x-text="t('Pre-filled Message Preview', 'मैसेज ड्राफ्ट')"></label>
+            <textarea x-model="feeDraftMessage" class="w-full h-44 bg-white border-2 border-[#1B2A4A] rounded p-3 text-xs leading-relaxed font-mono focus:ring-2 focus:ring-[#E8A33D] focus:outline-none"></textarea>
+          </div>
+        </div>
+
+        <div class="bg-[#FAF7F0] border-t-2 border-[#1B2A4A] p-4 flex justify-end gap-2">
+          <button @click="showFeeModal = false" class="px-4 py-2 border-2 border-[#1B2A4A] hover:bg-[#FAF7F0] font-bold text-xs rounded transition-all">
+            <span x-text="t('Cancel', 'रद्द')"></span>
+          </button>
+          <button @click="sendFeeMail()" class="px-5 py-2 bg-white text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all flex items-center gap-1.5">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-[#E8A33D]"></i> <span x-text="t('Send via Email', 'ईमेल द्वारा भेजें')"></span>
+          </button>
+          <button @click="sendFeeWhatsApp()" class="px-5 py-2 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+            <span x-text="t('Send on WhatsApp ↗', 'WhatsApp पर भेजें ↗')"></span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================== ADD CLIENT MODAL ================== -->
+    <div x-show="showAddClientModal" class="fixed inset-0 bg-[#1B2A4A]/40 backdrop-blur-xs flex items-center justify-center p-4 z-50" x-transition>
+      <div class="bg-[#FAF7F0] border-2 border-[#1B2A4A] max-w-lg w-full rounded shadow-[8px_8px_0_#1B2A4A] overflow-hidden">
+        
+        <div class="bg-[#1B2A4A] text-white p-6 flex justify-between items-center border-b-2 border-[#1B2A4A]">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-[#E8A33D]" x-text="t('Create Client Folder', 'क्लाइंट फोल्डर बनाएं')"></h3>
+            <p class="text-xs text-[#cbd3e1] mt-1" x-text="t('Set up contact info, preferred language, and statutory checklists.', 'नया क्लाइंट विवरण और आवश्यक अनुपालन सूची जोड़ें।')"></p>
+          </div>
+          <button @click="showAddClientModal = false" class="text-white text-xl font-bold">&times;</button>
+        </div>
+
+        <form @submit.prevent="addClient()" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto bg-white text-[#1B2A4A]">
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Full Name *', 'पूरा नाम *')"></label>
+            <input type="text" x-model="newClientForm.name" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" required placeholder="Sunil Singhania">
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Business Name', 'फर्म का नाम')"></label>
+            <input type="text" x-model="newClientForm.business" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" placeholder="Singhania Fabrics">
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Phone', 'फोन नंबर')"></label>
+              <input type="text" x-model="newClientForm.phone" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" placeholder="9876543210">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Email', 'ईमेल')"></label>
+              <input type="email" x-model="newClientForm.email" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" placeholder="sunil@firm.in">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('GSTIN / PAN', 'जीएसटीआईएन / पैन')"></label>
+              <input type="text" x-model="newClientForm.pan" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" placeholder="Optional">
+            </div>
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Preferred Language', 'भाषा')"></label>
+              <select x-model="newClientForm.language" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none">
+                <option value="English">English</option>
+                <option value="Hindi">Hindi / हिंदी</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t-2 border-[#FAF7F0] flex justify-end gap-2">
+            <button type="button" @click="showAddClientModal = false" class="px-4 py-2 border-2 border-[#1B2A4A] hover:bg-[#FAF7F0] font-bold text-xs rounded transition-all">
+              <span x-text="t('Cancel', 'रद्द करें')"></span>
+            </button>
+            <button type="submit" class="px-5 py-2 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+              <span x-text="t('Generate Checklist ✓', 'चेकलिस्ट बनाएं ✓')"></span>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- ================== ADD CUSTOM CHECKLIST ITEM MODAL ================== -->
+    <div x-show="showAddCustomChecklistItemModal" class="fixed inset-0 bg-[#1B2A4A]/40 backdrop-blur-xs flex items-center justify-center p-4 z-50" x-transition>
+      <div class="bg-[#FAF7F0] border-2 border-[#1B2A4A] max-w-md w-full rounded shadow-[8px_8px_0_#1B2A4A] overflow-hidden">
+        
+        <div class="bg-[#1B2A4A] text-white p-6 flex justify-between items-center border-b-2 border-[#1B2A4A]">
+          <div>
+            <h3 class="text-xl font-serif font-bold text-[#E8A33D]" x-text="t('Add Custom Document', 'नया आवश्यक दस्तावेज़ जोड़ें')"></h3>
+            <p class="text-xs text-[#cbd3e1] mt-1" x-text="t('Add customized check for this folder.', 'इस करदाता के लिए विशिष्ट फाइल आवश्यकता जोड़ें।')"></p>
+          </div>
+          <button @click="showAddCustomChecklistItemModal = false" class="text-white text-xl font-bold">&times;</button>
+        </div>
+
+        <form @submit.prevent="addCustomChecklistItem()" class="p-6 space-y-4 bg-white text-[#1B2A4A]">
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Document Name', 'दस्तावेज़ का नाम')"></label>
+            <input type="text" x-model="newChecklistItemForm.title" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none" required placeholder="e.g. Home Loan Interest Certificate">
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-[#1B2A4A]" x-text="t('Tax service category', 'टैक्स श्रेणी')"></label>
+            <select x-model="newChecklistItemForm.service" class="w-full border-2 border-[#1B2A4A] rounded px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-[#E8A33D] focus:outline-none">
+              <option value="ITR">ITR</option>
+              <option value="GST">GST</option>
+              <option value="TDS">TDS</option>
+            </select>
+          </div>
+
+          <div class="pt-4 border-t-2 border-[#FAF7F0] flex justify-end gap-2">
+            <button type="button" @click="showAddCustomChecklistItemModal = false" class="px-4 py-2 border-2 border-[#1B2A4A] hover:bg-[#FAF7F0] font-bold text-xs rounded transition-all">
+              <span x-text="t('Cancel', 'रद्द करें')"></span>
+            </button>
+            <button type="submit" class="px-5 py-2 bg-[#E8A33D] text-[#1B2A4A] border-2 border-[#1B2A4A] font-bold text-xs rounded shadow-[3px_3px_0_#1B2A4A] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+              <span x-text="t('Add to Checklist ✓', 'सूची में जोड़ें ✓')"></span>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MunimAI Alpine JS Application Data Model Logic -->
+  <script type="text/javascript">
+    function munimApp() {
+      return {
+        // Active screens & preferences
+        activeTab: 'dashboard',
+        staffLang: 'English',
+        portalLang: 'English',
+        
+        // Modal toggles
+        showAddClientModal: false,
+        showAddCustomChecklistItemModal: false,
+        showFollowUpModal: false,
+        showVoiceModal: false,
+        showFeeModal: false,
+        
+        // Selected client focus
+        selectedClient: null,
+        simulatedClientId: '1',
+
+        // Global firm details
+        firm: {
+          name: 'S. L. Goel & Associates',
+          whatsapp: '919811223344',
+          upi: 'slgoel@icici',
+          signature: 'Aarav Goel | Partner, S. L. Goel & Associates',
+          address: 'Main road office block, New Delhi, India'
+        },
+
+        // Registered staff
+        staff: [
+          { name: 'Aarav Goel', email: 'aarav@firm.in', role: 'Admin' },
+          { name: 'Ankit Goel', email: 'ankit@firm.in', role: 'Staff' },
+          { name: 'Meera Singh', email: 'meera@firm.in', role: 'Staff' }
+        ],
+
+        // Interactive dynamic clients data
+        clients: [
+          {
+            id: '1',
+            name: 'Sunil Singhania',
+            business: 'Singhania Fabrics',
+            phone: '919811223344',
+            email: 'sunil@singhania.com',
+            pan: 'AAAAA1111A',
+            language: 'Hindi',
+            services: ['ITR', 'GST'],
+            outstandingFees: 15000,
+            token: 'sunil_token_xyz',
+            logs: [
+              { text: 'Folder created successfully.', date: '11 Jul 2026' }
+            ],
+            checklist: [
+              { id: '1-1', title: 'Form 16 / Salary Certificate', service: 'ITR', status: 'Pending', aiResult: null },
+              { id: '1-2', title: 'Section 80C Investment proofs', service: 'ITR', status: 'Pending', aiResult: null },
+              { id: '1-3', title: 'GSTR-1 Invoices & Purchase Ledger', service: 'GST', status: 'Pending', aiResult: null }
+            ]
+          },
+          {
+            id: '2',
+            name: 'Riya Singhal',
+            business: 'Singhal Trading',
+            phone: '919811223355',
+            email: 'riya@singhal.com',
+            pan: 'BBBBB2222B',
+            language: 'English',
+            services: ['ITR'],
+            outstandingFees: 0,
+            token: 'riya_token_xyz',
+            logs: [
+              { text: 'Folder created successfully.', date: '11 Jul 2026' }
+            ],
+            checklist: [
+              { id: '2-1', title: 'Form 16A / TDS certificate', service: 'ITR', status: 'Pending', aiResult: null },
+              { id: '2-2', title: 'Bank statement 2025-26', service: 'ITR', status: 'Pending', aiResult: null }
+            ]
+          }
+        ],
+
+        // Interactive Modal Forms
+        newClientForm: {
+          name: '',
+          business: '',
+          phone: '',
+          email: '',
+          pan: '',
+          language: 'English'
+        },
+        newChecklistItemForm: {
+          title: '',
+          service: 'ITR'
+        },
+
+        // Follow up states
+        followUpLanguage: 'Hindi',
+        followUpDraftText: '',
+        
+        // Fee states
+        feeDraftMessage: '',
+
+        // Voice dictation state
+        isRecording: false,
+        voiceText: '',
+
+        // Init loads data from localStorage if exists
+        init() {
+          const cachedFirm = localStorage.getItem('munim_firm');
+          if (cachedFirm) this.firm = JSON.parse(cachedFirm);
+
+          const cachedClients = localStorage.getItem('munim_clients');
+          if (cachedClients) this.clients = JSON.parse(cachedClients);
+          
+          lucide.createIcons();
+        },
+
+        saveToStorage() {
+          localStorage.setItem('munim_firm', JSON.stringify(this.firm));
+          localStorage.setItem('munim_clients', JSON.stringify(this.clients));
+        },
+
+        // Translations helper
+        t(en, hi) {
+          return this.staffLang === 'Hindi' ? hi : en;
+        },
+        
+        tPortal(en, hi) {
+          return this.portalLang === 'Hindi' ? hi : en;
+        },
+
+        toggleStaffLang(lang) {
+          this.staffLang = lang;
+        },
+
+        // Calculations
+        getTotalOutstanding() {
+          return this.clients.reduce((acc, c) => acc + c.outstandingFees, 0);
+        },
+
+        getPendingDocsCount() {
+          let count = 0;
+          this.clients.forEach(c => {
+            c.checklist.forEach(i => {
+              if (i.status === 'Pending') count++;
+            });
+          });
+          return count;
+        },
+
+        getComplianceScore() {
+          let total = 0;
+          let verified = 0;
+          this.clients.forEach(c => {
+            c.checklist.forEach(i => {
+              total++;
+              if (i.status === 'Verified') verified++;
+            });
+          });
+          return total === 0 ? 100 : Math.round((verified / total) * 100);
+        },
+
+        getSimulatedClient() {
+          return this.clients.find(c => c.id === this.simulatedClientId);
+        },
+
+        // Tab Navigation
+        viewClientDetails(client) {
+          this.selectedClient = client;
+          this.activeTab = 'clients';
+          // re-init lucide icons on tab switch
+          setTimeout(() => lucide.createIcons(), 50);
+        },
+
+        // Add Client Folder
+        addClient() {
+          const id = String(this.clients.length + 1);
+          const newClient = {
+            id,
+            name: this.newClientForm.name,
+            business: this.newClientForm.business || 'Individual',
+            phone: this.newClientForm.phone || '919811223344',
+            email: this.newClientForm.email || 'client@firm.com',
+            pan: this.newClientForm.pan || 'PAN_OPTIONAL',
+            language: this.newClientForm.language,
+            services: ['ITR'],
+            outstandingFees: 5000,
+            token: 'token_' + id + '_' + Math.random().toString(36).substr(2, 5),
+            logs: [
+              { text: 'Client Folder created dynamically.', date: '11 Jul 2026' }
+            ],
+            checklist: [
+              { id: id + '-1', title: 'PAN card copy', service: 'ITR', status: 'Pending', aiResult: null },
+              { id: id + '-2', title: 'Form 16 or Profit statement', service: 'ITR', status: 'Pending', aiResult: null }
+            ]
+          };
+
+          this.clients.push(newClient);
+          this.saveToStorage();
+          
+          this.newClientForm = { name: '', business: '', phone: '', email: '', pan: '', language: 'English' };
+          this.showAddClientModal = false;
+          this.activeTab = 'clients';
+          this.viewClientDetails(newClient);
+        },
+
+        // Add Checklist Custom Item
+        addCustomChecklistItem() {
+          if (!this.selectedClient) return;
+          const id = this.selectedClient.id + '-' + (this.selectedClient.checklist.length + 1);
+          this.selectedClient.checklist.push({
+            id,
+            title: this.newChecklistItemForm.title,
+            service: this.newChecklistItemForm.service,
+            status: 'Pending',
+            aiResult: null
+          });
+          
+          this.selectedClient.logs.unshift({
+            text: `Added checklist requirement: ${this.newChecklistItemForm.title}`,
+            date: '11 Jul 2026'
+          });
+
+          this.saveToStorage();
+          this.newChecklistItemForm = { title: '', service: 'ITR' };
+          this.showAddCustomChecklistItemModal = false;
+        },
+
+        // Smart phone/voice note
+        openAIPhoneLogModal() {
+          this.isRecording = false;
+          this.voiceText = '';
+          this.showVoiceModal = true;
+          setTimeout(() => lucide.createIcons(), 50);
+        },
+
+        toggleRecording() {
+          this.isRecording = !this.isRecording;
+          if (this.isRecording) {
+            this.voiceText = 'Listening...';
+            setTimeout(() => {
+              this.voiceText = 'Sunil stated he is busy today but will email his Form 16 and Section 80C interest statements by tomorrow morning.';
+            }, 2500);
+          }
+          setTimeout(() => lucide.createIcons(), 50);
+        },
+
+        saveVoiceNote() {
+          if (!this.selectedClient || !this.voiceText.trim()) return;
+          
+          this.selectedClient.logs.unshift({
+            text: `Voice log: "${this.voiceText}"`,
+            date: '11 Jul 2026'
+          });
+
+          this.saveToStorage();
+          this.showVoiceModal = false;
+        },
+
+        // Smart AI Follow-up Draft
+        openFollowUpModal() {
+          if (!this.selectedClient) return;
+          
+          const missing = this.selectedClient.checklist
+            .filter(i => i.status === 'Pending')
+            .map(i => i.title);
+          
+          const link = `http://localhost:3000/#/upload/${this.selectedClient.token}`;
+
+          this.followUpLanguage = this.selectedClient.language;
+          
+          if (this.followUpLanguage === 'Hindi') {
+            this.followUpDraftText = `नमस्ते ${this.selectedClient.name} जी,\n\nआपके कर अनुपालन को पूरा करने के लिए निम्नलिखित दस्तावेज आवश्यक हैं:\n${missing.map(m => `• ${m}`).join('\n')}\n\nकृपया इस सुरक्षित लिंक पर अपलोड करें:\n${link}`;
+          } else {
+            this.followUpDraftText = `Dear ${this.selectedClient.name},\n\nHope you are well. To file your taxes, we require the following missing documents:\n${missing.map(m => `• ${m}`).join('\n')}\n\nKindly upload them securely here:\n${link}`;
+          }
+
+          this.showFollowUpModal = true;
+          setTimeout(() => lucide.createIcons(), 50);
+        },
+
+        sendFollowUpMail() {
+          if (!this.selectedClient) return;
+          
+          let body = this.followUpDraftText;
+          const sig = this.firm.signature || "Aarav Goel | S. L. Goel & Associates";
+          if (sig && !body.includes(sig)) {
+            body += `\n\nWarm regards,\n${sig}`;
+          }
+
+          this.selectedClient.logs.unshift({
+            text: `Follow-up email triggered in ${this.followUpLanguage}`,
+            date: '11 Jul 2026'
+          });
+
+          this.saveToStorage();
+          
+          const mailto = `mailto:${this.selectedClient.email}?subject=Urgent: Required Documents&body=${encodeURIComponent(body)}`;
+          window.open(mailto, '_self');
+          this.showFollowUpModal = false;
+        },
+
+        sendFollowUpWhatsApp() {
+          if (!this.selectedClient) return;
+          
+          let body = this.followUpDraftText;
+          const sig = this.firm.signature || "Aarav Goel | S. L. Goel & Associates";
+          if (sig && !body.includes(sig)) {
+            body += `\n\nWarm regards,\n${sig}`;
+          }
+
+          this.selectedClient.logs.unshift({
+            text: `Follow-up WhatsApp template triggered.`,
+            date: '11 Jul 2026'
+          });
+
+          this.saveToStorage();
+
+          const waUrl = `https://wa.me/${this.selectedClient.phone}?text=${encodeURIComponent(body)}`;
+          window.open(waUrl, '_blank');
+          this.showFollowUpModal = false;
+        },
+
+        // Fee Reminder
+        openFeeReminderModal() {
+          if (!this.selectedClient) return;
+
+          const upiLink = `upi://pay?pa=${this.firm.upi}&pn=${encodeURIComponent(this.firm.name)}&am=${this.selectedClient.outstandingFees}&cu=INR`;
+          
+          this.feeDraftMessage = `Dear ${this.selectedClient.name},\n\nProfessional fees of ₹${this.selectedClient.outstandingFees} are pending for your file. Kindly clear using the UPI link:\n${this.firm.upi}`;
+
+          this.showFeeModal = true;
+          setTimeout(() => lucide.createIcons(), 50);
+        },
+
+        sendFeeMail() {
+          if (!this.selectedClient) return;
+          
+          let body = this.feeDraftMessage;
+          const sig = this.firm.signature || "Aarav Goel | S. L. Goel & Associates";
+          if (sig && !body.includes(sig)) {
+            body += `\n\nWarm regards,\n${sig}`;
+          }
+
+          this.selectedClient.logs.unshift({
+            text: `Fee reminder email triggered.`,
+            date: '11 Jul 2026'
+          });
+
+          this.saveToStorage();
+          
+          const mailto = `mailto:${this.selectedClient.email}?subject=Fee Reminder&body=${encodeURIComponent(body)}`;
+          window.open(mailto, '_self');
+          this.showFeeModal = false;
+        },
+
+        sendFeeWhatsApp() {
+          if (!this.selectedClient) return;
+
+          this.selectedClient.logs.unshift({
+            text: `Fee reminder WhatsApp triggered.`,
+            date: '11 Jul 2026'
+          });
+
+          this.saveToStorage();
+
+          const waUrl = `https://wa.me/${this.selectedClient.phone}?text=${encodeURIComponent(this.feeDraftMessage)}`;
+          window.open(waUrl, '_blank');
+          this.showFeeModal = false;
+        },
+
+        // Simulated AI Vision Document Read
+        simulateAIVisionRead(item) {
+          item.aiResult = {
+            confidence: 94,
+            text: `AI Vision OCR Verified: Document matches checklist item "${item.title}". No issues found.`
+          };
+          
+          this.saveToStorage();
+        },
+
+        // Simulated Bulk Queue Scan
+        triggerBulkQueue() {
+          const pending = this.clients.filter(c => c.checklist.some(i => i.status === 'Pending'));
+          if (pending.length === 0) {
+            alert('All registered clients are fully compliant!');
+            return;
+          }
+          this.viewClientDetails(pending[0]);
+          this.openFollowUpModal();
+        },
+
+        // Firm Settings Save
+        saveFirmProfile() {
+          this.saveToStorage();
+          alert('Firm Master Profile updated successfully!');
+        },
+
+        // simulated client portal upload action
+        simulatePortalUpload(item) {
+          item.status = 'Received';
+          
+          const client = this.getSimulatedClient();
+          if (client) {
+            client.logs.unshift({
+              text: `Client uploaded document for "${item.title}" via Portal`,
+              date: '11 Jul 2026'
+            });
+          }
+
+          this.saveToStorage();
+          alert(`Document uploaded successfully for checklist item: ${item.title}!`);
+        }
+      };
+    }
+  </script>
+
+</body>
+</html>
