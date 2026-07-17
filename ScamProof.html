@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ScamProof – Instantly analyze suspicious links, messages, phone numbers, UPI IDs and USSD codes. Learn exactly why something is risky and how to stay safe." />
+  <meta name="theme-color" content="#0a0f1a" />
+  <title>ScamProof – Protect Yourself from Scams</title>
+  <style>
+/* ScamProof - Premium Dark Cybersecurity Theme */
+:root {
+  --bg-deep: #0a0f1a;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --bg-glass: rgba(30, 41, 59, 0.55);
+  --border-glass: rgba(148, 163, 184, 0.15);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-blue: #38bdf8;
+  --accent-cyan: #22d3ee;
+  --accent-green: #4ade80;
+  --accent-yellow: #facc15;
+  --accent-orange: #fb923c;
+  --accent-red: #f87171;
+  --accent-critical: #ef4444;
+  --gradient-shield: linear-gradient(135deg, #0ea5e9, #22c55e);
+  --shadow-glow: 0 0 40px rgba(56, 189, 248, 0.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Background grid + glow */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(34, 197, 94, 0.08), transparent),
+    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 32px;
+  gap: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-shield {
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+
+.logo-shield svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5));
+  animation: shieldPulse 3s ease-in-out infinite;
+}
+
+@keyframes shieldPulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 18px rgba(34, 197, 94, 0.6)); transform: scale(1.04); }
+}
+
+.logo-text {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #38bdf8, #4ade80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(12px);
+}
+
+.nav-btn:hover, .nav-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: var(--accent-blue);
+}
+
+/* ---------- Hero / Search ---------- */
+.hero {
+  text-align: center;
+  padding: 20px 0 40px;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.hero h1 span {
+  background: linear-gradient(135deg, #38bdf8, #4ade80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 560px;
+  margin: 0 auto 32px;
+}
+
+.search-box {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.search-box textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 20px 20px 60px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  font-family: inherit;
+  resize: vertical;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-glow);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box textarea:focus {
+  outline: none;
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15), var(--shadow-glow);
+}
+
+.search-box textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.search-actions {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0ea5e9, #22c55e);
+  color: #0a0f1a;
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(34, 197, 94, 0.4);
+}
+
+.btn-ghost {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text-primary);
+}
+
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.example-chip {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.example-chip:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  color: var(--accent-blue);
+}
+
+/* ---------- Results ---------- */
+.results {
+  display: none;
+  margin-top: 40px;
+  animation: fadeUp 0.4s ease;
+}
+
+.results.visible {
+  display: block;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius);
+  padding: 24px;
+  backdrop-filter: blur(16px);
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.risk-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px;
+}
+
+.risk-meter {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+}
+
+.risk-meter svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.risk-meter .track {
+  fill: none;
+  stroke: rgba(148, 163, 184, 0.15);
+  stroke-width: 10;
+}
+
+.risk-meter .progress {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.3s;
+}
+
+.risk-meter .score-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(0deg);
+}
+
+.risk-meter .score-value {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.risk-meter .score-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.risk-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.risk-type {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.risk-type strong {
+  color: var(--accent-cyan);
+}
+
+.risk-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Findings */
+.findings-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.finding {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.finding:last-child {
+  border-bottom: none;
+}
+
+.finding-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
+
+.finding-icon.critical { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+.finding-icon.high { background: rgba(249, 115, 22, 0.15); color: #fb923c; }
+.finding-icon.medium { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+.finding-icon.warning { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.finding-icon.info { background: rgba(148, 163, 184, 0.12); color: #94a3b8; }
+
+.finding-body h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.finding-body p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.finding-body .extra {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--accent-orange);
+}
+
+/* Actions & Tips */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.action-item::before {
+  content: "→";
+  color: var(--accent-green);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.tips-list {
+  list-style: none;
+}
+
+.tips-list li {
+  padding: 8px 0 8px 24px;
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.tips-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+/* ---------- Sections (Education, Knowledge, Library) ---------- */
+.section {
+  display: none;
+  margin-top: 20px;
+  animation: fadeUp 0.35s ease;
+}
+
+.section.visible {
+  display: block;
+}
+
+.section-header {
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 1.6rem;
+  font-weight: 750;
+  margin-bottom: 6px;
+}
+
+.section-header p {
+  color: var(--text-secondary);
+}
+
+.search-filter {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  font-family: inherit;
+}
+
+.search-filter:focus {
+  outline: none;
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.kb-card, .scam-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius);
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+
+.kb-card:hover, .scam-card:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+  transform: translateY(-2px);
+}
+
+.kb-card h3, .scam-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--accent-cyan);
+}
+
+.kb-card p, .scam-card p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.scam-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.tag {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent-blue);
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.scam-detail {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-glass);
+  font-size: 0.88rem;
+}
+
+.scam-detail strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+
+.scam-detail ul {
+  margin-left: 18px;
+  color: var(--text-secondary);
+}
+
+/* Education blocks */
+.edu-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.edu-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius);
+  padding: 22px;
+  backdrop-filter: blur(12px);
+}
+
+.edu-block h3 {
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edu-block p, .edu-block li {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.edu-block ul {
+  margin: 10px 0 0 20px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-glass);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.footer a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.disclaimer {
+  max-width: 640px;
+  margin: 12px auto 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .risk-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .search-actions {
+    position: static;
+    margin-top: 12px;
+    justify-content: flex-end;
+  }
+  .search-box textarea {
+    padding-bottom: 20px;
+  }
+  .nav {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <a href="#" class="logo" onclick="location.reload(); return false;">
+        <div class="logo-shield">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8"/>
+                <stop offset="100%" stop-color="#4ade80"/>
+              </linearGradient>
+            </defs>
+            <path d="M24 4L8 10v12c0 10.5 6.8 20.3 16 22.8 9.2-2.5 16-12.3 16-22.8V10L24 4z" fill="url(#sg)" opacity="0.2"/>
+            <path d="M24 4L8 10v12c0 10.5 6.8 20.3 16 22.8 9.2-2.5 16-12.3 16-22.8V10L24 4z" stroke="url(#sg)" stroke-width="2.5" fill="none"/>
+            <path d="M18 24l5 5 9-10" stroke="url(#sg)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="logo-text">ScamProof</div>
+          <div class="logo-sub">Stay one step ahead</div>
+        </div>
+      </a>
+      <nav class="nav">
+        <button class="nav-btn active" data-section="analyzer">Analyzer</button>
+        <button class="nav-btn" data-section="education">Why Scams Work</button>
+        <button class="nav-btn" data-section="knowledge">Knowledge Base</button>
+        <button class="nav-btn" data-section="library">Scam Library</button>
+      </nav>
+    </header>
+
+    <!-- ANALYZER SECTION -->
+    <section id="section-analyzer" class="section visible">
+      <div class="hero">
+        <h1>Is this a <span>scam</span>?</h1>
+        <p>Paste any suspicious link, phone number, message, UPI ID or code. We’ll explain exactly <strong>why</strong> it may be risky — in plain language.</p>
+
+        <div class="search-box">
+          <textarea
+            id="scam-input"
+            placeholder="Paste anything suspicious here…
+Examples: a website link, phone number, SMS text, UPI ID, *21* code, email…"
+            rows="4"
+            aria-label="Suspicious content to analyze"
+          ></textarea>
+          <div class="search-actions">
+            <button class="btn btn-ghost" id="clear-btn">Clear</button>
+            <button class="btn btn-primary" id="analyze-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Analyze
+            </button>
+          </div>
+        </div>
+
+        <div class="examples">
+          <span class="example-chip" data-example="*21*9876543210#">*21*9876543210#</span>
+          <span class="example-chip" data-example="Dear Customer, your KYC will expire today. Update now: http://sbi-kyc-verify.xyz">KYC expiry SMS</span>
+          <span class="example-chip" data-example="Your parcel is held at customs. Pay ₹420 duty: https://bit.ly/3xFake">Parcel customs</span>
+          <span class="example-chip" data-example="+91 98765 43210">Phone number</span>
+          <span class="example-chip" data-example="support@okaxis">UPI ID</span>
+          <span class="example-chip" data-example="You won ₹5,00,000 in our lucky draw! Claim now">Lottery win</span>
+          <span class="example-chip" data-example="##002#">##002# (safe)</span>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="results" class="results" aria-live="polite">
+        <div class="card">
+          <div class="risk-header">
+            <div class="risk-meter">
+              <svg viewBox="0 0 120 120">
+                <circle class="track" cx="60" cy="60" r="54"/>
+                <circle id="meter-progress" class="progress" cx="60" cy="60" r="54"
+                        stroke-dasharray="339.292" stroke-dashoffset="339.292"/>
+              </svg>
+              <div class="score-text">
+                <span id="score-value" class="score-value">0</span>
+                <span class="score-label">Risk</span>
+              </div>
+            </div>
+            <div class="risk-info">
+              <div id="risk-badge" class="risk-badge">Safe</div>
+              <div id="risk-type" class="risk-type">Detected type: —</div>
+              <p id="risk-desc" class="risk-desc">No analysis yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="findings-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Why this rating?
+          </h3>
+          <div id="findings-list"></div>
+        </div>
+
+        <div class="card">
+          <h3 class="findings-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Recommended Action
+          </h3>
+          <div id="actions-list" class="actions-grid"></div>
+        </div>
+
+        <div class="card">
+          <h3 class="findings-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Safety Tips
+          </h3>
+          <ul id="tips-list" class="tips-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION SECTION -->
+    <section id="section-education" class="section">
+      <div class="section-header">
+        <h2>Why Scams Work</h2>
+        <p>Understanding the psychology helps you resist the next attempt.</p>
+      </div>
+      <div class="edu-grid">
+        <div class="edu-block">
+          <h3>🧠 How scammers manipulate people</h3>
+          <p>Scammers do not rely on technology alone. They rely on human emotions:</p>
+          <ul>
+            <li><strong>Urgency</strong> – “Act within 24 hours or lose everything”</li>
+            <li><strong>Fear</strong> – “Your account will be blocked / police will arrest you”</li>
+            <li><strong>Greed</strong> – “You have won ₹5 lakh / guaranteed 40% returns”</li>
+            <li><strong>Authority</strong> – Impersonating bank, police, customs, government</li>
+            <li><strong>Scarcity</strong> – “Only 2 slots left / limited time offer”</li>
+          </ul>
+          <p style="margin-top:12px">When these emotions are triggered, the thinking part of the brain is partially bypassed. That is why even intelligent people fall for scams.</p>
+        </div>
+
+        <div class="edu-block">
+          <h3>📦 How fake courier / customs scams work</h3>
+          <p>You receive an SMS that a parcel is held for incomplete address or customs duty. The link opens a perfect-looking tracking page. You pay a small fee and enter card details. The page steals your data. Sometimes a follow-up call from a “customs officer” escalates into a digital-arrest demand for large sums.</p>
+        </div>
+
+        <div class="edu-block">
+          <h3>🔐 How OTP scams work</h3>
+          <p>Scammer already has your phone number and partial bank details. They call pretending to be the bank’s fraud team. They say a transaction is pending and ask you to “read out the OTP you just received to cancel it”. The OTP is actually authorizing a new transaction or adding a beneficiary. Money leaves within seconds.</p>
+        </div>
+
+        <div class="edu-block">
+          <h3>💸 How UPI &amp; QR scams work</h3>
+          <p>You are selling something online. Buyer says “I am sending money, just approve the request” or sends a QR code “to receive payment”. Approving the request or scanning the QR actually debits your account. Golden rule: you never enter UPI PIN to <em>receive</em> money.</p>
+        </div>
+
+        <div class="edu-block">
+          <h3>📞 How call-forwarding scams work</h3>
+          <p>A “delivery agent” or “bank executive” asks you to dial a code such as <code>*21*9876543210#</code>. This activates unconditional call forwarding. All future calls — including bank OTP voice calls — silently go to the scammer. They then empty your accounts. Defence: never dial codes from strangers; if in doubt dial <code>##002#</code>.</p>
+        </div>
+
+        <div class="edu-block">
+          <h3>🖥️ How remote-access scams work</h3>
+          <p>Caller claims to be tech support or bank security. They instruct you to install AnyDesk, TeamViewer or UltraViewer “so they can fix the issue”. Once connected they can see your screen, approve transactions, change passwords and transfer money while you watch helplessly.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- KNOWLEDGE BASE -->
+    <section id="section-knowledge" class="section">
+      <div class="section-header">
+        <h2>Knowledge Base</h2>
+        <p>Short, clear explanations of the terms scammers use against you.</p>
+      </div>
+      <div id="knowledge-grid" class="grid-cards"></div>
+    </section>
+
+    <!-- SCAM LIBRARY -->
+    <section id="section-library" class="section">
+      <div class="section-header">
+        <h2>Scam Library</h2>
+        <p>Searchable collection of common scams seen in India. Know them so you can spot them.</p>
+      </div>
+      <input type="search" id="library-search" class="search-filter" placeholder="Search scams (e.g. parcel, KYC, job, UPI…)" aria-label="Search scam library" />
+      <div id="library-grid" class="grid-cards"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p><strong>ScamProof</strong> — Local rule engine • No login • No data leaves your device</p>
+      <p class="disclaimer">
+        This tool uses pattern matching and heuristics. It is an educational aid, not a guarantee.
+        Always verify independently through official channels. In case of financial loss, immediately call your bank and report at
+        <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a> or 1930.
+      </p>
+    </footer>
+  </div>
+
+  <script>
+// ScamProof - Local Knowledge Base, Rules, and Reference Data
+// Extensible: future live services can plug into the same interfaces
+
+const SCAMPROOF_DATA = {
+  // ===================== USSD / MMI Codes =====================
+  ussdCodes: {
+    // Unconditional Call Forwarding
+    "*21#": {
+      action: "Activate unconditional call forwarding (to last set number or default)",
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH - Scammers send this so all your calls (including bank OTPs) go to them",
+      risk: 85,
+      explanation: "This code turns on call forwarding for ALL incoming calls. Once active, your phone may not even ring — calls go straight to another number."
+    },
+    "*21*": {
+      action: "Activate unconditional call forwarding to a specific number",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "CRITICAL - Classic call-forwarding scam. Scammer gets all your OTPs and verification calls",
+      risk: 95,
+      explanation: "Activates unconditional call forwarding to the number after *21*. Every call you receive is silently redirected."
+    },
+    "**21*": {
+      action: "Activate unconditional call forwarding (standard GSM)",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "CRITICAL - Same as *21*. Used in parcel/delivery and digital arrest scams",
+      risk: 95,
+      explanation: "Standard GSM code to forward ALL calls to another number. Extremely dangerous if dialed from a stranger's message."
+    },
+    "##21#": {
+      action: "Deactivate unconditional call forwarding",
+      enablesForwarding: false,
+      disablesForwarding: true,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "Low - This is the OFF switch. Safe and recommended if you suspect forwarding",
+      risk: 5,
+      explanation: "Turns OFF unconditional call forwarding. Good to run if you think someone may have activated forwarding on your line."
+    },
+    "*#21#": {
+      action: "Check status of unconditional call forwarding",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: true,
+      normallySafe: true,
+      scamMisuse: "None - This only queries the network",
+      risk: 0,
+      explanation: "Shows whether unconditional call forwarding is currently active and to which number. Completely safe to dial."
+    },
+    // No Answer
+    "**61*": {
+      action: "Activate call forwarding when no answer",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH - Conditional forwarding can still steal OTPs if you miss a call",
+      risk: 80,
+      explanation: "Forwards calls only if you do not answer within a few rings."
+    },
+    "*61*": {
+      action: "Activate call forwarding when no answer",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH",
+      risk: 80,
+      explanation: "Forwards unanswered calls to another number."
+    },
+    "##61#": {
+      action: "Deactivate no-answer call forwarding",
+      enablesForwarding: false,
+      disablesForwarding: true,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 5,
+      explanation: "Turns off forwarding for unanswered calls."
+    },
+    "*#61#": {
+      action: "Check no-answer forwarding status",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: true,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 0,
+      explanation: "Queries whether no-answer forwarding is active."
+    },
+    // Busy
+    "**67*": {
+      action: "Activate call forwarding when busy",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH",
+      risk: 75,
+      explanation: "Forwards calls when your line is already busy."
+    },
+    "*67*": {
+      action: "Activate call forwarding when busy",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH",
+      risk: 75,
+      explanation: "Forwards calls when busy."
+    },
+    "##67#": {
+      action: "Deactivate busy call forwarding",
+      enablesForwarding: false,
+      disablesForwarding: true,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 5,
+      explanation: "Turns off busy forwarding."
+    },
+    "*#67#": {
+      action: "Check busy forwarding status",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: true,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 0,
+      explanation: "Checks busy forwarding status."
+    },
+    // Unreachable
+    "**62*": {
+      action: "Activate call forwarding when unreachable",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH",
+      risk: 80,
+      explanation: "Forwards calls when your phone is off or has no signal."
+    },
+    "*62*": {
+      action: "Activate call forwarding when unreachable",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH",
+      risk: 80,
+      explanation: "Forwards when unreachable."
+    },
+    "##62#": {
+      action: "Deactivate unreachable call forwarding",
+      enablesForwarding: false,
+      disablesForwarding: true,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 5,
+      explanation: "Turns off unreachable forwarding."
+    },
+    "*#62#": {
+      action: "Check unreachable forwarding status",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: true,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 0,
+      explanation: "Checks unreachable forwarding."
+    },
+    // Master codes
+    "##002#": {
+      action: "Cancel ALL call forwarding (unconditional + conditional)",
+      enablesForwarding: false,
+      disablesForwarding: true,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "None - This is the emergency OFF switch. Recommended if you suspect any forwarding",
+      risk: 0,
+      explanation: "The master reset. Cancels every type of call forwarding on your line in one go. Extremely useful if you think a scammer has activated any divert."
+    },
+    "##004#": {
+      action: "Cancel all conditional call forwarding",
+      enablesForwarding: false,
+      disablesForwarding: true,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 0,
+      explanation: "Cancels only the conditional (busy / no-answer / unreachable) rules."
+    },
+    // Other common
+    "*#06#": {
+      action: "Display IMEI number",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 0,
+      explanation: "Shows your phone's unique IMEI. Completely safe."
+    },
+    "*43#": {
+      action: "Activate call waiting",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "Low",
+      risk: 10,
+      explanation: "Turns on call waiting feature."
+    },
+    "#43#": {
+      action: "Deactivate call waiting",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 5,
+      explanation: "Turns off call waiting."
+    },
+    "*#43#": {
+      action: "Check call waiting status",
+      enablesForwarding: false,
+      disablesForwarding: false,
+      checksStatus: true,
+      normallySafe: true,
+      scamMisuse: "None",
+      risk: 0,
+      explanation: "Queries call waiting status."
+    },
+    // Indian operator variants sometimes seen
+    "*401*": {
+      action: "Possible call forwarding activation (some Indian operators)",
+      pattern: true,
+      enablesForwarding: true,
+      disablesForwarding: false,
+      checksStatus: false,
+      normallySafe: false,
+      scamMisuse: "HIGH - Reported in Indian call-forwarding scams",
+      risk: 85,
+      explanation: "On some Indian networks this may activate call forwarding. Treat any *401* code from a stranger as dangerous."
+    },
+    "*402": {
+      action: "Possible deactivation code (operator specific)",
+      pattern: true,
+      enablesForwarding: false,
+      disablesForwarding: true,
+      checksStatus: false,
+      normallySafe: true,
+      scamMisuse: "Low",
+      risk: 15,
+      explanation: "Operator-specific. Prefer the universal ##002# instead."
+    }
+  },
+
+  // ===================== URL Shorteners =====================
+  urlShorteners: [
+    "bit.ly", "bitly.com", "tinyurl.com", "t.co", "goo.gl", "is.gd", "cutt.ly",
+    "rb.gy", "ow.ly", "buff.ly", "rebrand.ly", "short.io", "tiny.cc", "j.mp",
+    "lnkd.in", "db.tt", "qr.ae", "adf.ly", "bc.vc", "clck.ru", "cutt.us",
+    "shorturl.at", "v.gd", "tr.im", "soo.gd", "s.id", "gg.gg", "ouo.io"
+  ],
+
+  // ===================== Common Brands (for typosquatting heuristic) =====================
+  brands: [
+    "sbi", "hdfc", "icici", "axis", "kotak", "pnb", "bob", "canara", "unionbank",
+    "paytm", "phonepe", "gpay", "googlepay", "bhim", "amazon", "flipkart", "myntra",
+    "meesho", "snapdeal", "ajio", "nykaa", "swiggy", "zomato", "uber", "ola",
+    "irctc", "indiapost", "bluedart", "dhl", "fedex", "delhivery", "ekart",
+    "airtel", "jio", "vi", "bsnl", "vodafone", "income tax", "incometax", "uidai",
+    "aadhaar", "epfo", "nsdl", "utiitsl", "passport", "digilocker"
+  ],
+
+  // ===================== Psychological Manipulation Keywords =====================
+  psychology: {
+    urgency: ["today", "immediately", "urgent", "within 24 hours", "within 48 hours", "last chance", "expires today", "act now", "right now", "asap", "hurry", "limited time", "ends today", "before midnight", "by eod", "final notice"],
+    fear: ["blocked", "suspended", "frozen", "legal action", "arrest", "police", "cbi", "ed", "customs seized", "account will be closed", "sim deactivated", "disconnected", "penalty", "fine", "warrant", "fir", "investigation", "fraud detected", "unauthorized"],
+    greed: ["won", "lottery", "prize", "reward", "cashback", "bonus", "free", "claim now", "congratulations", "selected", "lucky winner", "₹", "rs.", "lakh", "crore", "guaranteed return", "high profit", "double your money"],
+    authority: ["bank", "rbi", "income tax", "customs", "police", "cbi", "government", "official", "customer care", "support team", "verification team", "kyc department", "fraud prevention"],
+    scarcity: ["limited vacancies", "only few left", "exclusive offer", "one time", "last slots", "closing soon"],
+    threat: ["account suspended", "legal consequences", "will be prosecuted", "arrest warrant", "property seized", "blacklist"]
+  },
+
+  // ===================== Scam Phrase Patterns =====================
+  scamPhrases: [
+    { regex: /kyc.*(expire|update|incomplete|pending|block)/i, weight: 30, reason: "Mentions KYC update/expiry with urgency — classic bank KYC scam" },
+    { regex: /(account|pan|aadhaar|sim).*(block|suspend|freeze|deactivate)/i, weight: 28, reason: "Threatens to block account / PAN / SIM — common pressure tactic" },
+    { regex: /(parcel|package|courier|shipment|delivery).*(held|seized|customs|pending|incomplete address|duty|fee)/i, weight: 32, reason: "Fake courier / customs parcel message" },
+    { regex: /(won|winner|lottery|prize|cashback).*(₹|rs\.?|rupee|lakh|crore)/i, weight: 25, reason: "Claims you won money or a prize — lottery / reward scam" },
+    { regex: /(otp|one.?time.?password|verification.?code).*(share|send|provide|confirm)/i, weight: 40, reason: "Asks for OTP — never share OTP with anyone" },
+    { regex: /(remote|screen.?share|anydesk|teamviewer|ultraviewer|quicksupport)/i, weight: 45, reason: "Requests remote access / screen sharing apps — high risk of full account takeover" },
+    { regex: /(download|install).*(apk|app|application)/i, weight: 38, reason: "Asks to download an APK or unknown app — often malware" },
+    { regex: /(upi|paytm|phonepe|gpay).*(collect|request|refund|cashback)/i, weight: 22, reason: "UPI-related payment / collect request language" },
+    { regex: /(job|work.?from.?home|part.?time|earn).*(₹|rs\.?|daily|per day|vacancy)/i, weight: 28, reason: "Unsolicited job / task / earn-from-home offer" },
+    { regex: /(income.?tax|it.?department|tax.?refund|assessment)/i, weight: 26, reason: "Impersonates Income Tax department" },
+    { regex: /(electricity|power|bescom|tata.?power).*(disconnect|bill|due|overdue)/i, weight: 24, reason: "Fake electricity disconnection threat" },
+    { regex: /(police|cbi|cyber.?crime|ed|enforcement).*(call|officer|case|fir)/i, weight: 30, reason: "Impersonates police / CBI / law enforcement" },
+    { regex: /(click|tap|open).*(link|here|below|to (avoid|claim|update|verify))/i, weight: 18, reason: "Pushes you to click a link under pressure" },
+    { regex: /(advance|registration|security|processing).*(fee|charge|deposit|payment)/i, weight: 30, reason: "Requests advance / registration / security deposit — classic job & loan scam" },
+    { regex: /(your (pan|aadhaar|account) is (blocked|suspended|frozen))/i, weight: 32, reason: "Direct claim that your PAN / Aadhaar / account is already blocked" }
+  ],
+
+  // ===================== Risk Level Mapping =====================
+  riskLevels: [
+    { min: 0,  max: 10,  label: "Safe",          color: "#22c55e", description: "No significant risk indicators found." },
+    { min: 11, max: 25,  label: "Low Risk",       color: "#84cc16", description: "Minor concerns. Still verify independently." },
+    { min: 26, max: 45,  label: "Medium Risk",    color: "#eab308", description: "Several warning signs. Proceed with caution." },
+    { min: 46, max: 65,  label: "High Risk",      color: "#f97316", description: "Strong indicators of a scam. Do not interact." },
+    { min: 66, max: 85,  label: "Critical",       color: "#ef4444", description: "Very high probability of fraud. Stop immediately." },
+    { min: 86, max: 100, label: "Fraud Likely",   color: "#b91c1c", description: "Almost certainly a scam. Report and block." }
+  ],
+
+  // ===================== Recommended Actions =====================
+  actions: {
+    ignore: "Ignore the message / call completely.",
+    verify: "Verify independently using official website or app (do not use links or numbers from the message).",
+    official: "Call the official customer care number listed on the bank/courier website or app.",
+    noClick: "Do not click any links.",
+    noPay: "Do not make any payment or share UPI / card details.",
+    noDial: "Do not dial any code or number given in the message.",
+    block: "Block the sender number / email.",
+    report: "Report to cybercrime.gov.in or call 1930 (National Cybercrime Helpline)."
+  },
+
+  // ===================== Knowledge Base =====================
+  knowledge: [
+    {
+      id: "otp",
+      title: "OTP (One-Time Password)",
+      content: "An OTP is a temporary code sent by your bank or service to verify a transaction or login. Real banks and companies NEVER ask you to share your OTP with anyone — not even their own staff. If someone asks for your OTP, they are a scammer. Sharing it gives them full access to your account."
+    },
+    {
+      id: "upi",
+      title: "UPI (Unified Payments Interface)",
+      content: "UPI lets you pay using a Virtual Payment Address (VPA) like name@okaxis. To RECEIVE money you never need to enter your UPI PIN. If an app or person asks you to enter PIN to 'receive' money, it is a collect request scam — money will leave your account."
+    },
+    {
+      id: "qr",
+      title: "QR Codes",
+      content: "Scammers send QR codes claiming 'scan to receive payment'. Scanning and approving a QR almost always means YOU are paying. Never scan a QR code received from an unknown person to 'receive' money."
+    },
+    {
+      id: "ussd",
+      title: "USSD / MMI Codes",
+      content: "USSD codes (starting with * or #) talk directly to your mobile network. Codes like *21*number# can silently forward all your calls — including bank OTP voice calls — to a scammer. Never dial a code sent by a stranger. To cancel all forwarding, dial ##002#."
+    },
+    {
+      id: "apk",
+      title: "APK Files",
+      content: "An APK is an Android app package. Scammers send 'special' banking or courier APKs via WhatsApp. These often contain malware that steals OTPs, passwords and even records your screen. Only install apps from the official Google Play Store or Apple App Store."
+    },
+    {
+      id: "remote",
+      title: "Screen Sharing & Remote Access",
+      content: "Apps like AnyDesk, TeamViewer, UltraViewer or QuickSupport give complete control of your phone or computer to the other person. Scammers posing as bank/tech support ask you to install them and then transfer money or approve transactions while you watch helplessly. Never install remote access apps on request of an unknown caller."
+    },
+    {
+      id: "simswap",
+      title: "SIM Swap",
+      content: "A scammer convinces your telecom provider to issue a new SIM with your number. Once they control the number they receive all your OTPs. Protect yourself by enabling SIM PIN / network lock and never sharing Aadhaar OTP with anyone claiming to be from the telecom company."
+    },
+    {
+      id: "phishing",
+      title: "Phishing",
+      content: "Phishing is when scammers send fake emails, SMS or websites that look like real banks or companies to steal your login details, card numbers or OTPs. Always check the URL carefully and never enter passwords on pages reached via SMS/email links."
+    },
+    {
+      id: "smishing",
+      title: "Smishing",
+      content: "Smishing is phishing via SMS. Messages about parcels, KYC, blocked accounts or prizes that contain links are almost always smishing. Real organisations do not send such urgent links by SMS."
+    },
+    {
+      id: "vishing",
+      title: "Vishing",
+      content: "Vishing is voice phishing — scam calls. Callers pretend to be from bank, police, customs or tech support. They create panic and ask for OTP, remote access or money transfer. Hang up and call the official number yourself."
+    },
+    {
+      id: "deepfake",
+      title: "Deepfake Voice Calls",
+      content: "AI can now clone a person's voice from a short sample. Scammers use deepfake audio of family members or officials to demand urgent money. Always verify with a video call or a second channel before transferring money for an 'emergency'."
+    },
+    {
+      id: "fakesupport",
+      title: "Fake Customer Support",
+      content: "Scammers buy Google ads or post fake numbers online so that when you search 'SBI customer care' you get their number. Always take customer care numbers only from the official bank website or the back of your debit/credit card."
+    }
+  ],
+
+  // ===================== Scam Library =====================
+  scamLibrary: [
+    {
+      id: "bluedart",
+      title: "Blue Dart / Courier Parcel Scam",
+      tags: ["courier", "parcel", "sms"],
+      summary: "SMS claims your Blue Dart / DHL / FedEx / India Post parcel is held for incomplete address or customs duty.",
+      howItWorks: "Message contains a link to a fake tracking page. You are asked to pay a small 'redelivery' or 'customs' fee and enter card/OTP details. Sometimes followed by a call from a 'customs officer'.",
+      redFlags: ["Link not on official domain", "Asks for payment to release parcel", "Threat of return to sender", "Generic greeting"],
+      protection: "Never click. Open the official courier app or website and track using the AWB number yourself. Real couriers never ask for card details via SMS."
+    },
+    {
+      id: "indiapost",
+      title: "India Post Scam",
+      tags: ["courier", "government", "sms"],
+      summary: "Fake SMS pretending to be from India Post about a package waiting or address incomplete.",
+      howItWorks: "Link leads to phishing page collecting personal and banking data. India Post never sends such SMS asking to update address via external links.",
+      redFlags: ["indiapost-gov-in style lookalike domains", "Urgency of 24-48 hours", "Request for Aadhaar / card"],
+      protection: "Ignore. Check official India Post website or app only."
+    },
+    {
+      id: "customs",
+      title: "Customs Parcel / Drug Seizure Scam",
+      tags: ["customs", "police", "vishing"],
+      summary: "Call or SMS claiming a parcel in your name contains drugs / passports and you will be arrested unless you pay a fine.",
+      howItWorks: "Often starts with SMS, then call from 'customs' transferred to 'CBI officer'. Victim is kept on call for hours (digital arrest) while money is transferred.",
+      redFlags: ["Threat of immediate arrest", "Demand for secrecy", "Request for UPI / crypto payment", "Video call with fake uniform"],
+      protection: "Hang up. Real agencies never demand money over phone. Call 1930 or local police."
+    },
+    {
+      id: "kyc",
+      title: "Bank KYC Update Scam",
+      tags: ["bank", "kyc", "sms", "vishing"],
+      summary: "Message or call saying your KYC is incomplete and account will be blocked today.",
+      howItWorks: "Link opens fake bank page. Or caller asks you to install remote app / share OTP. Money is drained within minutes.",
+      redFlags: ["Threat of same-day block", "Link or APK", "Request for OTP or screen share", "Generic 'Dear Customer'"],
+      protection: "Never click or share OTP. Log into official net-banking / app yourself to check KYC status."
+    },
+    {
+      id: "bankfreeze",
+      title: "Bank Account Freeze / Fraud Alert Scam",
+      tags: ["bank", "vishing"],
+      summary: "Caller claims suspicious transaction detected and your account will be frozen unless you verify.",
+      howItWorks: "They ask for OTP 'to cancel the transaction' or guide you to transfer money to a 'safe account'.",
+      redFlags: ["Caller already knows partial account details", "Urgency + fear", "Request for OTP or remote access"],
+      protection: "Hang up. Call the number on the back of your card."
+    },
+    {
+      id: "electricity",
+      title: "Electricity Bill / Disconnection Scam",
+      tags: ["utility", "sms"],
+      summary: "SMS threatens power disconnection unless outstanding bill is paid via a link.",
+      howItWorks: "Link collects card/UPI details. Real electricity boards never send payment links via random SMS.",
+      redFlags: ["Immediate disconnection threat", "Shortened URL", "Unsolicited"],
+      protection: "Pay only through official app or website of your electricity provider."
+    },
+    {
+      id: "job",
+      title: "Part-Time Job / Task Scam",
+      tags: ["job", "whatsapp", "telegram"],
+      summary: "WhatsApp / Telegram offer of easy work-from-home tasks paying thousands per day.",
+      howItWorks: "First few tasks pay small amounts to build trust. Then you are asked for 'security deposit' or to buy products to unlock higher earnings. Money never returns.",
+      redFlags: ["Unsolicited offer", "Payment required from you", "Telegram / WhatsApp only", "No company website or GST"],
+      protection: "Real employers never ask workers to pay. Ignore and report."
+    },
+    {
+      id: "investment",
+      title: "Telegram / WhatsApp Investment / Crypto Scam",
+      tags: ["investment", "crypto", "telegram"],
+      summary: "Groups promising guaranteed high returns on crypto, stock tips or trading signals.",
+      howItWorks: "You are shown fake profits, then asked to invest more. Withdrawals are blocked until further 'tax' or 'fees' are paid.",
+      redFlags: ["Guaranteed returns", "Pressure to invest quickly", "Only chat-based", "Celebrity deepfakes"],
+      protection: "If it sounds too good to be true, it is. Never invest via Telegram/WhatsApp."
+    },
+    {
+      id: "lottery",
+      title: "Lottery / Prize / WhatsApp Gold Scam",
+      tags: ["lottery", "reward"],
+      summary: "Message claiming you won a lottery, iPhone, gold or cash prize.",
+      howItWorks: "You are asked to pay 'processing fee', 'tax' or 'delivery charge' to claim the prize. No prize exists.",
+      redFlags: ["You never entered any contest", "Request for payment to receive prize", "Urgency"],
+      protection: "You cannot win a lottery you never entered. Delete and block."
+    },
+    {
+      id: "loan",
+      title: "Fake Loan / Instant Approval Scam",
+      tags: ["loan", "app"],
+      summary: "App or message offering instant personal loan with minimal documents.",
+      howItWorks: "After 'approval' you are asked to pay processing fee / insurance. Loan never arrives. Sometimes the app itself is malware.",
+      redFlags: ["Upfront fee before disbursal", "Unsolicited", "Pressure"],
+      protection: "Legitimate lenders deduct fees from the loan amount, never ask for advance payment."
+    },
+    {
+      id: "digitalarrest",
+      title: "Digital Arrest Scam",
+      tags: ["police", "cbi", "vishing"],
+      summary: "Callers claim you are under digital arrest for a crime linked to a parcel or bank account and must stay on video call while paying 'bail' or 'fine'.",
+      howItWorks: "Victim is kept on continuous video call for hours. Money is transferred under threat. Scammers use fake backgrounds and uniforms.",
+      redFlags: ["Demand to stay on call", "Threat of immediate arrest of family", "Request for UPI / crypto / gift cards", "Secrecy"],
+      protection: "Hang up immediately. Real police do not arrest via video call or demand money. Call 1930."
+    },
+    {
+      id: "callforward",
+      title: "Call Forwarding / USSD Scam",
+      tags: ["ussd", "phone"],
+      summary: "Message or 'delivery agent' asks you to dial a code like *21*number# or *401*number#.",
+      howItWorks: "The code activates call forwarding. All your incoming calls (including bank OTPs) go to the scammer. They then empty your accounts.",
+      redFlags: ["Any request to dial a * or # code", "Urgency from courier / bank caller"],
+      protection: "Never dial codes from messages. If you already did, immediately dial ##002# to cancel all forwarding."
+    }
+  ]
+};
+// ScamProof Risk Engine
+// Pure client-side weighted rule engine. Fully extensible.
+
+const ScamEngine = (() => {
+  const D = SCAMPROOF_DATA;
+
+  // ---------- Content Type Detection ----------
+  function detectType(raw) {
+    const input = (raw || "").trim();
+    if (!input) return { type: "Unknown", confidence: 0 };
+
+    // USSD / MMI first (highest priority for codes)
+    if (isUSSD(input)) {
+      return { type: "USSD/MMI Code", confidence: 0.98 };
+    }
+
+    // URL
+    if (isURL(input)) {
+      return { type: "Website URL", confidence: 0.95 };
+    }
+
+    // Email
+    if (isEmail(input)) {
+      return { type: "Email", confidence: 0.95 };
+    }
+
+    // UPI ID
+    if (isUPI(input)) {
+      return { type: "UPI ID", confidence: 0.9 };
+    }
+
+    // Phone
+    if (isPhone(input)) {
+      return { type: "Phone Number", confidence: 0.92 };
+    }
+
+    // Message heuristics
+    const lower = input.toLowerCase();
+    if (lower.includes("whatsapp") || /wa\.me|api\.whatsapp/i.test(input)) {
+      return { type: "WhatsApp Message", confidence: 0.7 };
+    }
+    if (/(otp|one.?time|verification code)/i.test(input) && input.length < 300) {
+      return { type: "OTP Request", confidence: 0.75 };
+    }
+    if (/(parcel|package|courier|delivery|shipment|bluedart|dhl|fedex|indiapost)/i.test(input)) {
+      return { type: "Courier Message", confidence: 0.8 };
+    }
+    if (/(bank|kyc|account.*(block|suspend|freeze)|net.?banking)/i.test(input)) {
+      return { type: "Bank Message", confidence: 0.8 };
+    }
+    if (/(job|work.?from.?home|part.?time|earn ₹|vacancy|hiring)/i.test(input)) {
+      return { type: "Job Offer", confidence: 0.75 };
+    }
+    if (/(invest|crypto|bitcoin|trading|profit|return|portfolio)/i.test(input)) {
+      return { type: "Investment Offer", confidence: 0.7 };
+    }
+    if (/(income.?tax|government|uidai|aadhaar|epfo|passport|customs)/i.test(input)) {
+      return { type: "Government Message", confidence: 0.7 };
+    }
+    if (input.length > 20 || /dear|customer|click|link|verify|update/i.test(input)) {
+      return { type: "SMS", confidence: 0.6 };
+    }
+
+    return { type: "Unknown", confidence: 0.3 };
+  }
+
+  function isUSSD(s) {
+    // Matches *21#, *21*9876543210#, **21*num#, ##21#, *#21#, *401#, etc.
+    return /^[\*#]{1,2}[\d\*#]+#?$/.test(s.replace(/\s/g, "")) ||
+           /^\*[\d\*]+#/.test(s) ||
+           /^##[\d\*]+#/.test(s) ||
+           /^\*#[\d\*]+#/.test(s);
+  }
+
+  function isURL(s) {
+    try {
+      // Add protocol if missing for parsing
+      const test = s.match(/^https?:\/\//i) ? s : "https://" + s;
+      const u = new URL(test);
+      return u.hostname.includes(".") || /^\d+\.\d+\.\d+\.\d+$/.test(u.hostname);
+    } catch {
+      return /^(https?:\/\/)?[\w.-]+\.[a-z]{2,}([\/\w.?=&%-]*)?$/i.test(s.trim());
+    }
+  }
+
+  function isEmail(s) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
+  }
+
+  function isUPI(s) {
+    // name@bank or mobile@upi
+    return /^[\w.-]+@[\w.-]+$/.test(s.trim()) && !isEmail(s) && s.includes("@");
+  }
+
+  function isPhone(s) {
+    const cleaned = s.replace(/[\s\-\(\)\.]/g, "");
+    // Indian mobile
+    if (/^(\+?91)?[6-9]\d{9}$/.test(cleaned)) return true;
+    // International-ish
+    if (/^\+?[1-9]\d{7,14}$/.test(cleaned)) return true;
+    // With 0 prefix
+    if (/^0[6-9]\d{9}$/.test(cleaned)) return true;
+    return false;
+  }
+
+  // ---------- USSD Analyzer ----------
+  function analyzeUSSD(input) {
+    const findings = [];
+    let score = 0;
+    const clean = input.replace(/\s/g, "");
+
+    // Exact match first
+    if (D.ussdCodes[clean]) {
+      const c = D.ussdCodes[clean];
+      score += c.risk;
+      findings.push({
+        severity: c.risk >= 70 ? "critical" : c.risk >= 40 ? "high" : "info",
+        title: c.action,
+        detail: c.explanation,
+        extra: `Scam misuse: ${c.scamMisuse}`
+      });
+      if (c.enablesForwarding) {
+        findings.push({
+          severity: "critical",
+          title: "This code ENABLES call forwarding",
+          detail: "Once activated, incoming calls (including bank OTP calls) can be silently redirected to another number controlled by a scammer."
+        });
+      }
+      if (c.disablesForwarding) {
+        findings.push({
+          severity: "info",
+          title: "This code DISABLES call forwarding",
+          detail: "This is generally safe and useful if you suspect your calls are being diverted."
+        });
+      }
+      if (c.checksStatus) {
+        findings.push({
+          severity: "info",
+          title: "This only checks status",
+          detail: "It does not change any settings. Completely safe."
+        });
+      }
+    } else {
+      // Pattern match
+      let matched = false;
+      for (const [key, c] of Object.entries(D.ussdCodes)) {
+        if (c.pattern && clean.startsWith(key.replace(/\*$/, ""))) {
+          matched = true;
+          score += c.risk;
+          findings.push({
+            severity: c.risk >= 70 ? "critical" : "high",
+            title: c.action,
+            detail: c.explanation,
+            extra: `Scam misuse: ${c.scamMisuse}`
+          });
+          if (c.enablesForwarding) {
+            findings.push({
+              severity: "critical",
+              title: "Enables call forwarding to a number",
+              detail: "The number after the code will start receiving your calls. Never dial such a code received from a stranger."
+            });
+          }
+          break;
+        }
+      }
+      if (!matched) {
+        // Generic USSD
+        score += 40;
+        findings.push({
+          severity: "high",
+          title: "Unrecognized USSD / MMI code",
+          detail: "This looks like a network service code. Scammers sometimes send obscure codes that change call settings. Do not dial it unless you fully understand its function."
+        });
+      }
+    }
+
+    // Always add the master warning
+    findings.push({
+      severity: "warning",
+      title: "Never dial codes sent by strangers",
+      detail: "If you already dialed a suspicious code, immediately dial ##002# to cancel ALL call forwarding, then check *#21#, *#61#, *#62#, *#67#."
+    });
+
+    return { score: Math.min(100, score), findings };
+  }
+
+  // ---------- Phone Analyzer ----------
+  function analyzePhone(input) {
+    const findings = [];
+    let score = 15; // baseline unknown number caution
+    const cleaned = input.replace(/[\s\-\(\)\.]/g, "");
+
+    // Indian mobile?
+    const isIndian = /^(\+?91)?[6-9]\d{9}$/.test(cleaned) || /^0[6-9]\d{9}$/.test(cleaned);
+    if (isIndian) {
+      findings.push({
+        severity: "info",
+        title: "Looks like a valid Indian mobile number format",
+        detail: "Format is correct, but that does not mean the caller is legitimate. Scammers use real Indian numbers too."
+      });
+    } else if (cleaned.startsWith("+") || cleaned.length > 11) {
+      score += 20;
+      findings.push({
+        severity: "medium",
+        title: "International or non-standard number",
+        detail: "Many scams originate from international numbers or VoIP. Be extra cautious."
+      });
+    }
+
+    // Premium rate heuristic (simple)
+    if (/^(1900|1901|1902|1908|1909)/.test(cleaned) || /premium|toll/i.test(input)) {
+      score += 35;
+      findings.push({
+        severity: "high",
+        title: "Possible premium-rate number pattern",
+        detail: "Some numbers charge high rates when called. Avoid calling back unknown numbers."
+      });
+    }
+
+    findings.push({
+      severity: "warning",
+      title: "Phone number alone cannot prove legitimacy",
+      detail: "Scammers spoof caller ID. Never trust the number shown on screen. Always hang up and call official numbers from the company's website or your card."
+    });
+
+    findings.push({
+      severity: "info",
+      title: "Safety advice",
+      detail: "Never share OTP. Never install apps. Never grant remote access. Hang up and verify independently."
+    });
+
+    return { score: Math.min(100, score), findings };
+  }
+
+  // ---------- URL Analyzer ----------
+  function analyzeURL(input) {
+    const findings = [];
+    let score = 0;
+    let url;
+    try {
+      const withProto = input.match(/^https?:\/\//i) ? input : "https://" + input;
+      url = new URL(withProto);
+    } catch {
+      score += 40;
+      findings.push({
+        severity: "high",
+        title: "Malformed or unparseable URL",
+        detail: "This does not look like a valid web address."
+      });
+      return { score, findings };
+    }
+
+    const host = url.hostname.toLowerCase();
+    const full = url.href.toLowerCase();
+
+    // Protocol
+    if (url.protocol !== "https:") {
+      score += 25;
+      findings.push({
+        severity: "high",
+        title: "Not using HTTPS",
+        detail: "The connection is not encrypted. Real banks and payment pages always use HTTPS. Entering data here is dangerous."
+      });
+    } else {
+      findings.push({
+        severity: "info",
+        title: "Uses HTTPS",
+        detail: "Encryption is present, but HTTPS alone does not make a site safe. Many phishing sites also use HTTPS."
+      });
+    }
+
+    // IP address URL
+    if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+      score += 40;
+      findings.push({
+        severity: "critical",
+        title: "URL uses a raw IP address",
+        detail: "Legitimate services almost never ask you to visit an IP address. This is a strong phishing indicator."
+      });
+    }
+
+    // Shortener
+    const isShort = D.urlShorteners.some(s => host === s || host.endsWith("." + s));
+    if (isShort) {
+      score += 25;
+      findings.push({
+        severity: "high",
+        title: "URL shortener detected",
+        detail: `Domain "${host}" is a known URL shortener. Short links hide the real destination and are frequently used in phishing SMS.`
+      });
+    }
+
+    // Excessive subdomains
+    const parts = host.split(".");
+    if (parts.length > 4) {
+      score += 20;
+      findings.push({
+        severity: "medium",
+        title: "Excessive subdomains",
+        detail: "Too many subdomain levels can be used to make a fake site look official (e.g. login.secure.bank.example.xyz)."
+      });
+    }
+
+    // Random-looking domain
+    if (/[0-9]{4,}/.test(host) || (host.length > 25 && /[a-z]{12,}/.test(host))) {
+      score += 15;
+      findings.push({
+        severity: "medium",
+        title: "Domain looks randomly generated or unusually long",
+        detail: "Phishing domains are often long strings of characters or contain many numbers."
+      });
+    }
+
+    // Brand impersonation heuristic
+    const suspiciousTlds = ["xyz","top","online","site","club","icu","buzz","rest","ml","ga","cf","gq","tk","one","click","link","live","shop","store","app","dev","tech","space","fun","pw","cc","ws"];
+    const brandHit = D.brands.find(b => {
+      const bClean = b.replace(/\s/g, "").toLowerCase();
+      if (!host.includes(bClean)) return false;
+      const labels = host.split(".");
+      const tld = labels[labels.length - 1];
+      const mainLabel = labels.length >= 2 ? labels[labels.length - 2] : labels[0];
+      // Any brand name on a highly suspicious TLD is risky
+      if (suspiciousTlds.includes(tld)) return true;
+      // Brand only appears in a subdomain, not the main label → suspicious
+      if (!mainLabel.includes(bClean)) return true;
+      // Main label is brand + extra words/hyphens (e.g. sbi-kyc-verify) → suspicious
+      if (mainLabel.includes("-") && mainLabel !== bClean) return true;
+      return false;
+    });
+    if (brandHit) {
+      score += 35;
+      findings.push({
+        severity: "critical",
+        title: `Possible brand impersonation ("${brandHit}")`,
+        detail: `The domain contains the name of a well-known brand but does not look like an official domain. This is a classic typosquatting / phishing technique.`
+      });
+    }
+
+    // Suspicious words in path or host
+    const suspiciousWords = ["login", "verify", "secure", "account", "update", "kyc", "confirm", "banking", "paypal", "signin"];
+    const foundWords = suspiciousWords.filter(w => full.includes(w));
+    if (foundWords.length >= 2) {
+      score += 15;
+      findings.push({
+        severity: "medium",
+        title: "Contains multiple sensitive keywords",
+        detail: `Words like ${foundWords.join(", ")} appear in the URL. Combined with other signals this raises suspicion.`
+      });
+    }
+
+    // Recently-created looking (heuristic only)
+    if (/\d{2,4}\.(xyz|top|online|site|club|icu|buzz|rest|ml|ga|cf|gq)$/i.test(host)) {
+      score += 20;
+      findings.push({
+        severity: "high",
+        title: "Suspicious top-level domain",
+        detail: "Domains ending in .xyz, .top, .online, .club etc. are frequently used for short-lived phishing sites."
+      });
+    }
+
+    if (score === 0) {
+      findings.push({
+        severity: "info",
+        title: "No strong automated red flags",
+        detail: "Still verify the domain manually. Type the official website address yourself instead of clicking links."
+      });
+    }
+
+    return { score: Math.min(100, score), findings };
+  }
+
+  // ---------- Message / General Text Analyzer ----------
+  function analyzeMessage(input) {
+    const findings = [];
+    let score = 0;
+    const text = input;
+
+    // Scam phrase rules
+    for (const rule of D.scamPhrases) {
+      if (rule.regex.test(text)) {
+        score += rule.weight;
+        findings.push({
+          severity: rule.weight >= 35 ? "critical" : rule.weight >= 25 ? "high" : "medium",
+          title: rule.reason,
+          detail: `Matched pattern that is commonly used in Indian scam messages.`
+        });
+      }
+    }
+
+    // Psychology scoring
+    for (const [tactic, words] of Object.entries(D.psychology)) {
+      const hits = words.filter(w => text.toLowerCase().includes(w.toLowerCase()));
+      if (hits.length > 0) {
+        const add = Math.min(25, hits.length * 8);
+        score += add;
+        findings.push({
+          severity: add >= 16 ? "high" : "medium",
+          title: `Uses ${tactic} tactics`,
+          detail: `Detected words/phrases: ${hits.slice(0, 4).join(", ")}${hits.length > 4 ? "…" : ""}. Scammers deliberately trigger ${tactic} to make you act without thinking.`
+        });
+      }
+    }
+
+    // Link presence
+    if (/https?:\/\/|www\.|bit\.ly|tinyurl|t\.co/i.test(text)) {
+      score += 15;
+      findings.push({
+        severity: "medium",
+        title: "Contains a link",
+        detail: "Messages with links are higher risk. Prefer typing the official website yourself."
+      });
+    }
+
+    // APK / download
+    if (/\.apk|download.*(app|application)|install.*(app|apk)/i.test(text)) {
+      score += 35;
+      findings.push({
+        severity: "critical",
+        title: "Mentions downloading an app or APK",
+        detail: "Scammers distribute malware as 'official' banking or courier apps. Only install from official app stores."
+      });
+    }
+
+    // Money amount
+    if (/₹\s*[\d,]+|rs\.?\s*[\d,]+|inr\s*[\d,]+/i.test(text)) {
+      score += 10;
+      findings.push({
+        severity: "info",
+        title: "Mentions a specific amount of money",
+        detail: "Scams often include exact figures (prize, fee, refund) to increase credibility and urgency."
+      });
+    }
+
+    if (findings.length === 0) {
+      findings.push({
+        severity: "info",
+        title: "No strong scam phrases detected",
+        detail: "Still stay cautious with unsolicited messages. When in doubt, verify through official channels."
+      });
+    }
+
+    return { score: Math.min(100, score), findings };
+  }
+
+  // ---------- Email Analyzer ----------
+  function analyzeEmail(input) {
+    const findings = [];
+    let score = 10;
+    const email = input.trim().toLowerCase();
+    const [local, domain] = email.split("@");
+
+    // Free providers often used in scams
+    const free = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "proton.me", "mail.com"];
+    if (free.includes(domain)) {
+      score += 15;
+      findings.push({
+        severity: "medium",
+        title: "Uses a free email provider",
+        detail: "Legitimate banks and government agencies almost never send official notices from Gmail/Yahoo etc. Prefer official domain emails."
+      });
+    }
+
+    // Brand in local part but free domain
+    const brandInLocal = D.brands.some(b => local.includes(b));
+    if (brandInLocal && free.includes(domain)) {
+      score += 30;
+      findings.push({
+        severity: "high",
+        title: "Brand name in free email address",
+        detail: "Example: sbi.support@gmail.com is never official. Real banks use their own domains."
+      });
+    }
+
+    findings.push({
+      severity: "info",
+      title: "Email address alone is weak evidence",
+      detail: "Anyone can register similar-looking addresses. Always check the full headers and never click links in unexpected emails."
+    });
+
+    return { score: Math.min(100, score), findings };
+  }
+
+  // ---------- UPI Analyzer ----------
+  function analyzeUPI(input) {
+    const findings = [];
+    let score = 20;
+    const upi = input.trim().toLowerCase();
+
+    findings.push({
+      severity: "warning",
+      title: "UPI ID cannot be fully verified offline",
+      detail: "Anyone can create a UPI ID. Matching a business name does not guarantee legitimacy. Always confirm the recipient name shown in your UPI app before paying."
+    });
+
+    // Suspicious patterns
+    if (/help|support|care|official|verify|kyc|bank|refund/i.test(upi)) {
+      score += 25;
+      findings.push({
+        severity: "high",
+        title: "UPI ID contains official-sounding words",
+        detail: "Scammers often register IDs like 'sbicustomercare@oksbi' or 'refund@paytm'. Real support never asks you to pay them."
+      });
+    }
+
+    findings.push({
+      severity: "info",
+      title: "Golden rule",
+      detail: "You never need to enter your UPI PIN to RECEIVE money. If you are entering a PIN, money is leaving your account."
+    });
+
+    return { score: Math.min(100, score), findings };
+  }
+
+  // ---------- Main Analyze Entry ----------
+  function analyze(rawInput) {
+    const input = (rawInput || "").trim();
+    if (!input) {
+      return {
+        type: "Unknown",
+        score: 0,
+        level: D.riskLevels[0],
+        findings: [],
+        actions: [],
+        tips: []
+      };
+    }
+
+    const detection = detectType(input);
+    let result;
+
+    switch (detection.type) {
+      case "USSD/MMI Code":
+        result = analyzeUSSD(input);
+        break;
+      case "Website URL":
+        result = analyzeURL(input);
+        break;
+      case "Phone Number":
+        result = analyzePhone(input);
+        break;
+      case "Email":
+        result = analyzeEmail(input);
+        break;
+      case "UPI ID":
+        result = analyzeUPI(input);
+        break;
+      default:
+        result = analyzeMessage(input);
+    }
+
+    // Cap and map level
+    const score = Math.min(100, Math.max(0, result.score));
+    const level = D.riskLevels.find(l => score >= l.min && score <= l.max) || D.riskLevels[0];
+
+    // Recommended actions based on score and type
+    const actions = [];
+    if (score >= 46) {
+      actions.push(D.actions.ignore);
+      actions.push(D.actions.noClick);
+      actions.push(D.actions.noPay);
+      actions.push(D.actions.block);
+      actions.push(D.actions.report);
+    } else if (score >= 26) {
+      actions.push(D.actions.verify);
+      actions.push(D.actions.official);
+      actions.push(D.actions.noClick);
+    } else {
+      actions.push(D.actions.verify);
+    }
+
+    if (detection.type === "USSD/MMI Code") {
+      actions.unshift(D.actions.noDial);
+      if (score >= 50) {
+        actions.push("If you already dialed it → immediately dial ##002# to cancel all call forwarding.");
+      }
+    }
+    if (detection.type === "Phone Number") {
+      actions.push("Hang up and call the official number from the company website or your card.");
+    }
+
+    // Safety tips
+    const tips = [
+      "Banks, government and couriers never ask for OTP, UPI PIN or remote access.",
+      "Type official website addresses yourself — never trust links in SMS or WhatsApp.",
+      "When in doubt, wait 10 minutes and talk to a family member before acting.",
+      "Report every suspected scam at cybercrime.gov.in or 1930."
+    ];
+
+    return {
+      input,
+      type: detection.type,
+      confidence: detection.confidence,
+      score,
+      level,
+      findings: result.findings,
+      actions,
+      tips
+    };
+  }
+
+  // Public API
+  return {
+    analyze,
+    detectType,
+    getKnowledge: () => D.knowledge,
+    getScamLibrary: () => D.scamLibrary,
+    getRiskLevels: () => D.riskLevels
+  };
+})();
+// ScamProof UI Controller
+
+document.addEventListener("DOMContentLoaded", () => {
+  const inputEl = document.getElementById("scam-input");
+  const analyzeBtn = document.getElementById("analyze-btn");
+  const clearBtn = document.getElementById("clear-btn");
+  const resultsEl = document.getElementById("results");
+  const sections = {
+    analyzer: document.getElementById("section-analyzer"),
+    education: document.getElementById("section-education"),
+    knowledge: document.getElementById("section-knowledge"),
+    library: document.getElementById("section-library")
+  };
+  const navBtns = document.querySelectorAll(".nav-btn");
+
+  // ---------- Navigation ----------
+  function showSection(name) {
+    Object.values(sections).forEach(s => s.classList.remove("visible"));
+    sections[name].classList.add("visible");
+    navBtns.forEach(b => {
+      b.classList.toggle("active", b.dataset.section === name);
+    });
+    if (name !== "analyzer") {
+      resultsEl.classList.remove("visible");
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  navBtns.forEach(btn => {
+    btn.addEventListener("click", () => showSection(btn.dataset.section));
+  });
+
+  // ---------- Analyze ----------
+  function runAnalysis() {
+    const raw = inputEl.value;
+    if (!raw.trim()) {
+      inputEl.focus();
+      return;
+    }
+
+    const result = ScamEngine.analyze(raw);
+    renderResults(result);
+    resultsEl.classList.add("visible");
+    resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  analyzeBtn.addEventListener("click", runAnalysis);
+  clearBtn.addEventListener("click", () => {
+    inputEl.value = "";
+    resultsEl.classList.remove("visible");
+    inputEl.focus();
+  });
+
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      runAnalysis();
+    }
+  });
+
+  // Example chips
+  document.querySelectorAll(".example-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      inputEl.value = chip.dataset.example;
+      runAnalysis();
+    });
+  });
+
+  // ---------- Render Results ----------
+  function renderResults(r) {
+    // Risk meter
+    const circumference = 2 * Math.PI * 54;
+    const offset = circumference - (r.score / 100) * circumference;
+    const progress = document.getElementById("meter-progress");
+    progress.style.stroke = r.level.color;
+    progress.style.strokeDasharray = circumference;
+    progress.style.strokeDashoffset = offset;
+
+    document.getElementById("score-value").textContent = r.score;
+    document.getElementById("score-value").style.color = r.level.color;
+
+    const badge = document.getElementById("risk-badge");
+    badge.textContent = r.level.label;
+    badge.style.background = r.level.color + "22";
+    badge.style.color = r.level.color;
+    badge.style.border = `1px solid ${r.level.color}55`;
+
+    document.getElementById("risk-type").innerHTML =
+      `Detected type: <strong>${escapeHtml(r.type)}</strong>`;
+    document.getElementById("risk-desc").textContent = r.level.description;
+
+    // Findings
+    const findingsContainer = document.getElementById("findings-list");
+    findingsContainer.innerHTML = "";
+    r.findings.forEach(f => {
+      const iconMap = {
+        critical: "⚠",
+        high: "🔴",
+        medium: "🟠",
+        warning: "ℹ",
+        info: "•"
+      };
+      const div = document.createElement("div");
+      div.className = "finding";
+      div.innerHTML = `
+        <div class="finding-icon ${f.severity}">${iconMap[f.severity] || "•"}</div>
+        <div class="finding-body">
+          <h4>${escapeHtml(f.title)}</h4>
+          <p>${escapeHtml(f.detail)}</p>
+          ${f.extra ? `<p class="extra">${escapeHtml(f.extra)}</p>` : ""}
+        </div>
+      `;
+      findingsContainer.appendChild(div);
+    });
+
+    // Actions
+    const actionsContainer = document.getElementById("actions-list");
+    actionsContainer.innerHTML = "";
+    r.actions.forEach(a => {
+      const div = document.createElement("div");
+      div.className = "action-item";
+      div.textContent = a;
+      actionsContainer.appendChild(div);
+    });
+
+    // Tips
+    const tipsContainer = document.getElementById("tips-list");
+    tipsContainer.innerHTML = "";
+    r.tips.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      tipsContainer.appendChild(li);
+    });
+  }
+
+  // ---------- Knowledge Base ----------
+  function renderKnowledge() {
+    const container = document.getElementById("knowledge-grid");
+    const data = ScamEngine.getKnowledge();
+    container.innerHTML = data.map(k => `
+      <div class="kb-card" data-id="${k.id}">
+        <h3>${escapeHtml(k.title)}</h3>
+        <p>${escapeHtml(k.content)}</p>
+      </div>
+    `).join("");
+  }
+
+  // ---------- Scam Library ----------
+  function renderLibrary(filter = "") {
+    const container = document.getElementById("library-grid");
+    const data = ScamEngine.getScamLibrary();
+    const q = filter.toLowerCase().trim();
+    const filtered = q
+      ? data.filter(s =>
+          s.title.toLowerCase().includes(q) ||
+          s.summary.toLowerCase().includes(q) ||
+          s.tags.some(t => t.includes(q))
+        )
+      : data;
+
+    container.innerHTML = filtered.map(s => `
+      <div class="scam-card">
+        <h3>${escapeHtml(s.title)}</h3>
+        <div class="tags">${s.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
+        <p>${escapeHtml(s.summary)}</p>
+        <div class="scam-detail">
+          <strong>How it works</strong>
+          <p>${escapeHtml(s.howItWorks)}</p>
+          <strong>Red flags</strong>
+          <ul>${s.redFlags.map(f => `<li>${escapeHtml(f)}</li>`).join("")}</ul>
+          <strong>How to protect yourself</strong>
+          <p>${escapeHtml(s.protection)}</p>
+        </div>
+      </div>
+    `).join("") || `<p style="color:var(--text-muted)">No matching scams found.</p>`;
+  }
+
+  document.getElementById("library-search").addEventListener("input", (e) => {
+    renderLibrary(e.target.value);
+  });
+
+  // ---------- Education content is static in HTML ----------
+
+  // Init
+  renderKnowledge();
+  renderLibrary();
+  showSection("analyzer");
+
+  // Utility
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+});  </script>
+</body>
+</html>
