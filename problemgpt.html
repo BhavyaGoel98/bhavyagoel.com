@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProblemGPS — Every Problem Has a Next Step</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1D5BFF; --blue-deep:#0B2A6B; --blue-soft:#E8EEFF;
+  --green:#0FA36B; --green-soft:#E4F7EE;
+  --amber:#F0A011; --amber-soft:#FDF3DD;
+  --red:#E5484D; --red-soft:#FDEAEA;
+  --ink:#101828; --ink-2:#475467; --ink-3:#8A94A6;
+  --paper:#F7F9FC; --card:#FFFFFF; --line:#E4E9F0;
+  --route:#1D5BFF;
+  --radius:16px; --shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.06);
+  --font-d:'Bricolage Grotesque',system-ui,sans-serif;
+  --font-b:'Inter',system-ui,sans-serif;
+}
+html[data-theme="dark"]{
+  --blue:#5B8CFF; --blue-deep:#B9CCFF; --blue-soft:#1A2440;
+  --green:#3BD695; --green-soft:#12291F;
+  --amber:#FFC24D; --amber-soft:#2E2410;
+  --red:#FF7A7E; --red-soft:#331416;
+  --ink:#F2F5FA; --ink-2:#B9C2D0; --ink-3:#7C8697;
+  --paper:#101318; --card:#181C23; --line:#262C36;
+  --route:#5B8CFF;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+h1,h2,h3,h4{font-family:var(--font-d);line-height:1.15;letter-spacing:-.01em}
+a{color:var(--blue)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:14px;padding:12px 0}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-weight:800;font-size:1.15rem;cursor:pointer;user-select:none}
+.logo svg{flex:0 0 auto}
+.logo span b{color:var(--blue)}
+.nav .grow{flex:1}
+.navbtn{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:10px;padding:7px 12px;font-size:.82rem;font-weight:600}
+.navbtn:hover{border-color:var(--blue);color:var(--blue)}
+/* sticky mini search */
+#miniSearch{display:none;flex:1;max-width:420px}
+#miniSearch input{width:100%;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.85rem}
+body.in-dash #miniSearch{display:block}
+/* ---------- hero ---------- */
+.hero{padding:64px 0 40px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:6px 14px;border-radius:99px;margin-bottom:20px}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3.6rem);font-weight:800;margin-bottom:14px}
+.hero h1 em{font-style:normal;color:var(--blue);position:relative;white-space:nowrap}
+.hero p.sub{color:var(--ink-2);font-size:1.06rem;max-width:520px;margin:0 auto 34px}
+/* search */
+.searchbox{position:relative;max-width:660px;margin:0 auto}
+.searchbar{display:flex;align-items:center;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:8px 8px 8px 18px;box-shadow:var(--shadow);transition:border-color .2s}
+.searchbar:focus-within{border-color:var(--blue)}
+.searchbar svg{color:var(--ink-3);flex:0 0 auto}
+.searchbar input{flex:1;border:none;outline:none;background:none;font-size:1.02rem;color:var(--ink);padding:10px 0;min-width:0}
+.searchbar input::placeholder{color:var(--ink-3)}
+.gobtn{background:var(--blue);color:#fff;border:none;border-radius:12px;padding:12px 22px;font-weight:700;font-size:.95rem;transition:transform .12s}
+html[data-theme="dark"] .gobtn{color:#0B1020}
+.gobtn:active{transform:scale(.97)}
+.suggest{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;z-index:40;display:none;text-align:left}
+.suggest.open{display:block;animation:fadeUp .18s ease}
+.suggest button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 16px;background:none;border:none;text-align:left;font-size:.92rem;color:var(--ink);border-bottom:1px solid var(--line)}
+.suggest button:last-child{border-bottom:none}
+.suggest button:hover,.suggest button.active{background:var(--blue-soft)}
+.suggest .cat{margin-left:auto;font-size:.68rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.trybar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+.trychip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:.8rem;color:var(--ink-2);font-weight:500}
+.trychip:hover{border-color:var(--blue);color:var(--blue)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+/* ---------- sections ---------- */
+section.block{padding:34px 0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+.sec-head h2{font-size:1.35rem;font-weight:700}
+.sec-head .count{font-size:.78rem;color:var(--ink-3);font-weight:600}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;text-align:left}
+.pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.pcard .ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--blue-soft);color:var(--blue);margin-bottom:12px}
+.pcard h3{font-size:1rem;font-weight:700;margin-bottom:5px}
+.pcard p{font-size:.8rem;color:var(--ink-2);margin-bottom:10px}
+.pcard .meta{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:6px}
+.tag.b{background:var(--blue-soft);color:var(--blue)} .tag.g{background:var(--green-soft);color:var(--green)}
+.tag.a{background:var(--amber-soft);color:var(--amber)} .tag.r{background:var(--red-soft);color:var(--red)}
+.catrow{display:flex;flex-wrap:wrap;gap:8px}
+.catchip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 15px;font-size:.84rem;font-weight:600;color:var(--ink-2)}
+.catchip:hover{border-color:var(--blue);color:var(--blue)}
+/* ---------- dashboard ---------- */
+#dash{display:none;padding:28px 0 60px}
+body.in-dash #home{display:none} body.in-dash #dash{display:block}
+.crumbs{font-size:.78rem;color:var(--ink-3);margin-bottom:14px}
+.crumbs b{color:var(--ink-2)}
+.summary-card{background:linear-gradient(120deg,var(--blue) 0%,var(--blue-deep) 100%);color:#fff;border-radius:20px;padding:26px 26px 22px;margin-bottom:16px;position:relative;overflow:hidden}
+html[data-theme="dark"] .summary-card{background:linear-gradient(120deg,#20336B,#101B3D);color:#EAF0FF}
+.summary-card .pin{position:absolute;right:-20px;top:-20px;opacity:.14;transform:rotate(12deg)}
+.summary-card .lbl{font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-bottom:8px}
+.summary-card h2{font-size:1.45rem;font-weight:800;max-width:640px}
+.summary-card .conf{margin-top:12px;font-size:.78rem;opacity:.8}
+.emg{background:var(--red-soft);border:1.5px solid var(--red);border-radius:16px;padding:18px 20px;margin-bottom:16px}
+.emg h3{color:var(--red);font-size:1.05rem;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.emg ul{margin:6px 0 0 18px;font-size:.88rem}
+.meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.meter{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.meter .k{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.meter .v{font-family:var(--font-d);font-weight:700;font-size:1.02rem;margin-bottom:8px}
+.bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+/* layout: main + side */
+.dashgrid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:860px){.dashgrid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.panel>h3{font-size:1.05rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.panel>h3 svg{color:var(--blue)}
+/* route / steps — signature element */
+.route{position:relative;padding-left:34px}
+.route::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:3px;border-radius:3px;background:repeating-linear-gradient(to bottom,var(--route) 0 7px,transparent 7px 13px);opacity:.45}
+.step{position:relative;padding:10px 12px 12px;border-radius:12px;margin-bottom:6px;transition:background .2s}
+.step:hover{background:var(--blue-soft)}
+.step .dot{position:absolute;left:-28px;top:14px;width:22px;height:22px;border-radius:50%;border:2.5px solid var(--route);background:var(--card);display:grid;place-items:center;font-size:.62rem;font-weight:800;color:var(--route);transition:.2s}
+.step.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+.step .top{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.step .top input{margin-top:5px;accent-color:var(--green);width:16px;height:16px;flex:0 0 auto}
+.step .tt{font-weight:700;font-size:.95rem}
+.step.done .tt{text-decoration:line-through;color:var(--ink-3)}
+.step .tm{margin-left:auto;font-size:.7rem;color:var(--ink-3);white-space:nowrap;font-weight:600;padding-top:3px}
+.step .dd{font-size:.85rem;color:var(--ink-2);margin:5px 0 0 26px}
+.step .why{font-size:.78rem;color:var(--ink-3);margin:5px 0 0 26px}
+.step .why b{color:var(--blue);font-weight:700}
+.step .note{margin:7px 0 0 26px;font-size:.78rem;border-radius:8px;padding:7px 10px}
+.note.tip{background:var(--green-soft);color:var(--green)} .note.warn{background:var(--amber-soft);color:var(--amber)}
+.progressline{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.progressline .bar{flex:1;height:9px}
+.progressline b{font-size:.82rem;color:var(--green);white-space:nowrap}
+/* documents / evidence */
+.doc{display:flex;gap:11px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.87rem}
+.doc:last-child{border:none}
+.doc svg{color:var(--blue);flex:0 0 auto;margin-top:2px}
+.doc b{display:block;font-size:.87rem}
+.doc span{color:var(--ink-2);font-size:.78rem}
+.evrow{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:.87rem}
+.evrow input{accent-color:var(--blue);width:15px;height:15px}
+.evscore{text-align:center;margin:12px 0 6px}
+.evscore .num{font-family:var(--font-d);font-size:2rem;font-weight:800}
+.evscore .lab{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+/* priority actions */
+.act{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);font-size:.88rem}
+.act:last-child{border:none}
+.prio{flex:0 0 auto;font-size:.62rem;font-weight:800;letter-spacing:.05em;padding:3px 8px;border-radius:6px;margin-top:2px}
+.prio.CRITICAL{background:var(--red);color:#fff}.prio.HIGH{background:var(--red-soft);color:var(--red)}
+.prio.MEDIUM{background:var(--amber-soft);color:var(--amber)}.prio.LOW{background:var(--blue-soft);color:var(--blue)}.prio.OPTIONAL{background:var(--line);color:var(--ink-2)}
+/* lists */
+.xlist li{margin:0 0 8px 18px;font-size:.87rem;color:var(--ink-2)}
+.xlist.red li::marker{content:"✕  ";color:var(--red)}
+.xlist.dot li::marker{color:var(--amber)}
+/* decision tree */
+.dtree{font-size:.86rem}
+.dnode{border-left:3px solid var(--blue);padding:6px 0 6px 14px;margin:0 0 4px 6px}
+.dnode b{font-weight:700}
+.dnode .yes{color:var(--green);font-weight:700}.dnode .no{color:var(--red);font-weight:700}
+.dnode .then{color:var(--ink-2)}
+/* outcomes / risks / faq */
+.outc{border-radius:12px;padding:12px 14px;margin-bottom:8px;font-size:.85rem}
+.outc b{display:block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.outc.best{background:var(--green-soft)} .outc.best b{color:var(--green)}
+.outc.norm{background:var(--blue-soft)} .outc.norm b{color:var(--blue)}
+.outc.worst{background:var(--red-soft)} .outc.worst b{color:var(--red)}
+.riskrow{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:.82rem}
+.riskrow .k{width:82px;color:var(--ink-2);font-weight:600;flex:0 0 auto}
+.riskrow .bar{flex:1}
+.riskrow .lv{width:70px;text-align:right;font-weight:700;font-size:.72rem;flex:0 0 auto}
+details.faq{border-bottom:1px dashed var(--line);padding:9px 0}
+details.faq:last-child{border:none}
+details.faq summary{cursor:pointer;font-weight:600;font-size:.9rem;list-style:none;display:flex;gap:8px;align-items:center}
+details.faq summary::before{content:"+";color:var(--blue);font-weight:800;width:14px}
+details.faq[open] summary::before{content:"–"}
+details.faq p{font-size:.84rem;color:var(--ink-2);padding:6px 0 2px 22px}
+/* related & alt */
+.relrow{display:flex;flex-wrap:wrap;gap:8px}
+.relchip{background:var(--blue-soft);color:var(--blue);border:none;border-radius:99px;padding:7px 13px;font-size:.78rem;font-weight:600}
+.altcard{border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px;font-size:.85rem}
+.altcard b{color:var(--blue)}
+/* template letter */
+.tpl{background:var(--paper);border:1px dashed var(--line);border-radius:12px;padding:14px;font-size:.8rem;white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;line-height:1.55;max-height:260px;overflow:auto}
+.toolrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tool{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:.8rem;font-weight:600;color:var(--ink-2)}
+.tool:hover{border-color:var(--blue);color:var(--blue)}
+.tool.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+html[data-theme="dark"] .tool.primary{color:#0B1020}
+/* glossary popover */
+.term{color:var(--blue);border-bottom:1.5px dotted var(--blue);cursor:help;font-weight:600}
+#gloss{position:fixed;inset:0;background:rgba(10,14,22,.5);display:none;place-items:center;z-index:99;padding:20px}
+#gloss.open{display:grid}
+#gloss .box{background:var(--card);border-radius:18px;max-width:440px;width:100%;padding:24px;box-shadow:var(--shadow)}
+#gloss h3{color:var(--blue);margin-bottom:8px}
+#gloss p{font-size:.9rem;color:var(--ink-2);margin-bottom:8px}
+#gloss .close{margin-top:10px}
+/* toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:99px;font-size:.85rem;font-weight:600;transition:.3s;z-index:100;opacity:0}
+#toast.show{transform:translateX(-50%);opacity:1}
+/* confetti */
+.cf{position:fixed;top:-10px;width:9px;height:14px;z-index:98;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--ink-3);font-size:.78rem;text-align:center}
+footer b{color:var(--ink-2)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* print */
+@media print{
+  header,.trybar,.toolrow,#toast,footer,.relrow,.suggest{display:none!important}
+  body{background:#fff;color:#000}
+  .panel,.meter,.summary-card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+  .summary-card{background:#fff!important;color:#000!important}
+  .dashgrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <div class="logo" onclick="goHome()" role="button" aria-label="ProblemGPS home">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.1-7-11a7 7 0 1 1 14 0c0 5.9-7 11-7 11Z" stroke="var(--blue)" stroke-width="2"/><path d="M9.5 10.2l2 2 3.5-4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Problem<b>GPS</b></span>
+    </div>
+    <div class="grow" id="miniSearch">
+      <input id="miniInput" type="text" placeholder="Search another problem…" aria-label="Search another problem">
+    </div>
+    <div class="grow" id="navSpacer"></div>
+    <button class="navbtn" onclick="openGlossary()">Glossary</button>
+    <button class="navbtn" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
+  </div>
+</header>
+
+<!-- ================= HOME ================= -->
+<main id="home">
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+        Offline · No sign-up · India-first
+      </div>
+      <h1>Every problem has a <em>next step.</em></h1>
+      <p class="sub">Describe your problem once. ProblemGPS turns it into a clear, step-by-step roadmap — like navigation, but for real life.</p>
+      <div class="searchbox">
+        <div class="searchbar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="mainInput" type="text" placeholder="Describe your problem…" autocomplete="off" aria-label="Describe your problem">
+          <button class="gobtn" onclick="submitSearch()">Solve it →</button>
+        </div>
+        <div class="suggest" id="suggestBox" role="listbox"></div>
+      </div>
+      <div class="trybar" id="tryBar"></div>
+    </div>
+
+    <section class="block">
+      <div class="sec-head"><h2>Popular problems</h2><span class="count" id="probCount"></span></div>
+      <div class="cardgrid" id="popularGrid"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-head"><h2>Browse by category</h2></div>
+      <div class="catrow" id="catRow"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-head"><h2>Letter &amp; complaint templates</h2></div>
+      <div class="cardgrid" id="tplGrid"></div>
+    </section>
+  </div>
+</main>
+
+<!-- ================= DASHBOARD ================= -->
+<main id="dash"><div class="wrap" id="dashInner"></div></main>
+
+<!-- glossary modal -->
+<div id="gloss" role="dialog" aria-modal="true">
+  <div class="box">
+    <h3 id="gTitle">Glossary</h3>
+    <p id="gBody"></p>
+    <div id="gList"></div>
+    <button class="tool close" onclick="closeGlossary()">Close</button>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<footer>
+  <div class="wrap">
+    <b>ProblemGPS</b> · Built by BG · Educational guidance, not legal advice. Verify details with official sources (helplines &amp; portals listed in each guide). Runs 100% in your browser — nothing you type leaves this page.
+  </div>
+</footer>
+<script>
+/* =====================================================
+   PROBLEMGPS — LOCAL RULE ENGINE (no API, fully offline)
+   ===================================================== */
+const DIFF=["Very Easy","Easy","Medium","Hard","Complex"];
+const URG=["No Rush","Within One Month","Within 7 Days","Within 3 Days","Today","Immediate"];
+
+const SYN={
+  salary:["wages","pay","wage","paycheck","payment from company","stipend","income from job","dues","salaries"],
+  employer:["company","boss","office","hr","firm","organisation","manager"],
+  scam:["fraud","cheated","duped","con","fake call","phishing","scammed","scammer","fraudster"],
+  stolen:["theft","snatched","lost","robbed","pickpocket","chori"],
+  deposit:["security deposit","advance","security money","token money"],
+  landlord:["owner","house owner","makan malik","property owner","rent owner"],
+  upi:["gpay","google pay","phonepe","paytm","bhim","online payment","digital payment"],
+  passport:["travel document"],
+  aadhaar:["aadhar","adhaar","adhar","uid","uidai"],
+  bill:["invoice","charges","billing"],
+  refund:["money back","return money","reimbursement","chargeback"],
+  notice:["legal letter","court letter","lawyer letter","summons"],
+  business:["startup","company registration","enterprise","venture","shop","firm registration"],
+  gst:["goods and services tax","gstin","tax registration"],
+  fake:["counterfeit","duplicate","defective","damaged","wrong product","nakli"],
+  electricity:["power","bijli","current","electric"],
+  phone:["mobile","smartphone","handset","cell"],
+};
+
+const EMERGENCY=[
+  {k:["suicide","kill myself","end my life","self harm","want to die","hurt myself"],
+   t:"You matter, and help is available right now",
+   lines:["<b>Tele-MANAS (24×7 mental health):</b> 14416 or 1-800-891-4416","<b>KIRAN helpline:</b> 1800-599-0019","<b>Emergency:</b> 112","If you can, reach out to someone you trust nearby. You don't have to face this alone."]},
+  {k:["domestic abuse","domestic violence","husband beats","wife beats","abuse at home","dowry harassment"],
+   t:"Your safety comes first",
+   lines:["<b>Women Helpline (24×7):</b> 181","<b>Police emergency:</b> 112","<b>National Commission for Women WhatsApp:</b> 7827-170-170","If you are in immediate danger, get to a safe place before anything else."]},
+  {k:["blackmail","sextortion","threatening me online","leak my photos","morphed photos"],
+   t:"Cyber blackmail — act fast, don't pay",
+   lines:["<b>Cyber Crime Helpline:</b> 1930 (call immediately)","<b>Report online:</b> cybercrime.gov.in","Do NOT pay or delete evidence. Screenshot everything, then block."]},
+  {k:["kidnap","kidnapped","missing child","child abuse","child exploitation"],
+   t:"This is a police emergency",
+   lines:["<b>Police:</b> 112 — call now","<b>CHILDLINE (children in danger):</b> 1098","Report first, gather details after. Every minute matters."]},
+  {k:["heart attack","medical emergency","accident","bleeding badly","unconscious","poisoning"],
+   t:"Medical emergency — call for help first",
+   lines:["<b>Ambulance:</b> 108 / 102","<b>All-in-one emergency:</b> 112","Stay with the person, keep them stable, and follow the operator's instructions."]},
+];
+
+const GLOSSARY={
+  FIR:"First Information Report — the written record police create when a crime is reported. Filing one is free, and you're entitled to a copy. For lost items, many states allow an online 'lost report' instead.",
+  GST:"Goods and Services Tax — India's single indirect tax on goods and services. Businesses above a turnover threshold (₹40L goods / ₹20L services in most states) must register on gst.gov.in and get a GSTIN.",
+  PAN:"Permanent Account Number — a 10-character ID from the Income Tax Department, needed for taxes, bank accounts, and big transactions.",
+  Aadhaar:"A 12-digit identity number issued by UIDAI, linked to your fingerprints and iris. Used as ID and address proof across services.",
+  NOC:"No Objection Certificate — a letter saying an authority or person has no objection to something (e.g., bank NOC after a loan closes).",
+  RTI:"Right to Information — a law that lets any citizen ask government departments for information for a ₹10 fee. Replies are due in 30 days.",
+  UPI:"Unified Payments Interface — the system behind GPay, PhonePe, Paytm etc. Failed UPI payments are usually auto-reversed within 1 business day.",
+  Chargeback:"A reversal of a card payment raised through your bank when a merchant fails to deliver, ships fakes, or charges wrongly. Raise it in writing with proof.",
+  "Legal Notice":"A formal letter, usually from a lawyer, warning of legal action if a demand isn't met by a deadline. It is a warning, not a court order — but never ignore it.",
+  "Consumer Court":"Consumer Disputes Redressal Commissions (District/State/National) where buyers can sue sellers. You can file online at edaakhil.nic.in, often without a lawyer.",
+  Affidavit:"A written statement you swear is true, signed before a notary or magistrate. Lying on one is a punishable offence.",
+  KYC:"Know Your Customer — identity verification (PAN, Aadhaar, photo) that banks and apps must do before giving you services.",
+  EPF:"Employees' Provident Fund — retirement savings where you and your employer each contribute 12% of basic pay. Managed by EPFO; check your balance on the UMANG app.",
+  CEIR:"Central Equipment Identity Register (sancharsaathi.gov.in) — the government portal to block a lost/stolen phone's IMEI so it can't be used on any Indian network.",
+  Ombudsman:"An independent official who resolves complaints against banks (RBI Ombudsman at cms.rbi.org.in) or electricity companies, free of cost, after you've tried the company first.",
+};
+
+const TEMPLATES=[
+ {id:"t-salary",n:"Salary reminder letter",d:"Formal written demand for unpaid salary",body:`To,\nThe HR Manager / Director,\n[COMPANY NAME], [ADDRESS]\n\nSubject: Non-payment of salary for [MONTH(S)] — request for immediate release\n\nDear Sir/Madam,\n\nI, [YOUR NAME], employed as [DESIGNATION] (Employee ID: [ID]) since [JOINING DATE], have not received my salary of ₹[AMOUNT] for [MONTH(S)] despite completing all assigned duties.\n\nI request that the pending salary be credited to my registered bank account within 7 days of this letter. Kindly treat this as a formal written demand. If the dues remain unpaid, I will be constrained to approach the Labour Commissioner and pursue remedies available under law.\n\nDate: [DATE]\nSincerely,\n[NAME] · [PHONE] · [EMAIL]`},
+ {id:"t-refund",n:"Refund request (online order)",d:"Written refund demand to a seller/platform",body:`To,\nCustomer Grievance Officer,\n[PLATFORM / SELLER NAME]\n\nSubject: Refund request — Order #[ORDER ID] dated [ORDER DATE]\n\nDear Sir/Madam,\n\nI purchased [PRODUCT] for ₹[AMOUNT] (Order #[ORDER ID]). The product received is [defective / fake / not as described / not delivered]. Details: [ONE-LINE DESCRIPTION]. Supporting photos/invoice are attached.\n\nUnder the Consumer Protection Act, 2019, I request a full refund of ₹[AMOUNT] within 10 days. Failing this, I will file a complaint with the National Consumer Helpline (1915) and the Consumer Commission via e-daakhil.\n\nDate: [DATE]\n[NAME] · [PHONE] · [REGISTERED EMAIL]`},
+ {id:"t-deposit",n:"Deposit demand to landlord",d:"Recover your security deposit in writing",body:`To,\n[LANDLORD NAME], [ADDRESS]\n\nSubject: Refund of security deposit — [FLAT ADDRESS]\n\nDear [LANDLORD NAME],\n\nI vacated the above premises on [VACATE DATE] after clearing all rent and utility dues, and handed over the keys in good condition. As per our rent agreement dated [AGREEMENT DATE], my security deposit of ₹[AMOUNT] is refundable on vacating.\n\nDespite reminders on [DATES], the deposit has not been returned. Kindly refund ₹[AMOUNT] within 15 days of receiving this letter, failing which I shall initiate legal proceedings for recovery along with interest and costs.\n\nDate: [DATE]\n[NAME] · [PHONE]`},
+ {id:"t-cyber",n:"Cyber fraud complaint summary",d:"Ready summary for 1930 / cybercrime.gov.in / FIR",body:`CYBER FRAUD COMPLAINT SUMMARY\n\nVictim: [NAME], [PHONE], [CITY]\nDate & time of fraud: [DATE, TIME]\nAmount lost: ₹[AMOUNT]\nMode: [UPI / card / net-banking / OTP shared / link clicked]\nMy account: [BANK, last 4 digits]\nFraudster details: [PHONE NUMBERS / UPI IDs / ACCOUNT NOS / LINKS]\nWhat happened (3–4 lines): [DESCRIPTION]\n\nActions already taken:\n[ ] Called 1930 at [TIME]  [ ] Bank informed & card blocked\n[ ] Complaint filed on cybercrime.gov.in — Ack No: [NUMBER]\n\nEvidence attached: screenshots, SMS alerts, bank statement, call recordings.`},
+];
+
+/* ---------------- PROBLEM DATABASE ---------------- */
+const PROBLEMS=[
+{id:"salary-not-received",title:"Salary Not Received",cat:"Employment",icon:"₹",
+ blurb:"Employer delaying or refusing to pay your salary",
+ keywords:["salary not received","salary delayed","company not paying","employer not paying","boss not paying","pending salary","unpaid wages","salary dispute","salary nahi mili","full and final","fnf pending"],
+ summary:"You are facing a salary payment dispute with your employer.",
+ difficulty:3,urgency:2,time:"15–60 days",timePct:55,cost:"Free → Low",costTag:"g",
+ laws:"Payment of Wages Act 1936 · Industrial Disputes Act 1947 · Code on Wages 2019",
+ steps:[
+  {t:"Collect your employment proof",d:"Gather your offer/appointment letter, employee ID, and joining email.",why:"Establishes the employer–employee relationship — the foundation of any claim.",time:"1 hr"},
+  {t:"Collect salary slips & bank statements",d:"Download slips for paid months and a bank statement showing the last credit and the missing months.",why:"Proves your salary amount and exactly which months are unpaid.",time:"1 hr",tip:"Statements downloaded from net-banking carry more weight than screenshots."},
+  {t:"Send a polite written reminder",d:"Email HR/manager stating months pending, amount, and a request to pay within 7 days. Keep it factual, not angry.",why:"Creates a paper trail and gives the employer a fair chance to fix it.",time:"30 min",warn:"Only written communication counts later — verbal promises don't."},
+  {t:"Send a formal demand letter",d:"If ignored, send the Salary Reminder template (below) by email AND speed post with acknowledgment.",why:"A dated formal demand is strong evidence of your good-faith attempt.",time:"1 day"},
+  {t:"Approach the Labour Commissioner",d:"File a complaint with the local Labour Commissioner's office (many states accept online complaints). Attach your evidence bundle.",why:"The Labour Department calls both parties for free conciliation — many disputes settle here.",time:"2–4 weeks",tip:"Employees earning under the wage ceiling get the fastest relief under the Payment of Wages Act."},
+  {t:"Escalate to labour court / civil suit",d:"If conciliation fails, file before the labour court, or a civil recovery suit for higher salaries. Consult a labour lawyer at this stage.",why:"Courts can order payment with interest and, in some cases, compensation.",time:"Months",warn:"Check limitation: don't sit on unpaid dues for years before acting."},
+ ],
+ docs:[{n:"Appointment / offer letter",y:"Proves employment and agreed salary"},{n:"Salary slips",y:"Show the pattern of payment"},{n:"Bank statement",y:"Shows the exact missing credits"},{n:"Emails / WhatsApp with HR",y:"Prove you demanded payment and their response"},{n:"ID & PAN",y:"Needed for filing complaints"},{n:"Resignation / F&F papers (if you left)",y:"Determine what final settlement is due"}],
+ evidence:[{n:"Employment contract / offer letter",w:25},{n:"Salary slips",w:20},{n:"Bank statement showing non-payment",w:25},{n:"Written demand (email/letter) sent",w:20},{n:"Employer's written response / excuse",w:10}],
+ actions:[{p:"HIGH",t:"Put your demand in writing today"},{p:"HIGH",t:"Secure all documents before relations sour"},{p:"MEDIUM",t:"Prepare the Labour Commissioner complaint"},{p:"LOW",t:"Keep a dated log of every promise made"},{p:"OPTIONAL",t:"Consult a labour lawyer for large amounts"}],
+ donts:["Don't resign in anger before securing evidence and dues in writing","Don't sign any full-and-final settlement without reading it","Don't rely on verbal promises — get dates in email","Don't threaten the employer illegally or on social media","Don't delete official emails or the HR chat"],
+ mistakes:["Waiting 6+ months hoping it resolves itself","Accepting partial cash payment with no receipt","Sending only WhatsApp messages, never a formal letter","Not calculating exact dues (salary + reimbursements + leave encashment)"],
+ faqs:[{q:"Can I complain while still employed?",a:"Yes. The law protects you, though practically many employees escalate after exit. Written reminders while employed are safe and useful."},
+  {q:"Is the Labour Commissioner route free?",a:"Yes — filing is free. You don't need a lawyer for conciliation."},
+  {q:"My employer says 'company has no funds'. Valid excuse?",a:"No. Financial difficulty doesn't cancel your right to earned wages. It may affect recovery speed, not your entitlement."},
+  {q:"What about PF and gratuity?",a:"Those are separate claims — PF via EPFO grievance (epfigms.gov.in), gratuity via the Controlling Authority if you served 4 years 240 days+."}],
+ tree:[{q:"Did the employer respond to your written reminder?",yes:"Negotiate a dated payment plan — in writing.",no:"Send the formal demand letter by speed post."},
+  {q:"Paid within the 7-day deadline you set?",yes:"Close the matter; keep records for 3 years.",no:"File with the Labour Commissioner."},
+  {q:"Did conciliation succeed?",yes:"Get the settlement recorded in writing before withdrawing.",no:"Escalate to labour court / civil recovery with a lawyer."}],
+ outcomes:{best:"Employer pays within days of your formal letter — most cases end here.",norm:"Payment arrives after Labour Commissioner conciliation, in 4–8 weeks.",worst:"Company is insolvent or vanishes; recovery needs court action and time. Your documents decide everything."},
+ risks:{Financial:3,Legal:2,Privacy:1,Safety:1,Time:3},
+ alts:[{t:"Internal HR grievance",d:"Larger companies have formal grievance cells — fastest when they work."},{t:"Group complaint",d:"If colleagues are unpaid too, a joint complaint carries far more weight."},{t:"Settlement",d:"Accepting a slightly reduced amount now can beat years of litigation — but always in writing."}],
+ related:["legal-notice-received","start-a-business"],tpl:"t-salary"},
+
+{id:"upi-payment-failed",title:"UPI Payment Failed",cat:"Digital Payments",icon:"⇄",
+ blurb:"Money debited but not credited to the receiver",
+ keywords:["upi failed","payment failed","money debited not credited","gpay failed","phonepe stuck","paytm failed","transaction pending","upi refund","money stuck","wrong upi transfer"],
+ summary:"Your money was debited in a UPI transaction but hasn't reached the receiver (or was sent wrongly).",
+ difficulty:1,urgency:3,time:"1–7 days",timePct:15,cost:"Free",costTag:"g",
+ laws:"RBI Harmonisation of TAT circular · RBI Integrated Ombudsman Scheme 2021",
+ steps:[
+  {t:"Wait for auto-reversal (T+1)",d:"Most failed UPI debits auto-reverse to your account within 1 business day. Note the exact UTR/transaction ID now.",why:"Banks are required by RBI to auto-reverse failed transactions; premature panic wastes effort.",time:"1 day",tip:"The 12-digit UTR number is the key to everything — screenshot it."},
+  {t:"Verify in your bank statement",d:"Check the actual bank statement (not just the app) for both debit and any reversal entry.",why:"App status can lag; the statement is the truth.",time:"10 min"},
+  {t:"Raise a dispute in the UPI app",d:"Open the transaction → 'Raise dispute / Get help'. Select 'debited but not credited'.",why:"This registers the complaint with NPCI's dispute system through your app.",time:"10 min"},
+  {t:"Complain to YOUR bank",d:"If unresolved in 3 days, complain to your bank (the debiting bank) with the UTR — via customer care and written email.",why:"The payer's bank owns the reversal; RBI requires resolution, with penalty of ₹100/day payable to you for delays beyond the deadline.",time:"15 min",warn:"Complain to your own bank, not the receiver's."},
+  {t:"Escalate to the RBI Ombudsman",d:"After 30 days without resolution, file free at cms.rbi.org.in with your complaint reference.",why:"The Ombudsman's decision binds the bank; the process is free and online.",time:"2–4 weeks"},
+ ],
+ docs:[{n:"Transaction screenshot with UTR",y:"Identifies the payment in bank systems"},{n:"Bank statement",y:"Proves debit without reversal"},{n:"Bank complaint reference no.",y:"Required for Ombudsman escalation"},{n:"SMS debit alert",y:"Timestamp corroboration"}],
+ evidence:[{n:"UTR / transaction ID saved",w:35},{n:"Bank statement showing debit",w:30},{n:"Dispute raised in app",w:15},{n:"Written complaint to bank",w:20}],
+ actions:[{p:"HIGH",t:"Save the UTR number right now"},{p:"MEDIUM",t:"Set a T+1 reminder to check for reversal"},{p:"MEDIUM",t:"Raise in-app dispute if not reversed"},{p:"LOW",t:"Diary the 30-day Ombudsman date"}],
+ donts:["Don't call numbers from Google search for 'customer care' — most are scams","Don't share OTP, PIN or screen with anyone offering to 'reverse' the payment","Don't retry the payment repeatedly before the first one settles","Don't uninstall the app — the dispute trail lives there"],
+ mistakes:["Trusting fake 'UPI helpline' numbers (huge fraud vector)","Complaining to the receiver's bank instead of your own","Losing the UTR number","Giving up before the Ombudsman stage"],
+ faqs:[{q:"I sent money to the WRONG UPI ID. Same process?",a:"Slightly different: contact your bank immediately to flag it, request the beneficiary's bank to reverse, and be politely persistent. If the receiver refuses to return, you can pursue via NPCI dispute and legal notice."},
+  {q:"Is there really a penalty for delayed reversal?",a:"Yes — RBI's TAT circular mandates ₹100/day compensation for delays beyond the prescribed reversal time, credited to you."},
+  {q:"The receiver says they never got it, but my app shows success.",a:"Ask them to check their bank statement. If genuinely not credited, raise the dispute — 'success' with no credit is a bank-side settlement issue."},
+  {q:"Does the Ombudsman cost anything?",a:"Nothing. cms.rbi.org.in is free, online, and doesn't need a lawyer."}],
+ tree:[{q:"Reversed automatically within 1 business day?",yes:"Done — no action needed.",no:"Raise the in-app dispute."},
+  {q:"Resolved by the app/bank within 7 days?",yes:"Verify the credit in your statement, then close.",no:"File a written complaint with your bank."},
+  {q:"Bank resolved within 30 days?",yes:"Confirm compensation if delayed beyond TAT.",no:"Escalate free to the RBI Ombudsman."}],
+ outcomes:{best:"Auto-reversal lands the next business day — the majority of cases.",norm:"Bank dispute resolves it within a week, sometimes with ₹100/day compensation.",worst:"Wrong-recipient transfers where the receiver refuses — may need a legal notice. Prevention: always verify the name shown before paying."},
+ risks:{Financial:2,Legal:1,Privacy:2,Safety:1,Time:2},
+ alts:[{t:"NPCI DMS",d:"NPCI's dispute portal if the app channel fails."},{t:"Branch visit",d:"A written complaint at your home branch, acknowledged with a stamp, moves stubborn cases."}],
+ related:["online-scam","electricity-bill-wrong"],tpl:null},
+
+{id:"online-scam",title:"I Got Scammed Online",cat:"Cyber Crime",icon:"⚠",
+ blurb:"Money lost to fraud — fake calls, links, OTP, sellers",
+ keywords:["scammed","online fraud","cyber fraud","fake call","otp fraud","phishing","lost money to fraud","whatsapp scam","telegram scam","investment scam","fake customs call","digital arrest","fraud transaction"],
+ summary:"You've lost money to an online scam and need to act within the golden hour to maximise recovery.",
+ difficulty:2,urgency:5,time:"Hours–weeks",timePct:35,cost:"Free",costTag:"g",
+ laws:"IT Act 2000 · BNS 2023 (cheating) · RBI limited-liability circular",
+ steps:[
+  {t:"Call 1930 immediately",d:"The national cyber fraud helpline. Give the amount, time, your bank, and any fraudster UPI IDs/numbers.",why:"1930 can freeze the money in the fraudster's chain — the first hours ('golden hour') decide how much is saved.",time:"15 min",warn:"Every hour of delay dramatically reduces recovery chances."},
+  {t:"Block your cards & secure accounts",d:"Block affected cards via the bank app, change net-banking and UPI PINs, revoke any screen-share/remote apps installed.",why:"Stops repeat debits while you handle the first loss.",time:"20 min"},
+  {t:"File on cybercrime.gov.in",d:"Register the complaint on the National Cyber Crime Reporting Portal. Save the acknowledgment number.",why:"Creates the official case that banks and police act on.",time:"30 min",tip:"Use the Cyber Fraud Complaint Summary template below — it has every field ready."},
+  {t:"Inform your bank in writing",d:"Email the bank's fraud desk with the transaction details and the portal acknowledgment. Ask for a fraud-marking and chargeback where applicable.",why:"RBI's limited-liability rules protect customers who report unauthorised transactions quickly — often zero liability if reported within 3 days.",time:"30 min"},
+  {t:"Preserve every piece of evidence",d:"Screenshots of chats, numbers, UPI IDs, links, call recordings, SMS alerts. Export chats with timestamps.",why:"Recovery and prosecution both live or die on evidence.",time:"1 hr",warn:"Never edit screenshots — edited evidence gets rejected."},
+  {t:"File an FIR if the amount is large",d:"Visit the local police station or cyber cell with your evidence bundle and portal acknowledgment.",why:"An FIR unlocks stronger police powers — account freezing, arrests, and court-ordered refunds.",time:"Half day"},
+  {t:"Follow up weekly",d:"Track the portal status, call 1930 for updates, and keep your bank complaint alive in writing.",why:"Frozen money is released back through the process — persistence pays.",time:"Ongoing"},
+ ],
+ docs:[{n:"Bank statement & SMS alerts",y:"Prove the exact debits"},{n:"Screenshots of chats/calls/links",y:"Identify the fraudster's trail"},{n:"Portal acknowledgment number",y:"Your case reference everywhere"},{n:"ID proof",y:"Needed for FIR"},{n:"Fraudster's numbers / UPI IDs",y:"What investigators freeze and trace"}],
+ evidence:[{n:"Reported to 1930 within 24h",w:30},{n:"Bank statement of the fraud debit",w:20},{n:"Chat/call screenshots preserved",w:20},{n:"cybercrime.gov.in acknowledgment",w:20},{n:"FIR copy",w:10}],
+ actions:[{p:"CRITICAL",t:"Call 1930 — right now, before reading further"},{p:"CRITICAL",t:"Block cards & change PINs"},{p:"HIGH",t:"File on cybercrime.gov.in today"},{p:"HIGH",t:"Written complaint to your bank"},{p:"MEDIUM",t:"FIR for large amounts"},{p:"LOW",t:"Warn family — scammers often re-target"}],
+ donts:["Don't pay 'recovery agents' who promise to get your money back — that's the second scam","Don't delete chats or block the fraudster before screenshotting","Don't share OTPs with anyone claiming to 'help', including fake bank/police callers","Don't install remote-access apps (AnyDesk/TeamViewer) on anyone's instruction","Don't feel ashamed into silence — reporting fast is what recovers money"],
+ mistakes:["Waiting a day 'to see what happens' — the golden hour is lost","Calling fake customer-care numbers found via search","Reporting only to the app, never to 1930/portal","Not informing the bank in writing within 3 days (weakens limited-liability protection)"],
+ faqs:[{q:"Will I get my money back?",a:"If reported within hours, banks freeze funds mid-chain and courts order release back — recovery happens often. After days, chances fall sharply. Report anyway."},
+  {q:"Is 'digital arrest' real?",a:"No. Police/CBI/customs never arrest you over a video call or demand money to 'clear your name'. Hang up and report to 1930."},
+  {q:"I shared my OTP. Is it my fault legally?",a:"You may share responsibility, but report immediately anyway — RBI's framework still limits liability based on how fast you report, and the fraudster is still prosecutable."},
+  {q:"The amount is small (₹500). Worth reporting?",a:"Yes — small reports build the pattern that catches gangs, and it takes 15 minutes on the portal."}],
+ tree:[{q:"Did the fraud happen in the last few hours?",yes:"Call 1930 first — freezing works best now.",no:"Still report: portal + bank + FIR."},
+  {q:"Was money frozen in the fraudster's account?",yes:"Follow the court/refund process for release — keep your acknowledgment safe.",no:"Push the FIR route and bank chargeback in parallel."},
+  {q:"Bank refusing liability after timely reporting?",yes:"Escalate to the RBI Ombudsman at cms.rbi.org.in — free.",no:"Track until refund completes."}],
+ outcomes:{best:"Reported within the hour; money frozen in the chain and refunded via the process.",norm:"Partial recovery; cards secured; fraudster numbers blocked; case registered.",worst:"Money mule-chained out within hours of a late report. Even then, reporting protects you from liability and repeat targeting."},
+ risks:{Financial:5,Legal:2,Privacy:4,Safety:2,Time:3},
+ alts:[{t:"Card chargeback",d:"For card payments to fake sellers, a chargeback via your bank runs in parallel."},{t:"Platform reporting",d:"Report the seller/profile on the platform (WhatsApp/Instagram/marketplace) to protect others."}],
+ related:["upi-payment-failed","phone-stolen"],tpl:"t-cyber"},
+
+{id:"phone-stolen",title:"Phone Lost or Stolen",cat:"Cyber Crime",icon:"📵",
+ blurb:"Secure your accounts, block the IMEI, recover or replace",
+ keywords:["phone stolen","mobile lost","lost my phone","phone snatched","mobile theft","block imei","find my phone","sim stolen"],
+ summary:"Your phone is lost or stolen — the priority is locking down money apps and identity before anything else.",
+ difficulty:2,urgency:5,time:"1–3 days",timePct:20,cost:"Free (new SIM ~₹50)",costTag:"g",
+ laws:"CEIR framework (DoT) · IT Act 2000",
+ steps:[
+  {t:"Lock money & identity first",d:"From another device: change passwords for email, banking, UPI; log out all sessions (Google: myaccount.google.com → Security). Call your bank to disable UPI on that number if needed.",why:"A thief with your unlocked phone can drain accounts in minutes — this outranks everything.",time:"30 min",warn:"Do this before hunting for the phone."},
+  {t:"Try remote locate / lock / erase",d:"Android: google.com/android/find · iPhone: icloud.com/find. Lock with a message and number; erase if recovery looks impossible.",why:"Locking blocks casual misuse; erase protects your data permanently.",time:"15 min"},
+  {t:"Block the SIM",d:"Call your telecom operator (from any phone) to block the SIM, then get a duplicate SIM with the same number from a store with ID proof.",why:"Stops OTPs from reaching the thief — OTP theft is how phones become bank fraud.",time:"1–2 hrs",tip:"Duplicate SIMs activate within hours; your number stays yours."},
+  {t:"File a police lost report / FIR",d:"Report at the nearest police station or your state's online lost-report portal. Get a stamped copy or digital acknowledgment.",why:"Required for CEIR blocking, insurance claims, and protects you if the phone is misused in a crime.",time:"1–2 hrs"},
+  {t:"Block the IMEI on CEIR",d:"Go to sancharsaathi.gov.in → CEIR → Block Stolen/Lost Mobile. You'll need the IMEI (on the box/bill), police report number, and ID.",why:"CEIR blocks the handset on ALL Indian networks — it becomes a brick even with a new SIM.",time:"20 min",tip:"IMEI is printed on the retail box and purchase invoice. If found later, the same portal unblocks it."},
+  {t:"Claim insurance / plan replacement",d:"If insured, file the claim with the FIR copy and invoice within the policy window.",why:"Theft claims are time-bound; delays void them.",time:"1 week"},
+ ],
+ docs:[{n:"Purchase invoice with IMEI",y:"Needed for CEIR and insurance"},{n:"Police report / FIR copy",y:"Mandatory for CEIR and claims"},{n:"ID proof",y:"For duplicate SIM and reports"},{n:"Insurance policy (if any)",y:"For the theft claim"}],
+ evidence:[{n:"IMEI number located",w:25},{n:"Police report filed",w:25},{n:"SIM blocked & duplicate issued",w:20},{n:"CEIR block request submitted",w:20},{n:"Accounts secured / sessions logged out",w:10}],
+ actions:[{p:"CRITICAL",t:"Log out & change passwords from another device"},{p:"CRITICAL",t:"Block the SIM"},{p:"HIGH",t:"Remote lock/erase the phone"},{p:"HIGH",t:"Police report → CEIR IMEI block"},{p:"MEDIUM",t:"Insurance claim"},{p:"LOW",t:"List the loss for warranty/records"}],
+ donts:["Don't go alone to 'recover' the phone if tracking shows a location — involve police","Don't delay SIM blocking to keep tracking alive — OTP theft costs more","Don't buy a 'cheap' second-hand phone without checking its IMEI on CEIR (it may be stolen)","Don't share your tracking location publicly"],
+ mistakes:["Hunting the phone for hours while bank apps sit exposed","Not knowing the IMEI (photograph your phone box today)","Skipping the police report, which blocks CEIR and insurance later"],
+ faqs:[{q:"Where do I find the IMEI after losing the phone?",a:"On the retail box, purchase invoice, or your Google/Apple account device page. Dial *#06# on any current phone to see that phone's IMEI."},
+  {q:"Will CEIR help me get the phone back?",a:"Sometimes — when a blocked phone touches any network, its location can surface to police. Its main job is making theft worthless."},
+  {q:"Found my phone later. Can I unblock?",a:"Yes — the same CEIR portal has an unblock option using your request ID."},
+  {q:"Is the police report mandatory?",a:"For CEIR and insurance, yes. Many states allow a quick online 'lost article' report that takes minutes."}],
+ tree:[{q:"Is the phone just misplaced nearby?",yes:"Ring it / use Find My — no formalities needed.",no:"Treat as stolen: secure accounts first."},
+  {q:"Tracking shows a live location?",yes:"Share with police — do not confront alone.",no:"Erase remotely, block SIM & IMEI."},
+  {q:"Recovered the handset?",yes:"Unblock IMEI on CEIR, reset passwords anyway.",no:"Complete insurance claim and move on — your data stayed safe."}],
+ outcomes:{best:"Phone found via tracking or CEIR ping; data untouched.",norm:"Phone gone but bricked via CEIR; number and accounts safe; insurance covers part of the cost.",worst:"Delayed action → OTP-based fraud on top of the loss. The first 30 minutes of account-locking prevent this."},
+ risks:{Financial:4,Legal:1,Privacy:5,Safety:2,Time:2},
+ alts:[{t:"Operator-level blocking",d:"Some operators offer device-block add-ons — ask when taking the duplicate SIM."},{t:"eSIM reissue",d:"On supported plans, an eSIM reissue is faster than a physical duplicate."}],
+ related:["online-scam","aadhaar-correction"],tpl:null},
+
+{id:"rental-deposit",title:"Rental Deposit Not Returned",cat:"Rental Issues",icon:"🏠",
+ blurb:"Landlord withholding your security deposit after you vacated",
+ keywords:["deposit not returned","security deposit","landlord not returning deposit","rent deposit","landlord refusing","advance not returned","makan malik deposit"],
+ summary:"Your landlord is withholding the security deposit after you vacated the premises.",
+ difficulty:3,urgency:1,time:"15–90 days",timePct:50,cost:"Free → Moderate",costTag:"a",
+ laws:"Rent agreement (contract) · State Rent Control / Model Tenancy Act · Civil recovery",
+ steps:[
+  {t:"Re-read your rent agreement",d:"Find the deposit clause: amount, refund timeline, and permitted deductions (damage, unpaid bills).",why:"The agreement is the rulebook — deductions outside it are unjustified.",time:"30 min"},
+  {t:"Assemble your proof of good handover",d:"Vacating photos/videos, key-handover message, final rent receipts, cleared utility bills.",why:"Kills the standard 'damages' excuse before it starts.",time:"1 hr",tip:"Always shoot a walkthrough video on vacating day — timestamped."},
+  {t:"Ask once, politely, in writing",d:"WhatsApp + email: 'As per clause X, kindly refund ₹___ by [date]'. Give 7–10 days.",why:"Most landlords pay after a firm written ask; it also starts your paper trail.",time:"15 min"},
+  {t:"Send a formal demand letter",d:"Use the Deposit Demand template below. Email + speed post with acknowledgment due. 15-day deadline.",why:"A dated formal demand is the prerequisite for any legal step and often ends the matter.",time:"1 day"},
+  {t:"Send a legal notice via a lawyer",d:"A lawyer's notice (typically ₹1,500–4,000) demanding refund with interest within 15 days.",why:"Landlords take lawyer letterheads seriously; most disputes settle at this stage.",time:"1–2 weeks"},
+  {t:"File for recovery",d:"Options: civil suit for recovery, or rent authority/tribunal where your state has one. Small amounts may also fit consumer forums when services were involved.",why:"Courts can order refund with interest and costs.",time:"Months",warn:"Weigh cost vs deposit size — a settlement at 90% now can beat 100% after a year."},
+ ],
+ docs:[{n:"Rent agreement",y:"Contains the refund clause"},{n:"Deposit payment proof",y:"Bank transfer/receipt of the deposit"},{n:"Rent payment records",y:"Show no dues pending"},{n:"Vacating photos/video",y:"Prove condition at handover"},{n:"Utility bill clearances",y:"Remove the 'pending bills' excuse"},{n:"Chats with the landlord",y:"Show demands and his replies"}],
+ evidence:[{n:"Written rent agreement",w:25},{n:"Deposit paid via bank (not cash)",w:25},{n:"Vacating condition photos/video",w:20},{n:"Written refund demand sent",w:20},{n:"Landlord's replies/excuses saved",w:10}],
+ actions:[{p:"HIGH",t:"Send the written demand with a deadline"},{p:"HIGH",t:"Lock down all proof (photos, chats, receipts)"},{p:"MEDIUM",t:"Prepare the legal notice if ignored"},{p:"LOW",t:"Calculate interest from the due date"},{p:"OPTIONAL",t:"Check if your state has a rent tribunal"}],
+ donts:["Don't hand over keys before at least documenting the flat's condition","Don't accept vague verbal 'I'll pay next month' — get dates in writing","Don't stop the last month's rent unilaterally unless the agreement allows adjustment","Don't threaten or create scenes at the property — it weakens your case"],
+ mistakes:["Paying the deposit in cash with no receipt","No photos at move-in AND move-out","Waiting a year before acting","Not reading the deduction clause before arguing"],
+ faqs:[{q:"Landlord claims 'painting charges'. Can he?",a:"Only if the agreement allows it or damage beyond normal wear-and-tear is proven. Routine repainting between tenants is usually the landlord's cost unless contracted otherwise."},
+  {q:"Deposit was in cash, no receipt. Am I finished?",a:"Harder, not hopeless — chats mentioning the deposit, witnesses, and the agreement clause still count. Get the landlord to acknowledge the amount in writing (even on WhatsApp)."},
+  {q:"Can I adjust the deposit against the last months' rent?",a:"Only by mutual written consent or if the agreement permits. Doing it unilaterally can put you technically in breach."},
+  {q:"How long do I have to sue?",a:"Generally 3 years from when the refund became due — but act within months, not years."}],
+ tree:[{q:"Did the landlord respond to your written demand?",yes:"Negotiate deductions against your photo evidence; settle in writing.",no:"Send the formal template letter by post."},
+  {q:"Paid after the formal letter?",yes:"Confirm receipt and close.",no:"Legal notice via a lawyer."},
+  {q:"Paid after the legal notice?",yes:"Done — most cases end here.",no:"File recovery suit / rent tribunal; claim interest and costs."}],
+ outcomes:{best:"Full refund within days of the written demand.",norm:"Refund minus small negotiated deductions after the legal notice.",worst:"Litigation over months. Your move-out video and bank-paid deposit are what win it."},
+ risks:{Financial:3,Legal:2,Privacy:1,Safety:1,Time:3},
+ alts:[{t:"RWA / society mediation",d:"Society committees often pressure landlords informally — fast and free."},{t:"Broker mediation",d:"The broker who made the deal has leverage and reputation at stake."},{t:"Settlement",d:"90% today can beat 100% after a year in court."}],
+ related:["legal-notice-received","electricity-bill-wrong"],tpl:"t-deposit"},
+
+{id:"lost-passport",title:"Lost Passport",cat:"Identity Documents",icon:"🛂",
+ blurb:"Report the loss and get a re-issued passport",
+ keywords:["lost passport","passport lost","passport stolen","reissue passport","passport missing","duplicate passport","passport kho gaya"],
+ summary:"Your passport is lost or stolen and needs to be reported and re-issued.",
+ difficulty:2,urgency:3,time:"2–6 weeks",timePct:45,cost:"Govt fee (~₹3,000–3,500)",costTag:"a",
+ laws:"Passports Act 1967 · Passport Rules 1980",
+ steps:[
+  {t:"File a police lost report immediately",d:"Report at the nearest police station or your state's online lost-report portal. Keep a stamped/digital copy.",why:"Legally required for re-issue, and it protects you if the lost passport is misused.",time:"1–2 hrs",warn:"A lost passport in the wrong hands is an identity-fraud risk — report the same day."},
+  {t:"Gather your documents",d:"Old passport details (number, dates — from a photocopy/scan), Aadhaar, address proof, and the police report.",why:"Re-issue needs your old passport particulars; a saved scan makes everything smoother.",time:"1 hr",tip:"Today's lesson for later: always keep a scanned copy of your passport in email/cloud."},
+  {t:"Apply for Re-issue on Passport Seva",d:"passportindia.gov.in → Apply for Fresh/Re-issue → select 'Re-issue' → reason 'Lost'. Fill Form + Annexure F (self-declaration for lost passport).",why:"'Re-issue (Lost)' is the correct route — not a fresh passport.",time:"1 hr"},
+  {t:"Pay the fee & book a PSK appointment",d:"Pay online (normal ~₹1,500 + lost-passport related charges; Tatkaal higher) and pick a Passport Seva Kendra slot.",why:"Appointments are mandatory; Tatkaal exists if you must travel soon.",time:"30 min"},
+  {t:"Attend the PSK appointment",d:"Carry originals + photocopies + police report. Biometrics and verification happen here.",why:"Physical presence is compulsory for biometrics.",time:"Half day"},
+  {t:"Complete police verification & receive",d:"Track status online; respond promptly if police verification is scheduled. The passport arrives by speed post.",why:"PV is standard for lost-passport cases; delays usually happen here.",time:"1–4 weeks"},
+ ],
+ docs:[{n:"Police report copy",y:"Mandatory for lost-passport re-issue"},{n:"Old passport photocopy/scan",y:"Provides the old passport number and dates"},{n:"Aadhaar / address proof",y:"Identity and current address"},{n:"Annexure F self-declaration",y:"Explains how the passport was lost"},{n:"Birth-date proof",y:"If details need re-verification"}],
+ evidence:[{n:"Police report filed",w:30},{n:"Old passport copy/scan available",w:25},{n:"Address & ID proofs ready",w:20},{n:"Online application submitted",w:25}],
+ actions:[{p:"CRITICAL",t:"Police report today (misuse protection)"},{p:"HIGH",t:"Apply for Re-issue online"},{p:"MEDIUM",t:"Book the earliest PSK slot"},{p:"LOW",t:"Save scans of the new passport when it arrives"}],
+ donts:["Don't pay 'agents' who promise passports without appointments — official process only","Don't apply as 'Fresh' when it should be 'Re-issue (Lost)'","Don't hide a previous loss/damage history in the form — mismatches cause rejection","Don't book travel before the new passport physically arrives"],
+ mistakes:["No saved copy of the old passport (makes the form harder)","Skipping the police report to 'save time'","Ignoring the police-verification call, restarting the whole cycle"],
+ faqs:[{q:"I'm abroad and lost my passport. What now?",a:"Contact the nearest Indian Embassy/Consulate — they issue an Emergency Certificate or re-issue, with a local police report."},
+  {q:"How fast is Tatkaal?",a:"Typically within 1–3 working days after appointment for issue, plus verification. Fees are higher, and lost-passport cases may need extra scrutiny."},
+  {q:"Do I need the exact old passport number?",a:"It helps a lot. If you truly have no record, the system can trace by your details, but expect extra verification time."},
+  {q:"Will my visas in the old passport survive?",a:"Valid visas in a lost passport generally must be re-obtained; consult each embassy — some transfer visas with proof."}],
+ tree:[{q:"Do you have a copy/scan of the lost passport?",yes:"Straightforward re-issue — apply today.",no:"Apply anyway with full personal details; expect added verification."},
+  {q:"Travelling within 2 weeks?",yes:"Choose Tatkaal and the earliest PSK slot.",no:"Normal scheme saves money."},
+  {q:"Police verification pending long?",yes:"Follow up at the local police station with your file number.",no:"Track online till dispatch."}],
+ outcomes:{best:"Re-issued in ~2 weeks with prompt PV.",norm:"4–6 weeks including verification.",worst:"Mismatched details or missed PV stretch it to months — accuracy in the form prevents this."},
+ risks:{Financial:2,Legal:2,Privacy:4,Safety:1,Time:3},
+ alts:[{t:"Tatkaal scheme",d:"Faster issue for urgent travel at a higher fee."},{t:"mPassport Seva app",d:"Apply and track from your phone."}],
+ related:["aadhaar-correction","phone-stolen"],tpl:null},
+
+{id:"aadhaar-correction",title:"Aadhaar Has Wrong Details",cat:"Identity Documents",icon:"🪪",
+ blurb:"Fix name, DOB, address, or mobile number in Aadhaar",
+ keywords:["aadhaar wrong","aadhaar correction","update aadhaar","aadhaar name change","aadhaar address change","aadhar galat","aadhaar dob wrong","aadhaar mobile update"],
+ summary:"Your Aadhaar card has incorrect details (name, date of birth, address, or mobile) that need updating.",
+ difficulty:1,urgency:1,time:"3–15 days",timePct:20,cost:"₹50 (₹100 with biometrics)",costTag:"g",
+ laws:"Aadhaar Act 2016 · UIDAI update regulations",
+ steps:[
+  {t:"Identify what needs updating & the route",d:"Address and documents: possible ONLINE at myaadhaar.uidai.gov.in. Name/DOB/photo/mobile/biometrics: visit an Aadhaar Seva Kendra.",why:"Choosing the right channel saves a wasted trip.",time:"10 min"},
+  {t:"Collect one valid supporting document",d:"Name: passport/PAN/marksheet · DOB: birth certificate/passport/Class-10 certificate · Address: bank statement, rent agreement (registered), utility bill.",why:"UIDAI accepts only documents on its approved list — check it on uidai.gov.in.",time:"30 min",tip:"For address without documents, the 'Head of Family' consent route can work."},
+  {t:"Update online (address/docs) …",d:"Login at myaadhaar.uidai.gov.in with OTP → Update Address → upload document → pay ₹50 → note the URN.",why:"Online updates skip queues entirely.",time:"20 min"},
+  {t:"… or book an Aadhaar Seva Kendra visit",d:"Book at appointments.uidai.gov.in (or walk in) with originals. Biometric/mobile/name/DOB updates happen here. Fee ₹50 (demographic) / ₹100 (with biometrics).",why:"These fields need in-person verification.",time:"Half day",warn:"Pay only the official fee at the counter — no 'agent charges'."},
+  {t:"Track with your URN",d:"Check status on myaadhaar portal with the Update Request Number. Approval usually takes 3–10 days.",why:"If rejected, the reason tells you exactly which document to fix.",time:"5 min"},
+  {t:"Download the updated e-Aadhaar",d:"Once approved, download the PDF (password: first 4 letters of name in CAPS + birth year) and update linked services (bank, PAN, SIM) if the name changed.",why:"The e-Aadhaar is fully valid — no need to wait for the physical card.",time:"10 min"},
+ ],
+ docs:[{n:"Aadhaar number / enrollment slip",y:"Identifies your record"},{n:"One UIDAI-approved proof per field",y:"The evidence for the change"},{n:"Registered mobile (for online)",y:"OTP login for the portal"},{n:"URN slip after applying",y:"Tracking and follow-up"}],
+ evidence:[{n:"Correct supporting document in hand",w:40},{n:"Right channel identified (online vs ASK)",w:20},{n:"Update submitted, URN saved",w:25},{n:"Linked services list made (bank, PAN, SIM)",w:15}],
+ actions:[{p:"HIGH",t:"Get the one right document for your field"},{p:"MEDIUM",t:"Submit the update & save the URN"},{p:"LOW",t:"Update bank/PAN/SIM after approval"},{p:"OPTIONAL",t:"Order the physical PVC card (₹50)"}],
+ donts:["Don't pay agents ₹500+ for a ₹50 job — the process is designed for self-service","Don't submit documents with spelling that differs from what you want in Aadhaar","Don't create a second Aadhaar — it's illegal; always update the existing one","Don't share your Aadhaar OTP with anyone 'helping' remotely"],
+ mistakes:["Visiting a Kendra for an address change that works online","Uploading a non-approved document and waiting on a doomed request","Forgetting the URN, making tracking impossible"],
+ faqs:[{q:"My mobile number is not linked. Can I still update online?",a:"No — online needs OTP on the registered mobile. First link a mobile at any Aadhaar Seva Kendra (₹50), then everything else can go online."},
+  {q:"How many times can I change name/DOB?",a:"UIDAI limits these: name updates are limited (generally twice), DOB effectively once. Get it exactly right with a strong document."},
+  {q:"Is e-Aadhaar as valid as the card?",a:"Yes — the digitally signed e-Aadhaar PDF is legally equivalent everywhere."},
+  {q:"Update rejected. Now what?",a:"The status shows the rejection reason — usually a document mismatch. Fix the document and reapply; the fee applies per request."}],
+ tree:[{q:"Is it an address/document update?",yes:"Do it fully online at myaadhaar.uidai.gov.in.",no:"Book an Aadhaar Seva Kendra visit."},
+  {q:"Approved within ~10 days?",yes:"Download e-Aadhaar; update linked services.",no:"Check URN status for the rejection reason and reapply with the right proof."}],
+ outcomes:{best:"Online update approved in 3–5 days.",norm:"Kendra visit + a week's processing.",worst:"Repeated rejections from mismatched documents — solved by matching the proof letter-for-letter."},
+ risks:{Financial:1,Legal:1,Privacy:3,Safety:1,Time:2},
+ alts:[{t:"mAadhaar app",d:"Carry Aadhaar digitally and manage some updates from your phone."},{t:"Head of Family route",d:"Address update using a family member's consent when you lack address proof."}],
+ related:["lost-passport","start-a-business"],tpl:null},
+
+{id:"fake-product",title:"Bought a Fake / Defective Product",cat:"Consumer Rights",icon:"📦",
+ blurb:"Refund or replacement for counterfeit, damaged, or wrong items",
+ keywords:["fake product","defective product","wrong item delivered","counterfeit","refund not given","return rejected","damaged product","online shopping complaint","seller refusing refund","nakli product"],
+ summary:"You received a fake, defective, or wrong product and the seller/platform isn't resolving it.",
+ difficulty:2,urgency:2,time:"7–45 days",timePct:35,cost:"Free (court fee only for big claims)",costTag:"g",
+ laws:"Consumer Protection Act 2019 · E-commerce Rules 2020",
+ steps:[
+  {t:"Document the product immediately",d:"Photos/video of the item, packaging, labels, serial numbers — ideally an unboxing video if you have one.",why:"Fresh, timestamped proof beats any later dispute about condition.",time:"20 min",tip:"For expensive orders, always record an unboxing video before opening fully."},
+  {t:"Use the platform's return window first",d:"Raise a return/replacement in the app with photos and exact reasons ('counterfeit', 'damaged in transit', 'different from listing').",why:"Platforms resolve most cases in-window; skipping this weakens later claims.",time:"20 min",warn:"Return windows are short (2–10 days) — act before yours closes."},
+  {t:"Escalate to the Grievance Officer",d:"Every e-commerce platform must publish a Grievance Officer's email (check the app's footer/help). Write formally with order ID and evidence; they must acknowledge in 48h and resolve in 1 month.",why:"E-commerce Rules 2020 make this a legal obligation, not customer-service charity.",time:"30 min"},
+  {t:"Call the National Consumer Helpline 1915",d:"Or register at consumerhelpline.gov.in / the NCH app. Quote your order details and prior complaint numbers.",why:"NCH forwards disputes to companies through a channel they take seriously — free and effective.",time:"20 min"},
+  {t:"Send a written refund demand",d:"Use the Refund Request template below with a 10-day deadline, sent to the grievance officer's email.",why:"A formal demand is the foundation for the consumer commission step.",time:"30 min"},
+  {t:"File in the Consumer Commission (e-daakhil)",d:"File online at edaakhil.nic.in — District Commission for claims up to ₹50 lakh. Court fee is nil up to ₹5 lakh claims. Lawyers optional.",why:"Commissions order refunds plus compensation for harassment and costs.",time:"Months",tip:"You can argue your own case — thousands of consumers do."},
+ ],
+ docs:[{n:"Invoice / order confirmation",y:"Proves the purchase and the price"},{n:"Photos/video of the product",y:"Show the defect or fakeness"},{n:"Listing screenshots",y:"Prove what was promised vs delivered"},{n:"Chat/emails with seller & platform",y:"Show your attempts and their refusals"},{n:"Complaint reference numbers",y:"NCH and grievance officer trail"}],
+ evidence:[{n:"Invoice/order proof",w:25},{n:"Photos/video of defect or fake",w:30},{n:"Return request raised in-window",w:15},{n:"Grievance officer complaint sent",w:15},{n:"NCH 1915 complaint number",w:15}],
+ actions:[{p:"HIGH",t:"Photograph everything before the window closes"},{p:"HIGH",t:"Raise the in-app return now"},{p:"MEDIUM",t:"Grievance Officer email + NCH 1915"},{p:"LOW",t:"Draft the e-daakhil complaint if refused"},{p:"OPTIONAL",t:"Card chargeback via your bank in parallel"}],
+ donts:["Don't discard the packaging, tags, or box until fully resolved","Don't use/damage the product further after spotting the defect","Don't accept 'replacement only' if the listing promised refunds","Don't miss the return window while 'talking' to support on calls"],
+ mistakes:["No unboxing evidence for a high-value order","Only calling support, never writing (calls leave no trail)","Not checking the seller's rating before buying (prevention)","Assuming consumer court is expensive — filing is nearly free"],
+ faqs:[{q:"Platform says 'non-returnable item'. Am I stuck?",a:"Non-returnable covers change-of-mind, not defects or fakes. Defective/counterfeit goods are actionable regardless of the label."},
+  {q:"How much can I claim in consumer court?",a:"Refund + compensation for harassment + litigation costs. Commissions routinely award more than the product price for proven harassment."},
+  {q:"Does a chargeback affect my consumer complaint?",a:"No — they run in parallel. If the chargeback refunds you first, withdraw or amend the complaint."},
+  {q:"Seller was a WhatsApp/Instagram page, not a platform.",a:"That leans toward fraud: report on cybercrime.gov.in and 1930, plus NCH. See the 'I Got Scammed Online' guide."}],
+ tree:[{q:"Is the return window still open?",yes:"File the in-app return with photos now.",no:"Go straight to the Grievance Officer + NCH."},
+  {q:"Did the platform resolve within a month?",yes:"Confirm the refund hit your account; close.",no:"Send the formal demand, then file on e-daakhil."},
+  {q:"Was it a card payment?",yes:"Raise a chargeback with your bank in parallel.",no:"Focus on NCH + commission."}],
+ outcomes:{best:"In-app return accepted; refund in a week.",norm:"Refund after Grievance Officer / NCH pressure within a month.",worst:"Commission case over months — usually ending in refund + compensation for documented cases."},
+ risks:{Financial:3,Legal:1,Privacy:1,Safety:1,Time:3},
+ alts:[{t:"Chargeback",d:"For card payments — bank-side reversal on proof of non-delivery/fake goods."},{t:"Brand verification",d:"For counterfeits, the genuine brand's anti-fake cell often helps confirm and pressure."},{t:"Social escalation",d:"A factual public post tagging the platform sometimes speeds resolution — keep it strictly truthful."}],
+ related:["online-scam","upi-payment-failed"],tpl:"t-refund"},
+
+{id:"legal-notice-received",title:"Received a Legal Notice",cat:"Legal",icon:"⚖",
+ blurb:"A lawyer's letter arrived — what it means and how to respond",
+ keywords:["legal notice","court notice","lawyer notice","received summons","legal letter","notice from advocate","defamation notice","cheque bounce notice"],
+ summary:"You've received a legal notice and need to respond correctly within the deadline.",
+ difficulty:3,urgency:4,time:"Reply within 15–30 days",timePct:60,cost:"Lawyer fee ₹2,000–10,000",costTag:"a",
+ laws:"Depends on the claim (contract, cheque bounce s.138 NI Act, property, defamation…)",
+ steps:[
+  {t:"Don't panic — read it twice, fully",d:"A legal notice is a demand letter, not a court order. Note: who sent it, what they claim, what they demand, and the deadline.",why:"Most notices are negotiation openers. Understanding the exact demand shapes everything.",time:"1 hr",tip:"Highlight the deadline date and the specific demand amount/action."},
+  {t:"Verify it's genuine",d:"Check the advocate's name, enrollment details, address, and whether the facts match reality. Scam 'notices' demanding instant online payment are common.",why:"Fraudulent notices are a rising scam — real notices never demand payment to a personal UPI.",time:"30 min",warn:"Never pay anything based on a notice alone, especially via links or UPI."},
+  {t:"Gather every related document",d:"Contracts, payment proofs, chats, emails, photos — everything connected to the dispute described.",why:"Your reply must be built on documents, not memory.",time:"1 day"},
+  {t:"Consult a lawyer before replying",d:"Take the notice + your bundle to a lawyer in the relevant field. A consult typically costs ₹500–2,000.",why:"A wrong sentence in your reply can be used against you for years. Cheque-bounce (s.138) notices especially have hard deadlines.",time:"2–3 days",warn:"For cheque-bounce notices, the 15-day payment window is statutory — missing it enables criminal proceedings."},
+  {t:"Send a written reply in time",d:"Your lawyer drafts a reply admitting nothing wrongly, stating your facts, and countering the demand. Send by email + speed post.",why:"Silence is read as weakness (and sometimes admission); a timely reply resets the negotiation.",time:"1 week"},
+  {t:"Negotiate or prepare",d:"Many disputes settle after the reply. If not, your lawyer prepares for the case they may file — you'll already hold the full evidence file.",why:"Being reply-ready and document-ready is 80% of legal defence.",time:"Ongoing"},
+ ],
+ docs:[{n:"The notice itself + envelope",y:"Envelope postmark proves dates"},{n:"All documents on the dispute",y:"Foundation of your reply"},{n:"Payment/communication proofs",y:"Often defeat the claim outright"},{n:"Your ID & address proof",y:"For the lawyer's records"}],
+ evidence:[{n:"Notice read and deadline noted",w:20},{n:"Genuineness verified",w:15},{n:"Full document bundle assembled",w:30},{n:"Lawyer consulted",w:20},{n:"Reply sent within the deadline",w:15}],
+ actions:[{p:"CRITICAL",t:"Note the deadline — today"},{p:"HIGH",t:"Verify the notice is genuine"},{p:"HIGH",t:"Assemble documents & consult a lawyer"},{p:"MEDIUM",t:"Send the reply on time"},{p:"LOW",t:"Keep the envelope and delivery proofs"}],
+ donts:["Don't ignore it — silence can strengthen their case and invite litigation","Don't call the opposite party in anger; anything said can be quoted","Don't pay anything through links/UPI demanded in a 'notice'","Don't reply yourself with emotional or admission-heavy language","Don't destroy any document related to the dispute — ever"],
+ mistakes:["Assuming a notice equals a court case (it doesn't — yet)","Missing statutory deadlines (cheque bounce = 15 days)","Replying in anger without legal review","Falling for fake 'FedEx/customs/CBI notice' scams"],
+ faqs:[{q:"Is a legal notice the same as a summons?",a:"No. A notice is from a lawyer; a summons is from a court and looks official with a case number and seal. Summons require appearance — take one to a lawyer immediately."},
+  {q:"What if the claims in it are false?",a:"Then your reply, backed by documents, says so precisely. False claims often evaporate when met with evidence."},
+  {q:"Can I settle directly after receiving a notice?",a:"Yes — many notices exist to trigger settlement. Negotiate through/with your lawyer, and record any settlement in writing."},
+  {q:"Received it on WhatsApp only. Valid?",a:"Courts increasingly accept electronic service. Treat it as real, verify it, and respond the same way you would to a posted one."}],
+ tree:[{q:"Is it a court summons (seal, case number)?",yes:"See a lawyer within 48 hours — appearance dates are strict.",no:"It's a demand letter — proceed calmly."},
+  {q:"Is the notice genuine?",yes:"Consult a lawyer and build your reply.",no:"Report the fraud attempt on cybercrime.gov.in."},
+  {q:"Is the demand partly justified?",yes:"Negotiate a written settlement via the reply.",no:"Send a firm point-by-point rebuttal in time."}],
+ outcomes:{best:"Your documented reply ends the matter — very common.",norm:"A negotiated settlement after replies are exchanged.",worst:"They litigate; your timely reply and evidence bundle become your defence backbone."},
+ risks:{Financial:3,Legal:4,Privacy:1,Safety:1,Time:3},
+ alts:[{t:"Mediation",d:"Court-annexed or private mediation settles disputes faster and cheaper than trial."},{t:"Lok Adalat",d:"For compoundable/civil money disputes — same-day binding settlements, no appeal drama."}],
+ related:["salary-not-received","rental-deposit"],tpl:null},
+
+{id:"electricity-bill-wrong",title:"Electricity Bill Is Wrong",cat:"Utilities",icon:"⚡",
+ blurb:"Inflated, doubled, or estimated bill from your discom",
+ keywords:["electricity bill wrong","bill too high","inflated bill","double bill","meter reading wrong","bijli bill","power bill incorrect","estimated bill"],
+ summary:"Your electricity bill looks inflated or incorrect and the distribution company needs to fix it.",
+ difficulty:2,urgency:2,time:"7–30 days",timePct:30,cost:"Free (meter test fee ~₹100–500 if opted)",costTag:"g",
+ laws:"Electricity Act 2003 · State Electricity Regulatory Commission rules",
+ steps:[
+  {t:"Read your own meter",d:"Photograph the meter display today. Compare the reading with the 'current reading' printed on the bill.",why:"If the billed reading exceeds the actual meter, the case is open-and-shut.",time:"10 min",tip:"Check if the bill says 'ESTIMATED' — estimated bills after missed readings are a top cause of inflated amounts."},
+  {t:"Compare consumption history",d:"Check units billed vs your last 6–12 months (printed on the bill or in the discom app).",why:"A sudden 2–3× jump with unchanged usage points to a reading or meter error.",time:"15 min"},
+  {t:"Complain to the discom",d:"Use the discom's helpline/app/portal (e.g., 1912 in many states). Attach your meter photo. Note the complaint number.",why:"Discoms must register and time-bound resolve billing complaints.",time:"20 min"},
+  {t:"Request a meter accuracy test",d:"If the meter itself seems fast, apply for testing (small fee, refundable in some states if the meter is faulty).",why:"A certified faulty meter forces bill revision for past months too.",time:"1–2 weeks"},
+  {t:"Escalate to the CGRF",d:"Unresolved in 30 days? File with the Consumer Grievance Redressal Forum of your discom (free, form on their website).",why:"The CGRF is a statutory body that can order bill correction and compensation.",time:"3–6 weeks"},
+  {t:"Appeal to the Electricity Ombudsman",d:"If the CGRF fails, appeal to your state's Electricity Ombudsman — free and consumer-friendly.",why:"The Ombudsman's orders bind the discom.",time:"4–8 weeks",warn:"Keep paying the undisputed average amount meanwhile to avoid disconnection — note 'under protest' on payments."},
+ ],
+ docs:[{n:"Disputed bill",y:"The document under challenge"},{n:"Your meter photo (dated)",y:"The single strongest proof"},{n:"6–12 months of past bills",y:"Show the consumption pattern"},{n:"Complaint numbers",y:"Escalation trail"},{n:"Payment receipts",y:"Prove you're not a defaulter"}],
+ evidence:[{n:"Dated photo of the actual meter reading",w:35},{n:"Past bills showing normal usage",w:25},{n:"Discom complaint number",w:20},{n:"Meter test report (if done)",w:20}],
+ actions:[{p:"HIGH",t:"Photograph the meter today"},{p:"HIGH",t:"Register the discom complaint with the photo"},{p:"MEDIUM",t:"Pay the undisputed average 'under protest'"},{p:"LOW",t:"Diary the 30-day CGRF date"},{p:"OPTIONAL",t:"Meter accuracy test"}],
+ donts:["Don't ignore the bill until disconnection notices arrive","Don't pay the full disputed amount silently — it weakens revision claims","Don't tamper with or open the meter (criminal offence)","Don't rely on verbal assurances from linemen — get complaint numbers"],
+ mistakes:["Not noticing 'ESTIMATED' printed on the bill","Throwing away old bills that prove your usage pattern","Missing the CGRF window while calling the helpline repeatedly"],
+ faqs:[{q:"Can they disconnect while my complaint is pending?",a:"Rules generally protect consumers who pay the undisputed/average amount during a dispute. Pay that portion and keep receipts."},
+  {q:"What is an 'estimated' bill?",a:"When the reader misses a visit, the discom bills an estimate. The next actual reading should true it up — but estimates often overshoot. Your own meter photo corrects it."},
+  {q:"The meter really runs fast. What happens after the test?",a:"If certified faulty, the discom must replace it and revise past bills based on average consumption."},
+  {q:"Is the CGRF really free?",a:"Yes — no fee, no lawyer needed. Forms are on your discom's website."}],
+ tree:[{q:"Does the billed reading exceed your actual meter?",yes:"Open-and-shut: complaint + photo forces correction.",no:"Check for tariff-slab or estimated-bill issues."},
+  {q:"Discom fixed it within 30 days?",yes:"Verify the revised bill and adjustment.",no:"File with the CGRF (free)."},
+  {q:"CGRF outcome satisfactory?",yes:"Done.",no:"Appeal to the Electricity Ombudsman."}],
+ outcomes:{best:"Bill corrected within days once your meter photo lands.",norm:"Revision after CGRF direction in a month or two.",worst:"Faulty-meter disputes running a quarter — your dated photos and past bills carry the case."},
+ risks:{Financial:3,Legal:1,Privacy:1,Safety:1,Time:2},
+ alts:[{t:"1912 helpline",d:"The common national power-complaint number routing to your discom."},{t:"Prepaid smart meter",d:"Where available, live-usage prepaid meters end reading disputes permanently."}],
+ related:["upi-payment-failed","rental-deposit"],tpl:null},
+
+{id:"gst-registration",title:"Register for GST",cat:"Business Registration",icon:"🧾",
+ blurb:"Get a GSTIN for your business — free, fully online",
+ keywords:["gst registration","register gst","gstin","gst number","new gst","gst apply","gst kaise banaye","gst for business"],
+ summary:"You want to register your business for GST and get a GSTIN.",
+ difficulty:2,urgency:0,time:"3–10 working days",timePct:25,cost:"Free (govt charges nothing)",costTag:"g",
+ laws:"CGST Act 2017 · GST registration rules",
+ steps:[
+  {t:"Confirm you actually need GST",d:"Mandatory above ₹40L turnover (goods) / ₹20L (services) in most states — lower in special-category states — and for interstate supply or selling on e-commerce platforms. Voluntary registration is allowed and often useful for B2B.",why:"Registering when not required adds monthly compliance you may not need.",time:"30 min",tip:"Selling on Amazon/Flipkart/Zomato etc.? GST is generally required regardless of turnover."},
+  {t:"Keep documents ready",d:"PAN (business/proprietor), Aadhaar, photo, bank proof (cancelled cheque/statement), business address proof (electricity bill + rent agreement/NOC if rented).",why:"Uploads are checked against each other — mismatches cause rejection.",time:"1 hr"},
+  {t:"Apply on gst.gov.in (Part A)",d:"Services → Registration → New Registration. Enter PAN, mobile, email → verify OTPs → get a TRN (Temporary Reference Number).",why:"The TRN lets you complete the form in sittings within 15 days.",time:"20 min"},
+  {t:"Complete Part B & upload documents",d:"Business details, promoter details, principal place of business, bank details, goods/services (HSN/SAC codes). Verify with Aadhaar e-KYC for faster approval.",why:"Aadhaar-authenticated applications are typically approved in ~7 working days without physical verification.",time:"1–2 hrs",warn:"The address proof name must match the PAN/owner or come with a proper NOC."},
+  {t:"Respond to any clarification (GST REG-03)",d:"If the officer raises a query, reply with the exact document asked within 7 working days.",why:"Non-response equals rejection; a clean reply usually completes approval.",time:"As needed"},
+  {t:"Receive GSTIN & set up compliance",d:"Download the registration certificate (REG-06), display it at your premises, add the GSTIN to invoices, and set up monthly/quarterly return filing (QRMP for small businesses).",why:"Registration is the start — timely returns keep it alive and penalty-free.",time:"1 day",tip:"Nil turnover still requires nil returns. Missing returns triggers late fees and eventual cancellation."},
+ ],
+ docs:[{n:"PAN card",y:"GST is PAN-based"},{n:"Aadhaar",y:"e-KYC for fast-track approval"},{n:"Photo of proprietor/partners",y:"Application requirement"},{n:"Bank proof",y:"Cancelled cheque or statement"},{n:"Business address proof",y:"Electricity bill + rent agreement/NOC"},{n:"Incorporation docs (if company/LLP)",y:"Certificate, MOA/AOA or deed"}],
+ evidence:[{n:"Threshold/need confirmed",w:15},{n:"All documents collected & matching",w:35},{n:"Application submitted with ARN",w:30},{n:"Clarifications answered on time",w:20}],
+ actions:[{p:"HIGH",t:"Match every document's name/address before uploading"},{p:"MEDIUM",t:"Use Aadhaar authentication for speed"},{p:"MEDIUM",t:"Track the ARN daily after applying"},{p:"LOW",t:"Plan return filing (accountant or software)"}],
+ donts:["Don't pay any portal 'registration fee' — GST registration is 100% free; only professionals charge for their service","Don't use a residential address without an NOC from the owner","Don't ignore a clarification notice — 7 working days, then rejection","Don't register and then skip returns; late fees accumulate daily"],
+ mistakes:["Name spelling differing across PAN, Aadhaar and the form","Wrong HSN/SAC codes chosen casually","Registering under the wrong state for the actual place of business"],
+ faqs:[{q:"How long does approval take?",a:"With Aadhaar authentication, typically about 7 working days; without it, up to 30 days and possible physical verification."},
+  {q:"Is voluntary registration worth it?",a:"If your clients are businesses that want GST invoices for input credit, yes. If you're purely B2C under the threshold, usually no."},
+  {q:"What is the composition scheme?",a:"Small businesses (turnover up to ₹1.5Cr goods / ₹50L services) can pay a flat low tax with quarterly compliance — but can't collect GST or claim input credit."},
+  {q:"Can I do this myself or do I need a CA?",a:"The portal is self-serviceable if your documents are clean. A CA helps with codes, scheme choice, and ongoing returns — many charge ₹1,000–3,000 for registration help."}],
+ tree:[{q:"Is your turnover above the threshold or do you sell interstate/on platforms?",yes:"Registration is mandatory — apply now.",no:"Consider voluntary registration only for B2B benefit."},
+  {q:"ARN generated after submission?",yes:"Track status; watch for REG-03 queries.",no:"Complete Part B within 15 days of the TRN."},
+  {q:"Received a clarification notice?",yes:"Reply with the exact document within 7 working days.",no:"Await approval and download REG-06."}],
+ outcomes:{best:"GSTIN in about a week with Aadhaar e-KYC.",norm:"~2–3 weeks with one clarification round.",worst:"Rejection over mismatched address proof — fixed by reapplying with a proper NOC/matching documents."},
+ risks:{Financial:1,Legal:2,Privacy:1,Safety:1,Time:2},
+ alts:[{t:"Composition scheme",d:"Flat-rate tax for small businesses with lighter compliance."},{t:"Professional filing",d:"CA/portal services handle it end-to-end for a modest fee."}],
+ related:["start-a-business","salary-not-received"],tpl:null},
+
+{id:"start-a-business",title:"Start a Business in India",cat:"Startup",icon:"🚀",
+ blurb:"From idea to a legally registered, bank-ready business",
+ keywords:["start a business","start startup","register company","business registration","open a shop","proprietorship","private limited","llp","udyam","msme registration","company kaise banaye"],
+ summary:"You want to start a business and set it up legally — structure, registration, bank, and licences.",
+ difficulty:3,urgency:0,time:"1–4 weeks",timePct:45,cost:"₹0 (proprietorship) → ₹7k–15k (Pvt Ltd)",costTag:"a",
+ laws:"Companies Act 2013 · LLP Act 2008 · Shops & Establishments Acts · MSME (Udyam)",
+ steps:[
+  {t:"Choose your structure",d:"Proprietorship: fastest, you = the business, unlimited liability. Partnership/LLP: 2+ people, LLP limits liability. Private Limited: investors-ready, most compliance. One Person Company: solo + limited liability.",why:"Structure decides taxes, liability, fundraising ability, and yearly compliance load.",time:"1–2 days",tip:"Freelancers and first shops usually start as proprietorships and upgrade later."},
+  {t:"Name & basics",d:"Pick a name (check MCA name search + trademark registry + domain availability). Decide the registered address.",why:"A clash with an existing trademark can force a costly rename later.",time:"1 day"},
+  {t:"Register the entity",d:"Proprietorship: no central registration — identity comes via Udyam + GST/Shops licence. LLP/Pvt Ltd/OPC: file SPICe+ on mca.gov.in (DSC + DIN + PAN + TAN issued together).",why:"SPICe+ bundles incorporation, PAN, TAN, EPFO/ESIC in one filing.",time:"3–10 days",warn:"For companies, a professional (CA/CS) is strongly recommended for the SPICe+ filing."},
+  {t:"Get Udyam (MSME) registration",d:"Free, 15 minutes at udyamregistration.gov.in with Aadhaar + PAN.",why:"Unlocks MSME benefits: easier loans, delayed-payment protection, tender access, subsidies.",time:"20 min",tip:"Genuinely free — ignore paid 'MSME certificate' websites."},
+  {t:"Open a current account",d:"With your registration proof (Udyam/GST/incorporation certificate) + PAN + KYC, open a business current account.",why:"Separating business money from personal is the #1 habit that saves tax-time pain.",time:"2–5 days"},
+  {t:"Licences, GST & compliance calendar",d:"Register GST if required (see the GST guide), get the Shops & Establishments licence from your municipality, FSSAI if food, and set a compliance calendar (returns, renewals).",why:"Licences depend on activity and state; missing one invites penalties later.",time:"1–2 weeks"},
+ ],
+ docs:[{n:"PAN & Aadhaar",y:"Base identity for every registration"},{n:"Address proof for the office",y:"Utility bill + rent agreement/NOC"},{n:"Photos & DSC (for companies)",y:"Digital signature for MCA filings"},{n:"Partnership deed / MOA-AOA",y:"Governing documents for multi-founder setups"},{n:"Bank KYC set",y:"For the current account"}],
+ evidence:[{n:"Structure decided with reasons",w:20},{n:"Name cleared (MCA + trademark + domain)",w:15},{n:"Entity registered / Udyam done",w:30},{n:"Current account opened",w:20},{n:"Licence & compliance list made",w:15}],
+ actions:[{p:"HIGH",t:"Decide the structure before spending on anything"},{p:"HIGH",t:"Check the name against trademarks today"},{p:"MEDIUM",t:"Udyam registration (free, 20 min)"},{p:"MEDIUM",t:"Open the current account early"},{p:"LOW",t:"Draft founder agreements even among friends"},{p:"OPTIONAL",t:"Trademark your brand name"}],
+ donts:["Don't pay portals for 'free' registrations (Udyam is free; GST is free)","Don't mix personal and business bank accounts","Don't copy a known brand's name 'slightly changed'","Don't skip a written founders' agreement because you're friends","Don't register a Pvt Ltd just for prestige if a proprietorship serves you — compliance costs are yearly"],
+ mistakes:["Choosing Pvt Ltd first and drowning in compliance with zero revenue","Ignoring trademark search until after printing packaging","No compliance calendar → missed filings → penalties","Renting an office before validating the idea"],
+ faqs:[{q:"What's the cheapest legal way to start?",a:"A proprietorship: Udyam (free) + GST if needed + Shops licence. You can be 'in business' within days at near-zero cost."},
+  {q:"When should I choose Pvt Ltd?",a:"When you need investors, ESOPs, or liability protection with multiple founders. Expect ₹7k–15k to incorporate and yearly compliance costs (₹10k–25k+)."},
+  {q:"Do I need a CA from day one?",a:"For proprietorships, at tax time is fine. For companies/LLPs, yes — filings are technical and penalty-prone."},
+  {q:"What does Udyam actually give me?",a:"MSME status: priority-sector lending, protection against delayed payments from buyers (interest mandated), subsidy schemes, and government tender eligibility."}],
+ tree:[{q:"Will you raise investment or have co-founders?",yes:"Lean LLP or Pvt Ltd; get a CA/CS.",no:"Proprietorship keeps it simple."},
+  {q:"Is your name clear on MCA + trademark search?",yes:"Lock the domain and proceed.",no:"Pick another — renames are expensive later."},
+  {q:"Registration done?",yes:"Current account → licences → compliance calendar.",no:"Finish Udyam/SPICe+ first; everything else depends on it."}],
+ outcomes:{best:"Proprietorship trading legally within a week at ~zero cost.",norm:"Pvt Ltd/LLP fully set up in 2–4 weeks with professional help.",worst:"Name/trademark clash or compliance neglect creating costs later — both preventable on day one."},
+ risks:{Financial:3,Legal:3,Privacy:1,Safety:1,Time:3},
+ alts:[{t:"Startup India recognition",d:"DPIIT recognition adds tax benefits and scheme access for eligible startups."},{t:"Franchise route",d:"Buying a proven model instead of building from zero."},{t:"Incubators",d:"College/government incubators give mentoring + sometimes seed grants."}],
+ related:["gst-registration","salary-not-received"],tpl:null},
+];
+</script>
+<script>
+/* ================= ENGINE ================= */
+const $=s=>document.querySelector(s);
+let memStore={}; // fallback if window.storage unavailable
+async function stGet(k){try{if(window.storage){const r=await window.storage.get(k);return r?JSON.parse(r.value):null}}catch(e){}return memStore[k]||null}
+async function stSet(k,v){memStore[k]=v;try{if(window.storage)await window.storage.set(k,JSON.stringify(v))}catch(e){}}
+
+function norm(s){return s.toLowerCase().replace(/[^a-z0-9\u0900-\u097F\s]/g," ").replace(/\s+/g," ").trim()}
+function expand(q){
+  let out=norm(q);
+  for(const [root,alts] of Object.entries(SYN)){
+    for(const a of alts){ if(out.includes(norm(a))) out+=" "+root; }
+  }
+  return out;
+}
+function scoreProblem(p,q){
+  let s=0; const nq=" "+q+" ";
+  for(const k of p.keywords){const nk=norm(k);
+    if(q===nk) s+=100;
+    else if(nq.includes(" "+nk+" ")) s+=40+nk.length;
+    else{ // partial word overlap
+      const words=nk.split(" ").filter(w=>w.length>3);
+      let hit=0; for(const w of words){ if(nq.includes(w)) hit++; }
+      if(words.length&&hit/words.length>=0.6) s+=18*hit;
+    }
+  }
+  const tw=norm(p.title).split(" ");
+  for(const w of tw){ if(w.length>3&&nq.includes(w)) s+=10; }
+  if(nq.includes(norm(p.cat))) s+=8;
+  return s;
+}
+function detectEmergency(q){
+  for(const e of EMERGENCY){ for(const k of e.k){ if(q.includes(k)) return e; } }
+  return null;
+}
+function findMatches(raw){
+  const q=expand(raw);
+  return PROBLEMS.map(p=>({p,s:scoreProblem(p,q)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+}
+
+/* ================= UI: HOME ================= */
+const ICON=t=>`<span style="font-size:1.15rem">${t}</span>`;
+const EXAMPLES=["My landlord won't return my deposit…","I got scammed on WhatsApp…","My salary is delayed…","I lost my passport…","My UPI payment failed…","My electricity bill is double…","How do I register GST?…","My phone was stolen…","I received a legal notice…","How do I start a business?…"];
+let exIdx=0;
+setInterval(()=>{const i=$("#mainInput"); if(i&&!i.value&&document.activeElement!==i){exIdx=(exIdx+1)%EXAMPLES.length;i.placeholder=EXAMPLES[exIdx];}},3000);
+
+function buildHome(){
+  $("#probCount").textContent=PROBLEMS.length+" guided roadmaps · fully offline";
+  $("#popularGrid").innerHTML=PROBLEMS.map(p=>`
+    <button class="pcard" onclick="openProblem('${p.id}')">
+      <div class="ic">${ICON(p.icon)}</div>
+      <h3>${p.title}</h3><p>${p.blurb}</p>
+      <div class="meta"><span class="tag b">${p.cat}</span><span class="tag ${p.difficulty>=4?'r':p.difficulty>=3?'a':'g'}">${DIFF[p.difficulty-1]}</span></div>
+    </button>`).join("");
+  const cats=[...new Set(PROBLEMS.map(p=>p.cat))];
+  $("#catRow").innerHTML=cats.map(c=>`<button class="catchip" onclick="openCategory('${c}')">${c}</button>`).join("");
+  $("#tryBar").innerHTML=["Salary delayed","Got scammed","Lost passport","UPI failed","Wrong Aadhaar","Start a business"].map(t=>`<button class="trychip" onclick="quick('${t}')">${t}</button>`).join("");
+  $("#tplGrid").innerHTML=TEMPLATES.map(t=>`
+    <button class="pcard" onclick="showTemplate('${t.id}')">
+      <div class="ic">${ICON("✉")}</div><h3>${t.n}</h3><p>${t.d}</p>
+      <div class="meta"><span class="tag g">Copy-ready</span></div>
+    </button>`).join("");
+}
+function quick(t){$("#mainInput").value=t;submitSearch();}
+function openCategory(c){
+  const list=PROBLEMS.filter(p=>p.cat===c);
+  if(list.length===1) return openProblem(list[0].id);
+  renderResults(c,list.map(p=>({p,s:1})),null);
+}
+
+/* suggestions */
+let sugIdx=-1;
+function bindSearch(inp){
+  inp.addEventListener("input",()=>{
+    const v=inp.value.trim(); const box=$("#suggestBox"); sugIdx=-1;
+    if(inp.id==="miniInput") return;
+    if(v.length<2){box.classList.remove("open");return}
+    const m=findMatches(v).slice(0,6);
+    if(!m.length){box.classList.remove("open");return}
+    box.innerHTML=m.map(x=>`<button onclick="openProblem('${x.p.id}')">${ICON(x.p.icon)} ${x.p.title}<span class="cat">${x.p.cat}</span></button>`).join("");
+    box.classList.add("open");
+  });
+  inp.addEventListener("keydown",e=>{
+    const box=$("#suggestBox"),items=box?box.querySelectorAll("button"):[];
+    if(e.key==="Enter"){ if(sugIdx>=0&&items[sugIdx]){items[sugIdx].click();} else {inp.id==="miniInput"?miniSubmit():submitSearch();} }
+    if(inp.id==="miniInput")return;
+    if(e.key==="ArrowDown"){e.preventDefault();sugIdx=Math.min(sugIdx+1,items.length-1);}
+    if(e.key==="ArrowUp"){e.preventDefault();sugIdx=Math.max(sugIdx-1,-1);}
+    if(e.key==="Escape"){box.classList.remove("open");}
+    items.forEach((b,i)=>b.classList.toggle("active",i===sugIdx));
+  });
+  document.addEventListener("click",e=>{if(!e.target.closest(".searchbox"))$("#suggestBox").classList.remove("open");});
+}
+function submitSearch(){
+  const v=$("#mainInput").value.trim(); if(!v)return;
+  $("#suggestBox").classList.remove("open");
+  const emg=detectEmergency(norm(v));
+  const m=findMatches(v);
+  if(m.length&&m[0].s>=30&&(m.length<2||m[0].s>m[1].s*1.6)&&!emg){openProblem(m[0].p.id,v);return}
+  renderResults(v,m.slice(0,8),emg);
+}
+function miniSubmit(){const v=$("#miniInput").value.trim();if(!v)return;$("#mainInput").value=v;$("#miniInput").value="";goHome(false);submitSearch();window.scrollTo({top:0});}
+
+/* ================= RESULTS (multi-match / no-match) ================= */
+function emgHTML(e){return `<div class="emg"><h3>⚠ ${e.t}</h3><ul>${e.lines.map(l=>`<li>${l}</li>`).join("")}</ul></div>`}
+function renderResults(q,matches,emg){
+  document.body.classList.add("in-dash");
+  const inner=$("#dashInner");
+  let html=`<div class="crumbs">Home → <b>Search: “${esc(q)}”</b></div>`;
+  if(emg) html+=emgHTML(emg);
+  if(matches.length){
+    html+=`<div class="summary-card"><div class="lbl">Closest routes found</div><h2>Pick the roadmap that matches your situation</h2><div class="conf">${matches.length} match${matches.length>1?"es":""} · tap one to open the full step-by-step plan</div></div>
+    <div class="cardgrid">`+matches.map(x=>`
+      <button class="pcard" onclick="openProblem('${x.p.id}')">
+        <div class="ic">${ICON(x.p.icon)}</div><h3>${x.p.title}</h3><p>${x.p.blurb}</p>
+        <div class="meta"><span class="tag b">${x.p.cat}</span><span class="tag g">${x.p.time}</span></div>
+      </button>`).join("")+`</div>`;
+  } else {
+    html+=`<div class="summary-card"><div class="lbl">No exact route yet</div><h2>We don't have a dedicated roadmap for this — here's how to still make progress</h2></div>
+    <div class="panel"><h3>General next steps for any problem</h3><ul class="xlist dot">
+      <li><b>Write 
