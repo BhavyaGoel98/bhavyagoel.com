@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasooli Pro — Get Paid. Politely. Then Legally.</title>
+<meta name="description" content="India's payment recovery toolkit for freelancers & agencies. Track stuck payments, send escalating WhatsApp reminders, calculate MSME interest, and draft demand notices.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ========== DESIGN TOKENS ========== */
+:root{
+  --ink:#0A0F0D;
+  --ink-2:#0E1613;
+  --card:#131F1A;
+  --card-2:#182B21;
+  --line:#1E3228;
+  --gold:#E8B84B;
+  --gold-dim:#8f7431;
+  --gold-glow:rgba(232,184,75,.12);
+  --stamp:#E4452F;
+  --stamp-glow:rgba(228,69,47,.1);
+  --mint:#7FD8A4;
+  --mint-glow:rgba(127,216,164,.08);
+  --text:#EDE8DA;
+  --muted:#8A9C91;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:15px;line-height:1.55;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;line-height:1.15}
+.mono{font-family:'IBM Plex Mono',monospace}
+a{color:var(--gold);text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select,textarea{
+  font-family:inherit;font-size:16px;color:var(--text);
+  background:var(--ink);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px;width:100%;
+  transition:border-color .2s,box-shadow .2s;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow)}
+label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* ========== BUTTONS ========== */
+.btn{
+  border-radius:12px;padding:12px 20px;font-size:14px;font-weight:600;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .15s,filter .15s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);
+  transform:translateX(-100%);transition:transform .4s;
+}
+.btn:hover::after{transform:translateX(100%)}
+.btn:active{transform:scale(.96)}
+.btn-gold{background:var(--gold);color:#1a1405;box-shadow:0 4px 24px var(--gold-glow)}
+.btn-gold:hover{filter:brightness(1.1);box-shadow:0 6px 32px rgba(232,184,75,.2)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--gold-dim);background:rgba(232,184,75,.04)}
+.btn-stamp{background:var(--stamp);color:#fff;box-shadow:0 4px 20px var(--stamp-glow)}
+.btn-mint{background:transparent;color:var(--mint);border:1px solid rgba(127,216,164,.3)}
+.btn-mint:hover{background:rgba(127,216,164,.06)}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:10px}
+.btn-lg{padding:16px 32px;font-size:16px;border-radius:14px}
+.pro-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;
+  color:var(--gold);border:1px solid var(--gold-dim);border-radius:6px;
+  padding:3px 8px;
+}
+
+/* ========== SCROLL REVEAL ========== */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.vis{opacity:1;transform:none}
+.reveal-d1{transition-delay:.1s}
+.reveal-d2{transition-delay:.2s}
+.reveal-d3{transition-delay:.3s}
+.reveal-d4{transition-delay:.4s}
+.reveal-d5{transition-delay:.5s}
+
+/* ========== FLOATING RUPEES (HERO BG) ========== */
+.rupee-rain{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.rupee-rain span{
+  position:absolute;font-family:'IBM Plex Mono',monospace;font-weight:600;
+  color:var(--gold);opacity:.06;
+  animation:float-up linear infinite;
+}
+@keyframes float-up{
+  0%{transform:translateY(110vh) rotate(0deg);opacity:0}
+  10%{opacity:.06}
+  90%{opacity:.06}
+  100%{transform:translateY(-10vh) rotate(360deg);opacity:0}
+}
+
+/* ========== LANDING HEADER ========== */
+.land-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:14px 0;
+  background:rgba(10,15,13,.6);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(30,50,40,.5);
+  transition:background .3s;
+}
+.land-header.scrolled{background:rgba(10,15,13,.92)}
+.lh-row{display:flex;align-items:center;justify-content:space-between}
+.lh-brand{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800}
+.lh-brand .ru{color:var(--gold)}
+.lh-nav{display:flex;gap:6px;align-items:center}
+.lh-link{color:var(--muted);font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:8px;transition:color .2s}
+.lh-link:hover{color:var(--text)}
+@media(max-width:640px){.lh-link.desk{display:none}}
+
+/* ========== HERO ========== */
+.hero-land{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:100px 20px 60px;text-align:center;
+  background:
+    radial-gradient(900px 600px at 70% 20%, rgba(232,184,75,.07), transparent),
+    radial-gradient(700px 500px at 20% 80%, rgba(228,69,47,.05), transparent),
+    radial-gradient(600px 400px at 50% 50%, rgba(127,216,164,.04), transparent);
+}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid var(--gold-dim);border-radius:100px;
+  padding:6px 18px;margin-bottom:24px;
+  background:rgba(232,184,75,.06);
+  animation:pulse-border 3s ease-in-out infinite;
+}
+@keyframes pulse-border{0%,100%{box-shadow:0 0 0 0 rgba(232,184,75,.15)}50%{box-shadow:0 0 0 8px rgba(232,184,75,0)}}
+.hero-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-h1{
+  font-size:clamp(36px,7vw,72px);font-weight:800;
+  line-height:1.05;margin-bottom:20px;
+  letter-spacing:-.02em;
+}
+.hero-h1 .grad{
+  background:linear-gradient(135deg,var(--gold),#f0d078,var(--stamp));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{
+  font-size:clamp(16px,2.5vw,20px);color:var(--muted);
+  max-width:560px;margin:0 auto 36px;line-height:1.6;
+}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-trust{
+  margin-top:48px;display:flex;gap:32px;justify-content:center;flex-wrap:wrap;
+  font-size:13px;color:var(--muted);
+}
+.hero-trust span{display:flex;align-items:center;gap:6px}
+.hero-trust .num{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--text)}
+
+/* ========== DEMO PREVIEW ========== */
+.demo-section{padding:80px 20px;position:relative}
+.demo-window{
+  max-width:900px;margin:0 auto;
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 40px 100px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03) inset;
+}
+.demo-bar{
+  display:flex;gap:6px;align-items:center;padding:14px 18px;
+  background:var(--ink-2);border-bottom:1px solid var(--line);
+}
+.demo-dot{width:10px;height:10px;border-radius:50%}
+.demo-body{padding:28px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:700px){.demo-body{grid-template-columns:1fr;padding:18px 14px}}
+.demo-stat{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:12px;
+  padding:18px;
+}
+.demo-stat .dlbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.demo-stat .dval{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;margin-top:6px}
+.demo-stat .dval.g{color:var(--gold)}
+.demo-stat .dval.r{color:var(--stamp)}
+.demo-stat .dval.m{color:var(--mint)}
+.demo-stat .dsub{font-size:11.5px;color:var(--muted);margin-top:4px}
+.demo-inv{
+  grid-column:1/-1;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;
+  padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.demo-inv .client{font-weight:600;font-size:15px}
+.demo-inv .meta{font-size:12px;color:var(--muted)}
+.demo-inv .d-stamp{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+  color:var(--stamp);border:2px solid var(--stamp);border-radius:5px;
+  padding:3px 8px;transform:rotate(-6deg);letter-spacing:.08em;
+}
+.demo-inv .amt{font-family:'IBM Plex Mono',monospace;font-size:20px;color:var(--gold);font-weight:600}
+
+/* ========== FEATURES ========== */
+.features{padding:80px 20px}
+.sec-label{
+  font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+}
+.sec-title{font-size:clamp(28px,5vw,42px);font-weight:800;margin-bottom:8px}
+.sec-sub{font-size:16px;color:var(--muted);max-width:580px;margin-bottom:40px}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.feat{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:28px 24px;position:relative;overflow:hidden;
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+}
+.feat:hover{border-color:var(--gold-dim);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.2)}
+.feat-icon{
+  width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:16px;
+}
+.feat-icon.ic-gold{background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.15)}
+.feat-icon.ic-red{background:rgba(228,69,47,.08);border:1px solid rgba(228,69,47,.12)}
+.feat-icon.ic-mint{background:rgba(127,216,164,.08);border:1px solid rgba(127,216,164,.12)}
+.feat h3{font-size:18px;font-weight:700;margin-bottom:6px}
+.feat p{font-size:14px;color:var(--muted);line-height:1.55}
+.feat .corner-glow{
+  position:absolute;top:-60px;right:-60px;width:180px;height:180px;
+  border-radius:50%;filter:blur(60px);opacity:0;transition:opacity .4s;
+}
+.feat:hover .corner-glow{opacity:1}
+
+/* ========== HOW IT WORKS ========== */
+.how{padding:80px 20px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:10px}
+.step{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:28px 22px;text-align:center;position:relative;
+}
+.step-num{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#d4a03c);color:#1a1405;
+  font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+}
+.step h4{font-size:16px;font-weight:700;margin-bottom:6px}
+.step p{font-size:13.5px;color:var(--muted);line-height:1.5}
+.step-arrow{
+  display:none;position:absolute;right:-14px;top:50%;transform:translateY(-50%);
+  color:var(--gold-dim);font-size:20px;
+}
+@media(min-width:800px){.step-arrow{display:block}.step:last-child .step-arrow{display:none}}
+
+/* ========== PRICING ========== */
+.pricing{padding:80px 20px}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:700px;margin:0 auto}
+@media(max-width:640px){.price-grid{grid-template-columns:1fr}}
+.plan{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:30px 24px;position:relative;transition:border-color .3s;
+}
+.plan.pro-plan{border-color:var(--gold-dim);background:linear-gradient(170deg,var(--card) 60%,rgba(232,184,75,.04))}
+.plan.pro-plan::before{
+  content:'MOST VALUE';position:absolute;top:-11px;right:20px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.1em;
+  background:var(--gold);color:#1a1405;padding:3px 12px;border-radius:6px;
+}
+.plan h3{font-size:20px;margin-bottom:4px}
+.plan .plan-price{
+  font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:600;margin:10px 0;
+}
+.plan .plan-price.gold{color:var(--gold)}
+.plan ul{list-style:none;margin:18px 0}
+.plan ul li{padding:6px 0;font-size:14px;color:var(--muted)}
+.plan ul li::before{content:'✦ ';color:var(--gold)}
+.plan.free-plan ul li::before{color:var(--mint)}
+
+/* ========== CTA BANNER ========== */
+.cta-banner{
+  padding:80px 20px;text-align:center;
+  background:
+    radial-gradient(600px 300px at 50% 50%, rgba(232,184,75,.08), transparent);
+}
+.cta-banner h2{font-size:clamp(26px,5vw,40px);font-weight:800;margin-bottom:12px}
+.cta-banner p{color:var(--muted);font-size:17px;margin-bottom:28px}
+
+/* ========== APP HEADER ========== */
+.app-view{display:none}
+.app-view.active{display:block}
+.land-view.hidden{display:none}
+header.app-header{
+  border-bottom:1px solid var(--line);
+  padding:14px 0;position:sticky;top:0;z-index:50;
+  background:rgba(10,15,13,.92);backdrop-filter:blur(12px);
+}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand h1{font-size:22px;font-weight:800}
+.brand h1 .ru{color:var(--gold)}
+.tagline{font-size:12px;color:var(--muted)}
+.head-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
+/* ========== HERO STATS (APP) ========== */
+.hero-app{padding:28px 0 8px}
+.hero-line{font-size:12px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:720px){.stats{grid-template-columns:1.4fr 1fr 1fr}}
+.stat{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.stat:hover{border-color:var(--gold-dim)}
+.stat .lbl{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.stat .val{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;margin-top:6px}
+.stat .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.stat.big .val{font-size:38px;color:var(--gold)}
+.stat .val.red{color:var(--stamp)}
+.stat .val.mint{color:var(--mint)}
+.locked-blur{filter:blur(7px);user-select:none;pointer-events:none}
+.lock-tag{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;color:var(--gold);gap:6px;background:rgba(10,15,13,.35);
+  cursor:pointer;border:none;width:100%;
+}
+
+/* ========== TABS ========== */
+.tabs{
+  display:flex;gap:4px;margin:24px 0 18px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  border-bottom:1px solid var(--line);padding-bottom:0;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  background:transparent;color:var(--muted);padding:12px 16px;font-size:14px;font-weight:600;
+  border-bottom:2px solid transparent;border-radius:8px 8px 0 0;white-space:nowrap;
+  transition:color .2s;
+}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab:hover{color:var(--text)}
+.tab .pro-dot{color:var(--gold);font-size:10px;vertical-align:top;margin-left:3px}
+section.panel{display:none;padding-bottom:60px;animation:fadeSlide .35s ease-out}
+section.panel.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ========== CARDS ========== */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.form-grid .full{grid-column:1/-1}
+.section-title{font-size:19px;font-weight:800;margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+
+/* ========== INVOICE LIST ========== */
+.inv-list{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.inv{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;position:relative;
+  display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;
+  transition:border-color .2s,transform .2s;
+  animation:fadeSlide .3s ease-out;
+}
+.inv:hover{border-color:var(--gold-dim);transform:translateX(3px)}
+.inv.paid{opacity:.5}
+.inv .client{font-weight:600;font-size:16px}
+.inv .meta{font-size:12.5px;color:var(--muted);margin-top:3px}
+.inv .amt{font-family:'IBM Plex Mono',monospace;font-size:20px;color:var(--gold);font-weight:600}
+.inv-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.stage-chip{
+  display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;
+  padding:3px 10px;border-radius:20px;margin-top:8px;border:1px solid var(--line);color:var(--muted);
+}
+.stage-chip.s1{color:var(--mint);border-color:rgba(127,216,164,.3)}
+.stage-chip.s2{color:var(--gold);border-color:var(--gold-dim)}
+.stage-chip.s3,.stage-chip.s4{color:#f0a04a;border-color:#7a5425}
+.stage-chip.s5{color:var(--stamp);border-color:var(--stamp)}
+.stamp{
+  position:absolute;top:10px;right:14px;
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.12em;
+  color:var(--stamp);border:2.5px solid var(--stamp);border-radius:5px;
+  padding:3px 9px;transform:rotate(-8deg);opacity:.85;pointer-events:none;
+}
+.stamp.paid-stamp{color:var(--mint);border-color:var(--mint);transform:rotate(6deg)}
+@media(max-width:640px){
+  .inv{grid-template-columns:1fr}
+  .inv-actions{justify-content:flex-start}
+  .stamp{top:auto;bottom:10px}
+}
+.empty{
+  text-align:center;padding:50px 20px;color:var(--muted);
+  border:1px dashed var(--line);border-radius:var(--radius);margin-top:20px;
+}
+.empty b{color:var(--text)}
+
+/* ========== MESSAGES ========== */
+.msg-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.msg-controls select{width:auto;min-width:160px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:transparent;color:var(--muted);padding:10px 14px;font-size:13px;font-weight:600;transition:background .2s,color .2s}
+.seg button.on{background:var(--gold);color:#1a1405}
+textarea#msgOut{min-height:180px;font-size:14.5px;line-height:1.6;resize:vertical}
+.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:16px 0 20px}
+@media(max-width:700px){.ladder{grid-template-columns:1fr;gap:8px}}
+.rung{
+  border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:11.5px;
+  color:var(--muted);background:var(--card-2);transition:border-color .25s,transform .25s;
+}
+.rung b{display:block;font-size:12.5px;color:var(--text);margin-bottom:2px}
+.rung.hot{border-color:var(--gold);color:var(--text);transform:scale(1.04)}
+.rung.hot b{color:var(--gold)}
+.rung.legal.hot{border-color:var(--stamp);transform:scale(1.04)}
+.rung.legal.hot b{color:var(--stamp)}
+
+/* ========== CALCULATOR ========== */
+.calc-out{
+  margin-top:18px;padding:20px;border-radius:14px;
+  background:var(--card-2);border:1px solid var(--line);
+  animation:fadeSlide .35s ease-out;
+}
+.calc-out .big{font-family:'IBM Plex Mono',monospace;font-size:32px;color:var(--stamp);font-weight:600}
+.calc-out .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px;gap:12px}
+.calc-out .row:last-child{border-bottom:none}
+.calc-out .row .mono{color:var(--gold);text-align:right}
+.note{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5}
+
+/* ========== LEGAL NOTICE ========== */
+.notice-preview{
+  background:#F5F0E4;color:#1c1a14;border-radius:10px;padding:34px;
+  font-family:Georgia,'Times New Roman',serif;font-size:13.5px;line-height:1.7;
+  margin-top:18px;position:relative;max-height:480px;overflow:auto;
+  animation:fadeSlide .35s ease-out;
+}
+.notice-preview h4{font-size:15px;text-align:center;letter-spacing:.06em;margin-bottom:18px;text-decoration:underline}
+.notice-preview p{margin-bottom:12px}
+.notice-preview .np-stamp{
+  position:absolute;top:22px;right:26px;transform:rotate(-10deg);
+  border:3px solid #C0392B;color:#C0392B;font-family:'IBM Plex Mono',monospace;
+  font-size:11px;font-weight:600;letter-spacing:.12em;padding:4px 10px;border-radius:4px;opacity:.8;
+}
+
+/* ========== MODALS ========== */
+.overlay{
+  position:fixed;inset:0;background:rgba(5,8,7,.8);backdrop-filter:blur(4px);z-index:200;
+  display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;
+}
+.overlay.open{display:flex}
+.modal{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  max-width:520px;width:100%;padding:28px;position:relative;margin:auto 0;
+  animation:modalPop .25s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 32px 80px rgba(0,0,0,.4);
+}
+@keyframes modalPop{from{transform:scale(.95) translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.modal .close{
+  position:absolute;top:14px;right:14px;background:transparent;color:var(--muted);
+  font-size:22px;line-height:1;padding:8px;border-radius:8px;transition:color .2s;
+}
+.modal .close:hover{color:var(--text)}
+.modal h3{font-size:20px;margin-bottom:6px}
+.pro-list{list-style:none;margin:16px 0}
+.pro-list li{padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.pro-list li::before{content:'✦ ';color:var(--gold)}
+.price-tag{font-family:'IBM Plex Mono',monospace;font-size:36px;color:var(--gold);font-weight:600;margin:8px 0}
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:#1a1405;font-weight:600;font-size:13.5px;
+  padding:12px 22px;border-radius:12px;z-index:300;display:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  animation:toastIn .3s ease-out;
+}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(16px);opacity:0}to{transform:translateX(-50%);opacity:1}}
+
+/* ========== FOOTER ========== */
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:12px;text-align:center}
+footer b{color:var(--gold)}
+
+/* ========== MOBILE ========== */
+@media(max-width:640px){
+  body{font-size:14.5px}
+  .wrap{padding:0 14px}
+  .btn{min-height:44px}
+  .btn-sm{min-height:40px;padding:9px 14px}
+  .btn-lg{padding:14px 24px;font-size:15px}
+  .hero-land{padding:90px 16px 50px;min-height:auto}
+  .hero-h1{margin-bottom:16px}
+  .hero-trust{gap:20px}
+  .features,.how,.pricing,.cta-banner,.demo-section{padding:50px 16px}
+  .sec-title{margin-bottom:6px}
+  .feat{padding:22px 18px}
+  .steps{gap:14px}
+  .price-grid{gap:14px}
+  .demo-body{gap:10px}
+  .demo-stat .dval{font-size:22px}
+  header.app-header{padding:10px 0}
+  .brand h1{font-size:20px}
+  .hero-app{padding:20px 0 4px}
+  .stat{padding:16px}
+  .stat .val{font-size:24px}
+  .stat.big .val{font-size:28px}
+  .tab{padding:11px 13px;font-size:13px}
+  .card{padding:16px 14px}
+  .section-title{font-size:17px}
+  .msg-controls{flex-direction:column;align-items:stretch}
+  .msg-controls select{width:100%;min-width:0}
+  .seg{width:100%;display:flex}
+  .seg button{flex:1;min-height:44px}
+  .inv{padding:15px}
+  .inv .amt{font-size:17px}
+  .inv-actions .btn-sm{flex:1;min-width:0}
+  .calc-out{padding:16px}
+  .calc-out .big{font-size:26px}
+  .notice-preview{padding:22px 16px;font-size:13px}
+  .modal{padding:20px 16px;border-radius:14px}
+  .price-tag{font-size:30px}
+  .toast{width:calc(100% - 32px);text-align:center;bottom:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .btn:active{transform:none}
+  .rupee-rain span{animation:none;display:none}
+  .hero-chip{animation:none}
+  .hero-chip .dot{animation:none}
+  .modal{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║          LANDING PAGE                     ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="land-view" id="landView">
+
+<nav class="land-header" id="landHeader">
+  <div class="wrap lh-row">
+    <div class="lh-brand"><span class="ru">₹</span>VASOOLI</div>
+    <div class="lh-nav">
+      <a href="#features" class="lh-link desk">Features</a>
+      <a href="#pricing" class="lh-link desk">Pricing</a>
+      <button class="btn btn-gold btn-sm" onclick="enterApp()">Open App →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-land">
+  <div class="rupee-rain" id="rupeeRain"></div>
+  <div style="position:relative;z-index:1">
+    <div class="hero-chip reveal"><span class="dot"></span> For Indian freelancers &amp; agencies</div>
+    <h1 class="hero-h1 reveal reveal-d1">
+      Get paid.<br>
+      <span class="grad">Politely. Then legally.</span>
+    </h1>
+    <p class="hero-sub reveal reveal-d2">
+      Track stuck payments, send escalating WhatsApp reminders,
+      calculate the MSME interest your client <em>legally</em> owes you,
+      and generate a demand notice that changes the conversation.
+    </p>
+    <div class="hero-ctas reveal reveal-d3">
+      <button class="btn btn-gold btn-lg" onclick="enterApp()">Start recovering money →</button>
+      <a href="#features" class="btn btn-ghost btn-lg">See how it works</a>
+    </div>
+    <div class="hero-trust reveal reveal-d4">
+      <span><span class="num" data-count="100">0</span>% free to start</span>
+      <span><span class="num">0</span> sign-ups needed</span>
+      <span>Data stays on <span class="num" style="font-size:13px">your</span> device</span>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO PREVIEW -->
+<section class="demo-section">
+  <div class="demo-window reveal">
+    <div class="demo-bar">
+      <div class="demo-dot" style="background:#E4452F"></div>
+      <div class="demo-dot" style="background:#E8B84B"></div>
+      <div class="demo-dot" style="background:#7FD8A4"></div>
+      <span style="font-size:12px;color:var(--muted);margin-left:8px">Vasooli Pro Dashboard</span>
+    </div>
+    <div class="demo-body">
+      <div class="demo-stat">
+        <div class="dlbl">Total outstanding</div>
+        <div class="dval g" data-count="247500" data-prefix="₹">₹0</div>
+        <div class="dsub">3 unpaid invoices</div>
+      </div>
+      <div class="demo-stat">
+        <div class="dlbl">Overdue 30+ days</div>
+        <div class="dval r" data-count="125000" data-prefix="₹">₹0</div>
+        <div class="dsub">Final-notice territory</div>
+      </div>
+      <div class="demo-stat">
+        <div class="dlbl">MSME interest accruing</div>
+        <div class="dval m" data-count="8420" data-prefix="₹">₹0</div>
+        <div class="dsub">They legally owe you this</div>
+      </div>
+      <div class="demo-inv">
+        <div>
+          <div class="client">Acme Solutions Pvt Ltd</div>
+          <div class="meta">INV-009 · Brand identity design · due 14 May 2026</div>
+        </div>
+        <div class="d-stamp">OVERDUE 68d</div>
+        <div class="amt">₹1,25,000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="sec-label reveal">What you get</div>
+    <h2 class="sec-title reveal">Four tools. One mission: <span style="color:var(--gold)">get your money back.</span></h2>
+    <p class="sec-sub reveal">Built for Indian freelancers who are tired of "payment next week, bhai" every week.</p>
+    <div class="feat-grid">
+      <div class="feat reveal">
+        <div class="corner-glow" style="background:var(--gold-glow)"></div>
+        <div class="feat-icon ic-gold">📋</div>
+        <h3>Dues Tracker</h3>
+        <p>Add every stuck invoice — client, amount, due date, work done. See who owes you what at a glance. Live OVERDUE stamp + day counter.</p>
+      </div>
+      <div class="feat reveal reveal-d1">
+        <div class="corner-glow" style="background:var(--mint-glow)"></div>
+        <div class="feat-icon ic-mint">💬</div>
+        <h3>Escalation Ladder</h3>
+        <p>Five stages from polite nudge to legal demand. Messages auto-picked by days overdue. English, Hindi, Hinglish. One-tap WhatsApp send.</p>
+      </div>
+      <div class="feat reveal reveal-d2">
+        <div class="corner-glow" style="background:var(--stamp-glow)"></div>
+        <div class="feat-icon ic-red">📐</div>
+        <h3>MSME Interest Calculator</h3>
+        <p>Under the MSMED Act, delayed payments attract compound interest at 3× the RBI bank rate. Most clients don't know this. Now you show them the math.</p>
+      </div>
+      <div class="feat reveal reveal-d3">
+        <div class="corner-glow" style="background:var(--stamp-glow)"></div>
+        <div class="feat-icon ic-red">📄</div>
+        <h3>Demand Notice Generator</h3>
+        <p>Printable legal demand citing the MSMED Act, Sections 15 & 16, with auto-calculated interest. Send by email or registered post. Game changer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="wrap">
+    <div class="sec-label reveal">Simple process</div>
+    <h2 class="sec-title reveal">Three steps to your money</h2>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h4>Add your invoices</h4>
+        <p>Client name, amount, due date, work delivered. Takes 30 seconds.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step reveal reveal-d1">
+        <div class="step-num">2</div>
+        <h4>Send the right message</h4>
+        <p>Vasooli picks the escalation stage. You hit "Send on WhatsApp" — done.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step reveal reveal-d2">
+        <div class="step-num">3</div>
+        <h4>Escalate if needed</h4>
+        <p>Still not paid? Calculate interest, generate a demand notice, file on MSME Samadhaan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="sec-label reveal">Pricing</div>
+    <h2 class="sec-title reveal">Cheaper than one hour of chasing payment</h2>
+    <p class="sec-sub reveal">Start free. Upgrade when a client pushes you past stage 2.</p>
+    <div class="price-grid">
+      <div class="plan free-plan reveal">
+        <h3>Free</h3>
+        <div class="plan-price">₹0</div>
+        <ul>
+          <li>Unlimited invoice tracking</li>
+          <li>Stage 1 &amp; 2 reminders (English)</li>
+          <li>WhatsApp one-tap send</li>
+          <li>Dashboard with live stats</li>
+          <li>Data stored locally on your device</li>
+        </ul>
+        <button class="btn btn-ghost" onclick="enterApp()" style="width:100%">Get started free</button>
+      </div>
+      <div class="plan pro-plan reveal reveal-d1">
+        <h3>Pro</h3>
+        <div class="plan-price gold">₹199</div>
+        <p style="font-size:13px;color:var(--muted);margin-top:-6px">one-time payment</p>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Stages 3–5 (formal, final, legal demand)</li>
+          <li>Hindi &amp; Hinglish message templates</li>
+          <li>MSME interest calculator</li>
+          <li>Printable demand notice (MSMED Act)</li>
+          <li>Live interest counter on dashboard</li>
+        </ul>
+        <button class="btn btn-gold" onclick="enterApp();setTimeout(()=>openModal('proModal'),400)" style="width:100%">Unlock Pro →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <h2 class="reveal">Your money. Their bank account.<br><span style="color:var(--gold)">Fix that.</span></h2>
+  <p class="reveal reveal-d1">No sign-up. No login. Just open and start tracking.</p>
+  <button class="btn btn-gold btn-lg reveal reveal-d2" onclick="enterApp()">Open Vasooli Pro →</button>
+</section>
+
+<footer>
+  <div class="wrap">Built with <b>Vasooli Pro</b> · Your data never leaves this device · Not a substitute for legal advice</div>
+</footer>
+
+</div><!-- /land-view -->
+
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║          APP VIEW                         ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="app-view" id="appView">
+
+<header class="app-header">
+  <div class="wrap head-row">
+    <div class="brand">
+      <h1><span class="ru">₹</span>VASOOLI</h1>
+      <span class="tagline">Get paid. Politely. Then legally.</span>
+    </div>
+    <div class="head-actions">
+      <span class="pro-badge" id="proBadge">FREE PLAN</span>
+      <button class="btn btn-ghost btn-sm" onclick="openModal('settingsModal')">My Business</button>
+      <button class="btn btn-gold btn-sm" id="unlockBtn" onclick="openModal('proModal')">Unlock Pro</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero-app">
+    <div class="hero-line">Your money, currently stuck in other people's bank accounts</div>
+    <div class="stats">
+      <div class="stat big">
+        <div class="lbl">Total Outstanding</div>
+        <div class="val" id="statTotal">₹0</div>
+        <div class="sub" id="statCount">0 unpaid invoices</div>
+      </div>
+      <div class="stat">
+        <div class="lbl">Overdue 30+ days</div>
+        <div class="val red" id="statCritical">₹0</div>
+        <div class="sub">Final-notice territory</div>
+      </div>
+      <div class="stat" id="interestStat">
+        <div class="lbl">Interest legally accruing (MSME)</div>
+        <div class="val mint" id="statInterest">₹0</div>
+        <div class="sub">Compound @ 3× RBI bank rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="tracker" onclick="switchTab('tracker')">Dues Tracker</button>
+    <button class="tab" data-tab="messages" onclick="switchTab('messages')">Reminder Ladder</button>
+    <button class="tab" data-tab="interest" onclick="switchTab('interest')">Interest Calc<span class="pro-dot">●</span></button>
+    <button class="tab" data-tab="legal" onclick="switchTab('legal')">Legal Notice<span class="pro-dot">●</span></button>
+  </div>
+
+  <!-- TRACKER -->
+  <section class="panel active" id="panel-tracker">
+    <div class="card">
+      <div class="section-title">Add a stuck payment</div>
+      <div class="section-sub">Every invoice you add gets a spot on the escalation ladder automatically.</div>
+      <div class="form-grid">
+        <div><label>Client / Company name</label><input id="fClient" placeholder="Who owes you?"></div>
+        <div><label>Client WhatsApp (optional)</label><input id="fPhone" type="tel" placeholder="91XXXXXXXXXX"></div>
+        <div><label>Amount due (₹)</label><input id="fAmount" type="number" min="1" placeholder="Amount in ₹"></div>
+        <div><label>Invoice no.</label><input id="fInvNo" placeholder="INV-001"></div>
+        <div><label>Work delivered</label><input id="fWork" placeholder="What did you deliver?"></div>
+        <div><label>Payment due date</label><input id="fDue" type="date"></div>
+        <div class="full"><button class="btn btn-gold" onclick="addInvoice()" style="width:100%">Add to tracker</button></div>
+      </div>
+    </div>
+    <div class="inv-list" id="invList"></div>
+    <div class="empty" id="emptyState">
+      <b>No stuck payments yet.</b><br>
+      Add your first unpaid invoice above — Vasooli will tell you exactly what to send, and when.
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section class="panel" id="panel-messages">
+    <div class="card">
+      <div class="section-title">The Escalation Ladder</div>
+      <div class="section-sub">Five stages, from friendly nudge to legal demand. Vasooli picks the right rung based on how overdue the payment is — you just hit send.</div>
+      <div class="ladder" id="ladderViz">
+        <div class="rung" data-s="1"><b>1 · Nudge</b>1–6 days late</div>
+        <div class="rung" data-s="2"><b>2 · Firm</b>7–14 days late</div>
+        <div class="rung" data-s="3"><b>3 · Formal</b>15–29 days late</div>
+        <div class="rung" data-s="4"><b>4 · Final</b>30–44 days late</div>
+        <div class="rung legal" data-s="5"><b>5 · Legal</b>45+ days late</div>
+      </div>
+      <div class="msg-controls">
+        <select id="msgInvoice" onchange="renderMessage()"></select>
+        <select id="msgStage" onchange="renderMessage()">
+          <option value="auto">Stage: Auto (recommended)</option>
+          <option value="1">Stage 1 — Friendly nudge</option>
+          <option value="2">Stage 2 — Firm reminder</option>
+          <option value="3">Stage 3 — Formal + late fee</option>
+          <option value="4">Stage 4 — Final notice</option>
+          <option value="5">Stage 5 — Legal demand</option>
+        </select>
+        <div class="seg" id="langSeg">
+          <button class="on" data-lang="en" onclick="setLang('en')">English</button>
+          <button data-lang="hi" onclick="setLang('hi')">हिन्दी</button>
+          <button data-lang="hg" onclick="setLang('hg')">Hinglish</button>
+        </div>
+      </div>
+      <textarea id="msgOut" readonly placeholder="Add an invoice in the Dues Tracker first — then your message appears here."></textarea>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="copyMessage()" style="flex:1">Copy message</button>
+        <button class="btn btn-mint" onclick="sendWhatsApp()" style="flex:1">Send on WhatsApp →</button>
+      </div>
+      <div class="note">Free plan: Stages 1–2 in English. Stages 3–5, Hindi &amp; Hinglish require Pro.</div>
+    </div>
+  </section>
+
+  <!-- INTEREST -->
+  <section class="panel" id="panel-interest">
+    <div class="card">
+      <div class="section-title">MSME Interest Calculator</div>
+      <div class="section-sub">Under the MSMED Act (Sec. 15–16), if a buyer doesn't pay a registered MSME within 45 days, interest accrues at <b style="color:var(--gold)">3× the RBI bank rate, compounded monthly</b>.</div>
+      <div class="form-grid">
+        <div><label>Pick a tracked invoice (or enter manually)</label>
+          <select id="calcInvoice" onchange="prefillCalc()"><option value="">— Manual entry —</option></select>
+        </div>
+        <div><label>Principal amount (₹)</label><input id="calcAmount" type="number" min="1" placeholder="Amount in ₹"></div>
+        <div><label>Days overdue (beyond 45-day window)</label><input id="calcDays" type="number" min="1" placeholder="Days beyond 45"></div>
+        <div><label>Current RBI bank rate (%)</label><input id="calcRate" type="number" step="0.25" value="5.75"></div>
+        <div class="full"><button class="btn btn-stamp" onclick="runCalc()" style="width:100%">Calculate what they legally owe me</button></div>
+      </div>
+      <div class="calc-out" id="calcOut" style="display:none">
+        <div class="lbl" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Interest legally owed to you</div>
+        <div class="big" id="calcInterest">₹0</div>
+        <div style="margin-top:14px">
+          <div class="row"><span>Principal</span><span class="mono" id="calcP">—</span></div>
+          <div class="row"><span>Effective rate (3× bank rate)</span><span class="mono" id="calcR">—</span></div>
+          <div class="row"><span>Period</span><span class="mono" id="calcT">—</span></div>
+          <div class="row"><span><b>Total demand</b></span><span class="mono" id="calcTotal" style="font-weight:600">—</span></div>
+        </div>
+        <div class="note">Indicative calculation for negotiation — not legal advice. MSME interest claims require Udyam registration and go through the MSME Samadhaan portal.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEGAL -->
+  <section class="panel" id="panel-legal">
+    <div class="card">
+      <div class="section-title">Demand Notice Generator</div>
+      <div class="section-sub">A formal, printable payment demand citing the MSMED Act. Send by email or registered post — it changes the conversation instantly.</div>
+      <div class="form-grid">
+        <div class="full"><label>Generate for tracked invoice</label>
+          <select id="legalInvoice"></select>
+        </div>
+        <div class="full" style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-stamp" onclick="renderNotice()" style="flex:1">Generate demand notice</button>
+          <button class="btn btn-ghost" onclick="printNotice()" style="flex:1">Print / Save as PDF</button>
+        </div>
+      </div>
+      <div class="notice-preview" id="noticePreview" style="display:none"></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <button onclick="goHome()" style="background:none;color:var(--gold);font-size:12px;margin-bottom:8px;font-weight:600">← Back to homepage</button><br>
+    Built with <b>Vasooli Pro</b> · Your data never leaves this device · Not a substitute for legal advice
+  </div>
+</footer>
+
+</div><!-- /app-view -->
+
+
+<!-- ========== MODALS ========== -->
+<div class="overlay" id="proModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal('proModal')">×</button>
+    <h3>Unlock Vasooli Pro</h3>
+    <div class="price-tag">₹199 <span style="font-size:13px;color:var(--muted);font-family:Inter">one-time</span></div>
+    <ul class="pro-list">
+      <li>Escalation Stages 3–5 (formal, final notice, legal demand)</li>
+      <li>Hindi &amp; Hinglish message templates</li>
+      <li>MSME Interest Calculator</li>
+      <li>Printable Demand Notice citing the MSMED Act</li>
+      <li>Live interest counter on your dashboard</li>
+    </ul>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-gold" onclick="payUPI()">Pay ₹199 via UPI</button>
+      <button class="btn btn-ghost" onclick="copyUPI()">Copy UPI ID</button>
+    </div>
+    <div class="note" style="margin-top:10px">UPI: <span class="mono" style="color:var(--gold)">preeti.aggarwals7@gmail.com</span><br>After paying, share the payment screenshot to receive your unlock code.</div>
+    <div style="margin-top:16px">
+      <label>Have an unlock code?</label>
+      <div style="display:flex;gap:8px">
+        <input id="unlockCode" placeholder="Enter code" style="flex:1">
+        <button class="btn btn-ghost" onclick="tryUnlock()">Unlock</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="settingsModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal('settingsModal')">×</button>
+    <h3>My Business</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Used to sign your reminders and generate the demand notice.</p>
+    <div class="form-grid">
+      <div><label>Your name</label><input id="sName" placeholder="Your full name"></div>
+      <div><label>Business name</label><input id="sBiz" placeholder="Your business / brand name"></div>
+      <div><label>Udyam Registration No.</label><input id="sUdyam" placeholder="UDYAM-XX-00-0000000"></div>
+      <div><label>Your UPI ID</label><input id="sPay" placeholder="yourname@upi"></div>
+      <div class="full"><button class="btn btn-gold" onclick="saveSettings()" style="width:100%">Save</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= LANDING PAGE JS ================= */
+// Floating rupees
+(function(){
+  const rain=document.getElementById('rupeeRain');if(!rain)return;
+  const syms=['₹','₹','₹','₹₹','₹'];
+  for(let i=0;i<18;i++){
+    const s=document.createElement('span');
+    s.textContent=syms[i%syms.length];
+    s.style.left=Math.random()*100+'%';
+    s.style.fontSize=(16+Math.random()*40)+'px';
+    s.style.animationDuration=(12+Math.random()*18)+'s';
+    s.style.animationDelay=(-Math.random()*20)+'s';
+    rain.appendChild(s);
+  }
+})();
+
+// Scroll reveal
+const revealObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');revealObs.unobserve(e.target)}});
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+// Counter animation
+const counterObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target, target=parseInt(el.dataset.count||'0'), prefix=el.dataset.prefix||'';
+    if(!target){counterObs.unobserve(el);return}
+    let start=0;const dur=1200,st=performance.now();
+    function tick(now){
+      const p=Math.min((now-st)/dur,1);
+      const eased=1-Math.pow(1-p,3);
+      start=Math.round(target*eased);
+      el.textContent=prefix+start.toLocaleString('en-IN');
+      if(p<1)requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    counterObs.unobserve(el);
+  });
+},{threshold:0.3});
+document.querySelectorAll('[data-count]').forEach(el=>counterObs.observe(el));
+
+// Header scroll effect
+window.addEventListener('scroll',()=>{
+  const h=document.getElementById('landHeader');
+  if(h)h.classList.toggle('scrolled',window.scrollY>60);
+},{passive:true});
+
+// Nav
+function enterApp(){
+  document.getElementById('landView').classList.add('hidden');
+  document.getElementById('appView').classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.getElementById('appView').classList.remove('active');
+  document.getElementById('landView').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+/* ================= APP STATE ================= */
+const LS_INV='vasooli_invoices',LS_SET='vasooli_settings',LS_PRO='vasooli_pro',LS_UNTIL='vasooli_pro_until';
+const UPI_ID='preeti.aggarwals7@gmail.com';
+let invoices=JSON.parse(localStorage.getItem(LS_INV)||'[]');
+let settings=JSON.parse(localStorage.getItem(LS_SET)||'{}');
+let isPro=localStorage.getItem(LS_PRO)==='1'||Date.now()<parseInt(localStorage.getItem(LS_UNTIL)||'0');
+let lang='en';
+
+const fmt=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const today=()=>new Date().setHours(0,0,0,0);
+const daysOver=inv=>Math.max(0,Math.floor((today()-new Date(inv.due).setHours(0,0,0,0))/86400000));
+const stageOf=d=>d<=0?0:d<=6?1:d<=14?2:d<=29?3:d<=44?4:5;
+const STAGE_NAMES={0:'Not yet due',1:'Friendly nudge',2:'Firm reminder',3:'Formal + late fee',4:'Final notice',5:'Legal demand'};
+
+/* ================= TEMPLATES ================= */
+const T={
+ en:{
+  1:`Hi {c} ji! 👋 Hope you're doing well. A gentle reminder that invoice {i} ({w}) for {a} was due on {due}. Whenever convenient, you can clear it via {pay}. Thanks so much!\n— {n}, {b}`,
+  2:`Hello {c}, following up on invoice {i} for {a} ({w}), which is now {d} days past its due date of {due}. Requesting you to process this at the earliest. Payment can be made to {pay}. Please confirm once done.\n— {n}, {b}`,
+  3:`Dear {c},\n\nThis is a formal reminder regarding invoice {i} for {a} ({w}), overdue by {d} days since {due}. As per our engagement terms, delayed payments may attract late fees. Kindly clear the outstanding amount within 5 working days to {pay}.\n\nRegards,\n{n}, {b}`,
+  4:`Dear {c},\n\nFINAL NOTICE — Invoice {i} for {a} ({w}) remains unpaid {d} days after the due date ({due}) despite repeated reminders. If payment is not received within 7 days, I will be compelled to initiate formal recovery proceedings, including a claim under the MSME Development Act, 2006, under which delayed payments attract compound interest at three times the RBI bank rate.\n\nI trust this can be resolved without escalation. Payment: {pay}.\n\n{n}, {b}`,
+  5:`NOTICE OF DEMAND\n\nDear {c},\n\nInvoice {i} for {a} ({w}) is now overdue by {d} days (due: {due}). Please note that under Sections 15 & 16 of the Micro, Small and Medium Enterprises Development Act, 2006, buyers are required to pay MSMEs within a maximum of 45 days, failing which compound interest accrues at THREE TIMES the bank rate notified by the RBI.\n\nStatutory interest is now accruing on this amount daily. If full payment (principal + accrued interest) is not received within 7 days, I will file a claim through the MSME Samadhaan portal and pursue all legal remedies available.\n\nThis is a formal demand. Payment: {pay}.\n\n{n}, {b}`
+ },
+ hi:{
+  1:`नमस्ते {c} जी! 🙏 आशा है आप स्वस्थ होंगे। एक विनम्र स्मरण — इनवॉइस {i} ({w}), राशि {a}, की देय तिथि {due} थी। सुविधा अनुसार भुगतान {pay} पर कर सकते हैं। धन्यवाद!\n— {n}, {b}`,
+  2:`नमस्ते {c}, इनवॉइस {i} ({w}), राशि {a}, की देय तिथि {due} को {d} दिन बीत चुके हैं। कृपया शीघ्र भुगतान करें — {pay}। भुगतान होने पर सूचित करें।\n— {n}, {b}`,
+  3:`प्रिय {c},\n\nयह एक औपचारिक स्मरण है — इनवॉइस {i}, राशि {a} ({w}), देय तिथि {due} से {d} दिन विलंबित है। अनुबंध की शर्तों के अनुसार विलंबित भुगतान पर विलंब शुल्क लागू हो सकता है। कृपया 5 कार्य दिवसों में {pay} पर भुगतान करें।\n\nसादर,\n{n}, {b}`,
+  4:`प्रिय {c},\n\nअंतिम सूचना — इनवॉइस {i}, राशि {a} ({w}), देय तिथि ({due}) के {d} दिन बाद भी बार-बार स्मरण के बावजूद अवैतनिक है। यदि 7 दिनों में भुगतान प्राप्त नहीं हुआ, तो मुझे MSME विकास अधिनियम, 2006 के अंतर्गत औपचारिक वसूली कार्रवाई शुरू करनी होगी, जिसमें विलंबित भुगतान पर RBI बैंक दर के तीन गुना चक्रवृद्धि ब्याज देय होता है।\n\nभुगतान: {pay}।\n\n{n}, {b}`,
+  5:`मांग सूचना\n\nप्रिय {c},\n\nइनवॉइस {i}, राशि {a} ({w}), अब {d} दिन विलंबित है (देय तिथि: {due})। कृपया ध्यान दें — MSME विकास अधिनियम, 2006 की धारा 15 व 16 के अनुसार, MSME को अधिकतम 45 दिनों में भुगतान अनिवार्य है, अन्यथा RBI बैंक दर के तीन गुना चक्रवृद्धि ब्याज देय होता है।\n\nइस राशि पर वैधानिक ब्याज प्रतिदिन बढ़ रहा है। 7 दिनों में पूर्ण भुगतान (मूलधन + ब्याज) न मिलने पर MSME समाधान पोर्टल पर दावा दायर किया जाएगा।\n\nयह एक औपचारिक मांग है। भुगतान: {pay}।\n\n{n}, {b}`
+ },
+ hg:{
+  1:`Hi {c} ji! 👋 Kaise hain aap? Bas ek chhota reminder — invoice {i} ({w}) ka {a} due tha {due} ko. Jab convenient ho, {pay} pe clear kar dijiye. Thank you!\n— {n}, {b}`,
+  2:`Hello {c}, invoice {i} ka {a} ({w}) ab {d} din late ho gaya hai (due date: {due}). Please jaldi process kar dijiye — {pay}. Done hone pe ek confirmation bhej dena. 🙏\n— {n}, {b}`,
+  3:`Dear {c},\n\nYeh ek formal reminder hai — invoice {i}, amount {a} ({w}), {due} se {d} din overdue hai. Terms ke hisaab se late payment pe late fee lag sakti hai. Please 5 working days ke andar {pay} pe payment clear karein.\n\nRegards,\n{n}, {b}`,
+  4:`Dear {c},\n\nFINAL NOTICE — Invoice {i} ka {a} ({w}) due date ({due}) ke {d} din baad bhi pending hai, repeated reminders ke bawajood. Agar 7 din mein payment nahi aaya, toh mujhe MSME Act 2006 ke under formal recovery start karni padegi — jisme late payment pe RBI bank rate ka 3 GUNA compound interest lagta hai.\n\nUmmeed hai baat yahin resolve ho jayegi. Payment: {pay}.\n\n{n}, {b}`,
+  5:`NOTICE OF DEMAND\n\nDear {c},\n\nInvoice {i} ({a}, {w}) ab {d} din overdue hai (due: {due}). MSME Development Act 2006, Section 15-16 ke according, MSME ko maximum 45 din mein payment karna zaroori hai — warna RBI bank rate ka TEEN GUNA compound interest legally lagta hai.\n\nIs amount pe statutory interest roz badh raha hai. 7 din mein full payment (principal + interest) nahi mila toh MSME Samadhaan portal pe claim file kiya jayega.\n\nYeh ek formal demand hai. Payment: {pay}.\n\n{n}, {b}`
+ }
+};
+
+/* ================= HELPERS ================= */
+function save(){localStorage.setItem(LS_INV,JSON.stringify(invoices))}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2600);
+}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function fmtDate(d){return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
+
+/* ================= INVOICES ================= */
+function addInvoice(){
+  const client=fClient.value.trim(),amount=parseFloat(fAmount.value),
+        invNo=fInvNo.value.trim()||('INV-'+(invoices.length+1)),work=fWork.value.trim()||'services rendered',
+        due=fDue.value,phone=fPhone.value.replace(/\D/g,'');
+  if(!client||!amount||!due){showToast('Client, amount and due date are required.');return}
+  invoices.unshift({id:Date.now(),client,amount,invNo,work,due,phone,paid:false});
+  save();fClient.value=fAmount.value=fInvNo.value=fWork.value=fDue.value=fPhone.value='';
+  renderAll();showToast('Added. The ladder is watching this one now.');
+}
+function markPaid(id){const v=invoices.find(x=>x.id===id);if(v){v.paid=!v.paid;save();renderAll();if(v.paid)showToast('Paid! One less vasooli to chase. 🎉')}}
+function delInvoice(id){invoices=invoices.filter(x=>x.id!==id);save();renderAll()}
+function goMessage(id){switchTab('messages');msgInvoice.value=id;renderMessage()}
+
+function renderList(){
+  const list=document.getElementById('invList');list.innerHTML='';
+  document.getElementById('emptyState').style.display=invoices.length?'none':'block';
+  invoices.forEach(inv=>{
+    const d=daysOver(inv),s=stageOf(d),el=document.createElement('div');
+    el.className='inv'+(inv.paid?' paid':'');
+    el.innerHTML=`
+      ${inv.paid?'<div class="stamp paid-stamp">PAID ✓</div>':(d>0?`<div class="stamp">OVERDUE ${d}d</div>`:'')}
+      <div>
+        <div class="client">${esc(inv.client)}</div>
+        <div class="meta">${esc(inv.invNo)} · ${esc(inv.work)} · due ${fmtDate(inv.due)}</div>
+        ${!inv.paid?`<span class="stage-chip s${s}">${d>0?('Stage '+s+' · '+STAGE_NAMES[s]):'Not yet due'}</span>`:''}
+      </div>
+      <div style="text-align:right">
+        <div class="amt">${fmt(inv.amount)}</div>
+        <div class="inv-actions" style="margin-top:10px">
+          ${!inv.paid?`<button class="btn btn-gold btn-sm" onclick="goMessage(${inv.id})">Remind</button>`:''}
+          <button class="btn btn-mint btn-sm" onclick="markPaid(${inv.id})">${inv.paid?'Undo':'Paid ✓'}</button>
+          <button class="btn btn-ghost btn-sm" onclick="delInvoice(${inv.id})">✕</button>
+        </div>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+/* ================= STATS ================= */
+function msmeInterest(P,days,bankRate){const r=(bankRate*3)/100/12;const m=days/30.44;return P*(Math.pow(1+r,m)-1)}
+function renderStats(){
+  const unpaid=invoices.filter(i=>!i.paid);
+  const total=unpaid.reduce((s,i)=>s+i.amount,0);
+  const critical=unpaid.filter(i=>daysOver(i)>=30).reduce((s,i)=>s+i.amount,0);
+  statTotal.textContent=fmt(total);
+  statCount.textContent=unpaid.length+' unpaid invoice'+(unpaid.length===1?'':'s');
+  statCritical.textContent=fmt(critical);
+  const rate=5.75;let interest=0;
+  unpaid.forEach(i=>{const d=daysOver(i);if(d>45)interest+=msmeInterest(i.amount,d-45,rate)});
+  const stat=document.getElementById('interestStat'),valEl=document.getElementById('statInterest');
+  if(isPro){
+    valEl.textContent=fmt(interest);valEl.classList.remove('locked-blur');
+    stat.querySelectorAll('.lock-tag').forEach(x=>x.remove());
+  } else {
+    valEl.textContent='₹ • • • •';valEl.classList.add('locked-blur');
+    if(!stat.querySelector('.lock-tag')){
+      const b=document.createElement('button');b.className='lock-tag';b.innerHTML='🔒 Unlock with Pro';
+      b.onclick=()=>openModal('proModal');stat.appendChild(b);
+    }
+  }
+}
+
+/* ================= MESSAGES ================= */
+function populateSelectors(){
+  const opts=invoices.filter(i=>!i.paid).map(i=>`<option value="${i.id}">${esc(i.client)} — ${fmt(i.amount)} (${daysOver(i)}d late)</option>`).join('');
+  msgInvoice.innerHTML=opts||'<option value="">No unpaid invoices yet</option>';
+  legalInvoice.innerHTML=opts||'<option value="">No unpaid invoices yet</option>';
+  calcInvoice.innerHTML='<option value="">— Manual entry —</option>'+opts;
+}
+function setLang(l){
+  if(l!=='en'&&!isPro){openModal('proModal');return}
+  lang=l;document.querySelectorAll('#langSeg button').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));
+  renderMessage();
+}
+function currentStage(inv){const sel=msgStage.value;return sel==='auto'?Math.max(1,stageOf(daysOver(inv))):parseInt(sel)}
+function renderMessage(){
+  const inv=invoices.find(i=>i.id==msgInvoice.value);
+  document.querySelectorAll('.rung').forEach(r=>r.classList.remove('hot'));
+  if(!inv){msgOut.value='';return}
+  const s=currentStage(inv);
+  const rung=document.querySelector(`.rung[data-s="${s}"]`);if(rung)rung.classList.add('hot');
+  if(s>=3&&!isPro){
+    msgOut.value=`🔒 Stage ${s} (${STAGE_NAMES[s]}) is a Pro feature.\n\nThis is where Vasooli gets serious — formal language, late-fee clauses, and the MSMED Act legal demand.\n\nUnlock Pro for ₹199 to send it.`;
+    return;
+  }
+  const t=T[lang][s];
+  msgOut.value=t.replaceAll('{c}',inv.client).replaceAll('{a}',fmt(inv.amount))
+    .replaceAll('{i}',inv.invNo).replaceAll('{w}',inv.work)
+    .replaceAll('{d}',daysOver(inv)).replaceAll('{due}',fmtDate(inv.due))
+    .replaceAll('{n}',settings.name||'—').replaceAll('{b}',settings.biz||'—')
+    .replaceAll('{pay}',settings.pay||'my UPI');
+}
+function copyMessage(){
+  if(!msgOut.value||msgOut.value.startsWith('🔒')){showToast('Nothing to copy yet.');return}
+  navigator.clipboard.writeText(msgOut.value).then(()=>showToast('Copied. Ab bhejo. 📋'));
+}
+function sendWhatsApp(){
+  const inv=invoices.find(i=>i.id==msgInvoice.value);
+  if(!inv||!msgOut.value||msgOut.value.startsWith('🔒')){showToast('Generate a message first.');return}
+  const base=inv.phone?`https://wa.me/${inv.phone}`:'https://wa.me/';
+  window.open(`${base}?text=${encodeURIComponent(msgOut.value)}`,'_blank');
+}
+
+/* ================= CALCULATOR ================= */
+function prefillCalc(){
+  const inv=invoices.find(i=>i.id==calcInvoice.value);
+  if(inv){calcAmount.value=inv.amount;calcDays.value=Math.max(1,daysOver(inv)-45)}
+}
+function runCalc(){
+  if(!isPro){openModal('proModal');return}
+  const P=parseFloat(calcAmount.value),d=parseFloat(calcDays.value),rate=parseFloat(calcRate.value)||5.75;
+  if(!P||!d){showToast('Enter an amount and days overdue.');return}
+  const interest=msmeInterest(P,d,rate);
+  calcOut.style.display='block';
+  calcInterest.textContent=fmt(interest);
+  calcP.textContent=fmt(P);
+  calcR.textContent=(rate*3).toFixed(2)+'% p.a. (compounded monthly)';
+  calcT.textContent=d+' days beyond the 45-day window';
+  calcTotal.textContent=fmt(P+interest);
+}
+
+/* ================= LEGAL NOTICE ================= */
+function renderNotice(){
+  if(!isPro){openModal('proModal');return}
+  const inv=invoices.find(i=>i.id==legalInvoice.value);
+  if(!inv){showToast('Select an unpaid invoice first.');return}
+  if(!settings.name||!settings.biz){showToast('Fill "My Business" details first.');openModal('settingsModal');return}
+  const d=daysOver(inv),interest=d>45?msmeInterest(inv.amount,d-45,5.75):0;
+  const p=document.getElementById('noticePreview');p.style.display='block';
+  p.innerHTML=`
+    <div class="np-stamp">DEMAND NOTICE</div>
+    <p style="text-align:right">Date: ${new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</p>
+    <p><b>From:</b><br>${esc(settings.name)}<br>${esc(settings.biz)}${settings.udyam?`<br>Udyam Reg. No.: ${esc(settings.udyam)}`:''}</p>
+    <p><b>To:</b><br>${esc(inv.client)}</p>
+    <h4>NOTICE OF DEMAND FOR PAYMENT UNDER THE MSMED ACT, 2006</h4>
+    <p>Dear Sir/Madam,</p>
+    <p>This notice is issued in respect of Invoice No. <b>${esc(inv.invNo)}</b> for services rendered ("${esc(inv.work)}"), for a sum of <b>${fmt(inv.amount)}</b>, which fell due for payment on <b>${fmtDate(inv.due)}</b> and remains unpaid — a delay of <b>${d} days</b>.</p>
+    <p>Your attention is drawn to <b>Sections 15 and 16 of the Micro, Small and Medium Enterprises Development Act, 2006</b>, under which a buyer is obligated to make payment to an MSME supplier within forty-five (45) days. Failure renders the buyer liable to pay <b>compound interest, with monthly rests, at three times the bank rate notified by the RBI</b>.</p>
+    ${interest>0?`<p>Statutory interest of approximately <b>${fmt(interest)}</b> has accrued, bringing the total demanded to <b>${fmt(inv.amount+interest)}</b>. Interest continues to accrue daily.</p>`:''}
+    <p>You are called upon to remit the full outstanding amount within <b>seven (7) days</b>, failing which proceedings shall be initiated before the MSME Facilitation Council through the <b>MSME Samadhaan portal</b>, at your risk as to costs and consequences.</p>
+    <p>Issued without prejudice to any other rights or remedies available.</p>
+    <p style="margin-top:26px">Yours faithfully,<br><br><b>${esc(settings.name)}</b><br>${esc(settings.biz)}</p>`;
+}
+function printNotice(){
+  const p=document.getElementById('noticePreview');
+  if(p.style.display==='none'||!p.innerHTML){showToast('Generate the notice first.');return}
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>Demand Notice</title><style>
+    body{font-family:Georgia,serif;font-size:13.5px;line-height:1.7;max-width:720px;margin:40px auto;padding:0 24px;color:#111}
+    h4{text-align:center;text-decoration:underline;letter-spacing:.06em}
+    p{margin-bottom:12px}
+    .np-stamp{float:right;border:3px solid #C0392B;color:#C0392B;font-family:monospace;font-size:11px;font-weight:600;letter-spacing:.12em;padding:4px 10px;border-radius:4px;transform:rotate(-8deg)}
+  </style></head><body>${p.innerHTML}</body></html>`);
+  w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+
+/* ================= PRO / SETTINGS ================= */
+function tryUnlock(){
+  const code=document.getElementById('unlockCode').value.trim().toUpperCase();
+  if(code==='BGPRO2026'){
+    isPro=true;localStorage.setItem(LS_PRO,'1');
+    closeModal('proModal');applyProUI();renderAll();
+    showToast('Pro unlocked. Ab full vasooli mode. ⚡');
+  } else if(code==='DL7913'){
+    localStorage.setItem(LS_UNTIL,String(Date.now()+30*86400000));
+    isPro=true;
+    closeModal('proModal');applyProUI();renderAll();
+    showToast('Pro unlocked — free for 30 days. ⚡');
+  } else showToast('Invalid code.');
+}
+function payUPI(){
+  window.location.href='upi://pay?pa='+encodeURIComponent(UPI_ID)+'&pn='+encodeURIComponent('Vasooli Pro')+'&am=199&cu=INR';
+  setTimeout(()=>showToast('No UPI app? Copy the UPI ID and pay manually.'),1500);
+}
+function copyUPI(){navigator.clipboard.writeText(UPI_ID).then(()=>showToast('UPI ID copied. 📋'))}
+function applyProUI(){
+  const badge=document.getElementById('proBadge'),btn=document.getElementById('unlockBtn');
+  if(localStorage.getItem(LS_PRO)==='1'){badge.textContent='PRO ⚡';btn.style.display='none'}
+  else if(isPro){
+    const left=Math.max(1,Math.ceil((parseInt(localStorage.getItem(LS_UNTIL)||'0')-Date.now())/86400000));
+    badge.textContent='PRO · '+left+'d left';btn.style.display='none';
+  } else {badge.textContent='FREE PLAN';btn.style.display=''}
+}
+function saveSettings(){
+  settings={name:sName.value.trim(),biz:sBiz.value.trim(),udyam:sUdyam.value.trim(),pay:sPay.value.trim()};
+  localStorage.setItem(LS_SET,JSON.stringify(settings));
+  closeModal('settingsModal');renderMessage();showToast('Saved.');
+}
+function loadSettings(){
+  sName.value=settings.name||'';sBiz.value=settings.biz||'';
+  sUdyam.value=settings.udyam||'';sPay.value=settings.pay||'';
+}
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
+  document.querySelectorAll('section.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+id));
+}
+function renderAll(){renderList();renderStats();populateSelectors();renderMessage()}
+loadSettings();applyProUI();renderAll();
+</script>
+</body>
+</html>
