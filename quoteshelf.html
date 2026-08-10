@@ -1,0 +1,3076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>QuoteShelf — Visual Quote Collector</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --bg-elevated: #fffdf8;
+      --bg-soft: #ebe3d4;
+      --ink: #1c1814;
+      --ink-muted: #6b5f52;
+      --ink-faint: #9a8b7a;
+      --line: #ddd2c0;
+      --accent: #8b4513;
+      --accent-soft: #c4784a;
+      --accent-glow: rgba(139, 69, 19, 0.14);
+      --gold: #b8860b;
+      --gold-soft: #f0d78c;
+      --danger: #a63d3d;
+      --success: #2f6b4f;
+      --shadow: 0 10px 40px rgba(60, 40, 20, 0.08);
+      --shadow-lg: 0 24px 60px rgba(40, 25, 10, 0.14);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --font-serif: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+      --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      --shelf-wood: linear-gradient(180deg, #8b5a2b 0%, #6b4226 40%, #5a361f 100%);
+      --card-grad-1: linear-gradient(135deg, #2c1810 0%, #5c3317 50%, #8b4513 100%);
+      --card-grad-2: linear-gradient(135deg, #1a2332 0%, #2d4a5e 50%, #3d6b7a 100%);
+      --card-grad-3: linear-gradient(135deg, #1f1a2e 0%, #3d2a54 50%, #6b4c7a 100%);
+      --card-grad-4: linear-gradient(135deg, #1a2e1a 0%, #2d4a2d 50%, #4a6b3d 100%);
+      --card-grad-5: linear-gradient(135deg, #2e1a1a 0%, #5c2a2a 50%, #8b3a3a 100%);
+      --card-grad-6: linear-gradient(135deg, #1a1a1a 0%, #333 50%, #555 100%);
+      --hero-glow: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(196, 120, 74, 0.22), transparent 60%);
+      --float-orb: rgba(139, 69, 19, 0.08);
+    }
+
+    [data-theme="dark"] {
+      --bg: #12100e;
+      --bg-elevated: #1c1814;
+      --bg-soft: #26201a;
+      --ink: #f3ebe0;
+      --ink-muted: #b5a794;
+      --ink-faint: #7d7163;
+      --line: #3a322a;
+      --accent: #d4925a;
+      --accent-soft: #e8b07a;
+      --accent-glow: rgba(212, 146, 90, 0.18);
+      --gold: #e0b84e;
+      --gold-soft: #5c4a1e;
+      --danger: #e07070;
+      --success: #6dbf94;
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
+      --shelf-wood: linear-gradient(180deg, #5a3a1e 0%, #3d2814 40%, #2a1a0e 100%);
+      --hero-glow: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212, 146, 90, 0.18), transparent 60%);
+      --float-orb: rgba(212, 146, 90, 0.1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      min-height: 100dvh;
+      line-height: 1.5;
+      transition: background 0.45s ease, color 0.45s ease;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    img, svg, video { max-width: 100%; height: auto; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ========== Views ========== */
+    .view {
+      display: none;
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .view.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: viewIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ========== Shared UI ========== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.65rem 1.15rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.25s ease, color 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0) scale(0.98); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fffaf3;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .btn-primary:hover { filter: brightness(1.08); box-shadow: 0 12px 32px var(--accent-glow); }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-muted);
+      padding: 0.5rem 0.75rem;
+    }
+
+    .btn-ghost:hover { color: var(--ink); background: var(--bg-soft); }
+
+    .btn-lg {
+      padding: 0.95rem 1.6rem;
+      font-size: 1rem;
+    }
+
+    .btn-icon {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border-radius: 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      color: var(--ink-muted);
+      display: inline-grid;
+      place-items: center;
+      transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-icon:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
+    .btn svg, .btn-icon svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .btn-icon svg { width: 18px; height: 18px; }
+
+    /* Theme toggle switch */
+    .theme-toggle {
+      position: relative;
+      width: 64px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--bg-soft);
+      padding: 3px;
+      display: inline-flex;
+      align-items: center;
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .theme-toggle:hover { border-color: var(--accent); }
+
+    .theme-toggle .knob {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      display: grid;
+      place-items: center;
+      transition: transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1), background 0.3s ease;
+      color: var(--gold);
+    }
+
+    [data-theme="dark"] .theme-toggle .knob {
+      transform: translateX(28px);
+      color: var(--gold);
+      background: #2a2218;
+    }
+
+    .theme-toggle .knob svg { width: 15px; height: 15px; transition: opacity 0.25s ease, transform 0.35s ease; }
+    .theme-toggle .icon-sun { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* ========== HOME PAGE ========== */
+    .home-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      background: var(--hero-glow), var(--bg);
+    }
+
+    .home-orbs {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      background: var(--float-orb);
+      animation: orbFloat 12s ease-in-out infinite;
+    }
+
+    .orb-1 { width: 340px; height: 340px; top: -80px; left: -60px; animation-duration: 14s; }
+    .orb-2 { width: 280px; height: 280px; bottom: 10%; right: -80px; animation-duration: 16s; animation-delay: -4s; }
+    .orb-3 { width: 180px; height: 180px; top: 40%; left: 55%; animation-duration: 11s; animation-delay: -2s; opacity: 0.7; }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(24px, -30px) scale(1.06); }
+      66% { transform: translate(-18px, 16px) scale(0.96); }
+    }
+
+    .home-nav {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem clamp(1.25rem, 4vw, 3rem);
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      animation: fadeDown 0.7s ease both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .home-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .home-brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--shelf-wood);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+      animation: brandPulse 3.5s ease-in-out infinite;
+    }
+
+    @keyframes brandPulse {
+      0%, 100% { transform: scale(1); box-shadow: var(--shadow); }
+      50% { transform: scale(1.04); box-shadow: 0 12px 28px var(--accent-glow); }
+    }
+
+    .home-brand-mark svg { width: 24px; height: 24px; color: #f5e6d0; }
+
+    .home-brand span {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .home-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .home-hero {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3rem) 3rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .hero-copy,
+    .hero-visual {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    @media (max-width: 900px) {
+      .home-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.75rem;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+      }
+      .hero-copy {
+        align-items: center;
+        width: 100%;
+      }
+      .hero-title { max-width: 16ch; margin-inline: auto; }
+      .hero-sub { margin-inline: auto; }
+      .hero-actions {
+        justify-content: center;
+        width: 100%;
+      }
+      .hero-pills { justify-content: center; }
+      .hero-visual {
+        order: -1;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        min-height: 0;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 0.25rem 0 0.5rem;
+      }
+
+      /* Stack cards instead of absolute float — fixes thin-strip collapse */
+      .float-card {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        max-width: 100%;
+        margin: 0;
+        opacity: 1 !important;
+        animation: fadeUp 0.6s ease both, cardBobSoft 5s ease-in-out infinite !important;
+        text-align: left;
+      }
+      .fc-1 { z-index: 3; animation-delay: 0s, 0s !important; }
+      .fc-2 { z-index: 2; animation-delay: 0.08s, -1.5s !important; }
+      .fc-3 { z-index: 1; animation-delay: 0.16s, -3s !important; display: none; }
+      .shelf-glow {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        margin-top: 0.15rem;
+      }
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.15rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      background: var(--accent-glow);
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: blink 1.6s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      max-width: 14ch;
+      animation: fadeUp 0.75s 0.18s ease both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+      position: relative;
+    }
+
+    .hero-title em::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.08em;
+      height: 0.18em;
+      background: var(--accent-glow);
+      border-radius: 4px;
+      z-index: -1;
+      animation: underlineGrow 1s 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes underlineGrow {
+      from { transform: scaleX(0); transform-origin: left; }
+      to { transform: scaleX(1); transform-origin: left; }
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: var(--ink-muted);
+      max-width: 38ch;
+      line-height: 1.65;
+      animation: fadeUp 0.75s 0.28s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.35rem;
+      animation: fadeUp 0.75s 0.38s ease both;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      animation: fadeUp 0.75s 0.48s ease both;
+    }
+
+    .hero-pill {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .hero-pill:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating quote cards visual */
+    .hero-visual {
+      position: relative;
+      min-height: 420px;
+      width: 100%;
+      min-width: 0;
+      animation: fadeUp 0.9s 0.25s ease both;
+    }
+
+    .float-card {
+      position: absolute;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1.15rem 1.2rem;
+      box-shadow: var(--shadow-lg);
+      width: min(280px, 78%);
+      max-width: 100%;
+      box-sizing: border-box;
+      backdrop-filter: blur(8px);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      overflow-wrap: anywhere;
+      word-wrap: break-word;
+    }
+
+    .float-card:hover {
+      transform: translateY(-6px) scale(1.02) !important;
+      box-shadow: 0 28px 60px rgba(40, 25, 10, 0.18);
+      z-index: 5;
+    }
+
+    .float-card .q {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      line-height: 1.35;
+      margin-bottom: 0.7rem;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .float-card .a {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+
+    .float-card .tag {
+      display: inline-block;
+      margin-top: 0.65rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    .fc-1 {
+      top: 8%;
+      left: 8%;
+      z-index: 3;
+      animation: cardBob 5.5s ease-in-out infinite;
+    }
+
+    .fc-2 {
+      top: 38%;
+      right: 0;
+      z-index: 2;
+      animation: cardBob 6.5s ease-in-out infinite reverse;
+      animation-delay: -1.5s;
+      opacity: 0.97;
+    }
+
+    .fc-3 {
+      bottom: 6%;
+      left: 18%;
+      z-index: 1;
+      animation: cardBob 7s ease-in-out infinite;
+      animation-delay: -3s;
+      width: min(240px, 70%);
+      opacity: 0.92;
+    }
+
+    @keyframes cardBob {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-14px) rotate(1.2deg); }
+    }
+
+    @keyframes cardBobSoft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .shelf-glow {
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      right: 10%;
+      height: 14px;
+      border-radius: 999px;
+      background: var(--shelf-wood);
+      box-shadow: 0 8px 30px rgba(107, 66, 38, 0.35);
+      animation: shelfPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes shelfPulse {
+      0%, 100% { opacity: 0.85; transform: scaleX(1); }
+      50% { opacity: 1; transform: scaleX(1.03); }
+    }
+
+    /* Features strip */
+    .home-features {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 3rem) 3.5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 800px) {
+      .home-features { grid-template-columns: 1fr; }
+    }
+
+    .feature-card {
+      background: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.25rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.45s; }
+    .feature-card:nth-child(2) { animation-delay: 0.55s; }
+    .feature-card:nth-child(3) { animation-delay: 0.65s; }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .feature-icon svg { width: 20px; height: 20px; }
+
+    .feature-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+
+    /* ========== APP SHELL ========== */
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.25rem 1.25rem 4rem;
+    }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--line);
+      animation: fadeDown 0.5s ease both;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: opacity 0.2s ease;
+    }
+
+    .brand:hover { opacity: 0.85; }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--shelf-wood);
+      display: grid;
+      place-items: center;
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .brand-mark svg { width: 26px; height: 26px; color: #f5e6d0; }
+
+    .brand h1 {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand p {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      margin-top: 0.15rem;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.15rem;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg-soft) 55%, var(--bg-elevated));
+    }
+
+    .panel-header h2 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+
+    .panel-body { padding: 1.15rem; }
+
+    .form-group { margin-bottom: 0.95rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      max-width: 100%;
+      padding: 0.7rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      font-size: 16px; /* avoid iOS input zoom */
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      line-height: 1.45;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .tag-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.55rem;
+    }
+
+    .tag-chip {
+      font-size: 0.75rem;
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      color: var(--ink-muted);
+      transition: all 0.2s ease;
+    }
+
+    .tag-chip:hover,
+    .tag-chip.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .form-actions .btn-primary { flex: 1; min-width: 140px; }
+
+    .edit-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 1rem;
+      border-radius: var(--radius-sm);
+      background: var(--accent-glow);
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .edit-banner.visible { display: flex; }
+
+    .main-col { display: flex; flex-direction: column; gap: 1rem; min-width: 0; width: 100%; }
+
+    #intakePanel { min-width: 0; width: 100%; }
+
+    .toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      padding: 1rem 1.15rem;
+    }
+
+    .search-wrap { position: relative; flex: 1; }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--ink-faint);
+      pointer-events: none;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 0.75rem 2.5rem 0.75rem 2.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 0.55rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: none;
+      place-items: center;
+      color: var(--ink-faint);
+    }
+
+    .search-clear.visible { display: grid; }
+    .search-clear:hover { background: var(--bg-soft); color: var(--ink); }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+
+    .filter-pill {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.38rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink-muted);
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .filter-pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fffaf3;
+      animation: pillPop 0.3s ease;
+    }
+
+    .filter-pill.fav-pill.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #1c1814;
+    }
+
+    @keyframes pillPop {
+      0% { transform: scale(0.92); }
+      60% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      padding: 0 0.15rem;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .stats-bar strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .shelves { display: flex; flex-direction: column; gap: 1.75rem; }
+
+    .shelf-section { animation: shelfIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+    @keyframes shelfIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .shelf-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      padding: 0 0.25rem;
+    }
+
+    .shelf-label h3 {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .shelf-count {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink-faint);
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+    }
+
+    .quote-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+      gap: 1rem;
+      padding-bottom: 0.85rem;
+    }
+
+    .shelf-plank {
+      height: 10px;
+      border-radius: 3px;
+      background: var(--shelf-wood);
+      box-shadow:
+        0 4px 0 rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      position: relative;
+      margin-top: -0.15rem;
+      animation: plankIn 0.5s 0.1s ease both;
+    }
+
+    @keyframes plankIn {
+      from { opacity: 0; transform: scaleX(0.85); }
+      to { opacity: 1; transform: scaleX(1); }
+    }
+
+    .shelf-plank::after {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: -6px;
+      height: 6px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.18), transparent 70%);
+    }
+
+    .quote-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.15rem 0.95rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+      position: relative;
+      overflow: hidden;
+      animation: cardIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .quote-card::before {
+      content: "“";
+      position: absolute;
+      top: -0.35rem;
+      left: 0.65rem;
+      font-family: var(--font-serif);
+      font-size: 4.5rem;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.12;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .quote-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+    }
+
+    .quote-card:hover::before {
+      opacity: 0.2;
+      transform: scale(1.08);
+    }
+
+    .quote-card.favorited {
+      border-color: color-mix(in srgb, var(--gold) 45%, var(--line));
+    }
+
+    .quote-text {
+      font-family: var(--font-serif);
+      font-size: 1.22rem;
+      line-height: 1.4;
+      font-weight: 500;
+      color: var(--ink);
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 6;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .quote-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      border-top: 1px solid var(--line);
+      padding-top: 0.75rem;
+    }
+
+    .quote-meta .author {
+      font-weight: 600;
+      color: var(--ink);
+      font-style: italic;
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+    }
+
+    .quote-meta .source { font-size: 0.8rem; }
+    .quote-meta .page { font-size: 0.75rem; color: var(--ink-faint); }
+
+    .quote-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .quote-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+
+    .quote-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.15rem;
+    }
+
+    .quote-actions .btn-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .quote-actions .btn-icon:hover {
+      background: var(--bg-soft);
+      border-color: var(--line);
+    }
+
+    .quote-actions .star-btn.active { color: var(--gold); animation: starPop 0.4s ease; }
+    .quote-actions .star-btn.active svg { fill: var(--gold); }
+
+    @keyframes starPop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.25) rotate(-8deg); }
+      100% { transform: scale(1); }
+    }
+
+    .quote-actions .spacer { flex: 1; }
+
+    .quote-actions .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      color: var(--ink-muted);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .quote-actions .btn-sm:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3.5rem 1.5rem;
+      color: var(--ink-muted);
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .empty-state .empty-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1rem;
+      border-radius: 20px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      animation: brandPulse 3s ease-in-out infinite;
+    }
+
+    .empty-state .empty-icon svg { width: 32px; height: 32px; }
+
+    .empty-state h3 {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+
+    .empty-state p { max-width: 360px; margin: 0 auto; font-size: 0.95rem; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 14, 10, 0.62);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      opacity: 1;
+      animation: overlayIn 0.28s ease both;
+    }
+
+    @keyframes overlayIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal {
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      width: min(560px, 100%);
+      max-height: min(92vh, 900px);
+      overflow: auto;
+      transform: translateY(16px) scale(0.96);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0) scale(1);
+      animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-wide { width: min(680px, 100%); }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: var(--bg-elevated);
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+    }
+
+    .modal-body { padding: 1.25rem; }
+
+    .modal-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      padding: 1rem 1.25rem 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .card-preview-wrap {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 1.15rem;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .share-card {
+      aspect-ratio: 1.1 / 1;
+      min-height: 320px;
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #faf6ef;
+      position: relative;
+      background: var(--card-grad-1);
+      transition: background 0.4s ease;
+    }
+
+    .share-card::before {
+      content: "“";
+      position: absolute;
+      top: 0.5rem;
+      left: 1.2rem;
+      font-family: var(--font-serif);
+      font-size: 7rem;
+      opacity: 0.15;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .share-card .sc-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+      line-height: 1.35;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+      text-wrap: pretty;
+    }
+
+    .share-card .sc-meta {
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      padding-top: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .share-card .sc-author {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .share-card .sc-source {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-top: 0.2rem;
+    }
+
+    .share-card .sc-brand {
+      margin-top: 0.85rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      font-weight: 600;
+    }
+
+    .gradient-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .grad-swatch {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .grad-swatch:hover { transform: scale(1.1); }
+    .grad-swatch.active {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 2px var(--bg-elevated), 0 0 0 4px var(--accent);
+      animation: pillPop 0.3s ease;
+    }
+
+    .g1 { background: linear-gradient(135deg, #2c1810, #8b4513); }
+    .g2 { background: linear-gradient(135deg, #1a2332, #3d6b7a); }
+    .g3 { background: linear-gradient(135deg, #1f1a2e, #6b4c7a); }
+    .g4 { background: linear-gradient(135deg, #1a2e1a, #4a6b3d); }
+    .g5 { background: linear-gradient(135deg, #2e1a1a, #8b3a3a); }
+    .g6 { background: linear-gradient(135deg, #1a1a1a, #555); }
+
+    .toast-host {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      animation: toastIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      max-width: 320px;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    #importFile { display: none; }
+
+    .confirm-text {
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+
+    .confirm-text strong { color: var(--ink); }
+
+    .menu-wrap { position: relative; }
+
+    .menu-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 0.4rem);
+      min-width: 190px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      padding: 0.4rem;
+      z-index: 50;
+    }
+
+    .menu-dropdown.open {
+      display: block;
+      animation: menuIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes menuIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .menu-dropdown button {
+      width: 100%;
+      text-align: left;
+      padding: 0.65rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      transition: background 0.15s ease;
+    }
+
+    .menu-dropdown button:hover { background: var(--bg-soft); }
+    .menu-dropdown button.danger { color: var(--danger); }
+    .menu-dropdown button svg { width: 16px; height: 16px; opacity: 0.8; }
+
+    .menu-divider {
+      height: 1px;
+      background: var(--line);
+      margin: 0.35rem 0.4rem;
+    }
+
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: 999px;
+      border: 2px solid var(--bg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ========== Mobile polish ========== */
+    @media (max-width: 720px) {
+      .home-nav {
+        padding: 0.9rem 1rem;
+        gap: 0.5rem;
+      }
+
+      .home-brand span { font-size: 1.2rem; }
+      .home-brand-mark { width: 40px; height: 40px; border-radius: 12px; }
+
+      .home-nav-actions .btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+      }
+
+      .home-nav-actions .btn-secondary {
+        display: none; /* theme + Enter CTA below is enough */
+      }
+
+      .theme-toggle {
+        width: 56px;
+        height: 32px;
+      }
+
+      .theme-toggle .knob {
+        width: 24px;
+        height: 24px;
+      }
+
+      [data-theme="dark"] .theme-toggle .knob {
+        transform: translateX(24px);
+      }
+
+      .home-hero {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .hero-title {
+        font-size: clamp(2rem, 9vw, 2.75rem);
+        max-width: none;
+      }
+
+      .hero-badge {
+        font-size: 0.68rem;
+        padding: 0.35rem 0.7rem;
+        letter-spacing: 0.03em;
+      }
+
+      .hero-sub {
+        font-size: 0.95rem;
+        max-width: 34ch;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .hero-pills {
+        gap: 0.4rem;
+      }
+
+      .hero-pill {
+        font-size: 0.72rem;
+        padding: 0.35rem 0.65rem;
+      }
+
+      .float-card {
+        padding: 1rem 1.05rem;
+      }
+
+      .float-card .q {
+        font-size: 1.05rem;
+      }
+
+      .home-features {
+        padding: 0 1rem 2.5rem;
+        gap: 0.75rem;
+      }
+
+      .feature-card {
+        padding: 1.1rem 1rem;
+        text-align: left;
+      }
+
+      /* App shell */
+      .app {
+        padding: 0.85rem 0.75rem 5.5rem;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        margin-bottom: 1.1rem;
+        padding-bottom: 0.9rem;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand h1 {
+        font-size: 1.35rem;
+      }
+
+      .brand p {
+        font-size: 0.75rem;
+      }
+
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.4rem;
+      }
+
+      .header-actions .btn-ghost {
+        padding: 0.45rem 0.55rem;
+        font-size: 0.8rem;
+      }
+
+      .header-actions .btn-secondary {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+      }
+
+      .layout {
+        gap: 1rem;
+      }
+
+      .panel {
+        border-radius: 14px;
+      }
+
+      .panel-header {
+        padding: 0.85rem 1rem;
+      }
+
+      .panel-header h2 {
+        font-size: 1.2rem;
+      }
+
+      .panel-body {
+        padding: 1rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group textarea {
+        min-height: 110px;
+        font-size: 1.05rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .form-actions .btn,
+      .form-actions .btn-primary {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .toolbar {
+        padding: 0.85rem;
+      }
+
+      .search-wrap input {
+        font-size: 16px; /* prevents iOS zoom */
+        padding: 0.7rem 2.4rem 0.7rem 2.5rem;
+      }
+
+      .filters {
+        gap: 0.35rem;
+        max-width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 0.15rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      .filters::-webkit-scrollbar { display: none; }
+
+      .filter-pill {
+        flex: 0 0 auto;
+        font-size: 0.74rem;
+        padding: 0.4rem 0.75rem;
+      }
+
+      .stats-bar {
+        font-size: 0.75rem;
+        gap: 0.5rem 0.85rem;
+      }
+
+      .quote-grid {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+
+      .quote-card {
+        padding: 1rem 0.95rem 0.85rem;
+        border-radius: 14px;
+      }
+
+      .quote-text {
+        font-size: 1.1rem;
+        -webkit-line-clamp: 8;
+        overflow-wrap: anywhere;
+      }
+
+      .quote-actions {
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+
+      .quote-actions .btn-sm {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem 0.75rem;
+        margin-top: 0.15rem;
+      }
+
+      .quote-actions .spacer {
+        display: none;
+      }
+
+      .shelf-label h3 {
+        font-size: 1.25rem;
+      }
+
+      .shelves {
+        gap: 1.35rem;
+      }
+
+      .empty-state {
+        padding: 2.5rem 1rem;
+      }
+
+      .empty-state h3 {
+        font-size: 1.35rem;
+      }
+
+      .modal-overlay {
+        padding: 0.65rem;
+        align-items: flex-end;
+      }
+
+      .modal,
+      .modal-wide {
+        width: 100%;
+        max-height: min(92vh, 900px);
+        border-radius: 18px 18px 14px 14px;
+      }
+
+      .modal-header {
+        padding: 0.95rem 1rem;
+      }
+
+      .modal-header h2 {
+        font-size: 1.2rem;
+      }
+
+      .modal-body {
+        padding: 1rem;
+      }
+
+      .modal-footer {
+        padding: 0.85rem 1rem 1rem;
+        flex-direction: column-reverse;
+      }
+
+      .modal-footer .btn {
+        width: 100%;
+      }
+
+      .share-card {
+        min-height: 260px;
+        padding: 1.35rem 1.15rem;
+        aspect-ratio: auto;
+      }
+
+      .share-card .sc-quote {
+        font-size: 1.2rem;
+      }
+
+      .menu-dropdown {
+        right: 0;
+        left: auto;
+        min-width: min(220px, calc(100vw - 1.5rem));
+      }
+
+      .toast-host {
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: 0.85rem;
+      }
+
+      .toast {
+        max-width: none;
+        width: 100%;
+        text-align: center;
+      }
+
+      .orb-1 { width: 220px; height: 220px; }
+      .orb-2 { width: 180px; height: 180px; }
+      .orb-3 { display: none; }
+    }
+
+    @media (max-width: 380px) {
+      .home-brand span { font-size: 1.05rem; }
+      .hero-title { font-size: 1.85rem; }
+      .header-actions .btn-ghost span,
+      .header-actions .btn-ghost {
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Safe areas for notched phones */
+    @supports (padding: max(0px)) {
+      .home-nav {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-top: max(0.9rem, env(safe-area-inset-top));
+      }
+      .app {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        padding-bottom: max(5.5rem, calc(env(safe-area-inset-bottom) + 4rem));
+      }
+      .toast-host {
+        bottom: max(0.85rem, env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+  <script data-arena-recording="true">(function(){
+"use strict";
+var SK="__arena_rec",RRWEB_CDN="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.js";
+var MAX_RECORDING_MS=600000,MAX_RRWEB_EVENTS=30000,MAX_INTERACTIONS=5000,MAX_CURSOR_POINTS=10000,recStopped=false;
+var stored=null;try{var raw=sessionStorage.getItem(SK);if(raw)stored=JSON.parse(raw);}catch(ex){}
+var meta=stored?stored.m||null:null,rrwebEvents=stored?stored.r||[]:[],rrwebStarted=false,startTime=stored?stored.st||Date.now():Date.now();
+var interactions=stored?stored.i||[]:[],cursorPath=stored?stored.c||[]:[],lastCursorSample=0,lastScrollSample=0;
+var pageHeight=document.documentElement.scrollHeight;
+var viewport={width:window.innerWidth,height:window.innerHeight};
+function isCapped(){if(recStopped)return true;if(Date.now()-startTime>=MAX_RECORDING_MS){recStopped=true;return true;}return false;}
+function persist(){try{var d=JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime});sessionStorage.setItem(SK,d);}catch(ex){rrwebEvents=rrwebEvents.slice(Math.floor(rrwebEvents.length/2));try{sessionStorage.setItem(SK,JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime}));}catch(ex2){}}}
+setInterval(persist,5000);
+window.addEventListener("resize",function(){viewport={width:window.innerWidth,height:window.innerHeight};pageHeight=document.documentElement.scrollHeight;});
+document.addEventListener("click",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var el=e.target;var tag=el.tagName?el.tagName.toLowerCase():"";var text=(el.textContent||"").trim().substring(0,80);var classes=el.className&&typeof el.className==="string"?el.className.substring(0,120):"";interactions.push({type:"click",t:Date.now()-startTime,x:Math.round(e.clientX),y:Math.round(e.clientY),element:{tag:tag,text:text,classes:classes}});},true);
+window.addEventListener("scroll",function(){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var now=Date.now();if(now-lastScrollSample<200)return;lastScrollSample=now;var scrollY=Math.round(window.scrollY||window.pageYOffset||0);var depthPct=pageHeight>viewport.height?Math.min(100,Math.round(((scrollY+viewport.height)/pageHeight)*100)):100;interactions.push({type:"scroll",t:now-startTime,y:scrollY,depth_pct:depthPct});},{passive:true});
+document.addEventListener("mousemove",function(e){if(isCapped()||cursorPath.length>=MAX_CURSOR_POINTS)return;var now=Date.now();if(now-lastCursorSample<250)return;lastCursorSample=now;cursorPath.push([Math.round(e.clientX),Math.round(e.clientY),now-startTime]);},{passive:true});
+document.addEventListener("keydown",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;interactions.push({type:"keydown",t:Date.now()-startTime,key:e.key});},true);
+function buildAnalytics(){if(!meta)return null;var ph=document.documentElement.scrollHeight;var maxScroll=0,clickElements={},firstClick=null,firstScroll=null,totalDistance=0;for(var i=0;i<interactions.length;i++){var ev=interactions[i];if(ev.type==="scroll"){if(ev.depth_pct>maxScroll)maxScroll=ev.depth_pct;if(!firstScroll)firstScroll=ev.t;}if(ev.type==="click"){if(!firstClick)firstClick=ev.t;var key=ev.element.tag+":"+ev.element.text.substring(0,30);clickElements[key]=true;}}for(var j=1;j<cursorPath.length;j++){var dx=cursorPath[j][0]-cursorPath[j-1][0];var dy=cursorPath[j][1]-cursorPath[j-1][1];totalDistance+=Math.sqrt(dx*dx+dy*dy);}var duration=Date.now()-startTime;var clickHeatmap=[];for(var k=0;k<interactions.length;k++){if(interactions[k].type==="click")clickHeatmap.push([interactions[k].x,interactions[k].y]);}return{generation_id:meta.generationId,tournament_id:meta.tournamentId,started_at:new Date(startTime).toISOString(),ended_at:new Date().toISOString(),duration_ms:duration,viewport:viewport,page_height:ph,interactions:interactions,cursor_path:cursorPath,click_heatmap:clickHeatmap,summary:{total_clicks:clickHeatmap.length,total_scrolls:interactions.filter(function(e){return e.type==="scroll";}).length,max_scroll_depth_pct:maxScroll,unique_elements_clicked:Object.keys(clickElements).length,time_to_first_click_ms:firstClick,time_to_first_scroll_ms:firstScroll,cursor_distance_px:Math.round(totalDistance),active_time_ms:duration}};}
+function loadRrweb(){if(rrwebStarted)return;rrwebStarted=true;var s=document.createElement("script");s.src=RRWEB_CDN;s.onload=function(){var rec=(window.rrweb&&window.rrweb.record)||window.rrwebRecord;if(!rec)return;rec({emit:function(event){if(rrwebEvents.length>=MAX_RRWEB_EVENTS||isCapped())return;rrwebEvents.push(event);}});};s.onerror=function(){};document.head.appendChild(s);}
+window.addEventListener("message",function(e){if(!e.data||typeof e.data.type!=="string")return;if(e.data.type==="arena:init"){if(!meta)startTime=Date.now();meta={generationId:e.data.generationId||e.data.modelId,tournamentId:e.data.tournamentId};persist();loadRrweb();if(e.source)e.source.postMessage({type:"arena:init-ack",generationId:meta.generationId},"*");}if(e.data.type==="arena:flush"){var resp={type:"arena:recording-data",generationId:meta?meta.generationId:null,rrwebEvents:rrwebEvents,analytics:buildAnalytics()};try{sessionStorage.removeItem(SK);}catch(ex){}if(e.source)e.source.postMessage(resp,"*");}});
+loadRrweb();
+})();</script>
+  <script data-arena-views="true">(function(){var isTop=false;try{isTop=window.self===window.top;}catch(e){}if(!isTop)return;window.__ARENA_META={generationId:"yoda",tournamentId:"1010d29c-17c1-4829-8706-58c7f9f9eeb8"};var payload={tournamentId:"1010d29c-17c1-4829-8706-58c7f9f9eeb8",modelId:"yoda"};try{var r=document.referrer;if(r){var u=new URL(r);payload.referrerDomain=u.hostname;}}catch(e){}try{var vid=null;try{vid=localStorage.getItem('arena_vid');}catch(e){}if(!vid){vid=typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,32);try{localStorage.setItem('arena_vid',vid);}catch(e){}}if(vid)payload.viewerId=vid;}catch(e){}try{fetch("https://www.designarena.ai/api/agon/page-views",{"method":"POST","headers":{"Content-Type":"application/json"},"body":JSON.stringify(payload),"keepalive":true});}catch(e){}})();</script>
+</head>
+<body>
+  <!-- ========== HOME VIEW ========== -->
+  <section id="view-home" class="view active" aria-label="Homepage">
+    <div class="home-shell">
+      <div class="home-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+      </div>
+
+      <nav class="home-nav">
+        <div class="home-brand">
+          <div class="home-brand-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              <path d="M8 7h8M8 11h5"/>
+            </svg>
+          </div>
+          <span>QuoteShelf</span>
+        </div>
+        <div class="home-nav-actions">
+          <button type="button" class="theme-toggle" id="themeToggleHome" title="Toggle light/dark mode" aria-label="Toggle light and dark mode">
+            <span class="knob">
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </span>
+          </button>
+          <button type="button" class="btn btn-secondary" data-enter-app>Open library</button>
+        </div>
+      </nav>
+
+      <div class="home-hero">
+        <div class="hero-copy">
+          <div class="hero-badge"><span class="dot"></span> Offline · Private · Beautiful</div>
+          <h1 class="hero-title">Your quotes,<br />on a living <em>shelf</em></h1>
+          <p class="hero-sub">
+            Capture memorable lines from books and articles, sort them onto visual shelves,
+            and turn favorites into shareable cards — all on your device, no account needed.
+          </p>
+          <div class="hero-actions">
+            <button type="button" class="btn btn-primary btn-lg" data-enter-app>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              Enter QuoteShelf
+            </button>
+            <button type="button" class="btn btn-secondary btn-lg" id="homeSamplesBtn">
+              Peek sample quotes
+            </button>
+          </div>
+          <div class="hero-pills">
+            <span class="hero-pill">★ Favorites</span>
+            <span class="hero-pill">Tag shelves</span>
+            <span class="hero-pill">Instant search</span>
+            <span class="hero-pill">Export JSON / MD</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <article class="float-card fc-1">
+            <p class="q">“We read to know we are not alone.”</p>
+            <p class="a">— C.S. Lewis</p>
+            <span class="tag">Reading</span>
+          </article>
+          <article class="float-card fc-2">
+            <p class="q">“The only true wisdom is in knowing you know nothing.”</p>
+            <p class="a">— Socrates</p>
+            <span class="tag">Philosophy</span>
+          </article>
+          <article class="float-card fc-3">
+            <p class="q">“Stay hungry. Stay foolish.”</p>
+            <p class="a">— Steve Jobs</p>
+            <span class="tag">Tech</span>
+          </article>
+          <div class="shelf-glow"></div>
+        </div>
+      </div>
+
+      <div class="home-features">
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <h3>Visual shelves</h3>
+          <p>Organize excerpts by tag on warm virtual bookcases — Philosophy, Tech, Favorites, and more.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </div>
+          <h3>Find anything</h3>
+          <p>Search by keyword, author, or source and filter with one-tap pills for tags and stars.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          </div>
+          <h3>Shareable cards</h3>
+          <p>Style any quote with elegant gradients and copy or screenshot a polished card in seconds.</p>
+        </article>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- ========== APP VIEW ========== -->
+  <section id="view-app" class="view" aria-label="Quote library">
+    <div class="app">
+      <header class="header">
+        <div class="brand" id="brandHome" title="Back to homepage" role="button" tabindex="0">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              <path d="M8 7h8M8 11h5"/>
+            </svg>
+          </div>
+          <div>
+            <h1>QuoteShelf</h1>
+            <p>Visual quote collector &amp; categorizer</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn btn-ghost" id="backHomeBtn" title="Back to homepage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Home
+          </button>
+          <button type="button" class="theme-toggle" id="themeToggleApp" title="Toggle light/dark mode" aria-label="Toggle light and dark mode">
+            <span class="knob">
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </span>
+          </button>
+          <div class="menu-wrap">
+            <button type="button" class="btn btn-secondary" id="dataMenuBtn" aria-haspopup="true" aria-expanded="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Data
+            </button>
+            <div class="menu-dropdown" id="dataMenu" role="menu">
+              <button type="button" id="exportJsonBtn" role="menuitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Export JSON
+              </button>
+              <button type="button" id="exportMdBtn" role="menuitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Export Markdown
+              </button>
+              <button type="button" id="importBtn" role="menuitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Import JSON
+              </button>
+              <div class="menu-divider"></div>
+              <button type="button" id="seedBtn" role="menuitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Load sample quotes
+              </button>
+              <button type="button" class="danger" id="clearAllBtn" role="menuitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Clear all data
+              </button>
+            </div>
+          </div>
+          <input type="file" id="importFile" accept="application/json,.json" />
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="panel" id="intakePanel">
+          <div class="panel-header">
+            <h2 id="formTitle">Add a Quote</h2>
+          </div>
+          <div class="panel-body">
+            <div class="edit-banner" id="editBanner">
+              <span>Editing existing quote</span>
+              <button type="button" class="btn-ghost" id="cancelEditBtn" style="padding:0.2rem 0.5rem;font-size:0.8rem;">Cancel</button>
+            </div>
+            <form id="quoteForm" autocomplete="off">
+              <input type="hidden" id="editId" value="" />
+              <div class="form-group">
+                <label for="quoteText">Quote</label>
+                <textarea id="quoteText" placeholder="Paste or type the excerpt that moved you…" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" id="author" placeholder="e.g. Virginia Woolf" required />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="source">Source Title</label>
+                  <input type="text" id="source" placeholder="Book or article" />
+                </div>
+                <div class="form-group">
+                  <label for="page">Page / Location</label>
+                  <input type="text" id="page" placeholder="p. 42, loc 1204…" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="tags">Tags</label>
+                <input type="text" id="tags" placeholder="Philosophy, Favorites, Leadership" />
+                <div class="tag-suggestions" id="tagSuggestions"></div>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  Save to Shelf
+                </button>
+                <button type="reset" class="btn btn-secondary" id="resetBtn">Clear</button>
+              </div>
+            </form>
+          </div>
+        </aside>
+
+        <main class="main-col">
+          <div class="panel" style="animation-delay:0.08s">
+            <div class="toolbar">
+              <div class="search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="search" id="searchInput" placeholder="Search quotes, authors, sources…" aria-label="Search quotes" />
+                <button type="button" class="search-clear" id="searchClear" aria-label="Clear search">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+              <div class="filters" id="filterPills"></div>
+            </div>
+          </div>
+
+          <div class="stats-bar" id="statsBar"></div>
+          <div class="shelves" id="shelves"></div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- Generate Card Modal -->
+  <div class="modal-overlay" id="cardModal" role="dialog" aria-modal="true" aria-labelledby="cardModalTitle">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h2 id="cardModalTitle">Shareable Quote Card</h2>
+        <button type="button" class="btn-icon" data-close-modal="cardModal" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card-preview-wrap">
+          <div class="share-card" id="shareCard">
+            <div class="sc-quote" id="scQuote"></div>
+            <div class="sc-meta">
+              <div class="sc-author" id="scAuthor"></div>
+              <div class="sc-source" id="scSource"></div>
+              <div class="sc-brand">QuoteShelf</div>
+            </div>
+          </div>
+        </div>
+        <label style="display:block;font-size:0.75rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:0.55rem;">Background</label>
+        <div class="gradient-picker" id="gradientPicker">
+          <button type="button" class="grad-swatch g1 active" data-grad="1" aria-label="Warm mahogany"></button>
+          <button type="button" class="grad-swatch g2" data-grad="2" aria-label="Ocean slate"></button>
+          <button type="button" class="grad-swatch g3" data-grad="3" aria-label="Twilight plum"></button>
+          <button type="button" class="grad-swatch g4" data-grad="4" aria-label="Forest green"></button>
+          <button type="button" class="grad-swatch g5" data-grad="5" aria-label="Deep crimson"></button>
+          <button type="button" class="grad-swatch g6" data-grad="6" aria-label="Midnight charcoal"></button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="copyQuoteBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Text
+        </button>
+        <button type="button" class="btn btn-primary" id="copyCardHintBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          Ready to Screenshot
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal" style="width:min(420px,100%)">
+      <div class="modal-header">
+        <h2 id="confirmTitle">Confirm</h2>
+        <button type="button" class="btn-icon" data-close-modal="confirmModal" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text" id="confirmText"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal="confirmModal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmOkBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-host" id="toastHost" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const STORAGE_KEY = "quoteshelf_v1";
+      const THEME_KEY = "quoteshelf_theme";
+      const VIEW_KEY = "quoteshelf_view";
+
+      const ICONS = {
+        star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+        edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+        trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+        book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+      };
+
+      const SAMPLE_QUOTES = [
+        { text: "We read to know we are not alone.", author: "C.S. Lewis", source: "Shadowlands", page: "", tags: ["Reading", "Favorites"], favorite: true },
+        { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates", source: "Plato's Apology", page: "", tags: ["Philosophy"], favorite: true },
+        { text: "Stay hungry. Stay foolish.", author: "Steve Jobs", source: "Stanford Commencement Address", page: "2005", tags: ["Tech", "Leadership"], favorite: false },
+        { text: "It is our choices, Harry, that show what we truly are, far more than our abilities.", author: "J.K. Rowling", source: "Harry Potter and the Chamber of Secrets", page: "p. 333", tags: ["Fiction", "Favorites"], favorite: true },
+        { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein", source: "", page: "", tags: ["Leadership", "Philosophy"], favorite: false },
+        { text: "A room without books is like a body without a soul.", author: "Marcus Tullius Cicero", source: "", page: "", tags: ["Reading", "Philosophy"], favorite: false },
+        { text: "The best way to predict the future is to invent it.", author: "Alan Kay", source: "", page: "", tags: ["Tech", "Leadership"], favorite: false },
+        { text: "You never really understand a person until you consider things from his point of view… until you climb into his skin and walk around in it.", author: "Harper Lee", source: "To Kill a Mockingbird", page: "ch. 3", tags: ["Fiction", "Philosophy"], favorite: true },
+      ];
+
+      let state = { quotes: [] };
+      let activeTag = "All";
+      let favoritesOnly = false;
+      let searchQuery = "";
+      let currentCardQuote = null;
+      let currentGrad = "1";
+      let confirmCallback = null;
+      let seedOnEnter = false;
+
+      const $ = (sel, root = document) => root.querySelector(sel);
+      const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+      const quoteForm = $("#quoteForm");
+      const quoteText = $("#quoteText");
+      const author = $("#author");
+      const source = $("#source");
+      const page = $("#page");
+      const tagsInput = $("#tags");
+      const editId = $("#editId");
+      const editBanner = $("#editBanner");
+      const formTitle = $("#formTitle");
+      const submitBtn = $("#submitBtn");
+      const shelvesEl = $("#shelves");
+      const filterPills = $("#filterPills");
+      const searchInput = $("#searchInput");
+      const searchClear = $("#searchClear");
+      const statsBar = $("#statsBar");
+      const tagSuggestions = $("#tagSuggestions");
+      const toastHost = $("#toastHost");
+      const viewHome = $("#view-home");
+      const viewApp = $("#view-app");
+
+      /* ---------- Navigation ---------- */
+      function showView(name, { push = true } = {}) {
+        const isHome = name === "home";
+        viewHome.classList.toggle("active", isHome);
+        viewApp.classList.toggle("active", !isHome);
+        document.body.style.overflow = "";
+        try {
+          sessionStorage.setItem(VIEW_KEY, name);
+        } catch (_) {}
+        if (push) {
+          const hash = isHome ? "#home" : "#app";
+          if (location.hash !== hash) history.pushState({ view: name }, "", hash);
+        }
+        if (!isHome) {
+          render();
+          if (seedOnEnter) {
+            seedOnEnter = false;
+            if (!state.quotes.length) loadSamples(true);
+          }
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function enterApp(withSamples) {
+        if (withSamples) seedOnEnter = true;
+        showView("app");
+      }
+
+      function goHome() {
+        showView("home");
+      }
+
+      /* ---------- Persistence ---------- */
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.quotes)) {
+              state = parsed;
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn("Failed to load quotes", e);
+        }
+        state = { quotes: [] };
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function uid() {
+        return "q_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+      }
+
+      /* ---------- Theme ---------- */
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem(THEME_KEY, theme);
+        const label = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+        $$(".theme-toggle").forEach((btn) => {
+          btn.setAttribute("aria-label", label);
+          btn.title = label;
+        });
+      }
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme") || "light";
+        applyTheme(current === "dark" ? "light" : "dark");
+      }
+
+      function initTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved === "dark" || saved === "light") {
+          applyTheme(saved);
+        } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          applyTheme("dark");
+        } else {
+          applyTheme("light");
+        }
+      }
+
+      /* ---------- Helpers ---------- */
+      function escapeHtml(str) {
+        return String(str ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function parseTags(str) {
+        return [...new Set(
+          String(str || "")
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+            .map((t) => t.replace(/\s+/g, " "))
+        )];
+      }
+
+      function allTags() {
+        const set = new Map();
+        state.quotes.forEach((q) => {
+          (q.tags || []).forEach((t) => {
+            const key = t.toLowerCase();
+            if (!set.has(key)) set.set(key, t);
+          });
+        });
+        return [...set.values()].sort((a, b) => a.localeCompare(b));
+      }
+
+      function toast(msg) {
+        const el = document.createElement("div");
+        el.className = "toast";
+        el.textContent = msg;
+        toastHost.appendChild(el);
+        setTimeout(() => {
+          el.style.opacity = "0";
+          el.style.transition = "opacity 0.3s ease";
+          setTimeout(() => el.remove(), 300);
+        }, 2600);
+      }
+
+      function openModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove("open");
+        if (!$$(".modal-overlay.open").length) {
+          document.body.style.overflow = "";
+        }
+      }
+
+      function askConfirm(title, text, onOk) {
+        $("#confirmTitle").textContent = title;
+        $("#confirmText").innerHTML = text;
+        confirmCallback = onOk;
+        openModal("confirmModal");
+      }
+
+      /* ---------- Filtering ---------- */
+      function getFilteredQuotes() {
+        const q = searchQuery.trim().toLowerCase();
+        return state.quotes
+          .filter((item) => {
+            if (favoritesOnly && !item.favorite) return false;
+            if (activeTag !== "All") {
+              const tags = (item.tags || []).map((t) => t.toLowerCase());
+              if (!tags.includes(activeTag.toLowerCase())) return false;
+            }
+            if (!q) return true;
+            const hay = [item.text, item.author, item.source, item.page, ...(item.tags || [])]
+              .join(" ")
+              .toLowerCase();
+            return hay.includes(q);
+          })
+          .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      }
+
+      function groupByShelf(quotes) {
+        if (activeTag !== "All" || favoritesOnly) {
+          const label =
+            favoritesOnly && activeTag === "All"
+              ? "Favorites"
+              : activeTag === "All"
+                ? "Results"
+                : activeTag;
+          return [{ name: label, quotes }];
+        }
+
+        const groups = new Map();
+        const untagged = [];
+
+        quotes.forEach((quote) => {
+          const tags = quote.tags && quote.tags.length ? quote.tags : null;
+          if (!tags) {
+            untagged.push(quote);
+            return;
+          }
+          tags.forEach((tag) => {
+            const key = tag.toLowerCase();
+            if (!groups.has(key)) groups.set(key, { name: tag, quotes: [] });
+            const g = groups.get(key);
+            if (!g.quotes.find((x) => x.id === quote.id)) g.quotes.push(quote);
+          });
+        });
+
+        const shelves = [...groups.values()].sort((a, b) => a.name.localeCompare(b.name));
+        if (untagged.length) shelves.push({ name: "Uncategorized", quotes: untagged });
+        return shelves;
+      }
+
+      /* ---------- Render ---------- */
+      function renderStats(filtered) {
+        const total = state.quotes.length;
+        const favs = state.quotes.filter((q) => q.favorite).length;
+        const tags = allTags().length;
+        statsBar.innerHTML = `
+          <span><strong>${total}</strong> quote${total === 1 ? "" : "s"}</span>
+          <span><strong>${favs}</strong> favorite${favs === 1 ? "" : "s"}</span>
+          <span><strong>${tags}</strong> shelf tag${tags === 1 ? "" : "s"}</span>
+          <span>Showing <strong>${filtered.length}</strong></span>
+        `;
+      }
+
+      function renderFilters() {
+        const tags = allTags();
+        let html = `
+          <button type="button" class="filter-pill ${activeTag === "All" && !favoritesOnly ? "active" : ""}" data-filter="all">All</button>
+          <button type="button" class="filter-pill fav-pill ${favoritesOnly ? "active" : ""}" data-filter="favorites">★ Favorites</button>
+        `;
+        tags.forEach((t) => {
+          const active = !favoritesOnly && activeTag.toLowerCase() === t.toLowerCase();
+          html += `<button type="button" class="filter-pill ${active ? "active" : ""}" data-filter-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`;
+        });
+        filterPills.innerHTML = html;
+      }
+
+      function renderTagSuggestions() {
+        const tags = allTags();
+        const common = ["Philosophy", "Tech", "Leadership", "Favorites", "Fiction", "Reading", "Science", "Poetry"];
+        const merged = [];
+        const seen = new Set();
+        [...tags, ...common].forEach((t) => {
+          const k = t.toLowerCase();
+          if (!seen.has(k)) {
+            seen.add(k);
+            merged.push(t);
+          }
+        });
+        const current = new Set(parseTags(tagsInput.value).map((t) => t.toLowerCase()));
+        tagSuggestions.innerHTML = merged
+          .slice(0, 12)
+          .map((t) => {
+            const active = current.has(t.toLowerCase()) ? "active" : "";
+            return `<button type="button" class="tag-chip ${active}" data-suggest-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`;
+          })
+          .join("");
+      }
+
+      function renderQuoteCard(q, index) {
+        const tagsHtml = (q.tags || [])
+          .map((t) => `<span class="quote-tag">${escapeHtml(t)}</span>`)
+          .join("");
+        const delay = Math.min(index * 0.04, 0.4);
+        return `
+          <article class="quote-card ${q.favorite ? "favorited" : ""}" data-id="${escapeHtml(q.id)}" style="animation-delay:${delay}s">
+            <p class="quote-text">${escapeHtml(q.text)}</p>
+            <div class="quote-meta">
+              <span class="author">— ${escapeHtml(q.author || "Unknown")}</span>
+              ${q.source ? `<span class="source">${escapeHtml(q.source)}</span>` : ""}
+              ${q.page ? `<span class="page">${escapeHtml(q.page)}</span>` : ""}
+            </div>
+            ${tagsHtml ? `<div class="quote-tags">${tagsHtml}</div>` : ""}
+            <div class="quote-actions">
+              <button type="button" class="btn-icon star-btn ${q.favorite ? "active" : ""}" data-action="favorite" title="Toggle favorite" aria-label="Toggle favorite">${ICONS.star}</button>
+              <button type="button" class="btn-icon" data-action="edit" title="Edit" aria-label="Edit quote">${ICONS.edit}</button>
+              <button type="button" class="btn-icon" data-action="delete" title="Delete" aria-label="Delete quote">${ICONS.trash}</button>
+              <span class="spacer"></span>
+              <button type="button" class="btn-sm" data-action="card">Generate Card</button>
+            </div>
+          </article>
+        `;
+      }
+
+      function render() {
+        if (!viewApp.classList.contains("active")) return;
+
+        const filtered = getFilteredQuotes();
+        renderStats(filtered);
+        renderFilters();
+        renderTagSuggestions();
+
+        if (!state.quotes.length) {
+          shelvesEl.innerHTML = `
+            <div class="panel">
+              <div class="empty-state">
+                <div class="empty-icon">${ICONS.book}</div>
+                <h3>Your shelves await</h3>
+                <p>Capture memorable lines from books, articles, and lectures. They stay on this device — no account required.</p>
+                <div style="margin-top:1.25rem;display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
+                  <button type="button" class="btn btn-primary" id="emptyAddFocus">Add your first quote</button>
+                  <button type="button" class="btn btn-secondary" id="emptySeed">Load samples</button>
+                </div>
+              </div>
+            </div>
+          `;
+          const focusBtn = $("#emptyAddFocus");
+          const seedBtn = $("#emptySeed");
+          if (focusBtn) focusBtn.addEventListener("click", () => quoteText.focus());
+          if (seedBtn) seedBtn.addEventListener("click", () => loadSamples(true));
+          return;
+        }
+
+        if (!filtered.length) {
+          shelvesEl.innerHTML = `
+            <div class="panel">
+              <div class="empty-state">
+                <div class="empty-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </div>
+                <h3>No matches</h3>
+                <p>Try another keyword, clear filters, or add a new quote to this shelf.</p>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        const shelves = groupByShelf(filtered);
+        let cardIndex = 0;
+        shelvesEl.innerHTML = shelves
+          .map(
+            (shelf, i) => `
+            <section class="shelf-section" style="animation-delay:${i * 0.05}s">
+              <div class="shelf-label">
+                <h3>${escapeHtml(shelf.name)} <span class="shelf-count">${shelf.quotes.length}</span></h3>
+              </div>
+              <div class="quote-grid">
+                ${shelf.quotes
+                  .map((q) => {
+                    const html = renderQuoteCard(q, cardIndex);
+                    cardIndex++;
+                    return html;
+                  })
+                  .join("")}
+              </div>
+              <div class="shelf-plank" aria-hidden="true"></div>
+            </section>
+          `
+          )
+          .join("");
+      }
+
+      /* ---------- CRUD ---------- */
+      function resetForm() {
+        quoteForm.reset();
+        editId.value = "";
+        editBanner.classList.remove("visible");
+        formTitle.textContent = "Add a Quote";
+        submitBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Save to Shelf`;
+        renderTagSuggestions();
+      }
+
+      function startEdit(id) {
+        const q = state.quotes.find((x) => x.id === id);
+        if (!q) return;
+        editId.value = q.id;
+        quoteText.value = q.text;
+        author.value = q.author || "";
+        source.value = q.source || "";
+        page.value = q.page || "";
+        tagsInput.value = (q.tags || []).join(", ");
+        editBanner.classList.add("visible");
+        formTitle.textContent = "Edit Quote";
+        submitBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Update Quote`;
+        renderTagSuggestions();
+        $("#intakePanel").scrollIntoView({ behavior: "smooth", block: "start" });
+        quoteText.focus();
+      }
+
+      function upsertQuote(data) {
+        if (data.id) {
+          const idx = state.quotes.findIndex((q) => q.id === data.id);
+          if (idx >= 0) {
+            state.quotes[idx] = { ...state.quotes[idx], ...data, updatedAt: Date.now() };
+            saveState();
+            toast("Quote updated");
+            return;
+          }
+        }
+        state.quotes.unshift({
+          ...data,
+          id: uid(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          favorite: !!data.favorite,
+        });
+        saveState();
+        toast("Quote saved to your shelf");
+      }
+
+      function deleteQuote(id) {
+        const q = state.quotes.find((x) => x.id === id);
+        askConfirm(
+          "Delete quote?",
+          `This will permanently remove the quote${q ? ` by <strong>${escapeHtml(q.author || "Unknown")}</strong>` : ""} from this device.`,
+          () => {
+            state.quotes = state.quotes.filter((x) => x.id !== id);
+            saveState();
+            if (editId.value === id) resetForm();
+            render();
+            toast("Quote deleted");
+          }
+        );
+      }
+
+      function toggleFavorite(id) {
+        const q = state.quotes.find((x) => x.id === id);
+        if (!q) return;
+        q.favorite = !q.favorite;
+        q.updatedAt = Date.now();
+        if (q.favorite) {
+          q.tags = q.tags || [];
+          if (!q.tags.some((t) => t.toLowerCase() === "favorites")) q.tags.push("Favorites");
+        }
+        saveState();
+        render();
+      }
+
+      /* ---------- Card generator ---------- */
+      const GRADIENTS = {
+        "1": "var(--card-grad-1)",
+        "2": "var(--card-grad-2)",
+        "3": "var(--card-grad-3)",
+        "4": "var(--card-grad-4)",
+        "5": "var(--card-grad-5)",
+        "6": "var(--card-grad-6)",
+      };
+
+      function openCardModal(id) {
+        const q = state.quotes.find((x) => x.id === id);
+        if (!q) return;
+        currentCardQuote = q;
+        $("#scQuote").textContent = q.text;
+        $("#scAuthor").textContent = q.author ? `— ${q.author}` : "";
+        const srcParts = [q.source, q.page].filter(Boolean);
+        $("#scSource").textContent = srcParts.join(" · ");
+        applyGradient(currentGrad);
+        openModal("cardModal");
+      }
+
+      function applyGradient(key) {
+        currentGrad = key;
+        $("#shareCard").style.background = GRADIENTS[key] || GRADIENTS["1"];
+        $$(".grad-swatch").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.grad === key);
+        });
+      }
+
+      async function copyQuoteText() {
+        if (!currentCardQuote) return;
+        const q = currentCardQuote;
+        let text = `"${q.text}"`;
+        if (q.author) text += `\n— ${q.author}`;
+        if (q.source) text += `, ${q.source}`;
+        if (q.page) text += ` (${q.page})`;
+        try {
+          await navigator.clipboard.writeText(text);
+          toast("Quote copied to clipboard");
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          toast("Quote copied to clipboard");
+        }
+      }
+
+      /* ---------- Import / Export ---------- */
+      function downloadFile(filename, content, type) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function dateStamp() {
+        const d = new Date();
+        return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+      }
+
+      function exportJSON() {
+        const payload = {
+          app: "QuoteShelf",
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          quotes: state.quotes,
+        };
+        downloadFile(`quoteshelf-export-${dateStamp()}.json`, JSON.stringify(payload, null, 2), "application/json");
+        toast("JSON exported");
+      }
+
+      function exportMarkdown() {
+        const lines = ["# QuoteShelf Export", "", `Exported ${new Date().toLocaleString()}`, ""];
+        const sorted = [...state.quotes].sort((a, b) => (a.author || "").localeCompare(b.author || ""));
+        sorted.forEach((q) => {
+          lines.push(`> ${q.text.replace(/\n/g, "\n> ")}`);
+          lines.push(">");
+          let attr = q.author ? `— **${q.author}**` : "— Unknown";
+          if (q.source) attr += `, *${q.source}*`;
+          if (q.page) attr += ` (${q.page})`;
+          lines.push(`> ${attr}`);
+          if (q.tags && q.tags.length) lines.push(`>`, `> Tags: ${q.tags.join(", ")}`);
+          if (q.favorite) lines.push(`>`, `> ★ Favorite`);
+          lines.push("", "---", "");
+        });
+        downloadFile(`quoteshelf-export-${dateStamp()}.md`, lines.join("\n"), "text/markdown");
+        toast("Markdown exported");
+      }
+
+      function importJSON(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const data = JSON.parse(reader.result);
+            let incoming = [];
+            if (Array.isArray(data)) incoming = data;
+            else if (data && Array.isArray(data.quotes)) incoming = data.quotes;
+            else throw new Error("Invalid format");
+
+            const cleaned = incoming
+              .filter((q) => q && typeof q.text === "string" && q.text.trim())
+              .map((q) => ({
+                id: q.id && typeof q.id === "string" ? q.id : uid(),
+                text: String(q.text).trim(),
+                author: String(q.author || "").trim(),
+                source: String(q.source || "").trim(),
+                page: String(q.page || "").trim(),
+                tags: Array.isArray(q.tags)
+                  ? q.tags.map(String).map((t) => t.trim()).filter(Boolean)
+                  : parseTags(q.tags || ""),
+                favorite: !!q.favorite,
+                createdAt: q.createdAt || Date.now(),
+                updatedAt: Date.now(),
+              }));
+
+            if (!cleaned.length) {
+              toast("No valid quotes found in file");
+              return;
+            }
+
+            askConfirm(
+              "Import quotes?",
+              `Found <strong>${cleaned.length}</strong> quote${cleaned.length === 1 ? "" : "s"}. Merge with your existing shelf of <strong>${state.quotes.length}</strong>?`,
+              () => {
+                const existingIds = new Set(state.quotes.map((q) => q.id));
+                let added = 0;
+                cleaned.forEach((q) => {
+                  if (existingIds.has(q.id)) q.id = uid();
+                  state.quotes.unshift(q);
+                  added++;
+                });
+                saveState();
+                render();
+                toast(`Imported ${added} quote${added === 1 ? "" : "s"}`);
+              }
+            );
+          } catch (e) {
+            toast("Could not import — invalid JSON");
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function loadSamples(silent) {
+        const run = () => {
+          SAMPLE_QUOTES.forEach((s) => {
+            state.quotes.push({
+              ...s,
+              id: uid(),
+              createdAt: Date.now() - Math.floor(Math.random() * 1000000),
+              updatedAt: Date.now(),
+            });
+          });
+          saveState();
+          render();
+          toast("Sample quotes added");
+        };
+
+        if (silent) {
+          run();
+          return;
+        }
+
+        askConfirm(
+          "Load sample quotes?",
+          "This adds a curated set of classic quotes to your shelf. Your existing quotes will be kept.",
+          run
+        );
+      }
+
+      function clearAll() {
+        askConfirm(
+          "Clear all data?",
+          "This permanently deletes <strong>every quote</strong> stored in this browser. Export first if you want a backup.",
+          () => {
+            state.quotes = [];
+            saveState();
+            resetForm();
+            activeTag = "All";
+            favoritesOnly = false;
+            render();
+            toast("All quotes cleared");
+          }
+        );
+      }
+
+      /* ---------- Events ---------- */
+      $$("[data-enter-app]").forEach((btn) => {
+        btn.addEventListener("click", () => enterApp(false));
+      });
+
+      $("#homeSamplesBtn").addEventListener("click", () => enterApp(true));
+      $("#backHomeBtn").addEventListener("click", goHome);
+      $("#brandHome").addEventListener("click", goHome);
+      $("#brandHome").addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          goHome();
+        }
+      });
+
+      $("#themeToggleHome").addEventListener("click", toggleTheme);
+      $("#themeToggleApp").addEventListener("click", toggleTheme);
+
+      quoteForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = quoteText.value.trim();
+        const auth = author.value.trim();
+        if (!text || !auth) {
+          toast("Quote and author are required");
+          return;
+        }
+        upsertQuote({
+          id: editId.value || undefined,
+          text,
+          author: auth,
+          source: source.value.trim(),
+          page: page.value.trim(),
+          tags: parseTags(tagsInput.value),
+          favorite: editId.value
+            ? !!(state.quotes.find((q) => q.id === editId.value) || {}).favorite
+            : parseTags(tagsInput.value).some((t) => t.toLowerCase() === "favorites"),
+        });
+        resetForm();
+        render();
+      });
+
+      $("#resetBtn").addEventListener("click", () => setTimeout(resetForm, 0));
+      $("#cancelEditBtn").addEventListener("click", resetForm);
+
+      tagSuggestions.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-suggest-tag]");
+        if (!btn) return;
+        const tag = btn.getAttribute("data-suggest-tag");
+        const current = parseTags(tagsInput.value);
+        const idx = current.findIndex((t) => t.toLowerCase() === tag.toLowerCase());
+        if (idx >= 0) current.splice(idx, 1);
+        else current.push(tag);
+        tagsInput.value = current.join(", ");
+        renderTagSuggestions();
+      });
+
+      tagsInput.addEventListener("input", () => renderTagSuggestions());
+
+      searchInput.addEventListener("input", () => {
+        searchQuery = searchInput.value;
+        searchClear.classList.toggle("visible", !!searchQuery);
+        render();
+      });
+
+      searchClear.addEventListener("click", () => {
+        searchInput.value = "";
+        searchQuery = "";
+        searchClear.classList.remove("visible");
+        searchInput.focus();
+        render();
+      });
+
+      filterPills.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        if (btn.dataset.filter === "all") {
+          activeTag = "All";
+          favoritesOnly = false;
+        } else if (btn.dataset.filter === "favorites") {
+          favoritesOnly = !favoritesOnly;
+          if (favoritesOnly) activeTag = "All";
+        } else if (btn.dataset.filterTag) {
+          const tag = btn.dataset.filterTag;
+          if (activeTag.toLowerCase() === tag.toLowerCase() && !favoritesOnly) activeTag = "All";
+          else {
+            activeTag = tag;
+            favoritesOnly = false;
+          }
+        }
+        render();
+      });
+
+      shelvesEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-action]");
+        if (!btn) return;
+        const card = btn.closest("[data-id]");
+        if (!card) return;
+        const id = card.getAttribute("data-id");
+        const action = btn.dataset.action;
+        if (action === "favorite") toggleFavorite(id);
+        else if (action === "edit") startEdit(id);
+        else if (action === "delete") deleteQuote(id);
+        else if (action === "card") openCardModal(id);
+      });
+
+      const dataMenuBtn = $("#dataMenuBtn");
+      const dataMenu = $("#dataMenu");
+      dataMenuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = dataMenu.classList.toggle("open");
+        dataMenuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      document.addEventListener("click", () => {
+        dataMenu.classList.remove("open");
+        dataMenuBtn.setAttribute("aria-expanded", "false");
+      });
+      dataMenu.addEventListener("click", (e) => e.stopPropagation());
+
+      $("#exportJsonBtn").addEventListener("click", () => {
+        dataMenu.classList.remove("open");
+        exportJSON();
+      });
+      $("#exportMdBtn").addEventListener("click", () => {
+        dataMenu.classList.remove("open");
+        exportMarkdown();
+      });
+      $("#importBtn").addEventListener("click", () => {
+        dataMenu.classList.remove("open");
+        $("#importFile").click();
+      });
+      $("#seedBtn").addEventListener("click", () => {
+        dataMenu.classList.remove("open");
+        loadSamples(false);
+      });
+      $("#clearAllBtn").addEventListener("click", () => {
+        dataMenu.classList.remove("open");
+        clearAll();
+      });
+      $("#importFile").addEventListener("change", (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) importJSON(file);
+        e.target.value = "";
+      });
+
+      $$("[data-close-modal]").forEach((btn) => {
+        btn.addEventListener("click", () => closeModal(btn.getAttribute("data-close-modal")));
+      });
+      $$(".modal-overlay").forEach((overlay) => {
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) closeModal(overlay.id);
+        });
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          $$(".modal-overlay.open").forEach((m) => closeModal(m.id));
+          dataMenu.classList.remove("open");
+        }
+      });
+
+      $("#confirmOkBtn").addEventListener("click", () => {
+        const cb = confirmCallback;
+        confirmCallback = null;
+        closeModal("confirmModal");
+        if (typeof cb === "function") cb();
+      });
+
+      $("#gradientPicker").addEventListener("click", (e) => {
+        const sw = e.target.closest("[data-grad]");
+        if (sw) applyGradient(sw.dataset.grad);
+      });
+
+      $("#copyQuoteBtn").addEventListener("click", copyQuoteText);
+      $("#copyCardHintBtn").addEventListener("click", () => {
+        toast("Card ready — screenshot the preview above");
+      });
+
+      window.addEventListener("popstate", () => {
+        const hash = (location.hash || "#home").replace("#", "");
+        showView(hash === "app" ? "app" : "home", { push: false });
+      });
+
+      /* ---------- Boot ---------- */
+      initTheme();
+      loadState();
+
+      // Always open on homepage for a clean first impression
+      const initial =
+        location.hash === "#app" ? "app" : "home";
+      if (!location.hash) history.replaceState({ view: "home" }, "", "#home");
+      showView(initial, { push: false });
+    })();
+  </script>
+</body>
+</html>
