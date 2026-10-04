@@ -1,1 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bhavya Goel</title>
+<meta name="description" content="Portfolio of Bhavya Goel, 10-year-old coder, AI generalist, website builder, founder of Bhavy Website Solutions and BG Fame.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --blue-900:#0B1E3B;
+  --blue-800:#102A56;
+  --blue-700:#14387A;
+  --blue-600:#1E4DB7;
+  --blue-500:#2563EB;
+  --yellow:#FFC700;
+  --yellow-2:#FFD93D;
+  --yellow-pale:#FFF9DB;
+  --cream:#FFFBEB;
+  --cream-2:#FFF4C4;
+  --navy:#0F2040;
+  --text:#0F172A;
+  --muted:#64748B;
+  --line:#E2E8F0;
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;line-height:1.6}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.03em}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
 
+/* Ambient background */
+#net{position:fixed;inset:0;z-index:0;opacity:.5;pointer-events:none}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:radial-gradient(rgba(11,30,59,.06) 1px,transparent 1px);
+  background-size:30px 30px}
+nav,main,footer{position:relative;z-index:1}
+
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue-500),var(--yellow));width:0;z-index:9999;transition:width .1s}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(255,251,235,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(15,32,64,0.08)}
+.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-mark{width:40px;height:40px;background:var(--blue-900);color:var(--yellow);display:grid;place-items:center;font-weight:800;font-family:'Space Grotesk';border-radius:10px;font-size:15px;letter-spacing:-0.04em;box-shadow:3px 3px 0 var(--yellow);border:2px solid var(--blue-900);transition:.25s}
+.logo:hover .logo-mark{transform:rotate(-6deg) scale(1.06)}
+.logo-text{line-height:1.1}
+.logo-text strong{font-family:'Space Grotesk';font-size:15px;letter-spacing:0.04em;color:var(--blue-900);display:block}
+.logo-text span{font-family:'JetBrains Mono';font-size:10px;letter-spacing:0.12em;color:var(--muted);font-weight:700}
+.nav-links{display:flex;align-items:center;gap:24px;list-style:none}
+.nav-links a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;letter-spacing:0.02em;position:relative;padding:6px 0;transition:.2s}
+.nav-links a.active,.nav-links a:hover{color:var(--blue-900)}
+.nav-links a.active::after{content:"";position:absolute;left:0;bottom:-2px;width:100%;height:2px;background:var(--yellow);border-radius:999px}
+.btn-cta{background:var(--blue-900);color:white;padding:10px 20px;border-radius:999px;font-weight:700;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:2px solid var(--blue-900);transition:.2s;box-shadow:0 4px 14px rgba(11,30,59,.16)}
+.btn-cta:hover{background:var(--yellow);color:var(--blue-900);transform:translateY(-2px)}
+.hamburger{display:none;width:40px;height:40px;border-radius:10px;border:2px solid var(--blue-900);background:white;align-items:center;justify-content:center;color:var(--blue-900);cursor:pointer}
+.nav-mobile{display:none;position:absolute;top:72px;left:0;right:0;background:white;border-bottom:1px solid var(--line);padding:18px 24px;flex-direction:column;gap:10px;box-shadow:0 20px 40px rgba(0,0,0,.08)}
+.nav-mobile.open{display:flex;animation:dropIn .3s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.nav-mobile a{font-weight:600;color:var(--text);text-decoration:none;padding:8px 0;border-bottom:1px solid #F1F5F9}
+
+/* HERO */
+.hero{padding:36px 0 20px;overflow:hidden;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding:10px 0 36px}
+.status-pill{display:inline-flex;align-items:center;gap:8px;background:var(--blue-900);color:#C7D2FE;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.1em;padding:6px 14px;border-radius:999px;font-weight:700;margin-bottom:16px;animation:dropIn .5s ease}
+.status-pill b{color:var(--yellow)}
+.status-dot{width:8px;height:8px;background:#22C55E;border-radius:50%;box-shadow:0 0 0 4px rgba(34,197,94,.2);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.hero h1{font-size:48px;line-height:1.02;font-weight:800;margin-bottom:18px;color:var(--blue-900)}
+.hero h1 em{font-style:normal;background:linear-gradient(180deg, transparent 60%, var(--yellow) 60%);padding:0 4px}
+.hero p{color:var(--muted);font-size:15px;max-width:520px;line-height:1.65;margin-bottom:24px}
+.hero-btns{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.btn-yellow{background:var(--yellow);color:var(--blue-900);padding:13px 24px;border-radius:999px;font-weight:800;font-family:'Space Grotesk';text-decoration:none;display:inline-flex;align-items:center;gap:10px;border:2px solid var(--blue-900);box-shadow:5px 5px 0 var(--blue-900);transition:.15s}
+.btn-yellow:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--blue-900)}
+.btn-ghost{background:white;color:var(--blue-900);padding:13px 24px;border-radius:999px;font-weight:800;font-family:'Space Grotesk';text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:2px solid var(--blue-900);transition:.15s}
+.btn-ghost:hover{background:var(--blue-900);color:white;transform:translateY(-2px)}
+.stats{display:flex;gap:24px;border-top:1px solid rgba(15,32,64,.08);padding-top:18px;max-width:520px}
+.stat b{font-size:30px;font-weight:800;color:var(--blue-900);font-family:'Space Grotesk';line-height:1}
+.stat span{display:block;font-size:10px;letter-spacing:0.12em;font-weight:800;color:var(--muted);margin-top:4px}
+.hero-visual{position:relative;display:flex;justify-content:center;align-items:center}
+.photo-wrap{position:relative;width:100%;max-width:390px;aspect-ratio:4/4.7;background:white;border-radius:28px;overflow:hidden;border:3px solid var(--blue-900);box-shadow:12px 12px 0 var(--yellow), 0 20px 40px rgba(11,30,59,.18);transform:rotate(1deg);animation:heroFloat 6s ease-in-out infinite}
+.photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.photo-wrap:hover img{transform:scale(1.05)}
+@keyframes heroFloat{0%,100%{transform:rotate(1deg) translateY(0)}50%{transform:rotate(1deg) translateY(-10px)}}
+.photo-cap{position:absolute;left:0;right:0;bottom:0;background:rgba(11,30,59,.88);color:white;padding:10px 16px;display:flex;justify-content:space-between;font-family:'JetBrains Mono';font-size:10.5px;font-weight:700}
+.photo-cap b{color:var(--yellow)}
+.float{position:absolute;background:white;border:2px solid var(--blue-900);padding:8px 12px;border-radius:12px;display:flex;align-items:center;gap:8px;box-shadow:4px 4px 0 var(--blue-900);font-weight:800;font-family:'Space Grotesk';font-size:12px;color:var(--blue-900);animation:floatY 3.5s ease-in-out infinite;z-index:2}
+.float.f1{top:12px;left:-14px}
+.float.f2{bottom:16px;right:-8px;animation-delay:1.7s}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* TERMINAL */
+.terminal-section{background:var(--navy);padding:26px 0 0;position:relative;overflow:hidden}
+.term{max-width:760px;margin:0 auto;background:#0B1426;border:1.5px solid rgba(255,255,255,.12);border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.4);animation:dropIn .6s ease}
+.term-top{height:42px;display:flex;align-items:center;gap:8px;padding:0 16px;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.dot{width:11px;height:11px;border-radius:50%}
+.term-title{margin-left:8px;color:#94A3B8;font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.04em}
+.term-body{padding:20px 22px;font-family:'JetBrains Mono';font-size:13px;line-height:1.75;color:#CBD5E1}
+.term-body .prompt{color:#38BDF8;font-weight:700}
+.term-body .cmd{color:white}
+.term-body .out{color:#94A3B8;padding-left:14px;border-left:2px solid #334155}
+.type-line{display:flex;gap:8px;align-items:center}
+.cursor{width:8px;height:16px;background:var(--yellow);display:inline-block;animation:blink 1s steps(1) infinite;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.pill-brand{display:inline-flex;align-items:center;gap:6px;background:var(--yellow);color:var(--blue-900);padding:3px 8px;border-radius:999px;font-weight:800;font-size:11px;margin-left:auto;border:1px solid var(--blue-900)}
+.marquee{margin-top:18px;background:var(--yellow);border-top:3px solid var(--blue-900);border-bottom:3px solid var(--blue-900);padding:10px 0;overflow:hidden;white-space:nowrap}
+.marquee-track{display:inline-flex;animation:marq 20s linear infinite;gap:24px;align-items:center;font-family:'Space Grotesk';font-weight:800;letter-spacing:0.12em;font-size:12px;color:var(--blue-900)}
+@keyframes marq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SECTIONS */
+.sec{padding:68px 0}
+.sec-cream{background:var(--cream)}
+.sec-white{background:white}
+.sec-dark{background:var(--blue-900);color:white}
+.eye{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.14em;font-weight:700;color:var(--blue-500);display:inline-flex;align-items:center;gap:6px;margin-bottom:8px}
+.eye::before{content:"//"}
+.sec-dark .eye{color:var(--yellow)}
+h2.sec-title{font-size:38px;font-weight:800;line-height:1;margin-bottom:8px;color:var(--blue-900)}
+.sec-dark h2.sec-title{color:white}
+.hl{background:linear-gradient(180deg,transparent 60%, var(--yellow) 60%);padding:0 4px}
+.sec-desc{color:var(--muted);max-width:620px;font-size:14.5px;line-height:1.65;margin-bottom:16px}
+.sec-dark .sec-desc{color:#B6C2DE}
+.sec-bar{width:60px;height:4px;background:var(--yellow);border-radius:999px;margin-bottom:24px;animation:growBar 1s ease .3s both}
+@keyframes growBar{from{width:0}to{width:60px}}
+.sec-bar.blue{background:var(--blue-500)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:start}
+.about-card{background:#FFFBEB;border:2px solid var(--blue-900);border-radius:20px;padding:24px;box-shadow:6px 6px 0 var(--blue-900);transition:.25s}
+.about-card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--blue-900)}
+.about-card p{color:#334155;font-size:14px;line-height:1.75;margin-bottom:12px}
+.about-card p:last-child{margin-bottom:0}
+.about-card p b{color:var(--blue-900)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag{padding:6px 12px;border-radius:999px;font-weight:800;font-size:11px;letter-spacing:0.04em;border:1.5px solid var(--blue-900);background:var(--yellow);color:var(--blue-900);font-family:'Space Grotesk';transition:.2s}
+.tag:hover{transform:translateY(-2px) rotate(-1deg)}
+.tag.blue{background:var(--blue-900);color:white}
+.tag.white{background:white;color:var(--blue-900)}
+
+/* BRAND */
+.brand-card{background:linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 100%);border-radius:24px;padding:28px;border:2px solid var(--blue-900);box-shadow:10px 10px 0 var(--yellow);color:white;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;position:relative;overflow:hidden}
+.brand-card::before{content:"";position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,199,0,.15),transparent 70%);animation:glowPulse 5s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.25);opacity:1}}
+.brand-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.brand-logo{width:46px;height:46px;border-radius:12px;background:white;color:var(--blue-900);display:grid;place-items:center;font-family:'Space Grotesk';font-weight:900;font-size:20px;border:2px solid var(--yellow)}
+.brand-name{font-family:'Space Grotesk';font-weight:800;font-size:22px}
+.brand-pill{font-size:10px;letter-spacing:0.1em;font-weight:800;background:var(--yellow);color:var(--blue-900);padding:4px 8px;border-radius:999px;margin-left:auto}
+.brand-desc{color:#C7D2FE;font-size:13.5px;line-height:1.7;margin:8px 0 16px}
+.brand-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.brand-list li{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;color:white;transition:.2s}
+.brand-list li:hover{transform:translateX(6px)}
+.brand-list li i{width:26px;height:26px;background:var(--yellow);color:var(--blue-900);border-radius:50%;display:grid;place-items:center;font-size:11px;flex-shrink:0}
+.brand-side{background:white;border-radius:18px;padding:20px;color:var(--blue-900);border:2px solid var(--blue-900);display:flex;flex-direction:column;justify-content:space-between}
+.brand-side small{font-size:10px;letter-spacing:0.12em;font-weight:800;color:var(--muted)}
+.brand-email{font-family:'JetBrains Mono';font-weight:800;font-size:12px;margin:6px 0 12px;color:var(--blue-700);word-break:break-all}
+
+/* JOURNEY */
+.timeline{position:relative;padding-left:32px;border-left:3px solid var(--yellow);margin-left:12px;display:flex;flex-direction:column;gap:16px}
+.j-item{position:relative;background:white;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 4px 14px rgba(15,32,64,.05);transition:.25s}
+.j-item:hover{transform:translateX(8px);box-shadow:0 8px 24px rgba(15,32,64,.1);border-color:var(--blue-900)}
+.j-item::before{content:"";position:absolute;left:-44px;top:20px;width:14px;height:14px;background:var(--yellow);border:3px solid var(--blue-900);border-radius:50%;box-shadow:0 0 0 3px white;transition:.25s}
+.j-item:hover::before{transform:scale(1.3)}
+.j-item.current{border:2px solid var(--blue-900);background:linear-gradient(135deg, #EFF6FF, #FFFBEB)}
+.j-item.current::before{animation:pulse 1.8s infinite}
+.j-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px}
+.j-ver{font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.08em;font-weight:700;color:var(--blue-500);background:#EFF6FF;padding:4px 8px;border-radius:999px;border:1px solid #DBEAFE}
+.j-title{font-weight:800;font-family:'Space Grotesk';font-size:17px;color:var(--blue-900)}
+.j-desc{color:var(--muted);font-size:13px;line-height:1.6}
+.badge-current{font-size:10px;letter-spacing:0.1em;font-weight:800;background:var(--blue-900);color:var(--yellow);padding:4px 8px;border-radius:999px}
+
+/* CERTS */
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.cert-card{background:white;border-radius:16px;overflow:hidden;border:2px solid var(--blue-900);box-shadow:5px 5px 0 var(--blue-900);cursor:pointer;transition:.2s;display:flex;flex-direction:column}
+.cert-card:hover{transform:translate(-3px,-3px) rotate(-.5deg);box-shadow:8px 8px 0 var(--yellow)}
+.cert-img-box{height:130px;background:var(--cream-2);position:relative;overflow:hidden;border-bottom:2px solid var(--blue-900)}
+.cert-img-box img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s ease}
+.cert-card:hover .cert-img-box img{transform:scale(1.08)}
+.cert-zoom{position:absolute;right:8px;bottom:8px;width:28px;height:28px;border-radius:8px;background:var(--blue-900);color:var(--yellow);display:grid;place-items:center;font-size:11px;opacity:0;transition:.2s}
+.cert-card:hover .cert-zoom{opacity:1}
+.cert-body{padding:16px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.cert-issuer{font-size:10px;letter-spacing:0.1em;font-weight:800;color:var(--muted);margin-bottom:4px}
+.cert-name{font-family:'Space Grotesk';font-weight:800;font-size:16px;color:var(--blue-900);line-height:1.2;margin-bottom:8px}
+.cert-desc{color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:12px}
+.verified{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;color:#16A34A;background:#DCFCE7;padding:4px 8px;border-radius:999px;border:1px solid #BBF7D0;align-self:flex-start}
+
+/* CHANNELS */
+.channels-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.ch-card{background:white;border:2px solid var(--blue-900);border-radius:18px;padding:22px;box-shadow:6px 6px 0 var(--yellow);display:flex;flex-direction:column;gap:12px;transition:.25s}
+.ch-card:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--yellow)}
+.ch-head{display:flex;align-items:center;gap:12px}
+.ch-avatar{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--blue-900),var(--blue-500));display:grid;place-items:center;color:var(--yellow);font-size:22px;border:2px solid var(--blue-900);flex-shrink:0;transition:.3s}
+.ch-card:hover .ch-avatar{transform:rotate(-8deg) scale(1.1)}
+.ch-name{font-weight:800;font-family:'Space Grotesk';font-size:18px;color:var(--blue-900)}
+.ch-cat{font-size:10px;letter-spacing:0.12em;font-weight:800;color:var(--blue-500);background:#EFF6FF;padding:3px 6px;border-radius:999px;display:inline-block;margin-top:4px}
+.ch-desc{color:var(--muted);font-size:13px;line-height:1.6}
+.ch-handle{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--blue-700);background:var(--yellow-pale);padding:5px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;align-self:flex-start}
+.ch-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;gap:10px;flex-wrap:wrap}
+
+/* PROJECTS (now clickable links) */
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+a.proj-card{background:white;border:2px solid var(--blue-900);border-radius:16px;padding:16px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;transition:.18s;box-shadow:4px 4px 0 rgba(15,32,64,.08);cursor:pointer;text-decoration:none;color:inherit;min-height:190px}
+a.proj-card:hover{transform:translate(-2px,-2px) rotate(-.4deg);box-shadow:7px 7px 0 var(--blue-900)}
+.proj-tag{font-size:10px;letter-spacing:0.08em;font-weight:800;color:var(--blue-500);background:#EFF6FF;padding:4px 8px;border-radius:999px;align-self:flex-start;border:1px solid #DBEAFE;text-transform:uppercase}
+.proj-name{font-family:'Space Grotesk';font-weight:800;font-size:16px;color:var(--blue-900)}
+.proj-desc{color:var(--muted);font-size:12.5px;line-height:1.6;flex:1}
+.proj-link{font-weight:800;font-size:11px;color:var(--blue-700);display:inline-flex;align-items:center;gap:4px;transition:.2s}
+a.proj-card:hover .proj-link{gap:8px;color:var(--blue-900)}
+.proj-num{position:absolute;right:10px;bottom:4px;font-family:'Space Grotesk';font-weight:800;font-size:32px;color:rgba(15,32,64,.05);pointer-events:none}
+a.proj-card:nth-child(3n+1){border-top:4px solid var(--yellow)}
+a.proj-card:nth-child(3n+2){border-top:4px solid var(--blue-500)}
+a.proj-card:nth-child(3n+3){border-top:4px solid var(--blue-900)}
+
+/* CONSULT */
+.consult{background:linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 100%);color:white;padding:56px 0;text-align:center;border-top:4px solid var(--yellow);border-bottom:4px solid var(--yellow);position:relative;overflow:hidden}
+.consult::before{content:"";position:absolute;left:-80px;top:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(255,199,0,.12),transparent 70%);animation:glowPulse 6s ease-in-out infinite}
+.consult h2{font-size:42px;font-weight:800;margin-bottom:12px}
+.consult p{color:#C7D2FE;max-width:540px;margin:0 auto 20px;font-size:14.5px}
+.consult-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+
+/* FOOTER */
+footer{background:var(--blue-900);color:#C7D2FE;padding:32px 0 20px;border-top:4px solid var(--yellow)}
+.foot-top{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.foot-brand{display:flex;gap:12px;align-items:center}
+.foot-logo{width:38px;height:38px;background:var(--yellow);color:var(--blue-900);display:grid;place-items:center;font-weight:800;font-family:'Space Grotesk';border-radius:10px;border:2px solid white;transition:.3s}
+.foot-logo:hover{transform:rotate(8deg)}
+.foot-name{font-family:'Space Grotesk';font-weight:800;color:white;font-size:15px}
+.foot-line{font-size:10px;letter-spacing:0.1em;font-weight:700;color:#94A3B8}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap}
+.foot-links a{color:#C7D2FE;text-decoration:none;font-weight:600;font-size:12px;transition:.2s}
+.foot-links a:hover{color:var(--yellow)}
+.foot-bottom{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:14px;font-family:'JetBrains Mono';font-size:11px;color:#94A3B8}
+.socials{display:flex;gap:8px}
+.socials a{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:white;text-decoration:none;border:1px solid rgba(255,255,255,.12);transition:.2s}
+.socials a:hover{background:var(--yellow);color:var(--blue-900);transform:translateY(-3px)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(11,30,59,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;z-index:90}
+.modal-overlay.open{display:flex}
+.modal{width:min(600px,100%);background:white;border-radius:20px;overflow:hidden;border:2px solid var(--blue-900);box-shadow:12px 12px 0 var(--blue-900);max-height:90vh;overflow-y:auto;animation:modalIn .35s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg, var(--blue-900), var(--blue-700));color:white}
+.modal-head h3{font-size:18px}
+.modal-close{width:32px;height:32px;border-radius:999px;background:var(--yellow);border:2px solid var(--blue-900);color:var(--blue-900);display:grid;place-items:center;cursor:pointer;font-weight:800;transition:.2s}
+.modal-close:hover{transform:rotate(90deg)}
+.modal-body{padding:20px}
+.modal-body img{width:100%;border-radius:12px;border:2px solid var(--line);display:block}
+.modal-body p{color:#334155;font-size:13.5px;margin-top:14px;line-height:1.7}
+
+.toast-wrap{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:8px;z-index:99;pointer-events:none}
+.toast{background:var(--blue-900);color:white;padding:12px 16px;border-radius:12px;font-weight:700;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);border:1.5px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:8px;border-left:4px solid var(--yellow);animation:toastIn .35s ease}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+
+@media(max-width:980px){
+  .nav-links{display:none}
+  .hamburger{display:inline-flex}
+  .hero-grid{grid-template-columns:1fr;gap:24px}
+  .about-grid{grid-template-columns:1fr}
+  .brand-card{grid-template-columns:1fr}
+  .channels-grid{grid-template-columns:1fr}
+  .projects-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .hero h1{font-size:36px}
+  .projects-grid{grid-template-columns:1fr}
+  .consult h2{font-size:30px}
+  .stats{flex-wrap:wrap;gap:18px}
+}
+</style>
+</head>
+<body>
+<canvas id="net"></canvas>
+<div id="progress"></div>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#home" class="logo">
+      <div class="logo-mark">BG</div>
+      <div class="logo-text">
+        <strong>BHAVYA.GOEL</strong>
+        <span>AI GENERALIST</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#brands">Brand</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#journey">Journey</a></li>
+      <li><a href="#certs">Certs</a></li>
+      <li><a href="#channels">Channels</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="#projects" class="btn-cta">Explore Projects <i class="fa-solid fa-arrow-right"></i></a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="#home">Home</a><a href="#about">About</a><a href="#brands">Brand</a>
+    <a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#certs">Certs</a><a href="#channels">Channels</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="status-pill"><span class="status-dot"></span> STATUS: <b>BUILDING &amp; TEACHING</b></div>
+        <h1>I build websites, <em>AI tools,</em> and companies — before bedtime.</h1>
+        <p>10 years old. Started Bhavy Website Solutions, founded BG Fame for practical AI education, and now exploring autonomous agent workflows. Self-taught generalist shipping real, working products.</p>
+        <div class="hero-btns">
+          <a href="#brands" class="btn-yellow">Explore My Brand <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="#projects" class="btn-ghost">View Projects</a>
+        </div>
+        <div class="stats">
+          <div class="stat"><b class="counter" data-target="1">0</b><span>BRAND FOUNDED</span></div>
+          <div class="stat"><b class="counter" data-target="4">0</b><span>VERIFIED CERTS</span></div>
+          <div class="stat"><b class="counter" data-target="18">0</b><span>PROJECTS BUILT</span></div>
+          <div class="stat"><b class="counter" data-target="10">0</b><span>YEARS OLD</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="photo-wrap">
+          <img src="https://z-cdn-media.chatglm.cn/files/7f23b796-9ed3-4b0f-b5c9-d424925a0175.jpeg?auth_key=1891027328-be1fdbb1c1244c6c8670d3cd426cbbe7-0-9bcae445f4dcb3604b5f27b2d794d03d" alt="Bhavya Goel">
+          <div class="photo-cap"><span><b>BHAVYA GOEL</b> · AGE 10</span><span>NEW DELHI, INDIA</span></div>
+        </div>
+        <div class="float f1"><i class="fa-solid fa-bolt" style="color:var(--blue-500)"></i> AI Generalist</div>
+        <div class="float f2"><i class="fa-solid fa-crown" style="color:var(--blue-900)"></i> BG Fame Founder</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL -->
+  <section class="terminal-section">
+    <div class="container" style="padding-bottom:6px">
+      <div class="term">
+        <div class="term-top">
+          <span class="dot" style="background:#EF4444"></span>
+          <span class="dot" style="background:#F59E0B"></span>
+          <span class="dot" style="background:#22C55E"></span>
+          <span class="term-title">zsh — bhavya@goel</span>
+        </div>
+        <div class="term-body">
+          <div><span class="prompt">bhavya@goel $</span> <span class="cmd">whoami</span></div>
+          <div class="out">Bhavya Goel (Age: 10)</div>
+          <div style="margin-top:8px"><span class="prompt">bhavya@goel $</span> <span class="cmd">cat role.txt</span></div>
+          <div class="out">10-year-old coder · founder of BG Fame · AI builder — India</div>
+          <div style="margin-top:8px"><span class="prompt">bhavya@goel $</span> <span class="cmd">cat brand.txt</span></div>
+          <div class="out">BG Fame = Specialized AI Workshops, Masterclasses, and Practical AI Education.</div>
+          <div style="margin-top:10px" class="type-line">
+            <span class="prompt">bhavya@goel $</span> <span class="cmd" id="typeTarget"></span><span class="cursor"></span>
+            <span class="pill-brand"><i class="fa-solid fa-graduation-cap"></i> BG Fame</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="marquee">
+      <div class="marquee-track">
+        <span>Claude ✦</span><span>Antigravity ✦</span><span>ChatGPT ✦</span><span>Gemini ✦</span><span>Bhavy Website Solutions ✦</span><span>BG Fame Education ✦</span><span>AI Generalist ✦</span><span>10 Years Old ✦</span>
+        <span>Claude ✦</span><span>Antigravity ✦</span><span>ChatGPT ✦</span><span>Gemini ✦</span><span>Bhavy Website Solutions ✦</span><span>BG Fame Education ✦</span><span>AI Generalist ✦</span><span>10 Years Old ✦</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="sec sec-white">
+    <div class="container">
+      <div class="eye reveal">THE PERSON BEHIND THE BRAND</div>
+      <h2 class="sec-title reveal">About <span class="hl">Bhavya</span></h2>
+      <div class="sec-bar blue reveal"></div>
+      <div class="about-grid">
+        <div class="about-card reveal d1">
+          <p>I'm Bhavya Goel — a 10-year-old coder, AI generalist, and tech enthusiast from India. I taught myself to code websites and master advanced AI models like Claude, ChatGPT, and Gemini.</p>
+          <p>My builder journey began with starting <b>Bhavy Website Solutions</b>, where I designed and delivered custom websites for clients. While running it, I founded my brand <b>BG Fame</b> for AI education — and after completing my client deliverables, I shut down Bhavy Website Solutions to focus fully on generative AI.</p>
+          <p>Through <b>BG Fame</b>, I actively teach other people how to effectively use AI tools through workshops, curated frameworks, and masterclasses. (BG Fame is dedicated strictly to AI education &amp; workshops; it does not build AI tools.)</p>
+          <div class="tags">
+            <span class="tag">AI Generalist</span>
+            <span class="tag blue">BG Fame Founder</span>
+            <span class="tag white">AI Educator</span>
+            <span class="tag white">Full-Stack Builder</span>
+          </div>
+        </div>
+        <div class="reveal d2" style="background:linear-gradient(135deg,var(--blue-900),var(--blue-700));border-radius:20px;border:2px solid var(--blue-900);padding:26px;color:white;box-shadow:8px 8px 0 var(--yellow);display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <div style="font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--yellow);margin-bottom:8px">PHILOSOPHY &amp; FOCUS</div>
+            <h3 style="font-size:22px;line-height:1.2;margin-bottom:12px">"Learn by building, master by teaching."</h3>
+            <p style="color:#C7D2FE;font-size:13px;line-height:1.6">Everything I learn in AI, coding, and web development gets packaged directly into actionable lessons and workshops through BG Fame.</p>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,0.08);border-radius:14px;border:1px solid rgba(255,255,255,0.12);margin-top:16px;display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;background:var(--yellow);color:var(--blue-900);border-radius:10px;display:grid;place-items:center;font-weight:800"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div style="font-size:12px"><b style="color:white;display:block">BG Fame Mission</b><span style="color:#C7D2FE">Accessible, hands-on AI education for all ages.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRANDS -->
+  <section id="brands" class="sec sec-cream">
+    <div class="container">
+      <div class="eye reveal">PROFESSIONAL ECOSYSTEM</div>
+      <h2 class="sec-title reveal">My Brand: <span class="hl">BG Fame</span></h2>
+      <p class="sec-desc reveal">Dedicated strictly to AI education, hands-on workshops, and training builders — founded and led by Bhavya Goel.</p>
+      <div class="sec-bar reveal"></div>
+      <div class="brand-card reveal d1">
+        <div>
+          <div class="brand-top">
+            <div class="brand-logo">BG</div>
+            <div>
+              <div class="brand-name">BG Fame</div>
+              <div style="font-size:10px;letter-spacing:0.1em;opacity:.8;font-weight:700">AI EDUCATION &amp; WORKSHOPS · EST. 2025 · ACTIVE</div>
+            </div>
+            <span class="brand-pill">EDUCATION CORE</span>
+          </div>
+          <div class="brand-desc">AI Workshops, Masterclasses, and Practical Education — helping students, creators, and professionals understand how to harness AI models effectively. (BG Fame is an educational and workshop brand; it does not make AI tools.)</div>
+          <ul class="brand-list">
+            <li><i class="fa-solid fa-chalkboard-user"></i> Specialized Hands-on AI Workshops</li>
+            <li><i class="fa-solid fa-graduation-cap"></i> AI Generalist Training &amp; Cohorts</li>
+            <li><i class="fa-solid fa-lightbulb"></i> Practical AI Workflows &amp; Masterclasses</li>
+          </ul>
+        </div>
+        <div class="brand-side">
+          <div>
+            <small>WORKSHOP INQUIRIES</small>
+            <div style="font-weight:800;font-size:14px;margin:4px 0;color:var(--blue-900)">Connect with BG Fame</div>
+            <div class="brand-email">bgfameai7@gmail.com</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:700">
+              <span style="width:8px;height:8px;background:#22C55E;border-radius:50%;display:inline-block"></span>
+              Active &amp; accepting workshop bookings
+            </div>
+          </div>
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+            <a href="mailto:bgfameai7@gmail.com?subject=Inquiry for BG Fame AI Workshop" class="btn-yellow" style="width:100%;justify-content:center;font-size:12px;padding:10px"><i class="fa-solid fa-paper-plane"></i> Email for Workshops</a>
+            <button onclick="navigator.clipboard.writeText('bgfameai7@gmail.com');showToast('Brand email copied!');" style="width:100%;padding:8px;border-radius:999px;border:1px solid var(--line);background:#F8FAFC;font-size:11px;font-weight:700;color:var(--blue-900);cursor:pointer;transition:.2s">Copy Brand Email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY (fixed order) -->
+  <section id="journey" class="sec sec-white">
+    <div class="container">
+      <div class="eye reveal">EVOLUTION &amp; VERSIONS</div>
+      <h2 class="sec-title reveal">My AI <span class="hl">Journey</span></h2>
+      <p class="sec-desc reveal">Every milestone in order: from first lines of code and client web work, to founding BG Fame and autonomous AI.</p>
+      <div class="sec-bar blue reveal"></div>
+      <div class="timeline">
+        <div class="j-item reveal">
+          <div class="j-head"><span class="j-ver">v1.0 · Origin</span></div>
+          <div class="j-title">First Lines of Code</div>
+          <div class="j-desc">Started teaching myself HTML, CSS, and web layouts at age 9, driven by curiosity to see code come to life in the browser.</div>
+        </div>
+        <div class="j-item reveal d1">
+          <div class="j-head"><span class="j-ver">v1.5 · Agency</span></div>
+          <div class="j-title">Started Bhavy Website Solutions</div>
+          <div class="j-desc">Launched Bhavy Website Solutions as my first digital agency, designing and delivering custom websites and web solutions for clients.</div>
+        </div>
+        <div class="j-item reveal d1">
+          <div class="j-head"><span class="j-ver">v2.0 · Founded</span></div>
+          <div class="j-title">Founded BG Fame</div>
+          <div class="j-desc">Established BG Fame as a specialized brand for AI education, masterclasses, and hands-on workshops to train other builders (BG Fame focuses on education and does not build AI tools).</div>
+        </div>
+        <div class="j-item reveal d1">
+          <div class="j-head"><span class="j-ver">v2.5 · Concluded</span></div>
+          <div class="j-title">Shutdown Bhavy Website Solutions</div>
+          <div class="j-desc">Closed down Bhavy Website Solutions after completing client website deliverables to transition my focus fully toward generative AI and education.</div>
+        </div>
+        <div class="j-item reveal d2">
+          <div class="j-head"><span class="j-ver">v3.0 · Certified</span></div>
+          <div class="j-title">Earning Industry Credentials</div>
+          <div class="j-desc">Achieved verified honors including the Generative AI Mastermind, Skill India Grade A Bootcamp, and Be10X AI Tools certification.</div>
+        </div>
+        <div class="j-item current reveal d2">
+          <div class="j-head"><span class="j-ver">v4.0 · Frontier</span> <span class="badge-current">CURRENT FOCUS</span></div>
+          <div class="j-title">Autonomous Agent Architectures</div>
+          <div class="j-desc">Pioneering multi-agent collaborative workflows, intelligent local developer environments, and full-stack interactive web tools.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTS -->
+  <section id="certs" class="sec sec-dark">
+    <div class="container">
+      <div class="eye reveal">TECHNICAL PROOFS</div>
+      <h2 class="sec-title reveal">Verified <span style="color:var(--yellow)">Certifications</span></h2>
+      <p class="sec-desc reveal">Real, verified qualifications earned through rigorous AI bootcamps and intensive technical masterminds. Click any card to view the full certificate.</p>
+      <div class="sec-bar reveal"></div>
+      <div class="certs-grid" id="certsGrid"></div>
+    </div>
+  </section>
+
+  <!-- CHANNELS -->
+  <section id="channels" class="sec sec-cream">
+    <div class="container">
+      <div class="eye reveal">ON CAMERA</div>
+      <h2 class="sec-title reveal">Creator <span class="hl">Channels</span></h2>
+      <p class="sec-desc reveal">Tech tutorials, developer setups, and everyday travel vlogs from a 10-year-old's perspective.</p>
+      <div class="sec-bar reveal"></div>
+      <div class="channels-grid">
+        <div class="ch-card reveal d1">
+          <div class="ch-head">
+            <div class="ch-avatar"><i class="fa-brands fa-youtube"></i></div>
+            <div>
+              <div class="ch-name">Bhavya Goel</div>
+              <div class="ch-cat">TECH &amp; PROGRAMMING</div>
+            </div>
+          </div>
+          <div class="ch-desc">Full developer setup guides, deep prompt workflow walkthroughs, coding experiments, and practical tips on building real web applications.</div>
+          <div class="ch-foot">
+            <div class="ch-handle"><i class="fa-brands fa-youtube" style="color:red"></i> @bhavyagoel2015</div>
+            <a href="https://www.youtube.com/@bhavyagoel2015" target="_blank" rel="noopener noreferrer" class="btn-cta"><i class="fa-solid fa-bell"></i> Subscribe</a>
+          </div>
+        </div>
+        <div class="ch-card reveal d2">
+          <div class="ch-head">
+            <div class="ch-avatar" style="background:linear-gradient(135deg,var(--yellow),#F59E0B);color:var(--blue-900)"><i class="fa-solid fa-plane-departure"></i></div>
+            <div>
+              <div class="ch-name">Fun with Bhavya Goel</div>
+              <div class="ch-cat">TRAVEL &amp; EXPERIENCES</div>
+            </div>
+          </div>
+          <div class="ch-desc">Family adventures, exploring historic places, science centers, and everyday moments caught on camera from a kid builder's perspective.</div>
+          <div class="ch-foot">
+            <div class="ch-handle"><i class="fa-brands fa-youtube" style="color:red"></i> @funwithbhavyag</div>
+            <a href="https://www.youtube.com/@funwithbhavyag" target="_blank" rel="noopener noreferrer" class="btn-cta" style="background:var(--yellow);color:var(--blue-900)"><i class="fa-solid fa-play"></i> Watch Vlogs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS (each card opens its own page) -->
+  <section id="projects" class="sec sec-white">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+        <div>
+          <div class="eye reveal">BHAVYA'S PERSONAL WORK</div>
+          <h2 class="sec-title reveal">Bhavya's <span class="hl">Projects</span></h2>
+        </div>
+        <span style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--muted)" class="reveal">18 Software Prototypes</span>
+      </div>
+      <div class="sec-bar blue reveal"></div>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+  </section>
+
+  <!-- CONSULT -->
+  <section class="consult">
+    <div class="container">
+      <div class="eye reveal" style="color:var(--yellow);justify-content:center;display:flex">FUTURE COLLABORATION</div>
+      <h2 class="reveal">Let's Build Something <span style="color:var(--yellow)">Extraordinary</span></h2>
+      <p class="reveal d1">Explore my personal software prototypes, developer experiments, or reach out directly for BG Fame workshops.</p>
+      <div class="consult-btns reveal d2">
+        <a href="#projects" class="btn-yellow">Explore All 18 Projects <i class="fa-solid fa-layer-group"></i></a>
+        <a href="mailto:bgfameai7@gmail.com?subject=Workshop Inquiry - BG Fame" class="btn-ghost">Email BG Fame <i class="fa-solid fa-envelope"></i></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="foot-logo">BG</div>
+        <div>
+          <div class="foot-name">Bhavya Goel</div>
+          <div class="foot-line">AI GENERALIST · FOUNDER OF BG FAME · CONTENT CREATOR</div>
+        </div>
+      </div>
+      <div class="socials">
+        <a href="https://www.youtube.com/@bhavyagoel2015" target="_blank" rel="noopener noreferrer" aria-label="Bhavya Goel YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://www.youtube.com/@funwithbhavyag" target="_blank" rel="noopener noreferrer" aria-label="Fun with Bhavya Goel YouTube"><i class="fa-solid fa-plane-departure"></i></a>
+        <a href="mailto:bgfameai7@gmail.com" aria-label="Email BG Fame"><i class="fa-solid fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-links">
+        <a href="#home">Home</a><a href="#about">About</a><a href="#brands">Brand</a>
+        <a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#certs">Certs</a><a href="#channels">Channels</a>
+      </div>
+      <div>© 2026 Bhavya Goel · Built with passion and AI curiosity.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL (certificates) -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h3 id="modalTitle">Details</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ---------- Ambient particle network ---------- */
+const cv = document.getElementById('net'), cx = cv.getContext('2d');
+let W, H, nodes = [];
+function resize(){
+  W = cv.width = innerWidth; H = cv.height = innerHeight;
+  const count = Math.min(60, Math.floor(W * H / 26000));
+  nodes = Array.from({length:count}, () => ({
+    x: Math.random()*W, y: Math.random()*H,
+    vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+    r: Math.random()*1.5 + .6
+  }));
+}
+resize(); addEventListener('resize', resize);
+function drawNet(){
+  cx.clearRect(0,0,W,H);
+  for(const n of nodes){
+    n.x += n.vx; n.y += n.vy;
+    if(n.x < 0 || n.x > W) n.vx *= -1;
+    if(n.y < 0 || n.y > H) n.vy *= -1;
+    cx.beginPath(); cx.arc(n.x, n.y, n.r, 0, 6.283);
+    cx.fillStyle = 'rgba(11,30,59,.18)'; cx.fill();
+  }
+  for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+    const a = nodes[i], b = nodes[j], dx = a.x-b.x, dy = a.y-b.y, d = dx*dx + dy*dy;
+    if(d < 15000){
+      cx.beginPath(); cx.moveTo(a.x,a.y); cx.lineTo(b.x,b.y);
+      cx.strokeStyle = 'rgba(37,99,235,' + (.1 * (1 - d/15000)) + ')';
+      cx.lineWidth = .6; cx.stroke();
+    }
+  }
+  requestAnimationFrame(drawNet);
+}
+drawNet();
+
+/* ---------- Nav ---------- */
+const ham = document.getElementById('hamburger'), mob = document.getElementById('navMobile');
+ham.addEventListener('click', ()=> mob.classList.toggle('open'));
+document.querySelectorAll('#navMobile a').forEach(a => a.addEventListener('click', ()=> mob.classList.remove('open')));
+addEventListener('scroll', ()=>{
+  document.getElementById('progress').style.width =
+    (scrollY / (document.body.scrollHeight - innerHeight) * 100) + '%';
+});
+
+/* ---------- Scroll reveal ---------- */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ---------- Animated counters ---------- */
+const cio = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.target, dur = 1400, t0 = performance.now();
+    (function tick(now){
+      const p = Math.min((now - t0)/dur, 1);
+      el.textContent = Math.floor(target * (1 - Math.pow(1-p, 3)));
+      if(p < 1) requestAnimationFrame(tick); else el.textContent = target;
+    })(t0);
+    cio.unobserve(el);
+  });
+}, {threshold:.5});
+document.querySelectorAll('.counter').forEach(el => cio.observe(el));
+
+/* ---------- Terminal typing ---------- */
+const cmd = './launch --brand bg-fame';
+let cIdx = 0, fwd = true;
+const target = document.getElementById('typeTarget');
+function typeLoop(){
+  if(fwd){
+    if(cIdx <= cmd.length){ target.textContent = cmd.slice(0, ++cIdx); }
+    else { fwd = false; setTimeout(typeLoop, 1400); return; }
+  } else {
+    if(cIdx > 0){ target.textContent = cmd.slice(0, --cIdx); }
+    else { fwd = true; }
+  }
+  setTimeout(typeLoop, 90);
+}
+typeLoop();
+
+/* ---------- Certifications (real photos) ---------- */
+const certs = [
+  { issuer:"OUTSKILL · VAIBHAV SISINTY", name:"Generative AI Mastermind",
+    img:"https://z-cdn-media.chatglm.cn/files/ab90b5e7-e233-4f9f-9c30-b8fe037abf22.jpeg?auth_key=1891092989-2f5c8fbdaf6b4f99828b1d5be9167df9-0-769ce002cc28042b7d62adb58a40fa9b",
+    desc:"Intensive mastermind program covering prompt engineering architecture, autonomous multi-agent pipelines, and production AI application deployment." },
+  { issuer:"GROWTH SCHOOL × SKILL INDIA / NSDC · MAY 2026", name:"Generative AI Bootcamp — Grade A",
+    img:"https://z-cdn-media.chatglm.cn/files/44191c87-6fc9-450a-b6a1-4847f55ca301.jpeg?auth_key=1891027328-16bd18daf030405c811fc5ba1230635b-0-6b896769732e3474776385141e8e0865",
+    desc:"National-level credential earned with highest distinction (Grade A) for live AI application engineering, workflow automation, and evaluation benchmarks." },
+  { issuer:"BE10X · ADITYA GOENKA & ADITYA KACHAVE · JUN 2026", name:"AI Tools & ChatGPT Workshop",
+    img:"https://z-cdn-media.chatglm.cn/files/e7a3414b-2968-4500-b174-fd7b2bbbbee1.jpeg?auth_key=1891027328-1261ea48718a40dd9fb0c80016d7da7b-0-2bdde06f7d0b5471dcfc541df72266b6",
+    desc:"Hands-on immersion in advanced ChatGPT reasoning models, automated workflow scripting, productivity multipliers, and no-code tool stacks." },
+  { issuer:"OUTSKILL · VAIBHAV SISINTY", name:"3-Day Generative AI Bootcamp",
+    img:"https://z-cdn-media.chatglm.cn/files/daf8bcfd-53bd-49a1-b00b-9ca05eb470be.jpeg?auth_key=1891027328-a209b77687d84f5abc311f96272dbc51-0-5f295862be1bd7dab9878cc69e4c6669",
+    desc:"Immersive sprint building and deploying practical generative AI workflows, custom assistant personas, and rapid software MVPs." }
+];
+document.getElementById('certsGrid').innerHTML = certs.map((c,i)=>`
+  <div class="cert-card reveal d${(i%3)+1}" onclick="openCertModal(${i})">
+    <div class="cert-img-box">
+      <img src="${c.img}" alt="${c.name} certificate" loading="lazy">
+      <span class="cert-zoom"><i class="fa-solid fa-expand"></i></span>
+    </div>
+    <div class="cert-body">
+      <div>
+        <div class="cert-issuer">${c.issuer}</div>
+        <div class="cert-name">${c.name}</div>
+        <div class="cert-desc">${c.desc}</div>
+      </div>
+      <div class="verified"><span style="width:6px;height:6px;background:#16A34A;border-radius:50%;display:inline-block"></span> VERIFIED CREDENTIAL</div>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('#certsGrid .reveal').forEach(el => io.observe(el));
+
+function openCertModal(i){
+  const c = certs[i];
+  document.getElementById('modalTitle').textContent = c.name;
+  document.getElementById('modalBody').innerHTML =
+    `<img src="${c.img}" alt="${c.name}"><p><b style="color:var(--blue-900)">${c.issuer}</b><br>${c.desc}</p>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+/* ---------- Projects: real links, each opens its own page ---------- */
+const projects = [
+  {tag:"Productivity · App",href:"bgtodohabita.html",name:"BG Fame ToDoHabita",
+   desc:"Golden productivity app — tasks, habits, mood tracker, pomodoro timer & calendar all in one. My most complete build yet."},
+  {tag:"Design · Tool",href:"bgcards.html",name:"BG Fame Cards",
+   desc:"Professional business card designer with multiple themes. Customize and export your own branded business cards."},
+  {tag:"Navigation · AI Tool",href:"bgglobalmap.html",name:"BG Fame Global Map",
+   desc:"Interactive world map with area boundary search and Wikipedia integration for specialty information. Built with Leaflet.js."},
+  {tag:"Fitness Coach · AI Tool",href:"fitcoachbg.html",name:"Fitness Coach BG",
+   desc:"An AI tool for bodybuilders, health-conscious people, or fitness freaks. Users must be at least 8 years old. The AI gives mindset boards and workouts based on their age, plus a personal dashboard with food logging."},
+  {tag:"Food · AI Tool",href:"nutriclick.html",name:"NutriClick",
+   desc:"NutriClick is an AI-first food logging and metabolic dashboard that scans meals and packaged foods, tracks hydration and fasting, and turns daily eating into actionable health insights."},
+  {tag:"Code Preview · AI Tool",href:"codeerase.html",name:"CodeErase",
+   desc:"CodeErase is an all-in-one coding playground to write, test, and preview code in multiple programming languages with a real deployment-like experience. Build projects, run code instantly, debug efficiently — all from a fast, modern workspace."},
+  {tag:"Code Teacher",href:"bgcodetutor.html",name:"BG Code Tutor",
+   desc:"For using CodeErase, you need to know code. This tool teaches you coding."},
+  {tag:"Interview Prep Tool",href:"interviewerbg.html",name:"Interviewer BG",
+   desc:"If you have to give an interview, this tool helps you prepare for that."},
+  {tag:"Scripting Tool",href:"script.ai.html",name:"Script.AI",
+   desc:"Generate viral video scripts in seconds with AI. Discover trending topics, create engaging short-form and long-form content, and get complete scene-by-scene production plans, titles, and storytelling frameworks."},
+  {tag:"News Tool",href:"bgnews.html",name:"BG News",
+   desc:"Select the industry of which you want the news."},
+  {tag:"Growth OS",href:"scalesprint.html",name:"ScaleSprint",
+   desc:"A premium startup growth operating system with strategic planners, SWOT analyzer, and outreach studio."},
+  {tag:"Neon Game",href:"neonloom.html",name:"NeonLoom",
+   desc:"A hologram types neon game."},
+  {tag:"Camera App",href:"pocketshot.html",name:"PocketShot",
+   desc:"A Camera App that feels like a real camera."},
+  {tag:"Planet Game",href:"planet-destroyer.html",name:"Planet Destroyer",
+   desc:"A game related to planets — users need to destroy planets, unlock new weapons, and get to know about the planet destroyed."},
+  {tag:"Problem Solver",href:"problemgpt.html",name:"Problem GPT",
+   desc:"Describe any problem, and ProblemGPT gives you a complete action plan."},
+  {tag:"Universe Information",href:"universe-explorer.html",name:"Universe Explorer",
+   desc:"Explore the entire universe — from planets to superclusters — in one immersive interactive experience."},
+  {tag:"Payment Tracker",href:"vasooli.html",name:"Vasooli",
+   desc:"Recover overdue payments with smart reminders, legal tools, and MSME-backed recovery workflows."},
+  {tag:"Scam Detection",href:"ScamProof.html",name:"ScamProof",
+   desc:"Detect scams, verify suspicious messages, and protect yourself with AI-powered fraud analysis."}
+];
+document.getElementById('projectsGrid').innerHTML = projects.map((p,i)=>`
+  <a href="${p.href}" class="proj-card reveal d${(i%3)+1}">
+    <span class="proj-tag">${p.tag}</span>
+    <div class="proj-name">${p.name}</div>
+    <div class="proj-desc">${p.desc}</div>
+    <span class="proj-link">Open Project →</span>
+    <span class="proj-num">${String(i+1).padStart(2,'0')}</span>
+  </a>`).join('');
+document.querySelectorAll('#projectsGrid .reveal').forEach(el => io.observe(el));
+
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+/* ---------- Toast ---------- */
+function showToast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<i class="fa-solid fa-circle-check" style="color:var(--yellow)"></i> ${msg}`;
+  wrap.appendChild(t);
+  setTimeout(()=> { t.style.transition = 'opacity .4s'; t.style.opacity = '0'; setTimeout(()=> t.remove(), 400); }, 3200);
+}
+</script>
+</body>
+</html>
