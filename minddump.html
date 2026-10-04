@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Dump every thought, sort it into an Eisenhower matrix, and focus — all local, no account.">
+<title>MindDump — Visual Task Brain Dump & Matrix</title>
+<script>
+  /* Apply saved theme before first paint to avoid a flash */
+  try {
+    document.documentElement.dataset.theme =
+      localStorage.getItem('minddump.theme') ||
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500;600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ design tokens ============ */
+  :root{
+    --bg:#F3EFE6; --surface:#FCFAF3; --surface2:#EBE6D8;
+    --ink:#24211A; --muted:#6F6759;
+    --line:#E1DAC8; --line2:#CBC1A9;
+    --q1:#C9410E; --q2:#0B7285; --q3:#9C7D00; --q4:#847C6E;
+    --shadow:0 1px 2px rgba(36,33,26,.05), 0 10px 28px -14px rgba(36,33,26,.14);
+    --f-disp:"Fraunces","Iowan Old Style",Georgia,serif;
+    --f-ui:"Karla","Segoe UI",Helvetica,sans-serif;
+    --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Consolas,monospace;
+    color-scheme:light;
+  }
+  [data-theme="dark"]{
+    --bg:#171410; --surface:#211D17; --surface2:#181510;
+    --ink:#ECE5D6; --muted:#9C9280;
+    --line:#2E2820; --line2:#48402F;
+    --q1:#FF7A50; --q2:#4CC3D9; --q3:#E4BE4B; --q4:#A19884;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 32px -16px rgba(0,0,0,.55);
+    color-scheme:dark;
+  }
+
+  /* ============ base ============ */
+  *,*::before,*::after{ box-sizing:border-box }
+  html{ scroll-behavior:smooth }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:400 16px/1.5 var(--f-ui);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,p{ margin:0 }
+  button{ font:inherit; color:inherit }
+  textarea{ font:inherit; color:inherit }
+  ::selection{ background:color-mix(in srgb, var(--q1) 30%, transparent) }
+  :focus-visible{ outline:2px solid var(--q1); outline-offset:2px; border-radius:4px }
+  .container{ max-width:1120px; margin:0 auto; padding:0 24px }
+  .mono{ font-family:var(--f-mono) }
+
+  /* ============ top bar ============ */
+  .topbar{ position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--line) }
+  .bar-in{ display:flex; align-items:center; gap:14px; height:62px }
+  .brand{ font:600 21px var(--f-disp); letter-spacing:-.01em; white-space:nowrap }
+  .brand span{ font-style:italic; color:var(--q1) }
+  .tagline{ font:500 10.5px var(--f-mono); text-transform:uppercase; letter-spacing:.1em; color:var(--muted); white-space:nowrap }
+  .bar-actions{ margin-left:auto; display:flex; gap:8px }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px;
+    border-radius:10px; border:1px solid var(--line2); background:var(--surface);
+    font-weight:600; font-size:13.5px; cursor:pointer; white-space:nowrap;
+    transition:border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .btn:hover{ border-color:var(--muted) }
+  .btn:active{ transform:translateY(1px) }
+  .btn svg{ width:15px; height:15px; flex:none }
+  .btn.primary{ background:var(--ink); border-color:var(--ink); color:var(--bg) }
+  .btn.primary:hover{ transform:translateY(-1px); box-shadow:0 8px 18px -10px rgba(0,0,0,.55) }
+  .btn.ghost{ background:transparent }
+  .btn.danger{ color:var(--q1) }
+  .btn.icon-only{ width:38px; padding:0; justify-content:center }
+  .btn.big{ height:44px; padding:0 20px; font-size:15px; border-radius:11px }
+  .ci svg{ width:12px; height:12px; opacity:.75 }
+
+  /* ============ hero / dump ============ */
+  .hero{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:26px; align-items:start; padding:46px 0 6px }
+  .eyebrow{ display:flex; align-items:center; gap:10px; font:600 11px var(--f-mono); text-transform:uppercase; letter-spacing:.16em; color:var(--muted) }
+  .stepnum{ display:inline-grid; place-items:center; width:23px; height:23px; border:1px solid var(--line2); border-radius:7px; background:var(--surface); color:var(--q1); letter-spacing:0 }
+  .hero h1{ font:600 clamp(32px,4.6vw,45px)/1.08 var(--f-disp); letter-spacing:-.015em; margin:16px 0 12px }
+  .hero h1 em{ font-style:italic; color:var(--q1) }
+  .lede{ max-width:56ch; color:var(--muted); font-size:16px; line-height:1.65; margin-bottom:26px }
+
+  .dump-panel{ border:1px solid var(--line2); border-radius:16px; background:var(--surface); box-shadow:var(--shadow); transition:border-color .2s }
+  .dump-panel:focus-within{ border-color:var(--muted) }
+  .dump-top{ display:flex; justify-content:space-between; gap:12px; padding:11px 18px; border-bottom:1px solid var(--line);
+    font:600 10.5px var(--f-mono); text-transform:uppercase; letter-spacing:.14em; color:var(--muted) }
+  .dump-field{ padding:14px 18px 6px }
+  #dumpInput{
+    display:block; width:100%; min-height:152px; max-height:60vh; resize:vertical;
+    border:0; outline:0; padding:0; background:
+      repeating-linear-gradient(to bottom, transparent 0 33px, color-mix(in srgb, var(--ink) 9%, transparent) 33px 34px);
+    font:500 17px/34px var(--f-ui); color:var(--ink);
+  }
+  #dumpInput::placeholder{ color:var(--muted); opacity:.7 }
+  .dump-bar{ display:flex; align-items:center; gap:16px; padding:12px 18px 16px; border-top:1px dashed var(--line) }
+  .hint{ font:500 10.5px var(--f-mono); text-transform:uppercase; letter-spacing:.1em; color:var(--muted) }
+
+  .howto{ position:sticky; top:82px; border:1px solid var(--line); border-radius:16px; background:var(--surface); padding:16px 18px }
+  .howto h3{ font:600 10.5px var(--f-mono); text-transform:uppercase; letter-spacing:.16em; color:var(--muted); margin-bottom:6px }
+  .rule{ display:flex; align-items:baseline; gap:8px; padding:9px 0; border-top:1px solid var(--line); font-size:13px }
+  .rule code{ font:500 11.5px var(--f-mono); color:var(--muted) }
+  .rule .arr{ color:var(--muted); flex:none }
+  .dest{ margin-left:auto; display:flex; align-items:center; gap:7px; font-weight:600; font-size:12.5px; white-space:nowrap }
+  .dest i{ width:7px; height:7px; border-radius:2.5px; background:var(--qa) }
+  .howto .foot{ margin-top:12px; padding-top:12px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; line-height:1.55 }
+
+  /* ============ matrix ============ */
+  .matrix-sec{ padding:40px 0 0; scroll-margin-top:78px }
+  .sec-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:16px }
+  .sec-hint{ font:400 11px var(--f-mono); color:var(--muted); letter-spacing:.03em }
+  .mini-ic svg{ width:12px; height:12px; vertical-align:-1px; color:var(--muted) }
+
+  .matrix{ display:grid; grid-template-columns:22px 1fr 1fr; grid-template-rows:auto auto auto; column-gap:16px; row-gap:13px }
+  .axis-x{ grid-column:2/4; grid-row:1; display:grid; grid-template-columns:subgrid; align-items:end }
+  .axis-x span{
+    text-align:center; padding-bottom:9px; border-bottom:1px solid var(--line);
+    font:600 10px var(--f-mono); text-transform:uppercase; letter-spacing:.22em; color:var(--muted);
+  }
+  .axis-y{ grid-column:1; grid-row:2/4; display:grid; grid-template-rows:subgrid; row-gap:13px }
+  .axis-y span{
+    writing-mode:vertical-rl; transform:rotate(180deg);
+    display:grid; place-items:center;
+    font:600 10px var(--f-mono); text-transform:uppercase; letter-spacing:.22em; color:var(--muted);
+  }
+  .quads{ grid-column:2/4; grid-row:2/4; display:grid; grid-template-columns:subgrid; grid-template-rows:subgrid }
+  @supports not (grid-template-columns:subgrid){
+    .matrix{ display:block }
+    .axis-y{ display:none }
+    .axis-x{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:12px }
+    .quads{ display:grid; grid-template-columns:1fr 1fr; gap:13px 16px }
+  }
+
+  .quad{ --qa:var(--q1); display:flex; flex-direction:column; min-width:0;
+    border:1px solid var(--line); border-radius:16px; background:var(--surface2);
+    transition:border-color .2s, background .2s }
+  .quad[data-quad="2"]{ --qa:var(--q2) } .quad[data-quad="3"]{ --qa:var(--q3) } .quad[data-quad="4"]{ --qa:var(--q4) }
+  .quad-head{ display:flex; align-items:flex-start; gap:10px; padding:14px 16px 8px }
+  .qdot{ width:9px; height:9px; border-radius:3px; background:var(--qa); margin-top:7px; flex:none; transition:transform .2s }
+  .quad-head h2{ font:600 19px var(--f-disp); letter-spacing:-.01em }
+  .qsub{ display:block; margin-top:3px; font:500 10px var(--f-mono); text-transform:uppercase; letter-spacing:.15em; color:var(--muted) }
+  .qcount{ margin-left:auto; flex:none; min-width:30px; text-align:center; padding:2px 8px; border:1px solid var(--line2); border-radius:999px;
+    font:500 12px var(--f-mono); color:var(--muted) }
+  .quad-body{ flex:1; display:flex; flex-direction:column; gap:8px; padding:4px 12px 12px; min-height:112px; border-radius:0 0 15px 15px }
+  .qempty{ margin:auto; padding:8px 12px; text-align:center; font:italic 500 14.5px var(--f-disp); color:var(--muted); opacity:.75; pointer-events:none }
+
+  .quad.over{ border-color:var(--qa); background:color-mix(in srgb, var(--qa) 7%, var(--surface2)) }
+  .quad.over .quad-body{ outline:2px dashed color-mix(in srgb, var(--qa) 35%, transparent); outline-offset:-6px; border-radius:10px }
+  .quad.over .qdot{ transform:scale(1.4) }
+  @keyframes qflash{ 0%{ box-shadow:0 0 0 0 color-mix(in srgb, var(--qa) 45%, transparent) } 100%{ box-shadow:0 0 0 16px transparent } }
+  .quad.flash{ animation:qflash .65s ease-out }
+
+  /* ============ task cards ============ */
+  .task{
+    position:relative; display:flex; align-items:flex-start; gap:10px;
+    background:var(--surface); border:1px solid var(--line); border-radius:11px;
+    padding:10px 8px 10px 13px; cursor:grab;
+    box-shadow:inset 3px 0 0 transparent;
+    transition:border-color .15s, opacity .2s;
+  }
+  .task:hover{ border-color:var(--line2) }
+  .task:active{ cursor:grabbing }
+  .task[data-p="1"]{ box-shadow:inset 3px 0 0 var(--q2) }
+  .task[data-p="2"]{ box-shadow:inset 3px 0 0 var(--q3) }
+  .task[data-p="3"]{ box-shadow:inset 3px 0 0 var(--q1) }
+  .task.done{ opacity:.55 }
+  .task.done .task-text{ text-decoration:line-through; color:var(--muted) }
+  .task.dragging{ opacity:.35; border-style:dashed }
+  @keyframes rise{ from{ opacity:0; transform:translateY(9px) } to{ opacity:1; transform:none } }
+  .task.land{ animation:rise .4s cubic-bezier(.2,.8,.3,1) both; animation-delay:var(--d,0ms) }
+  @keyframes bye{ to{ opacity:0; transform:translateX(14px) scale(.97) } }
+  .task.bye{ animation:bye .17s ease-in both }
+
+  .tick{
+    flex:none; width:20px; height:20px; margin-top:1px; padding:0; cursor:pointer;
+    border:1.5px solid var(--line2); border-radius:6px; background:transparent; color:transparent;
+    display:grid; place-items:center; transition:background .15s, border-color .15s;
+  }
+  .tick:hover{ border-color:var(--ink) }
+  .tick svg{ width:12px; height:12px; stroke-width:3 }
+  .task.done .tick, .focus-task .tick[aria-checked="true"]{ background:var(--ink); border-color:var(--ink); color:var(--bg) }
+
+  .task-text{
+    flex:1; min-width:0; text-align:left; padding:1px 0; border:0; background:none; cursor:pointer;
+    font:500 15px/1.45 var(--f-ui); color:var(--ink); overflow-wrap:anywhere;
+    border-bottom:1px dashed transparent;
+  }
+  .task-text:hover{ border-bottom-color:var(--line2) }
+  .task-edit{
+    flex:1; min-width:0; font:500 15px/1.45 var(--f-ui); color:var(--ink);
+    background:var(--bg); border:1px solid var(--q1); border-radius:6px; padding:2px 7px;
+  }
+
+  .task-act{ display:flex; gap:2px; flex:none; margin-top:-2px; opacity:0; transition:opacity .15s }
+  @media (hover:hover){ .task:hover .task-act, .task:focus-within .task-act{ opacity:1 } }
+  @media (hover:none){ .task-act{ opacity:1 } }
+  .icbtn{ width:28px; height:28px; padding:0; display:grid; place-items:center; border:0; border-radius:8px;
+    background:none; color:var(--muted); cursor:pointer; transition:background .15s, color .15s }
+  .icbtn:hover{ background:color-mix(in srgb, var(--ink) 8%, transparent); color:var(--ink) }
+  .icbtn.del:hover{ color:var(--q1) }
+  .icbtn svg{ width:15px; height:15px }
+
+  .pill{
+    height:24px; min-width:36px; margin-top:-1px; padding:0 7px; border-radius:7px; cursor:pointer;
+    border:1px solid transparent; background:none; color:var(--muted);
+    display:inline-flex; align-items:center; justify-content:center;
+    font:600 10.5px var(--f-mono); text-transform:uppercase; letter-spacing:.05em;
+    transition:border-color .15s;
+  }
+  .pill svg{ width:12px; height:12px }
+  .pill.p1{ color:var(--q2) } .pill.p2{ color:var(--q3) }
+  .pill.p3{ color:var(--q1); border-color:color-mix(in srgb, var(--q1) 40%, transparent) }
+
+  /* ============ stats + footer ============ */
+  .statsbar{ display:flex; align-items:center; gap:18px; margin-top:26px;
+    padding:14px 18px; border:1px solid var(--line); border-radius:14px; background:var(--surface) }
+  .stat{ font:400 12.5px var(--f-mono); color:var(--muted); white-space:nowrap }
+  .stat b{ font-weight:600; color:var(--ink) }
+  .prog{ flex:1; min-width:70px; height:4px; border-radius:99px; background:var(--surface2); overflow:hidden }
+  .prog i{ display:block; height:100%; width:0; background:var(--q2); border-radius:99px; transition:width .4s ease }
+  .foot{ display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    margin-top:38px; padding-bottom:46px; font:400 11px var(--f-mono); color:var(--muted) }
+  kbd{ border:1px solid var(--line2); border-bottom-width:2px; border-radius:5px; padding:1px 6px;
+    font:500 10px var(--f-mono); background:var(--surface) }
+
+  /* ============ focus drawer ============ */
+  .scrim{ position:fixed; inset:0; z-index:55; background:color-mix(in srgb, var(--ink) 38%, transparent);
+    opacity:0; visibility:hidden; transition:opacity .3s, visibility 0s .3s }
+  body.drawer-open .scrim{ opacity:1; visibility:visible; transition:opacity .3s }
+  body.drawer-open, body.modal-open{ overflow:hidden }
+
+  .drawer{
+    position:fixed; z-index:60; top:0; right:0; bottom:0; width:min(400px,94vw);
+    background:var(--surface); border-left:1px solid var(--line);
+    display:flex; flex-direction:column; padding:22px 24px; overflow-y:auto;
+    transform:translateX(102%); visibility:hidden;
+    transition:transform .38s cubic-bezier(.2,.8,.3,1), visibility 0s .38s;
+  }
+  body.drawer-open .drawer{ transform:none; visibility:visible; transition:transform .38s cubic-bezier(.2,.8,.3,1) }
+  .drawer-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px }
+  .drawer-head h2{ font:600 24px var(--f-disp); margin-top:6px }
+
+  .focus-task{ display:flex; align-items:flex-start; gap:10px; margin:16px 0 2px;
+    padding:12px 12px 12px 15px; border:1px solid var(--line); border-radius:12px; background:var(--surface2) }
+  .ft-text{ flex:1; min-width:0; font:500 14.5px/1.45 var(--f-ui); overflow-wrap:anywhere }
+  .ft-text.done{ text-decoration:line-through; color:var(--muted) }
+  .ft-empty{ margin:16px 0 2px; padding:14px 10px; text-align:center; border:1px dashed var(--line); border-radius:12px;
+    font:400 11px var(--f-mono); color:var(--muted) }
+
+  .ring-wrap{ position:relative; width:min(240px,68vw); aspect-ratio:1; margin:16px auto 4px }
+  .ring-wrap svg{ width:100%; height:100%; transform:rotate(-90deg) }
+  .ring-wrap circle{ fill:none; stroke-width:7 }
+  .ring-track{ stroke:var(--surface2) }
+  .ring-bar{ stroke:var(--q1); stroke-linecap:round; stroke-dasharray:603.2; stroke-dashoffset:0;
+    transition:stroke-dashoffset .3s linear }
+  .ring-wrap.done .ring-bar{ stroke:var(--q2) }
+  @keyframes ringpulse{ 50%{ transform:scale(1.035) } }
+  .ring-wrap.done{ animation:ringpulse .9s ease-out 3 }
+  .ring-center{ position:absolute; inset:0; display:grid; place-content:center; gap:3px; text-align:center }
+  .time{ font:500 44px var(--f-mono); font-variant-numeric:tabular-nums; letter-spacing:.02em }
+  .of{ font:400 11px var(--f-mono); color:var(--muted); letter-spacing:.05em }
+
+  .t-controls{ display:flex; align-items:center; justify-content:center; gap:18px; margin:6px 0 16px }
+  .playbtn{ width:58px; height:58px; border-radius:50%; border:0; background:var(--ink); color:var(--bg);
+    display:grid; place-items:center; cursor:pointer; transition:transform .15s }
+  .playbtn:hover{ transform:scale(1.06) }
+  .playbtn svg{ width:22px; height:22px }
+  .icbtn.big{ width:44px; height:44px; border:1px solid var(--line2); border-radius:50% }
+  .icbtn.big svg{ width:17px; height:17px }
+  .presets{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap }
+  .chip{ padding:6px 14px; border-radius:999px; border:1px solid var(--line2); background:none; cursor:pointer;
+    font:600 12.5px var(--f-mono); color:var(--muted); transition:.15s }
+  .chip:hover{ border-color:var(--muted) }
+  .chip.active{ background:var(--ink); border-color:var(--ink); color:var(--bg) }
+  .sessions{ display:flex; align-items:center; justify-content:center; gap:9px; margin-top:18px;
+    font:400 11.5px var(--f-mono); color:var(--muted) }
+  .sdots{ display:inline-flex; gap:5px }
+  .sdot{ width:7px; height:7px; border-radius:50%; border:1px solid var(--line2) }
+  .sdot.on{ background:var(--q3); border-color:var(--q3) }
+  .d-hint{ margin-top:10px; text-align:center; font:400 10px var(--f-mono); color:var(--muted); letter-spacing:.04em }
+
+  /* ============ popover / modal / toasts ============ */
+  .popover{
+    position:fixed; z-index:120; min-width:220px; padding:6px;
+    background:var(--surface); border:1px solid var(--line2); border-radius:12px;
+    box-shadow:0 18px 50px -18px rgba(0,0,0,.4); animation:pop .15s ease-out;
+  }
+  @keyframes pop{ from{ opacity:0; transform:translateY(-4px) scale(.98) } }
+  .pop-item{ display:flex; align-items:center; gap:10px; width:100%; padding:9px 10px; text-align:left;
+    border:0; background:none; border-radius:8px; font:500 14px var(--f-ui); color:var(--ink); cursor:pointer }
+  .pop-item:hover{ background:var(--surface2) }
+  .pop-item[aria-disabled="true"]{ opacity:.45; cursor:default }
+  .pop-item[aria-disabled="true"]:hover{ background:none }
+  .pop-item .dot{ flex:none; width:8px; height:8px; border-radius:3px; background:var(--qa) }
+  .pop-item .pi{ display:grid; place-items:center; color:var(--muted) }
+  .pop-item .pi svg{ width:15px; height:15px }
+  .pop-item .pl{ flex:1; min-width:0 }
+  .pop-item .pl small{ display:block; margin-top:1px; font:400 11px var(--f-mono); color:var(--muted) }
+  .pop-item .cur{ display:grid; place-items:center; color:var(--muted) }
+  .pop-item .cur svg{ width:14px; height:14px }
+
+  .modal-scrim{ position:fixed; inset:0; z-index:90; display:grid; place-items:center; padding:20px;
+    background:color-mix(in srgb, var(--ink) 40%, transparent);
+    opacity:0; visibility:hidden; transition:opacity .2s, visibility 0s .2s }
+  body.modal-open .modal-scrim{ opacity:1; visibility:visible; transition:opacity .2s }
+  .modal{ width:min(440px,100%); background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:22px; box-shadow:0 30px 80px -30px rgba(0,0,0,.5); transform:translateY(8px) scale(.98); transition:transform .2s }
+  body.modal-open .modal{ transform:none }
+  .modal h3{ font:600 21px var(--f-disp) }
+  .modal p{ margin-top:8px; color:var(--muted); font-size:14.5px; line-height:1.55 }
+  .modal p b{ color:var(--ink) }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:22px; flex-wrap:wrap }
+
+  .toasts{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:130;
+    display:flex; flex-direction:column; gap:8px; width:min(440px,calc(100vw - 32px)) }
+  .toast{ display:flex; align-items:center; gap:10px; padding:10px 8px 10px 16px;
+    background:var(--surface); border:1px solid var(--line2); border-radius:12px;
+    box-shadow:0 16px 44px -16px rgba(0,0,0,.4); font-size:14px; animation:rise .25s }
+  .t-msg{ flex:1; min-width:0 }
+  .t-act{ border:0; background:none; padding:6px 8px; border-radius:8px; cursor:pointer;
+    font:700 13px var(--f-ui); color:var(--q1); white-space:nowrap }
+  .t-act:hover{ text-decoration:underline }
+  .t-x{ flex:none }
+  .toast.bye{ opacity:0; transform:translateY(8px); transition:.25s }
+
+  /* ============ responsive ============ */
+  @media (max-width:980px){
+    .hero{ grid-template-columns:1fr }
+    .howto{ position:static }
+    .tagline{ display:none }
+  }
+  @media (max-width:860px){
+    .matrix{ display:block }
+    .axis-x, .axis-y{ display:none }
+    .quads{ display:grid; grid-template-columns:1fr; grid-template-rows:auto; row-gap:14px }
+  }
+  @media (max-width:720px){
+    .bl{ display:none }
+    .sec-hint{ display:none }
+    .container{ padding:0 16px }
+    .statsbar{ flex-wrap:wrap }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{ animation-duration:.001s !important; transition-duration:.001s !important }
+    html{ scroll-behavior:auto }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container bar-in">
+    <div class="brand">Mind<span>Dump</span></div>
+    <span class="tagline">dump &rarr; sort &rarr; focus &middot; all local</span>
+    <nav class="bar-actions" aria-label="App actions">
+      <button class="btn" id="importBtn" type="button"><span data-icon="upload"></span><span class="bl">Import</span></button>
+      <button class="btn" id="exportBtn" type="button" aria-haspopup="menu"><span data-icon="download"></span><span class="bl">Export</span><span class="ci" data-icon="chev"></span></button>
+      <button class="btn" id="timerBtn" type="button"><span data-icon="clock"></span><span class="bl">Focus</span></button>
+      <button class="btn icon-only" id="themeBtn" type="button" aria-label="Toggle dark mode"></button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ============ 01 · brain dump ============ -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero-main">
+      <p class="eyebrow"><span class="stepnum">01</span>Brain dump</p>
+      <h1 id="heroTitle">Get it out of your <em>head.</em></h1>
+      <p class="lede">Type or paste everything on your mind, one thought per line. Hit dump and each line
+        becomes a card, auto-sorted into the priority matrix below. No account, no cloud &mdash; it all
+        lives in this browser.</p>
+
+      <div class="dump-panel">
+        <div class="dump-top"><span>Notepad</span><span id="lineCount">one thought per line</span></div>
+        <div class="dump-field">
+          <textarea id="dumpInput" rows="5" spellcheck="true" aria-label="Brain dump — one thought per line"
+            placeholder="Reply to Sam's email&#10;Fix the leaking tap — due Friday&#10;Learn film photography, someday"></textarea>
+        </div>
+        <div class="dump-bar">
+          <button class="btn primary big" id="dumpBtn" type="button"><span data-icon="arrow"></span>Dump &amp; Categorize</button>
+          <span class="hint">Ctrl + Enter</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="howto" aria-label="Auto-sort rules">
+      <h3>Auto-sort rules</h3>
+      <div class="rule"><code>"asap" "today" "due"</code><span class="arr">&rarr;</span><span class="dest" style="--qa:var(--q1)"><i></i>Do First</span></div>
+      <div class="rule"><code>"email" "call" "pay"</code><span class="arr">&rarr;</span><span class="dest" style="--qa:var(--q3)"><i></i>Quick Wins</span></div>
+      <div class="rule"><code>"someday" "maybe" "later"</code><span class="arr">&rarr;</span><span class="dest" style="--qa:var(--q4)"><i></i>Someday</span></div>
+      <div class="rule"><code>anything else</code><span class="arr">&rarr;</span><span class="dest" style="--qa:var(--q2)"><i></i>Schedule</span></div>
+      <p class="foot">Start a line with <b>1:</b> <b>2:</b> <b>3:</b> or <b>4:</b> to force a quadrant.
+        Every guess is just a drag away from the right one.</p>
+    </aside>
+  </section>
+
+  <!-- ============ 02 · sort ============ -->
+  <section class="matrix-sec" id="matrix" aria-label="Eisenhower matrix">
+    <div class="sec-head">
+      <p class="eyebrow"><span class="stepnum">02</span>Sort</p>
+      <p class="sec-hint">drag cards between quadrants &mdash; or use the <span class="mini-ic" data-icon="move"></span> button on any card</p>
+    </div>
+    <div class="matrix">
+      <div class="axis-x" aria-hidden="true"><span>Urgent</span><span>Not urgent</span></div>
+      <div class="axis-y" aria-hidden="true"><span>Important</span><span>Not&nbsp;important</span></div>
+      <div class="quads" id="quads"></div>
+    </div>
+
+    <div class="statsbar">
+      <span class="stat" id="statLine"></span>
+      <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+      <button class="btn ghost danger" id="clearDoneBtn" type="button" hidden><span data-icon="trash"></span><span>Clear completed</span></button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>MindDump &mdash; your data never leaves this browser (localStorage). Export to back up.</span>
+    <span><kbd>/</kbd> focus the notepad &nbsp;&middot;&nbsp; <kbd>Ctrl</kbd>+<kbd>Enter</kbd> dump</span>
+  </footer>
+</main>
+
+<!-- ============ 03 · focus drawer ============ -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <header class="drawer-head">
+    <div>
+      <p class="eyebrow"><span class="stepnum">03</span>Focus</p>
+      <h2 id="drawerTitle">Focus session</h2>
+    </div>
+    <button class="icbtn" id="drawerClose" type="button" aria-label="Close focus panel" data-icon="x"></button>
+  </header>
+
+  <div id="focusTask"></div>
+
+  <div class="ring-wrap" id="ringWrap" aria-hidden="true">
+    <svg viewBox="0 0 220 220">
+      <circle class="ring-track" cx="110" cy="110" r="96"/>
+      <circle class="ring-bar" id="ringBar" cx="110" cy="110" r="96"/>
+    </svg>
+    <div class="ring-center">
+      <div class="time" id="timeText">25:00</div>
+      <div class="of" id="timeSub">of 25:00</div>
+    </div>
+  </div>
+  <p class="sr-only" style="position:absolute;left:-9999px" id="timeSr" role="timer"></p>
+
+  <div class="t-controls">
+    <button class="icbtn big" id="tReset" type="button" aria-label="Reset timer"></button>
+    <button class="playbtn" id="tPlay" type="button" aria-label="Start timer"></button>
+  </div>
+
+  <div class="presets" id="presets" role="group" aria-label="Session length">
+    <button class="chip" type="button" data-d="1500">25m</button>
+    <button class="chip" type="button" data-d="3000">50m</button>
+    <button class="chip" type="button" data-d="900">15m</button>
+    <button class="chip" type="button" data-d="300">5m</button>
+  </div>
+
+  <div class="sessions"><span class="sdots" id="sdots"></span><span id="sTxt"></span></div>
+  <p class="d-hint">the timer keeps running if you close this panel</p>
+</aside>
+
+<!-- modal -->
+<div class="modal-scrim" id="mScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h3 id="mTitle"></h3>
+    <p id="mBody"></p>
+    <div class="modal-actions" id="mActions"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept="application/json,.json" hidden>
+
+<script>
+(() => {
+'use strict';
+
+/* ================= helpers ================= */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+const truncate = (s, n) => s.length > n ? s.slice(0, n - 1) + '\u2026' : s;
+const fmtClock = sec => {
+  sec = Math.max(0, Math.round(sec));
+  return String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+};
+const rel = ts => {
+  const d = Date.now() - ts;
+  if (d < 60e3) return 'just now';
+  if (d < 3600e3) return Math.floor(d / 60e3) + 'm ago';
+  if (d < 86400e3) return Math.floor(d / 3600e3) + 'h ago';
+  if (d < 7 * 86400e3) return Math.floor(d / 86400e3) + 'd ago';
+  return new Date(ts).toLocaleDateString(undefined, { month:'short', day:'numeric' });
+};
+
+/* ================= inline icon set ================= */
+const ic = (p, fill) => `<svg viewBox="0 0 24 24" ${fill
+  ? 'fill="currentColor" aria-hidden="true"'
+  : 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'}>${p}</svg>`;
+const ICON = {
+  check:    ic('<polyline points="4.5 12.5 9.5 17.5 19.5 6.5"/>'),
+  x:        ic('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+  trash:    ic('<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>'),
+  clock:    ic('<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.2 14"/>'),
+  play:     ic('<polygon points="7 4.5 20 12 7 19.5"/>', true),
+  pause:    ic('<rect x="6.5" y="5" width="4" height="14" rx="1.3"/><rect x="13.5" y="5" width="4" height="14" rx="1.3"/>', true),
+  reset:    ic('<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>'),
+  download: ic('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
+  upload:   ic('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 8 12 3 17 8"/><line x1="12" y1="3" x2="12" y2="15"/>'),
+  sun:      ic('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  moon:     ic('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
+  move:     ic('<polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>'),
+  chev:     ic('<polyline points="6 9 12 15 18 9"/>'),
+  arrow:    ic('<line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/>'),
+  file:     ic('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
+  braces:   ic('<path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1"/><path d="M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/>'),
+};
+
+/* ================= constants ================= */
+const QUADS = [
+  { n:1, title:'Do First',   sub:'Urgent & important',     empty:'Calm water — nothing burning.' },
+  { n:2, title:'Schedule',   sub:'Important · not urgent', empty:'Nothing planned yet.' },
+  { n:3, title:'Quick Wins', sub:'Urgent · not important', empty:'No quick wins queued.' },
+  { n:4, title:'Someday',    sub:'Neither · brain dump',   empty:'A clean slate for someday.' },
+];
+const PRIOS = [{ label:'none' }, { label:'low' }, { label:'medium' }, { label:'high' }];
+const KEY = { tasks:'minddump.tasks.v1', theme:'minddump.theme', timer:'minddump.timer.v1', sessions:'minddump.sessions.v1' };
+const RX_URGENT  = /\b(asap|urgent\w*|today|tonight|tomorrow|now|eod|deadline|overdue|due)\b/i;
+const RX_SOMEDAY = /\b(someday|eventually|maybe|later|one\s?day|bucket\s?list|when\s+i\s+have\s+time|would\s+be\s+nice)\b|^idea\b[:\s]/i;
+const RX_ERRAND  = /\b(e-?mail|call|phone|text|reply|respond|pay|bill|order|buy|book|renew|print|pick\s?up|drop\s?off|invoice|fill\s?out)\b/i;
+const BASE_TITLE = 'MindDump — Visual Task Brain Dump & Matrix';
+
+/* ================= state & persistence ================= */
+let tasks = [];
+try {
+  const raw = JSON.parse(localStorage.getItem(KEY.tasks) || '[]');
+  if (Array.isArray(raw)) tasks = raw.filter(t => t && typeof t.text === 'string' && t.id);
+} catch (e) { /* corrupted storage — start fresh */ }
+
+let saveT = null;
+const flushSave = () => { clearTimeout(saveT); try { localStorage.setItem(KEY.tasks, JSON.stringify(tasks)); } catch (e) {} };
+const save = () => { clearTimeout(saveT); saveT = setTimeout(flushSave, 250); };
+addEventListener('beforeunload', flushSave);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushSave(); });
+
+/* ================= dom refs ================= */
+const dumpInput = $('#dumpInput'), lineCountEl = $('#lineCount'), dumpBtn = $('#dumpBtn');
+const quadsEl = $('#quads');
+const statLine = $('#statLine'), progBar = $('#progBar'), clearDoneBtn = $('#clearDoneBtn');
+const importBtn = $('#importBtn'), exportBtn = $('#exportBtn'), timerBtn = $('#timerBtn'), themeBtn = $('#themeBtn');
+const fileInput = $('#fileInput');
+const drawer = $('#drawer'), scrim = $('#scrim');
+const ringWrap = $('#ringWrap'), ringBar = $('#ringBar'), timeText = $('#timeText'), timeSub = $('#timeSub');
+const tPlay = $('#tPlay'), tReset = $('#tReset');
+const presetChips = $$('#presets .chip');
+const cardEl = id => $(`.task[data-id="${id}"]`);
+
+/* ================= matrix build & render ================= */
+function buildMatrix(){
+  quadsEl.innerHTML = QUADS.map(q => `
+    <section class="quad" data-quad="${q.n}" aria-labelledby="qh-${q.n}">
+      <header class="quad-head">
+        <span class="qdot" aria-hidden="true"></span>
+        <div>
+          <h2 id="qh-${q.n}">${q.title}</h2>
+          <span class="qsub">${q.sub}</span>
+        </div>
+        <span class="qcount" id="qc-${q.n}" title="Open tasks">0</span>
+      </header>
+      <div class="quad-body" id="qb-${q.n}"></div>
+    </section>`).join('');
+}
+
+function taskEl(t, delayMs){
+  const el = document.createElement('article');
+  const land = delayMs != null;
+  el.className = 'task' + (t.done ? ' done' : '') + (land ? ' land' : '');
+  if (land) el.style.setProperty('--d', delayMs + 'ms');
+  el.dataset.id = t.id;
+  el.dataset.p = t.p;
+  el.draggable = true;
+  const pr = PRIOS[t.p];
+  el.innerHTML = `
+    <button class="tick" data-act="toggle" type="button" role="checkbox" aria-checked="${t.done}"
+      aria-label="${t.done ? 'Mark as not done' : 'Mark as done'}: ${esc(t.text)}">${ICON.check}</button>
+    <button class="task-text" data-act="edit" type="button" title="Added ${rel(t.createdAt)} — click to edit">${esc(t.text)}</button>
+    <div class="task-act">
+      <button class="pill p${t.p}" data-act="prio" type="button"
+        aria-label="Priority: ${pr.label} — click to change" title="Priority: ${pr.label}">${t.p ? pr.label : ICON.flag}</button>
+      <button class="icbtn" data-act="focus" type="button" aria-label="Focus on this task" title="Focus on this">${ICON.clock}</button>
+      <button class="icbtn" data-act="move" type="button" aria-label="Move to another quadrant" title="Move">${ICON.move}</button>
+      <button class="icbtn del" data-act="del" type="button" aria-label="Delete task" title="Delete">${ICON.x}</button>
+    </div>`;
+  return el;
+}
+
+function renderQuads(landIds = null){
+  const landSet = landIds ? new Set(landIds) : null;
+  // keep keyboard focus stable across re-renders (same card, same action button)
+  const ae = document.activeElement;
+  const focusKey = (ae && ae.dataset && ae.dataset.act && ae.closest('.task'))
+    ? ae.closest('.task').dataset.id + '|' + ae.dataset.act : null;
+
+  for (const q of QUADS){
+    const body = $('#qb-' + q.n);
+    const list = tasks.filter(t => t.quad === q.n)
+                      .sort((a, b) => (a.done - b.done) || (b.createdAt - a.createdAt));
+    body.innerHTML = '';
+    if (!list.length){
+      body.innerHTML = `<p class="qempty">${q.empty}</p>`;
+    } else {
+      let d = 0;
+      list.forEach(t => body.appendChild(taskEl(t, landSet && landSet.has(t.id) ? (d++) * 55 : null)));
+    }
+    const open = list.filter(t => !t.done).length;
+    const chip = $('#qc-' + q.n);
+    chip.textContent = open;
+    chip.title = `${open} open · ${list.length - open} done`;
+  }
+  renderStats();
+  syncFocusTask();
+
+  if (focusKey){
+    const [id, act] = focusKey.split('|');
+    const el = $(`.task[data-id="${id}"] [data-act="${act}"]`);
+    if (el) el.focus();
+  }
+}
+
+function renderStats(){
+  const total = tasks.length, done = tasks.filter(t => t.done).length, open = total - done;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  statLine.innerHTML = `<b>${open}</b> open · <b>${done}</b> done · <b>${pct}%</b> cleared`;
+  progBar.style.width = pct + '%';
+  clearDoneBtn.hidden = done === 0;
+}
+
+/* ================= task operations ================= */
+function toggleDone(t){
+  t.done = !t.done;
+  t.doneAt = t.done ? Date.now() : null;
+  save(); renderQuads();
+}
+
+function moveTask(id, quad){
+  const t = tasks.find(x => x.id === id);
+  if (!t || t.quad === quad) return;
+  t.quad = quad;
+  save(); renderQuads([id]);
+  const qEl = $(`.quad[data-quad="${quad}"]`);
+  qEl.classList.remove('flash'); void qEl.offsetWidth; qEl.classList.add('flash');
+}
+
+function removeTask(id){
+  const i = tasks.findIndex(t => t.id === id);
+  if (i < 0) return;
+  const [t] = tasks.splice(i, 1);
+  const apply = () => {
+    save(); renderQuads();
+    if (Timer.focusId === id){ Timer.focusId = null; Timer.persist(); }
+    toast(`Deleted “${truncate(t.text, 34)}”`, {
+      label: 'Undo',
+      fn(){ tasks.splice(Math.min(i, tasks.length), 0, t); save(); renderQuads(); }
+    });
+  };
+  const el = cardEl(id);
+  if (el){ el.classList.add('bye'); el.style.pointerEvents = 'none'; setTimeout(apply, 170); }
+  else apply();
+}
+
+function beginEdit(card, t){
+  const txtEl = card.querySelector('.task-text');
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'task-edit';
+  inp.value = t.text;
+  inp.setAttribute('aria-label', 'Edit task');
+  txtEl.replaceWith(inp);
+  card.draggable = false;
+  inp.focus(); inp.select();
+  let closed = false;
+  const commit = () => {
+    if (closed) return; closed = true;
+    const v = inp.value.trim();
+    if (v && v !== t.text){ t.text = v.slice(0, 400); save(); }
+    renderQuads();
+  };
+  const cancel = () => { if (closed) return; closed = true; renderQuads(); };
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter'){ e.preventDefault(); commit(); }
+    else if (e.key === 'Escape'){ e.preventDefault(); cancel(); }
+  });
+  inp.addEventListener('blur', commit);
+}
+
+/* click delegation for all card actions */
+quadsEl.addEventListener('click', e => {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const card = btn.closest('.task');
+  if (!card) return;
+  const t = tasks.find(x => x.id === card.dataset.id);
+  if (!t) return;
+  switch (btn.dataset.act){
+    case 'toggle': toggleDone(t); break;
+    case 'edit':   beginEdit(card, t); break;
+    case 'prio':   t.p = (t.p + 1) % 4; save(); renderQuads(); break;
+    case 'focus':  Timer.focusId = t.id; Timer.persist(); syncFocusTask(); openDrawer(); break;
+    case 'move':   openMoveMenu(btn, t); break;
+    case 'del':    removeTask(t.id); break;
+  }
+});
+
+/* ================= drag & drop ================= */
+let dragId = null;
+quadsEl.addEventListener('dragstart', e => {
+  const card = e.target.closest('.task');
+  if (!card) return;
+  dragId = card.dataset.id;
+  card.classList.add('dragging');
+  e.dataTransfer.setData('text/plain', dragId);
+  e.dataTransfer.effectAllowed = 'move';
+});
+quadsEl.addEventListener('dragend', () => {
+  dragId = null;
+  $$('.quad').forEach(q => q.classList.remove('over'));
+  $$('.task.dragging').forEach(c => c.classList.remove('dragging'));
+});
+ $$('.quad').forEach(q => {
+  q.addEventListener('dragover', e => {
+    if (!dragId) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    q.classList.add('over');
+  });
+  q.addEventListener('dragleave', e => {
+    if (!q.contains(e.relatedTarget)) q.classList.remove('over');
+  });
+  q.addEventListener('drop', e => {
+    e.preventDefault();
+    q.classList.remove('over');
+    const id = dragId || e.dataTransfer.getData('text/plain');
+    if (id) moveTask(id, +q.dataset.quad);
+  });
+});
+
+/* ================= brain dump ================= */
+function parseLine(line){
+  let text = line.trim();
+  if (!text) return null;
+  let quad = null;
+  const forced = text.match(/^q?([1-4]):\s*(.+)$/i);   // "1: buy milk" forces quadrant 1
+  if (forced){ quad = +forced[1]; text = forced[2].trim(); }
+  if (!text) return null;
+  if (quad === null){
+    if (RX_URGENT.test(text)) quad = 1;
+    else if (RX_SOMEDAY.test(text)) quad = 4;
+    else if (RX_ERRAND.test(text)) quad = 3;
+    else quad = 2;
+  }
+  return { id: uid(), text: text.slice(0, 400), quad, done: false, p: 0, createdAt: 0 };
+}
+
+function doDump(){
+  const lines = dumpInput.value.split('\n');
+  const fresh = [];
+  let dupes = 0;
+  for (const line of lines){
+    const t = parseLine(line);
+    if (!t) continue;
+    if (tasks.some(x => !x.done && x.text.toLowerCase() === t.text.toLowerCase())){ dupes++; continue; }
+    fresh.push(t);
+  }
+  if (!fresh.length){
+    toast(dupes ? 'Those are already on your board.' : 'Nothing to sort — write a thought first.');
+    dumpInput.focus();
+    return;
+  }
+  const base = Date.now();
+  fresh.forEach((t, i) => t.createdAt = base + i);
+  tasks.push(...fresh);
+  save();
+  renderQuads(fresh.map(t => t.id));
+  dumpInput.value = '';
+  updateLineCount();
+  const skipped = dupes ? ` · ${dupes} duplicate${dupes > 1 ? 's' : ''} skipped` : '';
+  toast(`${fresh.length} thought${fresh.length > 1 ? 's' : ''} sorted${skipped}`);
+  $('#matrix').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateLineCount(){
+  const n = dumpInput.value.split('\n').filter(l => l.trim()).length;
+  lineCountEl.textContent = n ? `${n} line${n > 1 ? 's' : ''} ready` : 'one thought per line';
+}
+dumpInput.addEventListener('input', updateLineCount);
+dumpInput.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ e.preventDefault(); doDump(); }
+});
+dumpBtn.addEventListener('click', doDump);
+
+/* clear completed (with undo) */
+clearDoneBtn.addEventListener('click', () => {
+  const removed = tasks.filter(t => t.done);
+  if (!removed.length) return;
+  const snapshot = tasks;
+  tasks = tasks.filter(t => !t.done);
+  save(); renderQuads();
+  toast(`Cleared ${removed.length} completed task${removed.length > 1 ? 's' : ''}`, {
+    label: 'Undo',
+    fn(){ tasks = snapshot; save(); renderQuads(); }
+  });
+});
+
+/* ================= popover menu (export & move) ================= */
+let pop = null;
+function closePopover(){
+  if (!pop) return;
+  const anchor = pop._anchor;
+  pop.remove(); pop = null;
+  document.removeEventListener('pointerdown', onPopDown, true);
+  if (anchor && document.activeElement === document.body) anchor.focus();
+}
+function onPopDown(e){ if (pop && !pop.contains(e.target)) closePopover(); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && pop){ e.preventDefault(); e.stopPropagation(); closePopover(); }
+}, true);
+
+function openPopover(anchor, items){
+  closePopover();
+  pop = document.createElement('div');
+  pop.className = 'popover';
+  pop.setAttribute('role', 'menu');
+  pop._anchor = anchor;
+  pop.innerHTML = items.map((it, i) => `
+    <button class="pop-item" type="button" role="menuitem" data-i="${i}" ${it.disabled ? 'aria-disabled="true"' : ''}>
+      ${it.dot ? `<span class="dot" style="--qa:${it.dot}"></span>` : ''}
+      ${it.icon ? `<span class="pi">${it.icon}</span>` : ''}
+      <span class="pl">${esc(it.label)}${it.sub ? `<small>${esc(it.sub)}</small>` : ''}</span>
+      ${it.current ? `<span class="cur">${ICON.check}</span>` : ''}
+    </button>`).join('');
+  document.body.appendChild(pop);
+  const r = anchor.getBoundingClientRect();
+  const pw = pop.offsetWidth, ph = pop.offsetHeight;
+  pop.style.top = Math.min(Math.max(10, r.bottom + 8), Math.max(10, innerHeight - ph - 10)) + 'px';
+  pop.style.left = clamp(r.left, 10, innerWidth - pw - 10) + 'px';
+  pop.addEventListener('click', e => {
+    const b = e.target.closest('.pop-item');
+    if (!b) return;
+    const it = items[+b.dataset.i];
+    if (it.disabled) return;
+    closePopover();
+    it.onSelect();
+  });
+  setTimeout(() => document.addEventListener('pointerdown', onPopDown, true));
+  const first = pop.querySelector('.pop-item');
+  if (first) first.focus();
+}
+
+function openMoveMenu(anchor, t){
+  openPopover(anchor, QUADS.map(q => ({
+    dot: `var(--q${q.n})`,
+    label: q.title,
+    sub: q.sub,
+    current: t.quad === q.n,
+    disabled: t.quad === q.n,
+    onSelect: () => moveTask(t.id, q.n),
+  })));
+}
+
+/* ================= export / import ================= */
+function download(name, content, type){
+  const a = document.createElement('a');
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+const stamp = () => new Date().toISOString().slice(0, 10);
+
+function exportMD(){
+  const now = new Date();
+  const done = tasks.filter(t => t.done).length;
+  const L = ['# MindDump — task matrix', '',
+    `_Exported ${now.toLocaleString(undefined, { dateStyle:'medium', timeStyle:'short' })} · ${tasks.length} tasks · ${done} done_`, ''];
+  for (const q of QUADS){
+    L.push(`## ${q.title} — ${q.sub}`, '');
+    const list = tasks.filter(t => t.quad === q.n);
+    if (!list.length) L.push('_Nothing here._', '');
+    else {
+      list.forEach(t => L.push(`- [${t.done ? 'x' : ' '}] ${t.p ? '**' + PRIOS[t.p].label + '** · ' : ''}${t.text}`));
+      L.push('');
+    }
+  }
+  download(`minddump-${stamp()}.md`, L.join('\n'), 'text/markdown;charset=utf-8');
+  toast('Markdown exported.');
+}
+function exportJSON(){
+  const payload = { app: 'MindDump', version: 1, exportedAt: new Date().toISOString(), count: tasks.length, tasks };
+  download(`minddump-${stamp()}.json`, JSON.stringify(payload, null, 2), 'application/json');
+  toast('JSON exported.');
+}
+exportBtn.addEventListener('click', () => openPopover(exportBtn, [
+  { icon: ICON.file,   label: 'Markdown (.md)', sub: 'checkbox list, grouped by quadrant', onSelect: exportMD },
+  { icon: ICON.braces, label: 'JSON (.json)',   sub: 'full data — re-importable',          onSelect: exportJSON },
+]));
+
+function normalizeImport(data){
+  const arr = Array.isArray(data) ? data : (data && Array.isArray(data.tasks) ? data.tasks : null);
+  if (!arr) return null;
+  const out = [];
+  for (const it of arr){
+    const text = String((it && (it.text ?? it.title)) ?? '').trim();
+    if (!text) continue;
+    out.push({
+      id: uid(),
+      text: text.slice(0, 400),
+      quad: clamp(Math.round(+((it && it.quad) || 2)) || 2, 1, 4),
+      done: !!(it && it.done),
+      p: clamp(Math.round(+((it && it.p) || 0)) || 0, 0, 3),
+      createdAt: +((it && it.createdAt) || 0) || Date.now(),
+    });
+  }
+  return out;
+}
+
+importBtn.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => {
+  const f = e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    let data;
+    try { data = JSON.parse(r.result); }
+    catch (err){ toast('That file isn\u2019t valid JSON.'); return; }
+    const imported = normalizeImport(data);
+    if (!imported || !imported.length){ toast('No tasks found in that file.'); return; }
+    const res = await confirmModal({
+      title: 'Import tasks',
+      body: `Found <b>${imported.length}</b> task${imported.length > 1 ? 's' : ''} in <b>${esc(f.name)}</b>. Merge them into your board, or replace everything?`,
+      actions: [
+        { label: 'Cancel', value: 'cancel', kind: 'ghost' },
+        { label: 'Replace all', value: 'replace', kind: 'ghost danger' },
+        { label: 'Merge', value: 'merge', kind: 'primary' },
+      ],
+    });
+    if (res === 'merge'){ tasks.push(...imported); toast(`Merged ${imported.length} task${imported.length > 1 ? 's' : ''}.`); }
+    else if (res === 'replace'){ tasks = imported; toast('Board replaced with imported tasks.'); }
+    else return;
+    save(); renderQuads();
+  };
+  r.readAsText(f);
+});
+
+/* ================= modal ================= */
+let modalResolve = null, modalLastFocus = null;
+function confirmModal({ title, body, actions }){
+  return new Promise(res => {
+    modalResolve = res;
+    modalLastFocus = document.activeElement;
+    $('#mTitle').textContent = title;
+    $('#mBody').innerHTML = body;
+    const box = $('#mActions');
+    box.innerHTML = '';
+    actions.forEach(a => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'btn ' + (a.kind === 'primary' ? 'primary' : 'ghost') + (a.kind === 'danger' ? ' danger' : '');
+      b.textContent = a.label;
+      b.addEventListener('click', () => closeModal(a.value));
+      box.appendChild(b);
+    });
+    document.body.classList.add('modal-open');
+    const first = box.querySelector('.btn');
+    if (first) first.focus();
+  });
+}
+function closeModal(v){
+  document.body.classList.remove('modal-open');
+  const r = modalResolve; modalResolve = null;
+  if (modalLastFocus && modalLastFocus.focus) modalLastFocus.focus();
+  if (r) r(v);
+}
+ $('#mScrim').addEventListener('click', e => { if (e.target.id === 'mScrim') closeModal(null); });
+
+/* ================= toasts ================= */
+function toast(msg, action){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span class="t-msg">${esc(msg)}</span>` +
+    (action ? `<button class="t-act" type="button">${esc(action.label)}</button>` : '') +
+    `<button class="icbtn t-x" type="button" aria-label="Dismiss">${ICON.x}</button>`;
+  $('#toasts').appendChild(el);
+  const kill = () => { el.classList.add('bye'); setTimeout(() => el.remove(), 260); };
+  const timer = setTimeout(kill, 5200);
+  el.querySelector('.t-x').addEventListener('click', () => { clearTimeout(timer); kill(); });
+  const act = el.querySelector('.t-act');
+  if (act) act.addEventListener('click', () => { clearTimeout(timer); action.fn(); kill(); });
+}
+
+/* ================= pomodoro timer ================= */
+let actx = null;
+function chimeReady(){
+  try {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+  } catch (e) {}
+}
+function chime(){
+  chimeReady();
+  if (!actx || actx.state !== 'running') return;
+  const t0 = actx.currentTime + 0.02;
+  [[880, 0], [1108.73, 0.18], [1318.51, 0.36]].forEach(([f, dt]) => {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t0 + dt);
+    g.gain.exponentialRampToValueAtTime(0.14, t0 + dt + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dt + 0.9);
+    o.connect(g).connect(actx.destination);
+    o.start(t0 + dt); o.stop(t0 + dt + 1);
+  });
+}
+
+let sessions = (() => {
+  try { return JSON.parse(localStorage.getItem(KEY.sessions)) || { date: '', count: 0 }; }
+  catch (e) { return { date: '', count: 0 }; }
+})();
+function drawSessions(){
+  const today = new Date().toISOString().slice(0, 10);
+  const n = sessions.date === today ? sessions.count : 0;
+  $('#sdots').innerHTML = Array.from({ length: 8 }, (_, i) => `<span class="sdot${i < Math.min(n, 8) ? ' on' : ''}"></span>`).join('');
+  $('#sTxt').textContent = n === 0 ? 'no sessions yet today' : `${n} session${n > 1 ? 's' : ''} today`;
+}
+function bumpSessions(){
+  const today = new Date().toISOString().slice(0, 10);
+  if (sessions.date !== today) sessions = { date: today, count: 0 };
+  sessions.count++;
+  try { localStorage.setItem(KEY.sessions, JSON.stringify(sessions)); } catch (e) {}
+  drawSessions();
+}
+
+const RING_C = 603.2; // 2π × r (r = 96)
+const Timer = {
+  dur: 1500, remaining: 1500, running: false, endsAt: 0, focusId: null, raf: 0,
+  load(){
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem(KEY.timer) || '{}') || {}; } catch (e) {}
+    this.dur = [300, 900, 1500, 3000].includes(s.dur) ? s.dur : 1500;
+    this.focusId = typeof s.focusId === 'string' ? s.focusId : null;
+    if (s.running && s.endsAt > Date.now()){
+      this.running = true;
+      this.endsAt = s.endsAt;
+      this.remaining = (s.endsAt - Date.now()) / 1000;
+      this.loop();
+    } else {
+      this.remaining = Number.isFinite(s.rem) && s.rem >= 0 ? s.rem : this.dur;
+    }
+    this.draw();
+  },
+  persist(){
+    const rem = this.running ? Math.max(0, (this.endsAt - Date.now()) / 1000) : this.remaining;
+    try {
+      localStorage.setItem(KEY.timer, JSON.stringify({
+        dur: this.dur, rem: Math.round(rem), run: this.running,
+        endsAt: this.running ? this.endsAt : 0, focusId: this.focusId,
+      }));
+    } catch (e) {}
+  },
+  start(){
+    chimeReady(); // unlock audio on user gesture
+    if (this.remaining <= 0) this.remaining = this.dur;
+    this.running = true;
+    this.endsAt = Date.now() + this.remaining * 1000;
+    ringWrap.classList.remove('done');
+    this.loop(); this.draw(); this.persist();
+  },
+  pause(){
+    if (!this.running) return;
+    this.running = false;
+    this.remaining = Math.max(0, (this.endsAt - Date.now()) / 1000);
+    cancelAnimationFrame(this.raf);
+    this.draw(); this.persist();
+  },
+  reset(){
+    this.running = false;
+    this.remaining = this.dur;
+    cancelAnimationFrame(this.raf);
+    ringWrap.classList.remove('done');
+    this.draw(); this.persist();
+  },
+  setDur(sec){
+    this.dur = sec; this.running = false; this.remaining = sec;
+    cancelAnimationFrame(this.raf);
+    ringWrap.classList.remove('done');
+    this.draw(); this.persist();
+  },
+  loop(){
+    cancelAnimationFrame(this.raf);
+    const step = () => {
+      if (!this.running) return;
+      const rem = (this.endsAt - Date.now()) / 1000;
+      if (rem <= 0){
+        this.remaining = 0; this.running = false;
+        this.complete(); this.draw();
+        return;
+      }
+      this.remaining = rem; this.draw();
+      this.raf = requestAnimationFrame(step);
+    };
+    this.raf = requestAnimationFrame(step);
+  },
+  complete(){
+    chime();
+    bumpSessions();
+    ringWrap.classList.add('done');
+    const ft = tasks.find(t => t.id === this.focusId && !t.done);
+    toast('Focus session complete — take a break.', ft ? {
+      label: `Mark “${truncate(ft.text, 24)}” done`,
+      fn(){ ft.done = true; ft.doneAt = Date.now(); save(); renderQuads(); }
+    } : undefined);
+    this.persist();
+  },
+  draw(){
+    const rem = Math.max(0, this.remaining);
+    const t = fmtClock(rem);
+    if (timeText.textContent !== t) timeText.textContent = t;
+    timeSub.textContent = this.running ? 'focusing'
+      : (rem <= 0 ? 'done — nice work'
+      : (rem < this.dur ? 'paused' : `of ${fmtClock(this.dur)}`));
+    ringBar.style.strokeDashoffset = (RING_C * (1 - rem / this.dur)).toFixed(1);
+    tPlay.innerHTML = this.running ? ICON.pause : ICON.play;
+    tPlay.setAttribute('aria-label', this.running ? 'Pause timer' : 'Start timer');
+    presetChips.forEach(c => c.classList.toggle('active', +c.dataset.d === this.dur));
+    document.title = this.running ? `${t} · focus — MindDump` : BASE_TITLE;
+  },
+};
+
+tPlay.addEventListener('click', () => Timer.running ? Timer.pause() : Timer.start());
+tReset.addEventListener('click', () => Timer.reset());
+ $('#presets').addEventListener('click', e => {
+  const c = e.target.closest('.chip');
+  if (c) Timer.setDur(+c.dataset.d);
+});
+
+/* drawer */
+let drawerLastFocus = null;
+function openDrawer(){
+  drawerLastFocus = document.activeElement;
+  document.body.classList.add('drawer-open');
+  syncFocusTask();
+  setTimeout(() => tPlay.focus(), 80);
+}
+function closeDrawer(){
+  document.body.classList.remove('drawer-open');
+  if (drawerLastFocus && drawerLastFocus.focus) drawerLastFocus.focus();
+}
+timerBtn.addEventListener('click', openDrawer);
+ $('#drawerClose').addEventListener('click', closeDrawer);
+scrim.addEventListener('click', closeDrawer);
+
+function syncFocusTask(){
+  const box = $('#focusTask');
+  const t = tasks.find(x => x.id === Timer.focusId);
+  if (!t){
+    box.innerHTML = `<p class="ft-empty">Tap the clock on any card to focus on it here.</p>`;
+    return;
+  }
+  box.innerHTML = `
+    <div class="focus-task" style="margin:16px 0 2px">
+      <button class="tick" id="ftTick" type="button" role="checkbox" aria-checked="${t.done}"
+        aria-label="Toggle done">${ICON.check}</button>
+      <span class="ft-text ${t.done ? 'done' : ''}">${esc(t.text)}</span>
+      <button class="icbtn" id="ftClear" type="button" aria-label="Clear focus task">${ICON.x}</button>
+    </div>`;
+  $('#ftTick').addEventListener('click', () => toggleDone(t));
+  $('#ftClear').addEventListener('click', () => {
+    Timer.focusId = null; Timer.persist(); syncFocusTask();
+  });
+}
+
+/* ================= theme ================= */
+function applyTheme(mode){
+  document.documentElement.dataset.theme = mode;
+  themeBtn.innerHTML = mode === 'dark' ? ICON.sun : ICON.moon;
+  themeBtn.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  try { localStorage.setItem(KEY.theme, mode); } catch (e) {}
+}
+themeBtn.addEventListener('click', () =>
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+/* ================= global keyboard ================= */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){
+    if (pop) return; // already handled in capture phase
+    if (document.body.classList.contains('drawer-open')){ closeDrawer(); return; }
+    if (document.body.classList.contains('modal-open')){ closeModal(null); return; }
+  }
+  if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey){
+    const t = e.target;
+    const typing = t instanceof HTMLElement && t.matches('input, textarea, select, [contenteditable="true"]');
+    if (!typing){ e.preventDefault(); dumpInput.focus(); }
+  }
+});
+
+/* ================= init ================= */
+buildMatrix();
+ $$('[data-icon]').forEach(el => { el.innerHTML = ICON[el.dataset.icon] || ''; });
+ $('#tReset').innerHTML = ICON.reset;
+applyTheme(document.documentElement.dataset.theme || 'light');
+Timer.load();
+drawSessions();
+renderQuads();
+updateLineCount();
+
+})();
+</script>
+</body>
+</html>
