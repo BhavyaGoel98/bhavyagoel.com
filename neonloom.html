@@ -1,300 +1,1184 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Neon Loom — Hand-Woven Light</title>
+<title>NeonLoom — Hand-Woven Light</title>
+<meta name="description" content="Interactive computer-vision light loom powered by MediaPipe Hands, p5.js, and procedural Web Audio synthesis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root {
+    --bg-deep: #050811;
+    --bg-surface: #0b1120;
+    --bg-elevated: rgba(15, 23, 42, 0.78);
+    --border-subtle: rgba(148, 163, 184, 0.16);
+    --border-cyan: rgba(0, 229, 255, 0.45);
+    --border-magenta: rgba(255, 0, 229, 0.45);
     --cyan: #00e5ff;
     --magenta: #ff00e5;
-  }
-  html, body{
-    margin:0; padding:0; overflow:hidden;
-    background:#000;
-    width:100%; height:100%;
-    font-family: 'Courier New', Consolas, monospace;
-  }
-  /* The video element stays in the DOM (not display:none) so the browser
-     keeps decoding frames, but it is invisible — we draw our own mirrored,
-     stylized copy of it onto the canvas every frame. */
-  #webcam{
-    position:absolute;
-    top:0; left:0;
-    width:2px; height:2px;
-    opacity:0.01;
-    pointer-events:none;
-  }
-  canvas{ display:block; }
-
-  #status{
-    position:fixed;
-    top:18px; left:18px;
-    color:var(--cyan);
-    font-size:12px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    text-shadow:0 0 8px rgba(0,229,255,0.85), 0 0 2px rgba(0,229,255,0.9);
-    z-index:10;
-    pointer-events:none;
-    transition:opacity 0.6s ease;
-  }
-  #status.hidden{ opacity:0; }
-  #status.error{
-    color:var(--magenta);
-    text-shadow:0 0 8px rgba(255,0,229,0.85);
+    --yellow: #ffe11e;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', Consolas, monospace;
   }
 
-  #controls{
-    position:fixed; top:18px; right:18px; z-index:10;
-    display:flex; gap:10px;
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-  .ctrl-btn{
-    width:42px; height:42px;
-    border-radius:50%;
-    border:1px solid rgba(0,229,255,0.55);
-    background:rgba(4,10,18,0.55);
-    color:var(--cyan);
-    font-size:18px;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-    box-shadow:0 0 10px rgba(0,229,255,0.45), inset 0 0 8px rgba(0,229,255,0.15);
-    transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.3s ease;
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body.in-experience {
+    overflow: hidden;
+    height: 100%;
+    touch-action: none;
+    user-select: none;
+  }
+
+  /* Hidden webcam video element stays in DOM so browser decodes frames continuously */
+  #webcam {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 2px;
+    opacity: 0.01;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ============================================================
+     LANDING PAGE STYLES
+     ============================================================ */
+  #landingView {
+    position: relative;
+    z-index: 20;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(0, 229, 255, 0.08), transparent 42%),
+      radial-gradient(circle at 82% 24%, rgba(255, 0, 229, 0.07), transparent 42%),
+      var(--bg-deep);
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #landingView.hidden {
+    display: none;
+  }
+
+  .top-nav {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .brand-wordmark {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--text-primary);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #030712;
+    background: var(--cyan);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 0 0 24px rgba(0, 229, 255, 0.28);
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease, background 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    background: #33ebff;
+    box-shadow: 0 0 32px rgba(0, 229, 255, 0.45);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--border-cyan);
+    background: rgba(15, 23, 42, 0.95);
+  }
+
+  .container {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 48px;
+    align-items: stretch;
+    padding: 56px 0 64px;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 4.2vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    text-wrap: balance;
+    margin-bottom: 20px;
+  }
+
+  .hero-title span {
+    background: linear-gradient(95deg, #00e5ff 0%, #f472b6 55%, #ffe11e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-lead {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 60ch;
+    margin-bottom: 28px;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .preview-stage-card {
+    position: relative;
+    background: #070b16;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  #heroPreviewCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  #heroPreviewCanvas:active {
+    cursor: grabbing;
+  }
+
+  .preview-overlay-top,
+  .preview-overlay-bottom {
+    position: relative;
+    z-index: 2;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(5, 8, 17, 0.8), transparent);
+  }
+
+  .preview-overlay-bottom {
+    background: linear-gradient(to top, rgba(5, 8, 17, 0.85), transparent);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+  }
+
+  .section-block {
+    padding: 56px 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .section-header {
+    max-width: 680px;
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+    text-wrap: balance;
+  }
+
+  .section-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .info-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .info-card-step {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--cyan);
+    margin-bottom: 10px;
+  }
+
+  .info-card h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+  }
+
+  .info-card p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .spec-list {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .landing-footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 28px 0 40px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* ============================================================
+     INTERACTIVE EXPERIENCE HUD & STAGE
+     ============================================================ */
+  #experienceView {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 10;
+  }
+
+  #experienceView.hidden {
+    display: none;
+  }
+
+  #p5Container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  canvas {
+    display: block;
+  }
+
+  .hud-top-left {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: calc(100vw - 180px);
+    pointer-events: none;
+  }
+
+  #status {
+    color: var(--cyan);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.75);
+    background: rgba(5, 8, 17, 0.76);
+    border: 1px solid var(--border-subtle);
+    padding: 8px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    transition: opacity 0.35s ease, border-color 0.25s ease;
+  }
+
+  #status.hidden {
+    opacity: 0;
+  }
+
+  #status.error {
+    color: #fda4af;
+    border-color: rgba(244, 63, 94, 0.5);
+    text-shadow: 0 0 8px rgba(244, 63, 94, 0.65);
+  }
+
+  .tracking-readout {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: rgba(5, 8, 17, 0.68);
+    border: 1px solid var(--border-subtle);
+    padding: 6px 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+  }
+
+  #controls {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .ctrl-btn {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 229, 255, 0.4);
+    background: rgba(5, 10, 20, 0.76);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  .ctrl-btn:hover, .ctrl-btn:active{
-    transform:scale(1.08);
-    box-shadow:0 0 16px rgba(0,229,255,0.75), inset 0 0 10px rgba(0,229,255,0.3);
+
+  .ctrl-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: var(--cyan);
+    background: rgba(12, 22, 40, 0.9);
   }
-  .ctrl-btn:disabled{
-    opacity:0.3; cursor:not-allowed; box-shadow:none;
+
+  .ctrl-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
   }
-  .ctrl-btn.muted{
-    border-color:rgba(255,0,229,0.55);
-    color:var(--magenta);
-    box-shadow:0 0 10px rgba(255,0,229,0.45);
+
+  .ctrl-btn.muted,
+  .ctrl-btn.danger-state {
+    border-color: rgba(255, 0, 229, 0.55);
+    color: #f5d0fe;
+  }
+
+  .ctrl-btn.active-mode {
+    background: rgba(0, 229, 255, 0.18);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .hud-bottom-bar {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(5, 10, 20, 0.78);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .hud-select {
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(3, 6, 14, 0.82);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-backdrop.hidden {
+    display: none;
+  }
+
+  .modal-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 28px;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .modal-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+  }
+
+  @media (max-width: 960px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 32px 0 44px;
+    }
+    .grid-3, .grid-2 {
+      grid-template-columns: 1fr;
+    }
+    .nav-links {
+      display: none;
+    }
+    .ctrl-label {
+      display: none;
+    }
   }
 </style>
 </head>
 <body>
 
 <video id="webcam" playsinline autoplay muted></video>
-<div id="status">INITIALIZING CAMERA…</div>
 
-<div id="controls">
-  <button id="camSwitchBtn" class="ctrl-btn" title="Switch camera" aria-label="Switch front/back camera">⇄</button>
-  <button id="muteBtn" class="ctrl-btn" title="Mute sound" aria-label="Mute sound effects">🔊</button>
+<!-- 1. LANDING PAGE VIEW -->
+<div id="landingView">
+  <header class="top-nav">
+    <a href="#top" class="brand-wordmark">NeonLoom</a>
+    <nav class="nav-links">
+      <a href="#how-it-works">How It Works</a>
+      <a href="#hand-guide">Hand Guide</a>
+      <a href="#privacy-audio">Privacy &amp; Audio</a>
+      <a href="#compatibility">Compatibility</a>
+    </nav>
+    <button id="navStartBtn" class="btn-primary">Start Experience</button>
+  </header>
+
+  <main class="container">
+    <section class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-kicker">OPTICAL HAND TRACKING · WEB AUDIO SYNTHESIS</div>
+        <h1 class="hero-title">Weave elastic <span>neon light</span> between your fingertips.</h1>
+        <p class="hero-lead">
+          NeonLoom transforms your camera into a responsive optical loom. Raise one or two hands to string seven harmonic threads between your fingertips—plucking pentatonic chords, bending light tension, and crossing hands without losing tracking continuity.
+        </p>
+        <div class="hero-actions">
+          <button id="heroStartCameraBtn" class="btn-primary">Start Experience (Camera)</button>
+          <button id="heroStartSimBtn" class="btn-secondary">Interactive Simulator (No Camera)</button>
+        </div>
+        <div class="hero-meta">
+          <span>21-Point Hand Skeleton</span>
+          <span aria-hidden="true">·</span>
+          <span>Mirror-True Left/Right Continuity</span>
+          <span aria-hidden="true">·</span>
+          <span>100% Local Processing</span>
+        </div>
+      </div>
+
+      <div class="preview-stage-card" aria-label="Interactive Cat's Cradle Preview">
+        <canvas id="heroPreviewCanvas"></canvas>
+        <div class="preview-overlay-top">
+          <span style="font-family: var(--font-mono); font-size: 12px; color: var(--cyan);">LIVE INTERACTIVE PREVIEW</span>
+          <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">Drag Cyan or Magenta Hand</span>
+        </div>
+        <div class="preview-overlay-bottom">
+          <span>Left Hand: Cyan · Right Hand: Magenta · Tension: Solar Yellow</span>
+          <span>7 Harmonic Threads</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section-block">
+      <div class="section-header">
+        <h2 class="section-title">How NeonLoom Works</h2>
+        <p class="section-subtitle">Engineered for smooth, low-latency optical tracking and expressive audiovisual feedback across desktop and mobile browsers.</p>
+      </div>
+      <div class="grid-3">
+        <article class="info-card">
+          <div class="info-card-step">01. Optical Hand Pose</div>
+          <h3>21-Point Skeletal Mapping</h3>
+          <p>MediaPipe Hands locates 21 3D landmarks per hand on every new video frame. Velocity-adaptive smoothing eliminates resting jitter while keeping fast hand motion crisp.</p>
+        </article>
+        <article class="info-card">
+          <div class="info-card-step">02. Crossing &amp; Identity Lock</div>
+          <h3>Temporal Continuity Assignment</h3>
+          <p>Hands are tracked using mirror-aware handedness, palm geometry, and Hungarian trajectory matching—so crossing your wrists or using a single hand never swaps colors or snaps strings.</p>
+        </article>
+        <article class="info-card">
+          <div class="info-card-step">03. Elastic String Physics</div>
+          <h3>Pentatonic Tension Synthesis</h3>
+          <p>Seven elastic cradle threads connect matching fingertips and thumb-to-pinky diagonals. Stretching increases pitch and shifts hue from cyan to magenta to solar yellow.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="hand-guide" class="section-block">
+      <div class="section-header">
+        <h2 class="section-title">How to Position Your Hands</h2>
+        <p class="section-subtitle">NeonLoom adapts seamlessly whether you raise one hand, two hands, or cross them in motion.</p>
+      </div>
+      <div class="grid-2">
+        <article class="info-card">
+          <h3>Two-Hand Cat's Cradle Mode</h3>
+          <p>Hold both hands 30–60 cm from the camera with palms facing the screen or slightly angled toward each other. Five parallel threads link matching fingertips while two diagonal threads cross from thumb to pinky.</p>
+          <div class="spec-list">
+            <div>· Spread hands apart to increase string tension and raise pitch</div>
+            <div>· Quick finger flicks pluck individual threads with harmonic waves</div>
+            <div>· Cross hands horizontally—identity lock preserves Left (Cyan) and Right (Magenta)</div>
+          </div>
+        </article>
+        <article class="info-card">
+          <h3>Single-Hand Solo Loom Mode</h3>
+          <p>When only one hand is visible in frame, NeonLoom identifies whether it is your Left (Cyan) or Right (Magenta) hand and automatically weaves an intra-hand harmonic fan across your five fingertips.</p>
+          <div class="spec-list">
+            <div>· Open and pinch your thumb and fingers to pluck solo chords</div>
+            <div>· Brief tracking interruptions coast smoothly for 180ms without flicker</div>
+            <div>· Raise your second hand at any time to transition into the full two-hand cradle</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="privacy-audio" class="section-block">
+      <div class="grid-2">
+        <article class="info-card">
+          <h3>Camera Permission &amp; Local Privacy</h3>
+          <p>NeonLoom processes 100% of camera frames locally inside your browser using WebAssembly and WebGL. Video frames are never uploaded, recorded, or transmitted to any server.</p>
+          <div class="spec-list">
+            <div>· Requires browser camera permission when starting Camera Mode</div>
+            <div>· Stop or switch cameras at any time with full hardware track cleanup</div>
+            <div>· If no camera is available, use the built-in Interactive Simulator</div>
+          </div>
+        </article>
+        <article class="info-card" id="compatibility">
+          <h3>Procedural Audio &amp; Device Compatibility</h3>
+          <p>All sound is synthesized in real time using the Web Audio API—no external audio files required. Audio starts only after your explicit click gesture to respect browser autoplay policies.</p>
+          <div class="spec-list">
+            <div>· Desktop: Chrome, Edge, Firefox, Safari with webcam or Simulator</div>
+            <div>· Mobile: iOS Safari &amp; Android Chrome with Front/Rear camera switch</div>
+            <div>· Performance Tiers: High, Balanced, and Eco modes for mobile battery life</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="landing-footer">
+      <span>NeonLoom — Hand-Woven Light</span>
+      <span>Client-Side Computer Vision · MediaPipe Hands · p5.js · Web Audio API</span>
+    </footer>
+  </main>
 </div>
 
-<!-- p5.js -->
+<!-- 2. INTERACTIVE EXPERIENCE VIEW -->
+<div id="experienceView" class="hidden">
+  <div id="p5Container"></div>
+
+  <div class="hud-top-left">
+    <div id="status">INITIALIZING CAMERA…</div>
+    <div class="tracking-readout">
+      <span id="trackingBadge">STANDBY</span>
+      <span aria-hidden="true">·</span>
+      <span id="handsCountReadout">L: -- | R: --</span>
+      <span aria-hidden="true">·</span>
+      <span id="fpsReadout">60 FPS</span>
+    </div>
+  </div>
+
+  <div id="controls">
+    <button id="camSwitchBtn" class="ctrl-btn" title="Switch front/back camera" aria-label="Switch front/back camera">
+      <span>⇄</span><span class="ctrl-label">Switch Cam</span>
+    </button>
+    <button id="muteBtn" class="ctrl-btn muted" title="Toggle synthesized sound" aria-label="Toggle sound">
+      <span id="muteIcon">🔇</span><span id="muteLabel" class="ctrl-label">Sound Off</span>
+    </button>
+    <button id="pauseBtn" class="ctrl-btn" title="Pause or resume experience" aria-label="Pause or resume">
+      <span id="pauseIcon">⏸</span><span id="pauseLabel" class="ctrl-label">Pause</span>
+    </button>
+    <button id="resetBtn" class="ctrl-btn" title="Reset tracking and strings" aria-label="Reset loom">
+      <span>↺</span><span class="ctrl-label">Reset</span>
+    </button>
+    <button id="fullscreenBtn" class="ctrl-btn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+      <span>⛶</span><span class="ctrl-label">Fullscreen</span>
+    </button>
+    <button id="helpBtn" class="ctrl-btn" title="Help and controls" aria-label="Open help overlay">
+      <span>?</span><span class="ctrl-label">Help</span>
+    </button>
+    <button id="exitBtn" class="ctrl-btn danger-state" title="Exit to landing page" aria-label="Exit experience">
+      <span>✕</span><span class="ctrl-label">Exit</span>
+    </button>
+  </div>
+
+  <div class="hud-bottom-bar">
+    <button id="camToggleBtn" class="ctrl-btn" title="Start or stop camera stream">Stop Camera</button>
+    <button id="camRestartBtn" class="ctrl-btn" title="Restart camera stream">Restart Camera</button>
+    <button id="simToggleBtn" class="ctrl-btn" title="Toggle interactive touch/mouse hand simulator">Simulator Mode: Off</button>
+    <button id="mirrorToggleBtn" class="ctrl-btn" title="Toggle horizontal video mirror">Mirror: On</button>
+    <label for="qualitySelect" style="font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); margin-left: 4px;">Quality:</label>
+    <select id="qualitySelect" class="hud-select" aria-label="Performance quality mode">
+      <option value="high">High (Full Glow)</option>
+      <option value="balanced" selected>Balanced</option>
+      <option value="low">Eco (Mobile Save)</option>
+    </select>
+  </div>
+</div>
+
+<!-- Help Modal -->
+<div id="helpModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <h2 id="helpModalTitle">NeonLoom Guide &amp; Controls</h2>
+      <button id="closeHelpBtn" class="ctrl-btn" aria-label="Close help">✕</button>
+    </div>
+    <div class="spec-list" style="font-size: 0.9rem; line-height: 1.65;">
+      <p><strong style="color: var(--cyan);">Two-Hand Cat's Cradle:</strong> Raise both hands to weave 7 elastic threads between your fingertips. Move hands apart to tighten tension (Cyan → Magenta → Yellow) and flick fingers to pluck harmonic notes.</p>
+      <p><strong style="color: var(--magenta);">Single-Hand Solo Loom:</strong> Raise either your Left (Cyan) or Right (Magenta) hand alone to weave intra-hand threads between your thumb and fingers.</p>
+      <p><strong>Hand Crossing &amp; Fast Motion:</strong> Our temporal tracking engine locks onto each hand's trajectory and handedness so crossing your hands horizontally will not swap their colors or snap threads.</p>
+      <p><strong>Camera Permission Troubleshooting:</strong> If camera access was denied, click the camera icon in your browser address bar to allow camera permissions, then click <em>Restart Camera</em>—or enable <em>Simulator Mode</em> to weave with your mouse or touchscreen.</p>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
-<!-- MediaPipe Hands -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.js"></script>
 
 <script>
-/* ============================================================
-   NEON LOOM — Hand-Woven Light
-   Two hands, mirrored on screen, glowing skeletons, and seven
-   elastic neon threads strung between matching fingertips.
-   Cyan = left hand · Magenta = right hand · Yellow = tension.
-   Front/back camera switch + procedurally synthesized sound.
-   ============================================================ */
+const videoEl            = document.getElementById('webcam');
+const landingView        = document.getElementById('landingView');
+const experienceView     = document.getElementById('experienceView');
+const statusEl           = document.getElementById('status');
+const trackingBadgeEl    = document.getElementById('trackingBadge');
+const handsCountEl       = document.getElementById('handsCountReadout');
+const fpsReadoutEl       = document.getElementById('fpsReadout');
 
-// ---------- DOM ----------
-const videoEl     = document.getElementById('webcam');
-const statusEl    = document.getElementById('status');
-const camSwitchBtn= document.getElementById('camSwitchBtn');
-const muteBtn     = document.getElementById('muteBtn');
+const navStartBtn        = document.getElementById('navStartBtn');
+const heroStartCameraBtn = document.getElementById('heroStartCameraBtn');
+const heroStartSimBtn    = document.getElementById('heroStartSimBtn');
 
-// ---------- MediaPipe / camera state ----------
-let handsModel = null;
-let latestResults = null;
-let firstResultSeen = false;
-let cameraLoopActive = false;
-let currentFacing = 'user';   // 'user' = front, 'environment' = back
-let mirrorEnabled = true;     // mirror only makes sense for the front camera
-let statusFlashTimer = null;
+const camSwitchBtn       = document.getElementById('camSwitchBtn');
+const muteBtn            = document.getElementById('muteBtn');
+const muteIcon           = document.getElementById('muteIcon');
+const muteLabel          = document.getElementById('muteLabel');
+const pauseBtn           = document.getElementById('pauseBtn');
+const pauseIcon          = document.getElementById('pauseIcon');
+const pauseLabel         = document.getElementById('pauseLabel');
+const resetBtn           = document.getElementById('resetBtn');
+const fullscreenBtn      = document.getElementById('fullscreenBtn');
+const helpBtn            = document.getElementById('helpBtn');
+const closeHelpBtn       = document.getElementById('closeHelpBtn');
+const helpModal          = document.getElementById('helpModal');
+const exitBtn            = document.getElementById('exitBtn');
 
-// ---------- Hand smoothing state ----------
-const leftHandState  = { alpha: 0, pts: null };
-const rightHandState = { alpha: 0, pts: null };
-const SMOOTHING = 0.4;
-const FADE_IN   = 0.15;
-const FADE_OUT  = 0.08;
+const camToggleBtn       = document.getElementById('camToggleBtn');
+const camRestartBtn      = document.getElementById('camRestartBtn');
+const simToggleBtn       = document.getElementById('simToggleBtn');
+const mirrorToggleBtn    = document.getElementById('mirrorToggleBtn');
+const qualitySelect      = document.getElementById('qualitySelect');
 
-// ---------- Finger layout (MediaPipe Hands 21-point model) ----------
+let inExperience         = false;
+let isPaused             = false;
+let simulatorMode        = false;
+let qualityMode          = 'balanced';
+
+let handsModel           = null;
+let handsModelReady      = false;
+let isInferenceBusy      = false;
+let lastVideoTime        = -1;
+let lastInferenceMs      = 0;
+let pumpRafId            = null;
+let cameraActive         = false;
+let currentFacing        = 'user';
+let mirrorEnabled        = true;
+let videoDevices         = [];
+let currentDeviceIndex   = 0;
+let latestResults        = null;
+let statusFlashTimer     = null;
+
+function createHandTrack(side) {
+  return {
+    side,
+    alpha: 0,
+    pts: null,
+    vel: null,
+    centroid: null,
+    centroidVel: { vx: 0, vy: 0 },
+    missingFrames: 0,
+    handednessScore: 0
+  };
+}
+
+const leftHandState      = createHandTrack('left');
+const rightHandState     = createHandTrack('right');
+
+const MAX_COAST_FRAMES   = 6;
+const FADE_IN            = 0.22;
+const FADE_OUT           = 0.10;
+
 const FINGER_CHAINS = [
-  [0,1,2,3,4],     // thumb
-  [0,5,6,7,8],     // index
-  [0,9,10,11,12],  // middle
-  [0,13,14,15,16], // ring
-  [0,17,18,19,20]  // pinky
+  [0, 1, 2, 3, 4],
+  [0, 5, 6, 7, 8],
+  [0, 9, 10, 11, 12],
+  [0, 13, 14, 15, 16],
+  [0, 17, 18, 19, 20]
 ];
-const FINGERTIPS = [4,8,12,16,20];
+const FINGERTIPS = [4, 8, 12, 16, 20];
+const PALM_INDICES = [0, 5, 9, 13, 17];
 
 const STRING_PAIRS = [
-  [4,4],[8,8],[12,12],[16,16],[20,20],
-  [4,20],[20,4]
+  [4, 4], [8, 8], [12, 12], [16, 16], [20, 20],
+  [4, 20], [20, 4]
 ];
-const stringStates = STRING_PAIRS.map(() => ({ prevDist: null, vibe: 0, lastPluck: -9999 }));
 
-// ---------- Color palette ----------
-let palette;
-let vignette;
+const SOLO_STRING_PAIRS = [
+  [4, 8], [8, 12], [12, 16], [16, 20],
+  [4, 12], [8, 20], [4, 20]
+];
 
-// ============================================================
-// Audio — procedural Web Audio synthesis, no external assets
-// ============================================================
+const PENTATONIC_BASE = [220.0, 247.5, 293.3, 330.0, 396.0, 440.0, 528.0];
+
+const stringStates = STRING_PAIRS.map(() => ({
+  prevDist: null,
+  vibe: 0,
+  lastPluck: -9999
+}));
+
+const soloStringStates = {
+  left: SOLO_STRING_PAIRS.map(() => ({ prevDist: null, vibe: 0, lastPluck: -9999 })),
+  right: SOLO_STRING_PAIRS.map(() => ({ prevDist: null, vibe: 0, lastPluck: -9999 }))
+};
+
+let pluckSparks = [];
+
+const simHands = {
+  leftVisible: true,
+  rightVisible: true,
+  leftCenter: { x: 0.32, y: 0.54 },
+  rightCenter: { x: 0.68, y: 0.54 },
+  leftSpread: 1.0,
+  rightSpread: 1.0,
+  dragging: null
+};
+
 let audioCtx = null;
 let masterGain = null;
 let droneGain = null;
 let isMuted = false;
+let audioPermitted = false;
 const SAVED_VOLUME = 0.55;
 
-function initAudio() {
+function initAudioContext() {
   if (audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
 
+  audioCtx = new AudioCtx();
   masterGain = audioCtx.createGain();
-  masterGain.gain.value = isMuted ? 0 : SAVED_VOLUME;
+  masterGain.gain.value = 0;
   masterGain.connect(audioCtx.destination);
 
-  // Subtle ambient drone that swells slightly when hands are present.
   const d1 = audioCtx.createOscillator();
   const d2 = audioCtx.createOscillator();
-  d1.type = 'sine'; d1.frequency.value = 110;
-  d2.type = 'sine'; d2.frequency.value = 110 * 1.5;
+  d1.type = 'sine';
+  d1.frequency.value = 110;
+  d2.type = 'sine';
+  d2.frequency.value = 165;
+
   const droneFilter = audioCtx.createBiquadFilter();
   droneFilter.type = 'lowpass';
-  droneFilter.frequency.value = 800;
+  droneFilter.frequency.value = 680;
+
   droneGain = audioCtx.createGain();
   droneGain.gain.value = 0;
+
   d1.connect(droneFilter);
   d2.connect(droneFilter);
   droneFilter.connect(droneGain);
   droneGain.connect(masterGain);
+
   d1.start();
   d2.start();
 }
 
-function unlockAudio() {
-  initAudio();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+async function ensureAudioUnlocked() {
+  initAudioContext();
+  if (!audioCtx) return false;
+  if (audioCtx.state === 'suspended') {
+    try {
+      await audioCtx.resume();
+    } catch (e) {
+      return false;
+    }
+  }
+  audioPermitted = audioCtx.state === 'running';
+  syncAudioUI();
+  return audioPermitted;
 }
-window.addEventListener('pointerdown', unlockAudio);
-window.addEventListener('keydown', unlockAudio);
 
-function playPluck(tension) {
-  if (!audioCtx) return;
+function syncAudioUI() {
+  const active = audioPermitted && !isMuted && !isPaused && inExperience;
+  if (masterGain && audioCtx) {
+    masterGain.gain.setTargetAtTime(active ? SAVED_VOLUME : 0, audioCtx.currentTime, 0.04);
+  }
+  const showEnabled = audioPermitted && !isMuted;
+  muteIcon.textContent = showEnabled ? '🔊' : '🔇';
+  muteLabel.textContent = showEnabled ? 'Sound On' : 'Sound Off';
+  muteBtn.classList.toggle('muted', !showEnabled);
+}
+
+function playPluck(tension, stringIdx = 0) {
+  if (!audioCtx || !audioPermitted || isMuted || isPaused) return;
   const now = audioCtx.currentTime;
-  const freq = 220 + tension * 440; // tighter string -> higher pitch
+  const base = PENTATONIC_BASE[stringIdx % PENTATONIC_BASE.length];
+  const freq = base * (0.85 + tension * 0.95);
+
   const osc = audioCtx.createOscillator();
   osc.type = 'triangle';
-  osc.frequency.value = freq;
+  osc.frequency.setValueAtTime(freq, now);
+  osc.frequency.exponentialRampToValueAtTime(freq * 0.992, now + 0.36);
+
   const gain = audioCtx.createGain();
   gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.22, now + 0.005);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+  gain.gain.exponentialRampToValueAtTime(0.20, now + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+
   osc.connect(gain);
   gain.connect(masterGain);
   osc.start(now);
-  osc.stop(now + 0.4);
+  osc.stop(now + 0.42);
 }
 
 function playChime(rising) {
-  if (!audioCtx) return;
+  if (!audioCtx || !audioPermitted || isMuted || isPaused) return;
   const now = audioCtx.currentTime;
   const osc = audioCtx.createOscillator();
   osc.type = 'sine';
-  osc.frequency.setValueAtTime(rising ? 440 : 660, now);
-  osc.frequency.exponentialRampToValueAtTime(rising ? 880 : 330, now + 0.25);
+  osc.frequency.setValueAtTime(rising ? 396 : 528, now);
+  osc.frequency.exponentialRampToValueAtTime(rising ? 792 : 297, now + 0.26);
+
   const gain = audioCtx.createGain();
   gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.16, now + 0.03);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+  gain.gain.exponentialRampToValueAtTime(0.14, now + 0.025);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.36);
+
   osc.connect(gain);
   gain.connect(masterGain);
   osc.start(now);
-  osc.stop(now + 0.45);
+  osc.stop(now + 0.40);
 }
 
 function playClick() {
-  if (!audioCtx) return;
+  if (!audioCtx || !audioPermitted || isMuted) return;
   const now = audioCtx.currentTime;
   const osc = audioCtx.createOscillator();
-  osc.type = 'square';
-  osc.frequency.value = 1200;
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(980, now);
   const gain = audioCtx.createGain();
-  gain.gain.setValueAtTime(0.12, now);
-  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+  gain.gain.setValueAtTime(0.08, now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
   osc.connect(gain);
   gain.connect(masterGain);
   osc.start(now);
-  osc.stop(now + 0.1);
+  osc.stop(now + 0.07);
 }
 
-muteBtn.addEventListener('click', () => {
-  unlockAudio();
-  isMuted = !isMuted;
-  if (masterGain) masterGain.gain.value = isMuted ? 0 : SAVED_VOLUME;
-  muteBtn.textContent = isMuted ? '🔇' : '🔊';
-  muteBtn.classList.toggle('muted', isMuted);
-});
+function updateDroneAudio() {
+  if (!droneGain || !audioCtx) return;
+  const presence = (!isPaused && inExperience && !isMuted && audioPermitted)
+    ? (leftHandState.alpha + rightHandState.alpha) * 0.5
+    : 0;
+  const target = 0.055 * presence;
+  droneGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.08);
+}
 
-// ============================================================
-// p5 lifecycle
-// ============================================================
-function setup() {
-  pixelDensity(1);
-  createCanvas(windowWidth, windowHeight);
-  textFont('Courier New');
-
-  palette = {
-    left:  { joint: color(0, 220, 255),  tip: color(150, 255, 255) },
-    right: { joint: color(255, 0, 220),  tip: color(255, 160, 255) },
-    tensionLow:  color(0, 255, 255),
-    tensionMid:  color(255, 0, 255),
-    tensionHigh: color(255, 225, 30)
+(function initHeroPreview() {
+  const canvas = document.getElementById('heroPreviewCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w = 600, h = 420;
+  let previewHands = {
+    left: { x: 0.28, y: 0.52 },
+    right: { x: 0.72, y: 0.52 },
+    drag: null
   };
 
-  buildVignette();
-  initHandTracking();
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  buildVignette();
-}
-
-function draw() {
-  background(0);
-  drawVideoCover();
-  drawDarkAtmosphere();
-  updateHandStates();
-  drawHand(leftHandState,  palette.left);
-  drawHand(rightHandState, palette.right);
-  if (leftHandState.alpha > 0.05 && rightHandState.alpha > 0.05) {
-    drawCradleStrings();
+  function resizePreview() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    w = canvas.width = Math.max(300, rect.width);
+    h = canvas.height = Math.max(320, rect.height);
   }
-  updateDrone();
-  drawIdleHint();
-  drawCornerMark();
-}
+  window.addEventListener('resize', resizePreview);
+  setTimeout(resizePreview, 20);
 
-function updateDrone() {
-  if (!droneGain) return;
-  const presence = (leftHandState.alpha + rightHandState.alpha) / 2;
-  const target = 0.05 * presence;
-  droneGain.gain.value = lerp(droneGain.gain.value, target, 0.05);
-}
+  function buildPreviewHandPts(cx, cy, isLeft, time) {
+    const pts = [];
+    const dir = isLeft ? 1 : -1;
+    pts[0] = { x: cx, y: cy + 58 };
+    const angles = [-0.65, -0.32, 0.0, 0.30, 0.62];
+    const lengths = [64, 82, 90, 82, 68];
+    for (let f = 0; f < 5; f++) {
+      const baseAngle = -Math.PI / 2 + angles[f] * dir + Math.sin(time * 2 + f) * 0.04;
+      const len = lengths[f];
+      for (let j = 1; j <= 4; j++) {
+        const frac = j / 4;
+        pts[f * 4 + j] = {
+          x: cx + Math.cos(baseAngle) * len * frac,
+          y: cy + 40 + Math.sin(baseAngle) * len * frac
+        };
+      }
+    }
+    return pts;
+  }
 
-// ============================================================
-// Camera setup, manual getUserMedia + frame pump (supports switching)
-// ============================================================
-function initHandTracking() {
+  canvas.addEventListener('pointerdown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const dL = Math.hypot(px - previewHands.left.x, py - previewHands.left.y);
+    const dR = Math.hypot(px - previewHands.right.x, py - previewHands.right.y);
+    previewHands.drag = dL < dR ? 'left' : 'right';
+    previewHands[previewHands.drag] = { x: Math.max(0.12, Math.min(0.88, px)), y: Math.max(0.22, Math.min(0.82, py)) };
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!previewHands.drag) return;
+    const rect = canvas.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    previewHands[previewHands.drag] = {
+      x: Math.max(0.12, Math.min(0.88, px)),
+      y: Math.max(0.22, Math.min(0.82, py))
+    };
+  });
+
+  window.addEventListener('pointerup', () => {
+    previewHands.drag = null;
+  });
+
+  function renderPreview(nowMs) {
+    if (!inExperience) {
+      const t = nowMs * 0.001;
+      ctx.fillStyle = '#060a14';
+      ctx.fillRect(0, 0, w, h);
+
+      const lPts = buildPreviewHandPts(previewHands.left.x * w, previewHands.left.y * h, true, t);
+      const rPts = buildPreviewHandPts(previewHands.right.x * w, previewHands.right.y * h, false, t);
+
+      STRING_PAIRS.forEach((pair, idx) => {
+        const p1 = lPts[pair[0]];
+        const p2 = rPts[pair[1]];
+        const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        const tension = Math.max(0, Math.min(1, (dist - 80) / (w * 0.65)));
+        const hue = tension < 0.5 ? 186 + tension * 2 * 114 : 300 - (tension - 0.5) * 2 * 245;
+
+        ctx.save();
+        ctx.strokeStyle = `hsla(${hue}, 100%, 60%, 0.88)`;
+        ctx.shadowColor = `hsla(${hue}, 100%, 60%, 0.85)`;
+        ctx.shadowBlur = 12;
+        ctx.lineWidth = 4.2 - tension * 2.4;
+        ctx.beginPath();
+        for (let s = 0; s <= 16; s++) {
+          const u = s / 16;
+          const bx = p1.x + (p2.x - p1.x) * u;
+          const by = p1.y + (p2.y - p1.y) * u;
+          const wave = Math.sin(u * Math.PI * 5 + t * 7 + idx) * 4.5 * Math.sin(u * Math.PI);
+          if (s === 0) ctx.moveTo(bx, by + wave);
+          else ctx.lineTo(bx, by + wave);
+        }
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      [[lPts, '#00e5ff'], [rPts, '#ff00e5']].forEach(([pts, col]) => {
+        ctx.save();
+        ctx.strokeStyle = col;
+        ctx.globalAlpha = 0.45;
+        ctx.lineWidth = 1.5;
+        FINGER_CHAINS.forEach((chain) => {
+          ctx.beginPath();
+          chain.forEach((idx, i) => {
+            if (i === 0) ctx.moveTo(pts[idx].x, pts[idx].y);
+            else ctx.lineTo(pts[idx].x, pts[idx].y);
+          });
+          ctx.stroke();
+        });
+        ctx.globalAlpha = 1;
+        pts.forEach((p, idx) => {
+          const isTip = FINGERTIPS.includes(idx);
+          ctx.fillStyle = col;
+          ctx.shadowColor = col;
+          ctx.shadowBlur = isTip ? 14 : 6;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, isTip ? 5.5 : 3.2, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.restore();
+      });
+    }
+    requestAnimationFrame(renderPreview);
+  }
+  requestAnimationFrame(renderPreview);
+})();
+
+function ensureHandsModel() {
+  if (handsModel) return true;
   if (typeof Hands === 'undefined') {
-    setStatus('HAND-TRACKING LIBRARY FAILED TO LOAD — CHECK CONNECTION', true);
-    return;
+    setStatus('HAND-TRACKING LIBRARY FAILED TO LOAD — USE SIMULATOR MODE', true, false);
+    return false;
   }
 
   handsModel = new Hands({
@@ -304,116 +1188,604 @@ function initHandTracking() {
 
   handsModel.setOptions({
     maxNumHands: 2,
-    modelComplexity: 1,
-    minDetectionConfidence: 0.7,
-    minTrackingConfidence: 0.6
+    modelComplexity: qualityMode === 'low' ? 0 : 1,
+    minDetectionConfidence: 0.65,
+    minTrackingConfidence: 0.55
   });
 
   handsModel.onResults((results) => {
     latestResults = results;
-    if (!firstResultSeen) {
-      firstResultSeen = true;
-      setStatus('', false, true);
-    }
+    handsModelReady = true;
+    isInferenceBusy = false;
   });
 
-  startCameraStream('user')
-    .then(() => {
-      cameraLoopActive = true;
-      requestAnimationFrame(pumpFrames);
-      checkMultipleCameras();
-    })
-    .catch((err) => {
-      console.error(err);
-      setStatus('CAMERA ACCESS DENIED — ALLOW CAMERA PERMISSIONS AND RELOAD', true);
+  return true;
+}
+
+function stopCameraTracks() {
+  cameraActive = false;
+  if (pumpRafId) {
+    cancelAnimationFrame(pumpRafId);
+    pumpRafId = null;
+  }
+  if (videoEl && videoEl.srcObject) {
+    const stream = videoEl.srcObject;
+    stream.getTracks().forEach((track) => {
+      try { track.stop(); } catch (e) {}
     });
+    videoEl.srcObject = null;
+  }
+  lastVideoTime = -1;
+  isInferenceBusy = false;
+  updateCameraUI();
 }
 
-async function startCameraStream(facingMode) {
-  const constraints = {
-    video: {
-      facingMode: { ideal: facingMode },
-      width: { ideal: 1280 },
-      height: { ideal: 720 }
-    },
-    audio: false
-  };
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  if (videoEl.srcObject) {
-    videoEl.srcObject.getTracks().forEach((t) => t.stop());
-  }
-  videoEl.srcObject = stream;
-  await videoEl.play();
-  currentFacing = facingMode;
-  mirrorEnabled = facingMode === 'user';
+async function enumerateVideoCameras() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    videoDevices = devices.filter((d) => d.kind === 'videoinput');
+  } catch (e) {}
 }
 
-async function pumpFrames() {
-  if (cameraLoopActive && videoEl.readyState >= 2 && handsModel) {
-    try {
-      await handsModel.send({ image: videoEl });
-    } catch (e) { /* transient decode errors are safe to ignore */ }
+async function startCameraStream(facingMode = 'user', specificDeviceId = null) {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setStatus('CAMERA API UNAVAILABLE — SWITCHED TO INTERACTIVE SIMULATOR', true, false);
+    enableSimulatorMode(true);
+    return false;
   }
-  requestAnimationFrame(pumpFrames);
+
+  setStatus('INITIALIZING CAMERA…', false, false);
+  stopCameraTracks();
+
+  const targetWidth = qualityMode === 'low' ? 640 : 1280;
+  const targetHeight = qualityMode === 'low' ? 480 : 720;
+
+  const videoConstraint = specificDeviceId
+    ? { deviceId: { exact: specificDeviceId }, width: { ideal: targetWidth }, height: { ideal: targetHeight } }
+    : { facingMode: { ideal: facingMode }, width: { ideal: targetWidth }, height: { ideal: targetHeight } };
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: videoConstraint,
+      audio: false
+    });
+
+    videoEl.srcObject = stream;
+    await videoEl.play();
+
+    const videoTrack = stream.getVideoTracks()[0];
+    const settings = (videoTrack && videoTrack.getSettings) ? videoTrack.getSettings() : {};
+    if (settings.facingMode === 'environment') {
+      currentFacing = 'environment';
+      mirrorEnabled = false;
+    } else if (settings.facingMode === 'user') {
+      currentFacing = 'user';
+      mirrorEnabled = true;
+    } else {
+      currentFacing = facingMode;
+      mirrorEnabled = facingMode === 'user';
+    }
+
+    cameraActive = true;
+    simulatorMode = false;
+    await enumerateVideoCameras();
+    updateCameraUI();
+    setStatus('CAMERA ACTIVE — RAISE ONE OR TWO HANDS', false, false);
+    setTimeout(() => {
+      if (cameraActive) setStatus('', false, true);
+    }, 2400);
+
+    startFramePump();
+    return true;
+  } catch (err) {
+    console.warn('Camera access failed:', err);
+    setStatus('CAMERA ACCESS UNAVAILABLE — INTERACTIVE SIMULATOR ACTIVE (DRAG HANDS)', true, false);
+    enableSimulatorMode(true);
+    return false;
+  }
+}
+
+function startFramePump() {
+  if (pumpRafId) cancelAnimationFrame(pumpRafId);
+
+  async function pump(nowMs) {
+    if (!cameraActive || !inExperience) return;
+
+    const minIntervalMs = qualityMode === 'low' ? 42 : qualityMode === 'balanced' ? 26 : 16;
+    const hasNewVideoFrame = videoEl.readyState >= 2 && videoEl.currentTime !== lastVideoTime;
+
+    if (!isPaused && !simulatorMode && hasNewVideoFrame && !isInferenceBusy && (nowMs - lastInferenceMs >= minIntervalMs)) {
+      if (ensureHandsModel()) {
+        isInferenceBusy = true;
+        lastVideoTime = videoEl.currentTime;
+        lastInferenceMs = nowMs;
+        try {
+          await handsModel.send({ image: videoEl });
+        } catch (e) {
+          isInferenceBusy = false;
+        }
+      }
+    }
+
+    pumpRafId = requestAnimationFrame(pump);
+  }
+
+  pumpRafId = requestAnimationFrame(pump);
 }
 
 async function switchCamera() {
   playClick();
-  const newFacing = currentFacing === 'user' ? 'environment' : 'user';
-  try {
-    await startCameraStream(newFacing);
-  } catch (err) {
-    console.error(err);
-    flashStatus('NO SECOND CAMERA AVAILABLE ON THIS DEVICE', true);
+  if (simulatorMode) {
+    flashStatus('EXIT SIMULATOR MODE TO SWITCH PHYSICAL CAMERAS', false, 2000);
+    return;
+  }
+  const nextFacing = currentFacing === 'user' ? 'environment' : 'user';
+  let nextDeviceId = null;
+  if (videoDevices.length > 1) {
+    currentDeviceIndex = (currentDeviceIndex + 1) % videoDevices.length;
+    nextDeviceId = videoDevices[currentDeviceIndex].deviceId;
+  }
+  const ok = await startCameraStream(nextFacing, nextDeviceId);
+  if (!ok) {
+    await startCameraStream(currentFacing);
   }
 }
 
-async function checkMultipleCameras() {
-  try {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const cams = devices.filter((d) => d.kind === 'videoinput');
-    if (cams.length <= 1) {
-      camSwitchBtn.disabled = true;
-      camSwitchBtn.title = 'Only one camera detected';
-      camSwitchBtn.style.opacity = 0.35;
-    }
-  } catch (e) { /* leave the button enabled as a safe fallback */ }
+function enableSimulatorMode(enabled) {
+  simulatorMode = enabled;
+  if (enabled) {
+    stopCameraTracks();
+    setStatus('SIMULATOR MODE — DRAG HANDS OR PINCH/SPREAD WITH SCROLL WHEEL', false, false);
+  } else {
+    startCameraStream(currentFacing);
+  }
+  updateCameraUI();
 }
 
-camSwitchBtn.addEventListener('click', () => {
-  unlockAudio();
-  switchCamera();
-});
+function updateCameraUI() {
+  camToggleBtn.textContent = cameraActive ? 'Stop Camera' : 'Start Camera';
+  simToggleBtn.textContent = `Simulator Mode: ${simulatorMode ? 'On' : 'Off'}`;
+  simToggleBtn.classList.toggle('active-mode', simulatorMode);
+  mirrorToggleBtn.textContent = `Mirror: ${mirrorEnabled ? 'On' : 'Off'}`;
+  mirrorToggleBtn.classList.toggle('active-mode', mirrorEnabled);
+}
 
 function setStatus(text, isError = false, hide = false) {
   statusEl.textContent = text;
   statusEl.classList.toggle('error', isError);
-  statusEl.classList.toggle('hidden', hide);
+  statusEl.classList.toggle('hidden', hide || !text);
 }
 
-function flashStatus(text, isError = true, durationMs = 2200) {
+function flashStatus(text, isError = false, durationMs = 2200) {
   clearTimeout(statusFlashTimer);
   setStatus(text, isError, false);
   statusFlashTimer = setTimeout(() => setStatus('', false, true), durationMs);
 }
 
-// ============================================================
-// Video draw (mirrored when front-facing, "cover" fit, no letterboxing)
-// ============================================================
 function computeCoverRect(srcW, srcH, dstW, dstH) {
   const srcRatio = srcW / srcH;
   const dstRatio = dstW / dstH;
   let sx, sy, sw, sh;
   if (srcRatio > dstRatio) {
-    sh = srcH; sw = srcH * dstRatio; sy = 0; sx = (srcW - sw) / 2;
+    sh = srcH;
+    sw = srcH * dstRatio;
+    sy = 0;
+    sx = (srcW - sw) / 2;
   } else {
-    sw = srcW; sh = srcW / dstRatio; sx = 0; sy = (srcH - sh) / 2;
+    sw = srcW;
+    sh = srcW / dstRatio;
+    sx = 0;
+    sy = (srcH - sh) / 2;
   }
   return { sx, sy, sw, sh };
 }
 
+function landmarkToScreen(lm, srcW, srcH, cover, W, H) {
+  const px = lm.x * srcW;
+  const py = lm.y * srcH;
+  const rx = (px - cover.sx) / cover.sw;
+  const ry = (py - cover.sy) / cover.sh;
+  const dx = rx * W;
+  const dy = ry * H;
+  const x = mirrorEnabled ? (W - dx) : dx;
+  return { x, y: dy };
+}
+
+function computePalmCentroid(pts) {
+  let sx = 0, sy = 0;
+  for (let i = 0; i < PALM_INDICES.length; i++) {
+    const p = pts[PALM_INDICES[i]];
+    sx += p.x;
+    sy += p.y;
+  }
+  return { x: sx / PALM_INDICES.length, y: sy / PALM_INDICES.length };
+}
+
+function resolveIntrinsicHandSide(rawHandedness, pts, screenW) {
+  let label = rawHandedness && rawHandedness.label ? rawHandedness.label.toLowerCase() : null;
+  const score = rawHandedness && typeof rawHandedness.score === 'number' ? rawHandedness.score : 0.5;
+
+  if (label === 'left' || label === 'right') {
+    if (!mirrorEnabled) {
+      label = label === 'left' ? 'right' : 'left';
+    }
+    if (score >= 0.65) {
+      return { side: label, confidence: score };
+    }
+  }
+
+  const c = computePalmCentroid(pts);
+  return {
+    side: c.x < screenW * 0.5 ? 'left' : 'right',
+    confidence: 0.55
+  };
+}
+
+function computeTrackCost(candidate, track, diag) {
+  let cost = 0;
+  const isTrackActive = track.alpha > 0.15 && track.centroid && track.missingFrames <= MAX_COAST_FRAMES;
+
+  if (isTrackActive) {
+    const predX = track.centroid.x + track.centroidVel.vx;
+    const predY = track.centroid.y + track.centroidVel.vy;
+    const distNorm = Math.hypot(candidate.centroid.x - predX, candidate.centroid.y - predY) / Math.max(1, diag);
+    cost += distNorm * 2.6;
+  } else {
+    const anchorX = track.side === 'left' ? 0.30 : 0.70;
+    const anchorDist = Math.abs(candidate.centroid.x / Math.max(1, window.innerWidth) - anchorX);
+    cost += anchorDist * 0.45;
+  }
+
+  if (candidate.intrinsic.side !== track.side) {
+    const penaltyWeight = isTrackActive ? 0.28 : 1.15;
+    cost += penaltyWeight * candidate.intrinsic.confidence;
+  }
+
+  return cost;
+}
+
+function buildSimulatedHands(W, H, timeSec) {
+  const candidates = [];
+  const buildRig = (centerNorm, spread, side) => {
+    const cx = centerNorm.x * W;
+    const cy = centerNorm.y * H;
+    const dir = side === 'left' ? 1 : -1;
+    const pts = new Array(21);
+    pts[0] = { x: cx, y: cy + 68 };
+    const angles = [-0.68, -0.34, 0.0, 0.32, 0.64];
+    const lengths = [74, 96, 106, 96, 78];
+    for (let f = 0; f < 5; f++) {
+      const ang = -Math.PI / 2 + angles[f] * dir * spread + Math.sin(timeSec * 2.2 + f) * 0.03;
+      const len = lengths[f];
+      for (let j = 1; j <= 4; j++) {
+        const u = j / 4;
+        pts[f * 4 + j] = {
+          x: cx + Math.cos(ang) * len * u,
+          y: cy + 44 + Math.sin(ang) * len * u
+        };
+      }
+    }
+    const centroid = computePalmCentroid(pts);
+    return {
+      pts,
+      centroid,
+      intrinsic: { side, confidence: 0.98 }
+    };
+  };
+
+  if (simHands.leftVisible) {
+    candidates.push(buildRig(simHands.leftCenter, simHands.leftSpread, 'left'));
+  }
+  if (simHands.rightVisible) {
+    candidates.push(buildRig(simHands.rightCenter, simHands.rightSpread, 'right'));
+  }
+  return candidates;
+}
+
+function updateHandStates(W, H, timeSec) {
+  if (isPaused) return;
+
+  const diag = Math.hypot(W, H) || 1000;
+  let candidates = [];
+
+  if (simulatorMode) {
+    candidates = buildSimulatedHands(W, H, timeSec);
+  } else {
+    const srcW = videoEl.videoWidth;
+    const srcH = videoEl.videoHeight;
+    const rawLandmarks = (latestResults && latestResults.multiHandLandmarks) || [];
+    const rawHandedness = (latestResults && latestResults.multiHandedness) || [];
+
+    if (srcW && srcH && rawLandmarks.length > 0) {
+      const cover = computeCoverRect(srcW, srcH, W, H);
+      candidates = rawLandmarks.slice(0, 2).map((lm, idx) => {
+        const pts = lm.map((p) => landmarkToScreen(p, srcW, srcH, cover, W, H));
+        const centroid = computePalmCentroid(pts);
+        const intrinsic = resolveIntrinsicHandSide(rawHandedness[idx], pts, W);
+        return { pts, centroid, intrinsic };
+      });
+    }
+  }
+
+  let assignedLeft = null;
+  let assignedRight = null;
+
+  if (candidates.length === 1) {
+    const c0 = candidates[0];
+    const costL = computeTrackCost(c0, leftHandState, diag);
+    const costR = computeTrackCost(c0, rightHandState, diag);
+    if (costL <= costR) {
+      assignedLeft = c0;
+    } else {
+      assignedRight = c0;
+    }
+  } else if (candidates.length >= 2) {
+    const c0 = candidates[0];
+    const c1 = candidates[1];
+    const totalDirect = computeTrackCost(c0, leftHandState, diag) + computeTrackCost(c1, rightHandState, diag);
+    const totalSwapped = computeTrackCost(c0, rightHandState, diag) + computeTrackCost(c1, leftHandState, diag);
+
+    if (totalDirect <= totalSwapped) {
+      assignedLeft = c0;
+      assignedRight = c1;
+    } else {
+      assignedLeft = c1;
+      assignedRight = c0;
+    }
+  }
+
+  if (assignedLeft) {
+    advanceHandTrack(leftHandState, assignedLeft, diag);
+  } else {
+    coastOrShrinkHandTrack(leftHandState);
+  }
+
+  if (assignedRight) {
+    advanceHandTrack(rightHandState, assignedRight, diag);
+  } else {
+    coastOrShrinkHandTrack(rightHandState);
+  }
+
+  updateTelemetryHUD();
+}
+
+function advanceHandTrack(track, candidate, diag) {
+  track.missingFrames = 0;
+  track.handednessScore = candidate.intrinsic.confidence;
+
+  if (!track.pts || track.alpha < 0.02) {
+    track.pts = candidate.pts.map((p) => ({ x: p.x, y: p.y }));
+    track.vel = candidate.pts.map(() => ({ vx: 0, vy: 0 }));
+    track.centroid = { x: candidate.centroid.x, y: candidate.centroid.y };
+    track.centroidVel = { vx: 0, vy: 0 };
+  } else {
+    const cDx = candidate.centroid.x - track.centroid.x;
+    const cDy = candidate.centroid.y - track.centroid.y;
+    track.centroidVel.vx = track.centroidVel.vx * 0.55 + cDx * 0.45;
+    track.centroidVel.vy = track.centroidVel.vy * 0.55 + cDy * 0.45;
+    track.centroid.x += track.centroidVel.vx;
+    track.centroid.y += track.centroidVel.vy;
+
+    for (let i = 0; i < 21; i++) {
+      const dx = candidate.pts[i].x - track.pts[i].x;
+      const dy = candidate.pts[i].y - track.pts[i].y;
+      const speed = Math.hypot(dx, dy);
+      const speedNorm = Math.min(1, speed / (diag * 0.035));
+      const adaptiveFactor = 0.25 + speedNorm * 0.57;
+
+      track.vel[i].vx = dx * adaptiveFactor;
+      track.vel[i].vy = dy * adaptiveFactor;
+      track.pts[i].x += track.vel[i].vx;
+      track.pts[i].y += track.vel[i].vy;
+    }
+  }
+
+  const prevAlpha = track.alpha;
+  track.alpha = track.alpha + (1 - track.alpha) * FADE_IN;
+  if (prevAlpha < 0.45 && track.alpha >= 0.45) {
+    playChime(true);
+  }
+}
+
+function coastOrShrinkHandTrack(track) {
+  track.missingFrames++;
+
+  if (track.pts && track.vel && track.missingFrames <= MAX_COAST_FRAMES && track.alpha > 0.2) {
+    for (let i = 0; i < 21; i++) {
+      track.vel[i].vx *= 0.72;
+      track.vel[i].vy *= 0.72;
+      track.pts[i].x += track.vel[i].vx;
+      track.pts[i].y += track.vel[i].vy;
+    }
+    if (track.centroid) {
+      track.centroidVel.vx *= 0.72;
+      track.centroidVel.vy *= 0.72;
+      track.centroid.x += track.centroidVel.vx;
+      track.centroid.y += track.centroidVel.vy;
+    }
+    return;
+  }
+
+  const prevAlpha = track.alpha;
+  track.alpha = track.alpha * (1 - FADE_OUT);
+  if (prevAlpha >= 0.45 && track.alpha < 0.45) {
+    playChime(false);
+  }
+
+  if (track.alpha < 0.015) {
+    track.alpha = 0;
+    track.pts = null;
+    track.vel = null;
+    track.centroid = null;
+    track.centroidVel = { vx: 0, vy: 0 };
+  }
+}
+
+function resetLoomState() {
+  playClick();
+  [leftHandState, rightHandState].forEach((t) => {
+    t.alpha = 0;
+    t.pts = null;
+    t.vel = null;
+    t.centroid = null;
+    t.centroidVel = { vx: 0, vy: 0 };
+    t.missingFrames = 0;
+  });
+  stringStates.forEach((st) => {
+    st.prevDist = null;
+    st.vibe = 0;
+  });
+  soloStringStates.left.forEach((st) => { st.prevDist = null; st.vibe = 0; });
+  soloStringStates.right.forEach((st) => { st.prevDist = null; st.vibe = 0; });
+  pluckSparks = [];
+  simHands.leftCenter = { x: 0.32, y: 0.54 };
+  simHands.rightCenter = { x: 0.68, y: 0.54 };
+  simHands.leftSpread = 1.0;
+  simHands.rightSpread = 1.0;
+  flashStatus('LOOM STATE RESET', false, 1500);
+}
+
+function updateTelemetryHUD() {
+  const lActive = leftHandState.alpha > 0.15;
+  const rActive = rightHandState.alpha > 0.15;
+
+  if (isPaused) {
+    trackingBadgeEl.textContent = 'PAUSED';
+    trackingBadgeEl.style.color = '#fbbf24';
+  } else if (lActive && rActive) {
+    trackingBadgeEl.textContent = '2 HANDS · CRADLE LOCKED';
+    trackingBadgeEl.style.color = '#00e5ff';
+  } else if (lActive) {
+    trackingBadgeEl.textContent = 'LEFT HAND · SOLO LOOM';
+    trackingBadgeEl.style.color = '#00e5ff';
+  } else if (rActive) {
+    trackingBadgeEl.textContent = 'RIGHT HAND · SOLO LOOM';
+    trackingBadgeEl.style.color = '#ff00e5';
+  } else {
+    trackingBadgeEl.textContent = simulatorMode ? 'SIMULATOR READY' : 'SEARCHING FOR HANDS';
+    trackingBadgeEl.style.color = '#94a3b8';
+  }
+
+  handsCountEl.textContent = `L: ${Math.round(leftHandState.alpha * 100)}% | R: ${Math.round(rightHandState.alpha * 100)}%`;
+}
+
+let palette;
+let vignette;
+let fpsSmoothed = 60;
+
+function setup() {
+  pixelDensity(1);
+  const cnv = createCanvas(windowWidth, windowHeight);
+  cnv.parent('p5Container');
+  textFont('JetBrains Mono');
+
+  palette = {
+    left:  { joint: color(0, 229, 255),  tip: color(165, 255, 255) },
+    right: { joint: color(255, 0, 229),  tip: color(255, 175, 255) },
+    tensionLow:  color(0, 255, 255),
+    tensionMid:  color(255, 0, 255),
+    tensionHigh: color(255, 225, 30)
+  };
+
+  buildVignette();
+
+  const el = cnv.elt;
+  el.addEventListener('pointerdown', (e) => {
+    if (!simulatorMode || isPaused) return;
+    const px = e.clientX / width;
+    const py = e.clientY / height;
+    const dL = Math.hypot(px - simHands.leftCenter.x, py - simHands.leftCenter.y);
+    const dR = Math.hypot(px - simHands.rightCenter.x, py - simHands.rightCenter.y);
+    simHands.dragging = dL <= dR ? 'left' : 'right';
+    const target = simHands.dragging === 'left' ? simHands.leftCenter : simHands.rightCenter;
+    target.x = constrain(px, 0.08, 0.92);
+    target.y = constrain(py, 0.15, 0.88);
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!simulatorMode || !simHands.dragging || isPaused) return;
+    const px = e.clientX / width;
+    const py = e.clientY / height;
+    const target = simHands.dragging === 'left' ? simHands.leftCenter : simHands.rightCenter;
+    target.x = constrain(px, 0.08, 0.92);
+    target.y = constrain(py, 0.15, 0.88);
+  });
+
+  window.addEventListener('pointerup', () => {
+    simHands.dragging = null;
+  });
+
+  el.addEventListener('wheel', (e) => {
+    if (!simulatorMode || isPaused) return;
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.08 : 0.08;
+    simHands.leftSpread = constrain(simHands.leftSpread + delta, 0.35, 1.45);
+    simHands.rightSpread = constrain(simHands.rightSpread + delta, 0.35, 1.45);
+  }, { passive: false });
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  buildVignette();
+}
+
+function draw() {
+  if (!inExperience) return;
+
+  const dt = deltaTime || 16.6;
+  fpsSmoothed = lerp(fpsSmoothed, 1000 / Math.max(1, dt), 0.08);
+  if (frameCount % 12 === 0) {
+    fpsReadoutEl.textContent = `${Math.round(fpsSmoothed)} FPS`;
+  }
+
+  background(3, 6, 14);
+  if (!simulatorMode) {
+    drawVideoCover();
+  } else {
+    drawSimulatorGrid();
+  }
+  drawDarkAtmosphere();
+
+  const timeSec = millis() / 1000;
+  updateHandStates(width, height, timeSec);
+
+  const lVisible = leftHandState.alpha > 0.05 && leftHandState.pts;
+  const rVisible = rightHandState.alpha > 0.05 && rightHandState.pts;
+
+  if (lVisible && rVisible) {
+    drawCradleStrings(timeSec);
+  } else {
+    stringStates.forEach((st) => {
+      st.prevDist = null;
+      st.vibe *= 0.85;
+    });
+
+    if (lVisible) {
+      drawSoloHandStrings(leftHandState, soloStringStates.left, palette.left.joint, timeSec);
+    } else {
+      soloStringStates.left.forEach((st) => { st.prevDist = null; });
+    }
+
+    if (rVisible) {
+      drawSoloHandStrings(rightHandState, soloStringStates.right, palette.right.joint, timeSec);
+    } else {
+      soloStringStates.right.forEach((st) => { st.prevDist = null; });
+    }
+  }
+
+  drawHand(leftHandState, palette.left);
+  drawHand(rightHandState, palette.right);
+  updateAndDrawSparks();
+
+  updateDroneAudio();
+  drawIdleHint();
+  drawCornerMark();
+}
+
 function drawVideoCover() {
-  const srcW = videoEl.videoWidth, srcH = videoEl.videoHeight;
+  const srcW = videoEl.videoWidth;
+  const srcH = videoEl.videoHeight;
   if (!srcW || !srcH) return;
   const cover = computeCoverRect(srcW, srcH, width, height);
   drawingContext.save();
@@ -429,9 +1801,17 @@ function drawVideoCover() {
   drawingContext.restore();
 }
 
+function drawSimulatorGrid() {
+  stroke(0, 229, 255, 16);
+  strokeWeight(1);
+  const step = 56;
+  for (let x = 0; x < width; x += step) line(x, 0, x, height);
+  for (let y = 0; y < height; y += step) line(0, y, width, y);
+}
+
 function drawDarkAtmosphere() {
   noStroke();
-  fill(4, 8, 16, 110);
+  fill(4, 8, 16, simulatorMode ? 70 : 115);
   rect(0, 0, width, height);
   if (vignette) image(vignette, 0, 0);
 }
@@ -449,64 +1829,6 @@ function buildVignette() {
   ctx.fillRect(0, 0, width, height);
 }
 
-// ============================================================
-// Landmark mapping + hand-side assignment
-// ============================================================
-function landmarkToScreen(lm, srcW, srcH, cover) {
-  const px = lm.x * srcW, py = lm.y * srcH;
-  const rx = (px - cover.sx) / cover.sw;
-  const ry = (py - cover.sy) / cover.sh;
-  const dx = rx * width, dy = ry * height;
-  const x = mirrorEnabled ? (width - dx) : dx;
-  return { x, y: dy };
-}
-
-function updateHandStates() {
-  const srcW = videoEl.videoWidth, srcH = videoEl.videoHeight;
-  const lm = (latestResults && latestResults.multiHandLandmarks) || [];
-
-  if (srcW && srcH && lm.length > 0) {
-    const cover = computeCoverRect(srcW, srcH, width, height);
-    const handsScreen = lm.map((landmarks) =>
-      landmarks.map((p) => landmarkToScreen(p, srcW, srcH, cover))
-    );
-    handsScreen.sort((a, b) => a[0].x - b[0].x); // leftmost on screen first
-
-    const leftPts  = handsScreen[0] || null;
-    const rightPts = handsScreen[1] || null;
-
-    leftPts  ? growHand(leftHandState, leftPts)   : shrinkHand(leftHandState);
-    rightPts ? growHand(rightHandState, rightPts) : shrinkHand(rightHandState);
-  } else {
-    shrinkHand(leftHandState);
-    shrinkHand(rightHandState);
-  }
-}
-
-function growHand(state, targetPts) {
-  if (!state.pts) {
-    state.pts = targetPts.map((p) => ({ x: p.x, y: p.y }));
-  } else {
-    for (let i = 0; i < 21; i++) {
-      state.pts[i].x = lerp(state.pts[i].x, targetPts[i].x, SMOOTHING);
-      state.pts[i].y = lerp(state.pts[i].y, targetPts[i].y, SMOOTHING);
-    }
-  }
-  const before = state.alpha;
-  state.alpha = lerp(state.alpha, 1, FADE_IN);
-  if (before < 0.5 && state.alpha >= 0.5) playChime(true);
-}
-
-function shrinkHand(state) {
-  const before = state.alpha;
-  state.alpha = lerp(state.alpha, 0, FADE_OUT);
-  if (state.alpha < 0.01) state.alpha = 0;
-  if (before >= 0.5 && state.alpha < 0.5) playChime(false);
-}
-
-// ============================================================
-// Drawing: per-hand skeleton + glowing joints
-// ============================================================
 function rgbaStr(c, alphaMul = 1) {
   return `rgba(${red(c)},${green(c)},${blue(c)},${(alpha(c) / 255) * alphaMul})`;
 }
@@ -523,10 +1845,12 @@ function drawHand(state, pal) {
 
 function drawSkeleton(pts, baseColor, a) {
   drawingContext.save();
-  drawingContext.shadowBlur = 5;
-  drawingContext.shadowColor = rgbaStr(baseColor, 0.5);
-  stroke(red(baseColor), green(baseColor), blue(baseColor), 75 * a);
-  strokeWeight(1.4);
+  if (qualityMode !== 'low') {
+    drawingContext.shadowBlur = 6;
+    drawingContext.shadowColor = rgbaStr(baseColor, 0.55);
+  }
+  stroke(red(baseColor), green(baseColor), blue(baseColor), 95 * a);
+  strokeWeight(1.6);
   noFill();
   FINGER_CHAINS.forEach((chain) => {
     beginShape();
@@ -538,25 +1862,23 @@ function drawSkeleton(pts, baseColor, a) {
 
 function drawJointGlow(p, col, r, a) {
   drawingContext.save();
-  drawingContext.shadowBlur = 18;
-  drawingContext.shadowColor = rgbaStr(col, 0.9 * a);
+  if (qualityMode !== 'low') {
+    drawingContext.shadowBlur = qualityMode === 'high' ? 18 : 11;
+    drawingContext.shadowColor = rgbaStr(col, 0.9 * a);
+  }
   noStroke();
-  fill(red(col), green(col), blue(col), 205 * a);
+  fill(red(col), green(col), blue(col), 210 * a);
   ellipse(p.x, p.y, r * 2, r * 2);
-  fill(255, 255, 255, 175 * a);
+  fill(255, 255, 255, 185 * a);
   ellipse(p.x, p.y, r * 0.85, r * 0.85);
   drawingContext.restore();
 }
 
-// ============================================================
-// Drawing: elastic cradle strings between fingertips
-// ============================================================
-function drawCradleStrings() {
+function drawCradleStrings(timeSec) {
   const diag = Math.hypot(width, height);
   const maxDist = diag * 0.45;
   const minDist = 50;
   const alphaMul = Math.min(leftHandState.alpha, rightHandState.alpha);
-  const t = millis() / 1000;
 
   STRING_PAIRS.forEach((pair, i) => {
     const p1 = leftHandState.pts[pair[0]];
@@ -567,14 +1889,18 @@ function drawCradleStrings() {
     if (st.prevDist == null) st.prevDist = d;
     const delta = Math.abs(d - st.prevDist);
     st.prevDist = d;
+
     const boost = Math.min(delta * 1.8, 22);
-    st.vibe = Math.min(st.vibe * 0.90 + boost * 0.6, 26);
+    if (!isPaused) {
+      st.vibe = Math.min(st.vibe * 0.90 + boost * 0.6, 26);
+    }
 
     const tension = constrain(map(d, minDist, maxDist, 0, 1), 0, 1);
 
-    if (boost > 5 && millis() - st.lastPluck > 130) {
-      playPluck(tension);
+    if (!isPaused && boost > 5.2 && millis() - st.lastPluck > 130) {
+      playPluck(tension, i);
       st.lastPluck = millis();
+      spawnPluckSparks((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5, tension);
     }
 
     const col = tension < 0.5
@@ -583,28 +1909,67 @@ function drawCradleStrings() {
     const thickness = map(tension, 0, 1, 5.5, 1.4);
     const colA = color(red(col), green(col), blue(col), 235 * alphaMul);
 
-    drawElasticString(p1, p2, colA, thickness, st.vibe, tension, t);
+    drawElasticString(p1, p2, colA, thickness, st.vibe, tension, timeSec);
+  });
+}
+
+function drawSoloHandStrings(handState, statesArr, baseColor, timeSec) {
+  const alphaMul = handState.alpha;
+  const diag = Math.hypot(width, height);
+  const maxDist = diag * 0.22;
+
+  SOLO_STRING_PAIRS.forEach((pair, i) => {
+    const p1 = handState.pts[pair[0]];
+    const p2 = handState.pts[pair[1]];
+    const d = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+
+    const st = statesArr[i];
+    if (st.prevDist == null) st.prevDist = d;
+    const delta = Math.abs(d - st.prevDist);
+    st.prevDist = d;
+
+    const boost = Math.min(delta * 2.0, 18);
+    if (!isPaused) {
+      st.vibe = Math.min(st.vibe * 0.88 + boost * 0.55, 18);
+    }
+
+    const tension = constrain(map(d, 20, maxDist, 0, 1), 0, 1);
+    if (!isPaused && boost > 4.2 && millis() - st.lastPluck > 150) {
+      playPluck(tension, i);
+      st.lastPluck = millis();
+      spawnPluckSparks((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5, tension);
+    }
+
+    const col = lerpColor(baseColor, palette.tensionHigh, tension * 0.65);
+    const colA = color(red(col), green(col), blue(col), 205 * alphaMul);
+    const thickness = map(tension, 0, 1, 3.8, 1.2);
+    drawElasticString(p1, p2, colA, thickness, st.vibe, tension, timeSec);
   });
 }
 
 function drawElasticString(p1, p2, colA, thickness, vibeAmp, tension, time) {
-  const dx = p2.x - p1.x, dy = p2.y - p1.y;
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
   const len = Math.hypot(dx, dy) || 1;
-  const nx = -dy / len, ny = dx / len;
-  const segments = 16;
+  const nx = -dy / len;
+  const ny = dx / len;
+  const segments = qualityMode === 'low' ? 10 : 16;
 
   const pts = [];
   for (let i = 0; i <= segments; i++) {
     const u = i / segments;
-    const bx = lerp(p1.x, p2.x, u), by = lerp(p1.y, p2.y, u);
+    const bx = lerp(p1.x, p2.x, u);
+    const by = lerp(p1.y, p2.y, u);
     const envelope = Math.sin(Math.PI * u);
     const wave = Math.sin(u * Math.PI * 7 + time * 9) * vibeAmp * envelope;
     pts.push({ x: bx + nx * wave, y: by + ny * wave });
   }
 
   drawingContext.save();
-  drawingContext.shadowBlur = 12 + tension * 16;
-  drawingContext.shadowColor = rgbaStr(colA, 0.9);
+  if (qualityMode !== 'low') {
+    drawingContext.shadowBlur = (qualityMode === 'high' ? 12 : 8) + tension * 14;
+    drawingContext.shadowColor = rgbaStr(colA, 0.9);
+  }
   stroke(colA);
   strokeWeight(thickness);
   noFill();
@@ -613,7 +1978,7 @@ function drawElasticString(p1, p2, colA, thickness, vibeAmp, tension, time) {
   endShape();
   drawingContext.restore();
 
-  stroke(255, 255, 255, alpha(colA) * 0.55);
+  stroke(255, 255, 255, alpha(colA) * 0.58);
   strokeWeight(Math.max(thickness * 0.3, 0.6));
   noFill();
   beginShape();
@@ -621,21 +1986,56 @@ function drawElasticString(p1, p2, colA, thickness, vibeAmp, tension, time) {
   endShape();
 }
 
-// ============================================================
-// Idle hint + corner mark
-// ============================================================
+function spawnPluckSparks(x, y, tension) {
+  if (qualityMode === 'low' || pluckSparks.length > 48) return;
+  const count = qualityMode === 'high' ? 5 : 3;
+  for (let i = 0; i < count; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = 1.2 + Math.random() * 3.2;
+    pluckSparks.push({
+      x, y,
+      vx: Math.cos(ang) * spd,
+      vy: Math.sin(ang) * spd,
+      life: 1.0,
+      tension
+    });
+  }
+}
+
+function updateAndDrawSparks() {
+  if (pluckSparks.length === 0) return;
+  noStroke();
+  for (let i = pluckSparks.length - 1; i >= 0; i--) {
+    const s = pluckSparks[i];
+    if (!isPaused) {
+      s.x += s.vx;
+      s.y += s.vy;
+      s.life -= 0.045;
+    }
+    if (s.life <= 0) {
+      pluckSparks.splice(i, 1);
+      continue;
+    }
+    const c = s.tension < 0.5 ? palette.tensionLow : palette.tensionHigh;
+    fill(red(c), green(c), blue(c), s.life * 220);
+    ellipse(s.x, s.y, s.life * 5.5, s.life * 5.5);
+  }
+}
+
 function drawIdleHint() {
   const bothGone = leftHandState.alpha < 0.05 && rightHandState.alpha < 0.05;
   if (!bothGone) return;
   const pulse = 0.6 + 0.4 * Math.sin(millis() / 600);
   drawingContext.save();
-  drawingContext.shadowBlur = 16;
-  drawingContext.shadowColor = 'rgba(0,229,255,0.85)';
+  if (qualityMode !== 'low') {
+    drawingContext.shadowBlur = 14;
+    drawingContext.shadowColor = 'rgba(0,229,255,0.85)';
+  }
   noStroke();
-  fill(150, 235, 255, 150 * pulse);
+  fill(150, 235, 255, 165 * pulse);
   textAlign(CENTER, CENTER);
-  textSize(15);
-  text('RAISE BOTH HANDS INTO FRAME TO WEAVE THE LOOM', width / 2, height - 56);
+  textSize(14);
+  text('RAISE ONE OR BOTH HANDS INTO FRAME TO WEAVE THE LOOM', width / 2, height - 78);
   drawingContext.restore();
 }
 
@@ -644,8 +2044,113 @@ function drawCornerMark() {
   fill(150, 220, 255, 90);
   textAlign(RIGHT, BOTTOM);
   textSize(11);
-  text('NEON LOOM // HAND-WOVEN LIGHT', width - 18, height - 18);
+  text('NEON LOOM · HAND-WOVEN LIGHT', width - 18, height - 18);
 }
+
+async function enterExperience(useSim = false) {
+  inExperience = true;
+  isPaused = false;
+  document.body.classList.add('in-experience');
+  landingView.classList.add('hidden');
+  experienceView.classList.remove('hidden');
+  resizeCanvas(windowWidth, windowHeight);
+  buildVignette();
+
+  await ensureAudioUnlocked();
+
+  if (useSim) {
+    enableSimulatorMode(true);
+  } else {
+    ensureHandsModel();
+    await startCameraStream(currentFacing);
+  }
+}
+
+function exitExperience() {
+  playClick();
+  stopCameraTracks();
+  inExperience = false;
+  isPaused = false;
+  document.body.classList.remove('in-experience');
+  experienceView.classList.add('hidden');
+  landingView.classList.remove('hidden');
+  syncAudioUI();
+}
+
+navStartBtn.addEventListener('click', () => enterExperience(false));
+heroStartCameraBtn.addEventListener('click', () => enterExperience(false));
+heroStartSimBtn.addEventListener('click', () => enterExperience(true));
+
+camSwitchBtn.addEventListener('click', async () => {
+  await ensureAudioUnlocked();
+  switchCamera();
+});
+
+muteBtn.addEventListener('click', async () => {
+  const unlocked = await ensureAudioUnlocked();
+  if (!unlocked) return;
+  isMuted = !isMuted;
+  syncAudioUI();
+  playClick();
+});
+
+pauseBtn.addEventListener('click', () => {
+  isPaused = !isPaused;
+  pauseIcon.textContent = isPaused ? '▶' : '⏸';
+  pauseLabel.textContent = isPaused ? 'Resume' : 'Pause';
+  pauseBtn.classList.toggle('active-mode', isPaused);
+  syncAudioUI();
+  updateTelemetryHUD();
+});
+
+resetBtn.addEventListener('click', resetLoomState);
+
+fullscreenBtn.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+helpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+closeHelpBtn.addEventListener('click', () => helpModal.classList.add('hidden'));
+helpModal.addEventListener('click', (e) => {
+  if (e.target === helpModal) helpModal.classList.add('hidden');
+});
+
+exitBtn.addEventListener('click', exitExperience);
+
+camToggleBtn.addEventListener('click', async () => {
+  if (cameraActive) {
+    stopCameraTracks();
+    setStatus('CAMERA STOPPED', false, false);
+  } else {
+    await startCameraStream(currentFacing);
+  }
+});
+
+camRestartBtn.addEventListener('click', async () => {
+  await startCameraStream(currentFacing);
+});
+
+simToggleBtn.addEventListener('click', () => {
+  enableSimulatorMode(!simulatorMode);
+});
+
+mirrorToggleBtn.addEventListener('click', () => {
+  mirrorEnabled = !mirrorEnabled;
+  updateCameraUI();
+});
+
+qualitySelect.addEventListener('change', (e) => {
+  qualityMode = e.target.value;
+  if (handsModel) {
+    handsModel.setOptions({ modelComplexity: qualityMode === 'low' ? 0 : 1 });
+  }
+});
+
+window.addEventListener('beforeunload', stopCameraTracks);
 </script>
 </body>
 </html>
