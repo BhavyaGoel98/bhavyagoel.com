@@ -1,23 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CodeErase</title>
-    
-    <!-- SVG Favicon Data URI to perfectly match the brand without external files -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M 35 30 L 15 50 L 35 70' stroke='%23E5E5E5' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='50' y1='20' x2='50' y2='80' stroke='%23FFD700' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M 65 30 L 85 50 L 65 70' stroke='%23E5E5E5' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg transform='translate(60, 60) rotate(-30)'%3E%3Crect x='0' y='0' width='30' height='18' rx='3' fill='%23FFD700' stroke='%23E5E5E5' stroke-width='2'/%3E%3Crect x='20' y='0' width='10' height='18' fill='%23FFF' stroke='%23E5E5E5' stroke-width='2' rx='2'/%3E%3Cpath d='M 0 5 L -10 15 M 0 13 L -12 25 M 5 18 L -5 28' stroke='%23FFD700' stroke-width='2' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome for Icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeErase — 3D Professional Coding Workspace & Live Sandbox</title>
+    <meta name="description" content="Professional browser-based multi-language coding playground with 3D spatial visualizations, sandboxed HTML/CSS/JS live preview, and remote compiler execution.">
+
+    <!-- Brand SVG Favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M 35 30 L 15 50 L 35 70' stroke='%23E5E5E5' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='50' y1='20' x2='50' y2='80' stroke='%23FFD700' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M 65 30 L 85 50 L 65 70' stroke='%23E5E5E5' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+    <!-- Fonts: Outfit (Display), Plus Jakarta Sans (UI), JetBrains Mono (Code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CodeMirror for Editor Environment -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+
+    <!-- Three.js for Real 3D Interactive Elements -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- CodeMirror Core, Themes, Modes, and Addons (Bracket Matching, Auto-Close) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/eclipse.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closetag.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/selection/active-line.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
@@ -29,1541 +40,1565 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/swift/swift.min.js"></script>
 
     <style>
-        /* DESIGN SYSTEM & VARIABLES */
-        :root {
-            --primary: #FFD700;
-            --secondary: #FFB800;
-            --bg-base: #0B0B0B;
-            --bg-surface: #0f0f0f;
-            --bg-card: #121212;
-            --border: #232323;
-            --text-main: #FFFFFF;
-            --text-muted: #9CA3AF;
+        :root, [data-theme="dark"] {
+            --primary: #FBBF24;
+            --primary-hover: #F59E0B;
+            --accent-cyan: #38BDF8;
+            --bg-base: #0B0C10;
+            --bg-surface: #11131A;
+            --bg-card: #151822;
+            --bg-elevated: #1C202E;
+            --border: #252A3A;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
             --success: #22C55E;
+            --warning: #F59E0B;
             --error: #EF4444;
-            
-            --font-sans: 'Inter', sans-serif;
-            --font-head: 'Poppins', sans-serif;
+            --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.55);
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-head: 'Outfit', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
-            
-            --sidebar-width: 280px;
-            --sidebar-collapsed: 80px;
-            --header-height: 70px;
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            --glow: 0 0 20px rgba(255, 215, 0, 0.15);
-            --glow-strong: 0 0 30px rgba(255, 215, 0, 0.4);
+            --header-height: 60px;
+            --sidebar-width: 240px;
+            --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* RESET & BASE */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        [data-theme="light"] {
+            --primary: #D97706;
+            --primary-hover: #B45309;
+            --accent-cyan: #0284C7;
+            --bg-base: #F8FAFC;
+            --bg-surface: #F1F5F9;
+            --bg-card: #FFFFFF;
+            --bg-elevated: #E2E8F0;
+            --border: #CBD5E1;
+            --text-main: #0F172A;
+            --text-muted: #475569;
+            --shadow-card: 0 12px 32px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
         body {
             background-color: var(--bg-base);
             color: var(--text-main);
             font-family: var(--font-sans);
+            height: 100dvh;
             overflow: hidden;
-            height: 100vh;
             display: flex;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        /* BRAND LOGO SVG STYLING */
-        .app-logo {
-            width: 32px;
-            height: 32px;
-            margin-right: 12px;
-            flex-shrink: 0;
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
-        }
-        
-        .welcome-logo .app-logo {
-            width: 100px;
-            height: 100px;
-            margin: 0;
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
-        }
-        
-        .editor-meta .app-logo {
-            width: 24px;
-            height: 24px;
-            margin-right: 0;
-        }
-
-        /* UI COMPONENTS */
-        .btn {
-            padding: 12px 24px;
-            border-radius: 12px;
-            border: none;
-            font-family: var(--font-sans);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: var(--transition);
-        }
-        
-        .btn:hover::after { left: 100%; }
-
-        .btn-primary { background: var(--primary); color: #000; box-shadow: var(--glow); }
-        .btn-primary:hover { background: var(--secondary); transform: translateY(-2px); box-shadow: var(--glow-strong); }
-
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); box-shadow: var(--glow); }
-
-        .glass-panel {
-            background: rgba(18, 18, 18, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-        }
-
-        /* LAYOUT */
         #app {
             display: flex;
-            flex-direction: row;
             width: 100%;
             height: 100%;
             position: relative;
         }
 
-        /* WELCOME OVERLAY */
-        .welcome-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(11, 11, 11, 0.95);
-            backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        .welcome-overlay.hidden { opacity: 0; pointer-events: none; }
-
-        .welcome-modal {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 24px;
-            padding: 50px 40px;
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
-            box-shadow: var(--glow-strong);
-            transform: translateY(0);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .welcome-overlay.hidden .welcome-modal { transform: translateY(50px) scale(0.95); }
-
-        .welcome-logo { margin: 0 auto 30px; display: flex; justify-content: center; }
-
-        .welcome-input {
-            width: 100%;
-            background: var(--bg-base);
-            border: 1px solid var(--border);
-            padding: 16px;
-            border-radius: 12px;
-            color: var(--text-main);
-            font-family: var(--font-head);
-            font-size: 20px;
-            text-align: center;
-            outline: none;
-            transition: var(--transition);
-            margin-bottom: 24px;
-        }
-
-        .welcome-input:focus { border-color: var(--primary); box-shadow: var(--glow); }
-
-        /* SIDEBAR OVERLAY FOR MOBILE */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .sidebar-overlay.active { display: block; opacity: 1; }
-
-        /* SIDEBAR NAVIGATION */
+        /* Sidebar Navigation */
         #sidebar {
             width: var(--sidebar-width);
-            background: var(--bg-card);
+            background: var(--bg-surface);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            transition: var(--transition);
-            z-index: 1000;
-            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .brand {
             height: var(--header-height);
             display: flex;
             align-items: center;
-            padding: 0 24px;
+            padding: 0 20px;
             font-family: var(--font-head);
-            font-weight: 800;
-            font-size: 24px;
+            font-weight: 700;
+            font-size: 20px;
             color: var(--text-main);
             border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            white-space: nowrap;
             text-decoration: none;
-            flex-shrink: 0;
+            gap: 10px;
         }
+
+        .app-logo { width: 28px; height: 28px; flex-shrink: 0; }
 
         .nav-links {
             flex: 1;
-            padding: 24px 16px;
+            padding: 16px 12px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
         }
 
         .nav-item {
-            padding: 14px 16px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
+            gap: 12px;
             color: var(--text-muted);
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 10px;
+            font-size: 14px;
             font-weight: 500;
             transition: var(--transition);
-            white-space: nowrap;
-            position: relative;
-        }
-        
-        .nav-item i { width: 24px; font-size: 20px; margin-right: 16px; text-align: center; transition: var(--transition); }
-
-        .nav-item:hover, .nav-item.active { color: var(--primary); background: rgba(255, 215, 0, 0.05); }
-        .nav-item.active i { color: var(--primary); filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5)); }
-
-        .nav-item::before {
-            content: ''; position: absolute; left: -16px; top: 50%; transform: translateY(-50%);
-            height: 0; width: 4px; background: var(--primary); border-radius: 0 4px 4px 0; transition: var(--transition);
-        }
-        .nav-item.active::before { height: 60%; }
-
-        .sidebar-footer { padding: 20px 16px; border-top: 1px solid var(--border); flex-shrink: 0; }
-
-        .user-profile-sm {
-            display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px;
-            cursor: pointer; transition: var(--transition); overflow: hidden; white-space: nowrap;
-        }
-        .user-profile-sm:hover { background: rgba(255, 255, 255, 0.05); }
-
-        .avatar {
-            width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #000; display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-family: var(--font-head); flex-shrink: 0; box-shadow: var(--glow);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
         }
 
-        /* MAIN CONTENT AREA */
+        .nav-item i { width: 18px; text-align: center; font-size: 15px; }
+        .nav-item:hover { color: var(--text-main); background: var(--bg-elevated); }
+        .nav-item.active { color: #090A0F; background: var(--primary); font-weight: 600; }
+
+        .sidebar-footer {
+            padding: 14px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            min-width: 0;
+        }
+
+        .avatar-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #090A0F;
+            font-weight: 700;
+            font-family: var(--font-head);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        /* Main Area */
         #main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            min-width: 0;
+            height: 100%;
             position: relative;
-            background: radial-gradient(circle at 100% 0%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+            overflow: hidden;
         }
 
-        .mobile-header {
+        .mobile-topbar {
             display: none;
-            height: 60px;
-            background: var(--bg-card);
+            height: 54px;
+            background: var(--bg-surface);
             border-bottom: 1px solid var(--border);
+            padding: 0 14px;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            z-index: 900;
             flex-shrink: 0;
-        }
-
-        .mobile-menu-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 10px;
-            margin-right: -10px;
+            gap: 8px;
         }
 
         .page {
             display: none;
-            height: 100%;
             width: 100%;
+            height: 100%;
             overflow-y: auto;
-            position: absolute;
-            top: 0; left: 0;
-            background: var(--bg-base);
         }
 
         .page.active {
             display: block;
-            animation: pageEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes pageEnter {
-            from { opacity: 0; transform: translateY(15px); }
+        #page-editor.active {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .page-container {
-            max-width: 1400px;
+        /* Buttons */
+        .btn {
+            padding: 9px 16px;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #090A0F;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: var(--bg-card);
+            border-color: var(--border);
+            color: var(--text-main);
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 7px; }
+
+        /* Landing Page & 3D Hero */
+        .landing-container {
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 40px;
-            padding-bottom: 100px;
+            padding: 36px 28px 96px;
         }
 
-        .page-header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px; }
-        .page-title { font-family: var(--font-head); font-size: 36px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
-        .page-subtitle { color: var(--text-muted); font-size: 16px; margin-top: 8px; }
-
-        /* --- 1. HOMEPAGE --- */
-        .hero-section {
-            min-height: 85vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; position: relative; padding: 40px 20px;
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 36px;
+            align-items: center;
+            min-height: 500px;
+            margin-bottom: 64px;
         }
 
-        .hero-bg-anim { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0; }
-        .floating-code { position: absolute; color: rgba(255, 255, 255, 0.03); font-family: var(--font-mono); font-size: 14px; white-space: pre; pointer-events: none; animation: floatup 20s linear infinite; }
-        @keyframes floatup { from { transform: translateY(100vh); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } to { transform: translateY(-100px); opacity: 0; } }
-
-        .hero-content { z-index: 1; max-width: 900px; }
-        .tag-pill { display: inline-block; padding: 8px 16px; background: rgba(255, 215, 0, 0.1); color: var(--primary); border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 24px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: var(--glow); }
-        .hero-title { font-family: var(--font-head); font-size: 80px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; letter-spacing: -2px; }
-        .text-gradient { background: linear-gradient(to right, #FFFFFF, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-desc { font-size: 22px; color: var(--text-muted); margin-bottom: 48px; line-height: 1.6; max-width: 700px; margin-left: auto; margin-right: auto; }
-
-        .hero-stats { display: flex; justify-content: center; gap: 60px; margin-top: 80px; border-top: 1px solid var(--border); padding-top: 40px; }
-        .stat-item h4 { font-family: var(--font-mono); font-size: 36px; color: var(--text-main); margin-bottom: 8px; }
-        .stat-item p { color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 100px; padding-bottom: 100px; }
-        .feat-card { padding: 40px 30px; transition: var(--transition); }
-        .feat-card:hover { border-color: rgba(255, 215, 0, 0.3); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .feat-icon { width: 60px; height: 60px; border-radius: 16px; background: rgba(255, 215, 0, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 24px; box-shadow: var(--glow); }
-        .feat-card h3 { font-family: var(--font-head); font-size: 24px; margin-bottom: 16px; }
-        .feat-card p { color: var(--text-muted); line-height: 1.7; }
-
-        /* --- 2. EDITOR PAGE --- */
-        #page-editor { padding: 0; display: none; flex-direction: column; background: var(--bg-base); }
-        #page-editor.active { display: flex; }
-
-        .editor-header {
-            height: var(--header-height); background: var(--bg-surface); border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0;
+        .hero-kicker {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--primary);
+            letter-spacing: 0.08em;
+            margin-bottom: 14px;
         }
 
-        .editor-meta { display: flex; align-items: center; gap: 15px; flex: 1; min-width: 0; }
-        .proj-name-input {
-            background: transparent; border: 1px solid transparent; color: var(--text-main);
-            font-family: var(--font-head); font-size: 18px; font-weight: 600; padding: 6px 12px; border-radius: 8px;
-            outline: none; transition: var(--transition); width: 100%; max-width: 250px; text-overflow: ellipsis;
-        }
-        .proj-name-input:focus, .proj-name-input:hover { border-color: var(--border); background: var(--bg-base); }
-
-        .editor-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
-        .toolbar-btn {
-            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main);
-            width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: var(--transition); flex-shrink: 0;
-        }
-        .toolbar-btn:hover { background: var(--bg-base); border-color: var(--primary); color: var(--primary); }
-
-        .editor-main { flex: 1; display: flex; overflow: hidden; }
-
-        .lang-sidebar {
-            width: 70px; background: var(--bg-card); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 12px; overflow-y: auto; flex-shrink: 0;
+        .hero-title {
+            font-family: var(--font-head);
+            font-size: clamp(2rem, 4vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -0.025em;
+            margin-bottom: 18px;
         }
 
-        .lang-tab {
-            width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: var(--text-muted); cursor: pointer; transition: var(--transition); position: relative; border: 1px solid transparent; flex-shrink: 0;
-        }
-        .lang-tab:hover { background: var(--bg-base); color: var(--text-main); }
-        .lang-tab.active { background: rgba(255, 215, 0, 0.1); color: var(--primary); border-color: rgba(255, 215, 0, 0.3); box-shadow: var(--glow); }
-
-        .lang-tab .tooltip {
-            position: absolute; left: 60px; background: var(--bg-card); border: 1px solid var(--border);
-            padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none;
-            transition: var(--transition); white-space: nowrap; z-index: 1000;
-        }
-        .lang-tab:hover .tooltip { opacity: 1; transform: translateX(5px); }
-
-        .editor-split { flex: 1; display: flex; flex-direction: row; min-width: 0; }
-
-        .code-pane { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); position: relative; min-width: 0; }
-        .pane-header {
-            height: 40px; background: var(--bg-card); border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-family: var(--font-mono); font-size: 13px; flex-shrink: 0;
-        }
-        .pane-header .lang-badge { color: var(--primary); font-weight: 600; }
-
-        .CodeMirror { flex: 1; height: auto !important; font-family: var(--font-mono); font-size: 15px; background: var(--bg-base) !important; padding-top: 10px; }
-
-        .preview-pane { flex: 1; display: flex; flex-direction: column; background: #ffffff; position: relative; }
-        
-        .preview-header {
-            height: 36px; background: var(--bg-card); border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; padding: 0 16px; font-family: var(--font-mono); font-size: 13px;
-            color: var(--text-muted); justify-content: space-between; flex-shrink: 0;
+        .hero-desc {
+            font-size: 15px;
+            line-height: 1.65;
+            color: var(--text-muted);
+            margin-bottom: 26px;
+            max-width: 58ch;
         }
 
-        #preview-iframe { width: 100%; flex: 1; border: none; background: #fff; display: block; }
-
-        .mock-execution-overlay {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-base);
-            display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; text-align: center; padding: 20px;
-        }
-        .mock-icon { font-size: 64px; color: var(--border); margin-bottom: 24px; }
-
-        .console-pane { height: 250px; background: #000000; border-top: 1px solid var(--border); display: flex; flex-direction: column; z-index: 20; flex-shrink: 0; }
-        .console-header {
-            height: 36px; background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; align-items: center;
-            padding: 0 16px; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); justify-content: space-between; flex-shrink: 0;
-        }
-        .console-output { flex: 1; overflow-y: auto; padding: 16px; font-family: var(--font-mono); font-size: 14px; color: #E5E5E5; line-height: 1.6; }
-        .log-row { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 12px; }
-        .log-time { color: #666; font-size: 12px; flex-shrink: 0; }
-        .log-msg { flex: 1; word-break: break-all; }
-        .log-err { color: var(--error); }
-        .log-sys { color: var(--primary); }
-        .log-warn { color: var(--secondary); }
-
-        .editor-footer {
-            height: 30px; background: var(--primary); color: #000; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 16px; font-family: var(--font-mono); font-size: 12px; font-weight: 600; flex-shrink: 0;
+        .three-stage-card {
+            position: relative;
+            height: 460px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
         }
 
-        /* --- PAGES --- */
-        .profile-header-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; margin-bottom: 40px; position: relative; text-align: center; padding-bottom: 40px; }
-        .profile-cover { height: 200px; background: linear-gradient(135deg, #1a1a1a, rgba(255,215,0,0.2)); position: relative; }
-        .profile-avatar-large { width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: 6px solid var(--bg-card); margin: -75px auto 20px; position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; box-shadow: var(--glow); }
-        .avatar-text { font-size: 60px; font-weight: 800; color: #000; font-family: var(--font-head); }
-        .profile-name { font-family: var(--font-head); font-size: 32px; font-weight: 700; margin-bottom: 8px; }
-        .profile-bio { color: var(--text-muted); max-width: 600px; margin: 0 auto 30px; line-height: 1.6; padding: 0 20px; }
-        .profile-stats-bar { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
-        .p-stat h3 { font-family: var(--font-mono); font-size: 28px; color: var(--primary); margin-bottom: 4px; }
-        .p-stat p { color: var(--text-muted); font-size: 14px; text-transform: uppercase; }
+        #three-hero-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+        }
 
-        .challenges-board { display: flex; flex-direction: column; gap: 20px; }
-        .challenge-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); }
-        .challenge-card:hover { border-color: var(--primary); transform: translateX(10px); }
-        .chal-info h3 { font-family: var(--font-head); font-size: 22px; margin-bottom: 12px; }
-        .chal-meta { display: flex; flex-wrap: wrap; gap: 20px; color: var(--text-muted); font-size: 14px; }
-        .chal-meta span { display: flex; align-items: center; gap: 8px; }
-        .diff-badge { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 16px; }
-        .diff-easy { background: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid var(--success); }
-        .diff-med { background: rgba(255, 184, 0, 0.1); color: var(--secondary); border: 1px solid var(--secondary); }
-        .diff-hard { background: rgba(239, 68, 68, 0.1); color: var(--error); border: 1px solid var(--error); }
+        .three-dock {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 18, 26, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            color: #F8FAFC;
+            font-family: var(--font-mono);
+            white-space: nowrap;
+            max-width: 94%;
+            overflow-x: auto;
+        }
 
-        .collections-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-        .collection-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px 30px; text-align: center; cursor: pointer; transition: var(--transition); }
-        .collection-card:hover { border-color: var(--primary); background: rgba(255,215,0,0.02); transform: translateY(-5px); }
-        .col-icon { font-size: 48px; color: var(--primary); margin-bottom: 20px; }
+        /* 3D Tilt Cards */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 64px;
+            perspective: 1000px;
+        }
 
-        .search-hero { text-align: center; padding: 80px 20px; }
-        .search-hero .search-input { max-width: 800px; margin: 0 auto; padding: 24px 30px 24px 70px; font-size: 24px; border-radius: 40px; width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); font-family: var(--font-sans); outline: none; transition: var(--transition); }
-        .search-hero .search-input:focus { border-color: var(--primary); box-shadow: var(--glow); }
-        .search-input-wrapper { position: relative; max-width: 800px; margin: 0 auto; }
-        .search-hero .search-input-wrapper i { font-size: 28px; left: 25px; position: absolute; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .tilt-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+            transform-style: preserve-3d;
+        }
 
-        .roadmap { margin-top: 60px; position: relative; }
-        .roadmap::before { content: ''; position: absolute; left: 40px; top: 0; bottom: 0; width: 2px; background: var(--border); }
-        .rm-item { position: relative; padding-left: 100px; margin-bottom: 60px; }
-        .rm-version { position: absolute; left: 0; top: 0; width: 80px; height: 80px; background: var(--bg-card); border: 2px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 20px; color: var(--primary); box-shadow: var(--glow); z-index: 2; }
-        .rm-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; }
-        .rm-content h3 { font-family: var(--font-head); font-size: 24px; margin-bottom: 16px; }
-        .rm-content ul { list-style: none; color: var(--text-muted); line-height: 1.8; }
-        .rm-content ul li::before { content: '→'; color: var(--primary); margin-right: 10px; font-weight: bold; }
+        .tilt-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px) rotateX(2deg) rotateY(-2deg);
+        }
 
-        .settings-layout { display: grid; grid-template-columns: 280px 1fr; gap: 40px; }
-        .settings-nav { display: flex; flex-direction: column; gap: 8px; }
-        .set-nav-item { padding: 14px 20px; border-radius: 12px; cursor: pointer; color: var(--text-muted); font-weight: 500; transition: var(--transition); }
-        .set-nav-item.active, .set-nav-item:hover { background: rgba(255,215,0,0.1); color: var(--primary); }
-        .settings-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px; }
-        .form-group { margin-bottom: 30px; }
-        .form-group label { display: block; margin-bottom: 12px; font-weight: 500; color: var(--text-muted); }
-        .form-control { width: 100%; background: var(--bg-base); border: 1px solid var(--border); border-radius: 12px; padding: 16px; color: var(--text-main); font-family: var(--font-sans); font-size: 16px; outline: none; transition: var(--transition); }
-        .form-control:focus { border-color: var(--primary); }
+        .tilt-card h3 {
+            font-family: var(--font-head);
+            font-size: 19px;
+            margin: 12px 0 8px;
+        }
 
-        /* MOBILE RESPONSIVE MEDIA QUERIES */
-        @media (max-width: 768px) {
-            .mobile-header { display: flex; }
-            
+        .tilt-card p {
+            color: var(--text-muted);
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+
+        /* Editor Workspace */
+        .editor-topbar {
+            min-height: 54px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 6px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .editor-left-group, .editor-right-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .proj-title-input {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-family: var(--font-head);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 8px;
+            width: 170px;
+            outline: none;
+        }
+        .proj-title-input:focus { border-color: var(--primary); }
+
+        /* Language Toggles Bar */
+        .editor-subbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 6px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .lang-toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .web-toggle-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 7px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .web-toggle-chip.enabled {
+            border-color: var(--primary);
+            color: var(--text-main);
+            background: rgba(251, 191, 36, 0.12);
+        }
+
+        .web-toggle-chip.active-tab {
+            background: var(--primary);
+            color: #090A0F;
+            border-color: var(--primary);
+        }
+
+        /* Workspace Split Container */
+        .workspace-body {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .lang-rail {
+            width: 54px;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            gap: 6px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .rail-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .rail-btn:hover { color: var(--text-main); background: var(--bg-elevated); }
+        .rail-btn.active {
+            color: var(--primary);
+            background: rgba(251, 191, 36, 0.14);
+            border-color: rgba(251, 191, 36, 0.4);
+        }
+
+        .split-panes {
+            flex: 1;
+            display: flex;
+            min-width: 0;
+            min-height: 0;
+            height: 100%;
+            position: relative;
+        }
+
+        .editor-column {
+            width: 50%;
+            min-width: 240px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+            border-right: 1px solid var(--border);
+        }
+
+        /* Full-Height Multi-Line Editor Wrapper (Never Collapses to 3 Lines) */
+        .cm-full-wrapper {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            min-height: 260px;
+            overflow: hidden;
+        }
+
+        .CodeMirror {
+            position: absolute !important;
+            inset: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .CodeMirror-scroll {
+            height: 100% !important;
+        }
+
+        .resizer-bar {
+            width: 6px;
+            background: var(--bg-surface);
+            cursor: col-resize;
+            transition: background 0.15s;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+        .resizer-bar:hover, .resizer-bar.dragging { background: var(--primary); }
+
+        .output-column {
+            flex: 1;
+            min-width: 240px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .pane-bar {
+            height: 36px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        /* Quick Symbol Bar for Touch Devices */
+        .mobile-symbol-bar {
+            display: none;
+            height: 34px;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            padding: 0 8px;
+            align-items: center;
+            gap: 4px;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .sym-btn {
+            min-width: 30px;
+            height: 26px;
+            padding: 0 8px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .sym-btn:active { background: var(--primary); color: #090A0F; }
+
+        .preview-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: #FFFFFF;
+            min-height: 160px;
+        }
+
+        #preview-iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background: #FFFFFF;
+        }
+
+        .compiled-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-base);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .console-container {
+            height: 200px;
+            background: #08090C;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .console-logs {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 14px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: #E2E8F0;
+        }
+
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 8px;
+            line-height: 1.5;
+        }
+        .log-ts { color: #64748B; flex-shrink: 0; }
+        .log-sys { color: #FBBF24; }
+        .log-err { color: #EF4444; }
+        .log-warn { color: #F59E0B; }
+
+        /* Mobile Bottom Thumb-Zone Workspace Switcher */
+        .mobile-bottom-tabs {
+            display: none;
+            height: 52px;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            padding: 6px 8px;
+            flex-shrink: 0;
+        }
+
+        .mob-tab-btn {
+            border-radius: 9px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+        }
+        .mob-tab-btn.active {
+            background: var(--primary);
+            color: #090A0F;
+        }
+        .mob-tab-btn.run-btn {
+            background: var(--success);
+            color: #090A0F;
+            font-weight: 700;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 16px;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: var(--shadow-card);
+        }
+
+        @media (max-width: 900px) {
+            .mobile-topbar { display: flex; }
+            .mobile-symbol-bar { display: flex; }
+            .mobile-bottom-tabs { display: grid; }
             #sidebar {
                 position: fixed;
-                left: -100%; top: 0; bottom: 0; width: 280px;
-                box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+                top: 0; bottom: 0; left: 0;
+                transform: translateX(-100%);
             }
-            #sidebar.open { left: 0; }
-            
-            .page { top: 60px; height: calc(100% - 60px); }
-            .page-container { padding: 20px; padding-bottom: 60px; }
-            
-            .hero-title { font-size: 42px; letter-spacing: -1px; }
-            .hero-desc { font-size: 18px; }
-            .hero-stats { flex-direction: row; flex-wrap: wrap; justify-content: space-around; gap: 30px; margin-top: 40px; border: none; padding-top: 0; }
-            .stat-item { flex: 0 0 40%; }
-            .features-grid { grid-template-columns: 1fr; margin-top: 40px; gap: 20px; padding-bottom: 60px; }
-            
-            .editor-header { height: auto; flex-direction: column; padding: 15px; gap: 15px; }
-            .editor-meta { width: 100%; justify-content: center; }
-            .proj-name-input { text-align: center; max-width: 100%; }
-            .editor-actions { width: 100%; justify-content: center; flex-wrap: wrap; }
-            .editor-actions .btn { flex: 1; justify-content: center; }
-            
-            .editor-main { flex-direction: column; }
-            .lang-sidebar { 
-                flex-direction: row; width: 100%; height: 60px; padding: 0 10px; 
-                overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); 
-                justify-content: flex-start;
+            #sidebar.open { transform: translateX(0); }
+            .landing-container { padding: 24px 16px 80px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 24px; min-height: auto; }
+            .three-stage-card { height: 340px; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .workspace-body { flex-direction: column; }
+            .lang-rail {
+                width: 100%;
+                height: 44px;
+                flex-direction: row;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 0 10px;
+                overflow-x: auto;
+                overflow-y: hidden;
             }
-            .lang-tab { width: 44px; height: 44px; font-size: 20px; }
-            .lang-tab .tooltip { display: none; }
-            
-            .editor-split { flex-direction: column; overflow-y: auto; display: block; }
-            .code-pane, #right-pane { flex: none; height: 50vh; min-height: 400px; border-right: none; border-bottom: 1px solid var(--border); }
-            
-            .challenge-card { flex-direction: column; gap: 20px; align-items: flex-start; padding: 20px; }
-            .challenge-card .btn { width: 100%; justify-content: center; }
-            
-            .profile-stats-bar { flex-direction: row; flex-wrap: wrap; gap: 30px; }
-            
-            .search-hero { padding: 30px 0; }
-            .search-hero .hero-title { font-size: 36px; }
-            .search-hero .search-input { font-size: 18px; padding: 16px 20px 16px 50px; }
-            .search-hero .search-input-wrapper i { font-size: 20px; left: 20px; }
-            
-            .roadmap::before { left: 20px; }
-            .rm-item { padding-left: 60px; }
-            .rm-version { width: 40px; height: 40px; font-size: 14px; }
-            .rm-content { padding: 20px; }
-            
-            .settings-layout { grid-template-columns: 1fr; }
-            .settings-nav { flex-direction: row; overflow-x: auto; white-space: nowrap; padding-bottom: 10px; margin-bottom: 20px; }
-            .set-nav-item { flex-shrink: 0; }
-            .settings-panel { padding: 20px; }
-            .form-group[style] { flex-direction: column; align-items: flex-start !important; gap: 15px; }
-            
-            .welcome-modal { padding: 40px 20px; }
+            .resizer-bar { display: none; }
+            .editor-column, .output-column {
+                width: 100% !important;
+                height: 100%;
+                border-right: none;
+            }
+            .mobile-hidden { display: none !important; }
         }
     </style>
 </head>
 <body>
-
-<!-- INLINE SVG SYMBOL DEFINITIONS FOR ZERO-DEPENDENCY LOGO RENDERING -->
-<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
     <symbol id="logo-svg" viewBox="0 0 100 100">
-        <path d="M 35 30 L 15 50 L 35 70" stroke="#E5E5E5" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="50" y1="20" x2="50" y2="80" stroke="#FFD700" stroke-width="8" stroke-linecap="round"/>
-        <path d="M 65 30 L 85 50 L 65 70" stroke="#E5E5E5" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <g transform="translate(60, 60) rotate(-30)">
-            <rect x="0" y="0" width="30" height="18" rx="3" fill="#FFD700" stroke="#E5E5E5" stroke-width="2"/>
-            <rect x="20" y="0" width="10" height="18" fill="#FFF" stroke="#E5E5E5" stroke-width="2" rx="2"/>
-            <path d="M 0 5 L -10 15 M 0 13 L -12 25 M 5 18 L -5 28" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
-        </g>
+        <path d="M 35 30 L 15 50 L 35 70" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="50" y1="20" x2="50" y2="80" stroke="#FBBF24" stroke-width="8" stroke-linecap="round"/>
+        <path d="M 65 30 L 85 50 L 65 70" stroke="currentColor" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
 </svg>
 
 <div id="app">
-    <!-- MOBILE SIDEBAR OVERLAY -->
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="app.toggleSidebar()"></div>
-
-    <!-- SIDEBAR -->
     <aside id="sidebar">
-        <a href="#" class="brand" onclick="app.navigate('home')">
+        <a href="#home" class="brand" onclick="app.navigate('home'); return false;">
             <svg class="app-logo"><use href="#logo-svg"></use></svg>
             <span>CodeErase</span>
         </a>
-        
         <div class="nav-links">
-            <a href="#" class="nav-item active" id="nav-home" data-page="home">
-                <i class="fas fa-home"></i> <span>Home</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-editor" data-page="editor">
-                <i class="fas fa-code"></i> <span>Editor</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-challenges" data-page="challenges">
+            <button class="nav-item active" data-page="home" onclick="app.navigate('home')">
+                <i class="fas fa-cube"></i> <span>3D Overview</span>
+            </button>
+            <button class="nav-item" data-page="editor" onclick="app.navigate('editor')">
+                <i class="fas fa-code"></i> <span>IDE Workspace</span>
+            </button>
+            <button class="nav-item" data-page="challenges" onclick="app.navigate('challenges')">
                 <i class="fas fa-trophy"></i> <span>Challenges</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-collections" data-page="collections">
-                <i class="fas fa-folder-open"></i> <span>Collections</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-search" data-page="search">
-                <i class="fas fa-search"></i> <span>Search</span>
-            </a>
-            <div style="margin: 20px 0; border-top: 1px solid var(--border)"></div>
-            <a href="#" class="nav-item" id="nav-profile" data-page="profile">
-                <i class="fas fa-user"></i> <span>Profile</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-settings" data-page="settings">
-                <i class="fas fa-cog"></i> <span>Settings</span>
-            </a>
-            <a href="#" class="nav-item" id="nav-about" data-page="about">
-                <i class="fas fa-info-circle"></i> <span>About & Roadmap</span>
-            </a>
+            </button>
+            <button class="nav-item" data-page="collections" onclick="app.navigate('collections')">
+                <i class="fas fa-folder-open"></i> <span>Saved Projects</span>
+            </button>
+            <button class="nav-item" data-page="settings" onclick="app.navigate('settings')">
+                <i class="fas fa-sliders"></i> <span>Settings</span>
+            </button>
         </div>
-
         <div class="sidebar-footer">
-            <div class="user-profile-sm" onclick="app.navigate('profile')">
-                <div class="avatar" id="sidebar-avatar">--</div>
-                <div style="flex:1; overflow:hidden;">
-                    <div style="font-weight:600; font-size:14px; color:var(--text-main)" id="sidebar-user-name">Guest</div>
-                    <div style="font-size:12px; color:var(--success)">Free Forever</div>
+            <div class="user-chip" onclick="app.navigate('settings')">
+                <div class="avatar-circle" id="sidebar-avatar">CE</div>
+                <div style="overflow:hidden">
+                    <div id="sidebar-username" style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Developer</div>
+                    <div style="font-size:11px;color:var(--success)">Local + Sandbox</div>
                 </div>
             </div>
+            <button class="btn btn-outline btn-sm" onclick="app.toggleTheme()" title="Toggle Light / Dark Theme">
+                <i class="fas fa-sun" id="sidebar-theme-icon"></i>
+            </button>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main id="main-content">
-        
-        <!-- MOBILE TOP NAV -->
-        <div class="mobile-header">
-            <a href="#" class="brand" style="border: none; padding: 0; height: auto;" onclick="app.navigate('home')">
+        <!-- Mobile Top Header with Prominent Light/Dark Toggle -->
+        <div class="mobile-topbar">
+            <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-head);font-weight:700">
                 <svg class="app-logo"><use href="#logo-svg"></use></svg>
-                <span style="font-size: 20px;">CodeErase</span>
-            </a>
-            <button class="mobile-menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
-        </div>
-
-        <!-- PAGE: HOME -->
-        <div id="page-home" class="page active">
-            <div class="hero-section">
-                <div class="hero-bg-anim" id="hero-bg"></div>
-                <div class="hero-content">
-                    <div class="tag-pill">CodeErase Platform</div>
-                    <h1 class="hero-title">Build Anything.<br><span class="text-gradient">Test Everything.</span></h1>
-                    <p class="hero-desc">The next-generation coding playground that behaves like a real deployment. Write, test, and preview every major programming language instantly in a professional, real-time environment.</p>
-                    <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-                        <button class="btn btn-primary" onclick="app.navigate('editor')" style="padding: 16px 32px; font-size: 16px;">
-                            <i class="fas fa-terminal"></i> Start Coding Now
-                        </button>
-                        <button class="btn btn-outline" onclick="app.navigate('challenges')" style="padding: 16px 32px; font-size: 16px;">
-                            <i class="fas fa-trophy"></i> View Challenges
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="hero-stats glass-panel" style="padding: 30px 60px; border-radius: 20px;">
-                    <div class="stat-item">
-                        <h4>14+</h4>
-                        <p>Languages</p>
-                    </div>
-                    <div class="stat-item">
-                        <h4>0ms</h4>
-                        <p>Web Preview</p>
-                    </div>
-                    <div class="stat-item">
-                        <h4>100%</h4>
-                        <p>Deployment Feel</p>
-                    </div>
-                    <div class="stat-item">
-                        <h4>24/7</h4>
-                        <p>Execution API</p>
-                    </div>
-                </div>
+                <span>CodeErase</span>
             </div>
-
-            <div class="page-container">
-                <div class="features-grid">
-                    <div class="feat-card glass-panel">
-                        <div class="feat-icon"><i class="fas fa-globe"></i></div>
-                        <h3>Multi-Language Support</h3>
-                        <p>Write not just HTML/CSS/JS, but Python, Java, C++, Go, Rust and more. All executed perfectly via robust APIs.</p>
-                    </div>
-                    <div class="feat-card glass-panel">
-                        <div class="feat-icon"><i class="fas fa-bolt"></i></div>
-                        <h3>Real-Time Preview</h3>
-                        <p>Watch your web applications come to life as you type. Zero lag, perfect rendering, full iframe isolation.</p>
-                    </div>
-                    <div class="feat-card glass-panel">
-                        <div class="feat-icon"><i class="fas fa-server"></i></div>
-                        <h3>Deployment Simulation</h3>
-                        <p>Experience code exactly as it behaves on a real server. Stop guessing, start testing with confidence.</p>
-                    </div>
-                    <div class="feat-card glass-panel">
-                        <div class="feat-icon"><i class="fas fa-bug"></i></div>
-                        <h3>Advanced Console</h3>
-                        <p>Professional logging, error tracking, and execution outputs exactly like your favorite IDE terminal.</p>
-                    </div>
-                    <div class="feat-card glass-panel">
-                        <div class="feat-icon"><i class="fas fa-share-nodes"></i></div>
-                        <h3>Instant Sharing</h3>
-                        <p>Share your masterpieces with the community in a click. Fork, like, and build upon others' work.</p>
-                    </div>
-                    <div class="feat-card glass-panel">
-                        <div class="feat-icon"><i class="fas fa-moon"></i></div>
-                        <h3>Premium Dark Aesthetics</h3>
-                        <p>Built by developers, for developers. Enjoy a stunning, eye-friendly interface designed for long coding sessions.</p>
-                    </div>
-                </div>
+            <div style="display:flex;align-items:center;gap:6px">
+                <button class="btn btn-outline btn-sm" onclick="app.toggleTheme()" title="Toggle Light / Dark Mode">
+                    <i class="fas fa-sun" id="mobile-theme-icon"></i>
+                    <span id="mobile-theme-label">Light</span>
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="app.navigate('editor')">IDE</button>
+                <button class="btn btn-outline btn-sm" onclick="document.getElementById('sidebar').classList.toggle('open')">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
 
-        <!-- PAGE: EDITOR -->
-        <div id="page-editor" class="page">
-            <div class="editor-header">
-                <div class="editor-meta">
-                    <svg class="app-logo"><use href="#logo-svg"></use></svg>
-                    <input type="text" class="proj-name-input" value="Untitled Project" id="project-title-input">
+        <!-- PAGE: HOME / LANDING -->
+        <section id="page-home" class="page active">
+            <div class="landing-container">
+                <div class="hero-grid">
+                    <div>
+                        <div class="hero-kicker">CODEERASE 3D STUDIO · SANDBOXED IDE</div>
+                        <h1 class="hero-title">Write, Toggle, and Execute Code in Real 3D Space.</h1>
+                        <p class="hero-desc">
+                            A repaired, production-grade browser development workspace. Enable or disable HTML, CSS, and JavaScript layers independently, inspect live 3D WebGL geometry, and run 12+ languages without faked outputs.
+                        </p>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <button class="btn btn-primary" onclick="app.navigate('editor')" style="padding:12px 22px;font-size:14px">
+                                <i class="fas fa-terminal"></i> Start Coding
+                            </button>
+                            <button class="btn btn-outline" onclick="app.loadTemplate('particle')" style="padding:12px 18px;font-size:14px">
+                                <i class="fas fa-atom"></i> 3D Particle Demo
+                            </button>
+                            <button class="btn btn-outline" onclick="app.toggleTheme()" style="padding:12px 16px;font-size:14px">
+                                <i class="fas fa-circle-half-stroke"></i> Toggle Light / Dark
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="three-stage-card">
+                        <canvas id="three-hero-canvas"></canvas>
+                        <div class="three-dock">
+                            <span>3D AST Core</span>
+                            <span>·</span>
+                            <label>Explode <input type="range" id="three-explode" min="0" max="1" step="0.02" value="0.2" style="vertical-align:middle;width:65px"></label>
+                            <span>·</span>
+                            <button class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:11px" onclick="app.cycleThreeFinish()">Finish</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="editor-actions">
-                    <button class="btn btn-outline" style="padding: 8px 16px;"><i class="fas fa-save"></i> Save</button>
-                    <button class="btn btn-outline" style="padding: 8px 16px;" onclick="app.formatCode()"><i class="fas fa-align-left"></i> Format</button>
-                    <button class="btn btn-primary" id="btn-run" onclick="app.runCode()" style="padding: 8px 24px;"><i class="fas fa-play"></i> Run</button>
+
+                <div class="bento-grid">
+                    <div class="tilt-card">
+                        <i class="fas fa-toggle-on" style="font-size:22px;color:var(--primary)"></i>
+                        <h3>01. Granular Language Toggles</h3>
+                        <p>Enable or disable HTML, CSS, and JavaScript layers independently. Disabled languages preserve your source code in memory while isolating the live preview.</p>
+                    </div>
+                    <div class="tilt-card">
+                        <i class="fas fa-shield-halved" style="font-size:22px;color:var(--accent-cyan)"></i>
+                        <h3>02. Sandboxed Iframe Engine</h3>
+                        <p>Isolated srcdoc execution captures console logs, uncaught runtime exceptions, and promise rejections without risking host application stability.</p>
+                    </div>
+                    <div class="tilt-card">
+                        <i class="fas fa-microchip" style="font-size:22px;color:var(--success)"></i>
+                        <h3>03. Honest Multi-Language Execution</h3>
+                        <p>Browser-native HTML/CSS/JS and TypeScript transpilation paired with documented Piston API remote execution for Python, C++, Rust, Go, and Java.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: EDITOR WORKSPACE -->
+        <section id="page-editor" class="page">
+            <div class="editor-topbar">
+                <div class="editor-left-group">
+                    <input type="text" id="project-title" class="proj-title-input" value="3D Holo-Cube Sandbox" aria-label="Project Title">
+                    <select id="template-select" class="btn btn-outline btn-sm" onchange="app.loadTemplate(this.value)">
+                        <option value="">Examples...</option>
+                        <option value="prism">3D Holo-Cube & Tilt Card</option>
+                        <option value="particle">Gravity Particle Network</option>
+                    </select>
+                </div>
+                <div class="editor-right-group">
+                    <label style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:5px;cursor:pointer">
+                        <input type="checkbox" id="autorun-toggle" checked onchange="app.toggleAutoRun(this.checked)"> Auto-Run
+                    </label>
+                    <button class="btn btn-outline btn-sm" onclick="app.toggleTheme()" title="Toggle Light / Dark Mode">
+                        <i class="fas fa-sun" id="toolbar-theme-icon"></i> <span id="toolbar-theme-label">Light</span>
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="app.formatCode()" title="Format Code">
+                        <i class="fas fa-align-left"></i> Format
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="app.saveProject()" title="Save Snapshot">
+                        <i class="fas fa-floppy-disk"></i> Save
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="app.downloadProject()" title="Export Project Source">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="app.openResetModal()" title="Reset Project">
+                        <i class="fas fa-rotate-left"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm" id="btn-run" onclick="app.runCode()">
+                        <i class="fas fa-play"></i> Run
+                    </button>
                 </div>
             </div>
 
-            <div class="editor-main">
-                <!-- Lang Sidebar -->
-                <div class="lang-sidebar" id="editor-langs">
-                    <!-- Generated via JS -->
+            <!-- Language Enable/Disable Toggles Bar -->
+            <div class="editor-subbar">
+                <div class="lang-toggle-group">
+                    <span style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);margin-right:4px">LAYERS:</span>
+                    <div class="web-toggle-chip enabled active-tab" id="chip-html">
+                        <input type="checkbox" checked onchange="app.toggleWebLayer('html', this.checked)" title="Enable/Disable HTML">
+                        <span onclick="app.switchLang('html')">HTML</span>
+                    </div>
+                    <div class="web-toggle-chip enabled" id="chip-css">
+                        <input type="checkbox" checked onchange="app.toggleWebLayer('css', this.checked)" title="Enable/Disable CSS">
+                        <span onclick="app.switchLang('css')">CSS</span>
+                    </div>
+                    <div class="web-toggle-chip enabled" id="chip-javascript">
+                        <input type="checkbox" checked onchange="app.toggleWebLayer('javascript', this.checked)" title="Enable/Disable JS">
+                        <span onclick="app.switchLang('javascript')">JS</span>
+                    </div>
                 </div>
+                <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted);white-space:nowrap" id="engine-indicator">
+                    Sandbox (srcdoc)
+                </div>
+            </div>
 
-                <!-- Editor Split -->
-                <div class="editor-split">
-                    <!-- Code Pane -->
-                    <div class="code-pane">
-                        <div class="pane-header">
-                            <div><i class="fas fa-code"></i> <span id="current-lang-label" class="lang-badge">HTML</span></div>
-                            <div class="editor-actions">
-                                <button class="toolbar-btn" title="Copy Code" onclick="app.copyCode()"><i class="fas fa-copy"></i></button>
-                                <button class="toolbar-btn" title="Clear" onclick="app.clearCode()"><i class="fas fa-trash"></i></button>
+            <div class="workspace-body">
+                <div class="lang-rail" id="lang-rail"></div>
+
+                <div class="split-panes" id="split-panes">
+                    <div class="editor-column" id="editor-col">
+                        <div class="pane-bar">
+                            <div>
+                                <span id="active-lang-badge" style="color:var(--primary);font-weight:700">HTML5</span>
+                                <span id="disabled-layer-banner" style="display:none;color:var(--warning);margin-left:8px">(Disabled — Code Preserved)</span>
+                            </div>
+                            <div style="display:flex;gap:6px">
+                                <button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="app.copyCode()"><i class="fas fa-copy"></i> Copy</button>
+                                <button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="app.clearEditor()"><i class="fas fa-eraser"></i> Clear</button>
                             </div>
                         </div>
-                        <textarea id="main-editor"></textarea>
-                        <div class="editor-footer">
-                            <span id="editor-stats">Ln 1, Col 1</span>
-                            <span>UTF-8 • CodeErase Engine</span>
+
+                        <div class="cm-full-wrapper">
+                            <textarea id="code-textarea"></textarea>
+                        </div>
+
+                        <!-- Mobile Quick Symbol Bar -->
+                        <div class="mobile-symbol-bar">
+                            <button class="sym-btn" onclick="app.insertSymbol('  ')">Tab</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('{')">{</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('}')">}</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('(')">(</button>
+                            <button class="sym-btn" onclick="app.insertSymbol(')')">)</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('<')">&lt;</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('>')">&gt;</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('/')">/</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('=')">=</button>
+                            <button class="sym-btn" onclick="app.insertSymbol(';')">;</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('&quot;')">&quot;</button>
+                            <button class="sym-btn" onclick="app.insertSymbol('\'')">'</button>
+                        </div>
+
+                        <div class="pane-bar" style="border-top:1px solid var(--border);border-bottom:none;font-size:11px;color:var(--text-muted)">
+                            <span id="cursor-stats">Ln 1, Col 1</span>
+                            <span id="autosave-status">Autosaved locally</span>
                         </div>
                     </div>
 
-                    <!-- Right Column (Preview + Console) -->
-                    <div class="code-pane" style="border-right: none;" id="right-pane">
-                        <div class="preview-pane" id="preview-section">
-                            <div class="preview-header">
-                                <div><i class="fas fa-globe" style="color:var(--text-main)"></i> Web Preview</div>
-                                <button class="toolbar-btn" style="width: 24px; height: 24px; background: transparent; border: none; color: var(--text-muted);" title="Toggle Fullscreen" onclick="app.toggleFullscreenPreview()">
-                                    <i class="fas fa-expand" id="fullscreen-icon"></i>
+                    <div class="resizer-bar" id="panel-resizer"></div>
+
+                    <div class="output-column" id="output-col">
+                        <div class="preview-container" id="preview-wrapper">
+                            <div class="pane-bar">
+                                <span><i class="fas fa-globe"></i> Sandboxed Live Preview</span>
+                                <button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="app.toggleFullscreenPreview()">
+                                    <i class="fas fa-expand"></i>
                                 </button>
                             </div>
-                            <iframe id="preview-iframe"></iframe>
-                            <div class="mock-execution-overlay" id="mock-overlay">
-                                <i class="fas fa-terminal mock-icon"></i>
-                                <h3 style="color:var(--text-main); font-family:var(--font-head); font-size:24px;">Backend Environment</h3>
-                                <p style="color:var(--text-muted); margin-top:10px;">Execution output is displayed in the console below.</p>
+                            <iframe id="preview-iframe" sandbox="allow-scripts allow-modals allow-forms" title="Live Code Preview"></iframe>
+                            <div class="compiled-overlay" id="compiled-overlay">
+                                <i class="fas fa-server" style="font-size:38px;color:var(--primary);margin-bottom:12px"></i>
+                                <h3 style="font-family:var(--font-head);font-size:19px" id="compiled-title">Remote Compiler Mode</h3>
+                                <p style="color:var(--text-muted);font-size:13px;max-width:340px;margin-top:8px">
+                                    Tap <strong>Run</strong> to execute via the external Piston API runtime or local TypeScript transpiler. Output streams to the console.
+                                </p>
                             </div>
                         </div>
-                        <div class="console-pane">
-                            <div class="console-header">
-                                <div><i class="fas fa-terminal"></i> Terminal / Console</div>
-                                <button class="toolbar-btn" style="width: 24px; height: 24px; background: transparent; border: none; color: var(--text-muted);" onclick="app.clearConsole()"><i class="fas fa-ban"></i></button>
+
+                        <div class="console-container" id="console-wrapper">
+                            <div class="pane-bar" style="background:#0D1017;color:#94A3B8">
+                                <span><i class="fas fa-terminal"></i> Console & Diagnostics</span>
+                                <button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="app.clearConsole()">Clear</button>
                             </div>
-                            <div class="console-output" id="console-output">
-                                <div class="log-row"><span class="log-time">[System]</span><span class="log-sys">CodeErase Terminal initialized. Ready.</span></div>
-                            </div>
+                            <div class="console-logs" id="console-logs"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Mobile Thumb-Zone Bottom Switcher -->
+            <div class="mobile-bottom-tabs">
+                <button class="mob-tab-btn active" id="mob-tab-editor" onclick="app.setMobilePane('editor')">
+                    <i class="fas fa-code"></i> <span>Editor</span>
+                </button>
+                <button class="mob-tab-btn" id="mob-tab-preview" onclick="app.setMobilePane('preview')">
+                    <i class="fas fa-eye"></i> <span>Preview</span>
+                </button>
+                <button class="mob-tab-btn" id="mob-tab-console" onclick="app.setMobilePane('console')">
+                    <i class="fas fa-terminal"></i> <span>Console</span>
+                </button>
+                <button class="mob-tab-btn run-btn" onclick="app.runCode()">
+                    <i class="fas fa-play"></i> <span>Run</span>
+                </button>
+            </div>
+        </section>
 
         <!-- PAGE: CHALLENGES -->
-        <div id="page-challenges" class="page">
-            <div class="page-container">
-                <div class="page-header">
-                    <div>
-                        <h2 class="page-title">Coding Challenges</h2>
-                        <p class="page-subtitle">Test your skills and earn XP by solving problems.</p>
-                    </div>
-                </div>
-
-                <div class="filter-tags" style="margin-bottom: 30px; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
-                    <button class="btn btn-primary" style="flex-shrink:0;">All Difficulties</button>
-                    <button class="btn btn-outline" style="flex-shrink:0;">Beginner</button>
-                    <button class="btn btn-outline" style="flex-shrink:0;">Intermediate</button>
-                    <button class="btn btn-outline" style="flex-shrink:0;">Advanced</button>
-                </div>
-
-                <div class="challenges-board" id="challenges-list">
-                    <!-- Generated via JS -->
-                </div>
+        <section id="page-challenges" class="page">
+            <div class="landing-container">
+                <h2 style="font-family:var(--font-head);font-size:28px;margin-bottom:8px">Interactive Coding Challenges</h2>
+                <p style="color:var(--text-muted);margin-bottom:24px">Load any problem into the workspace with real starter code.</p>
+                <div id="challenges-container" style="display:grid;gap:16px"></div>
             </div>
-        </div>
+        </section>
 
-        <!-- PAGE: COLLECTIONS -->
-        <div id="page-collections" class="page">
-            <div class="page-container">
-                <div class="page-header">
-                    <div>
-                        <h2 class="page-title">Your Collections</h2>
-                        <p class="page-subtitle">Organize your saved snippets and projects.</p>
-                    </div>
-                    <button class="btn btn-primary"><i class="fas fa-plus"></i> New Collection</button>
-                </div>
-
-                <div class="collections-grid" id="collections-grid">
-                    <!-- Generated via JS -->
-                </div>
+        <!-- PAGE: COLLECTIONS / SAVED -->
+        <section id="page-collections" class="page">
+            <div class="landing-container">
+                <h2 style="font-family:var(--font-head);font-size:28px;margin-bottom:8px">Saved Workspace Sessions</h2>
+                <p style="color:var(--text-muted);margin-bottom:24px">Restore any locally saved snapshot immediately.</p>
+                <div id="saved-list" class="bento-grid"></div>
             </div>
-        </div>
-
-        <!-- PAGE: PROFILE -->
-        <div id="page-profile" class="page">
-            <div class="page-container">
-                <div class="profile-header-card">
-                    <div class="profile-cover"></div>
-                    <div class="profile-avatar-large">
-                        <div class="avatar-text" id="profile-page-avatar">--</div>
-                    </div>
-                    <h2 class="profile-name" id="profile-page-name">Guest</h2>
-                    <p class="profile-bio">Welcome to my CodeErase profile! I'm ready to build the future of the web.</p>
-                    
-                    <div class="profile-stats-bar">
-                        <div class="p-stat">
-                            <h3>0</h3>
-                            <p>Projects</p>
-                        </div>
-                        <div class="p-stat">
-                            <h3>0</h3>
-                            <p>Followers</p>
-                        </div>
-                        <div class="p-stat">
-                            <h3>0</h3>
-                            <p>Total Views</p>
-                        </div>
-                        <div class="p-stat">
-                            <h3>0</h3>
-                            <p>Total XP</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 style="font-family: var(--font-head); font-size: 24px; margin-bottom: 24px;">Recent Activity</h3>
-                <div id="profile-projects-grid">
-                    <!-- Generated via JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE: SEARCH -->
-        <div id="page-search" class="page">
-            <div class="page-container">
-                <div class="search-hero">
-                    <h1 class="hero-title" style="margin-bottom: 40px;">What are you looking for?</h1>
-                    <div class="search-input-wrapper">
-                        <i class="fas fa-search"></i>
-                        <input type="text" class="search-input" placeholder="Search across CodeErase...">
-                    </div>
-                </div>
-                <div style="text-align: center; color: var(--text-muted); margin-top: 20px;">
-                    <i class="fas fa-keyboard" style="font-size: 40px; margin-bottom: 20px; opacity: 0.5;"></i>
-                    <p>Start typing to search projects, users, tags, and code.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE: ABOUT -->
-        <div id="page-about" class="page">
-            <div class="page-container">
-                <div class="page-header">
-                    <div>
-                        <h2 class="page-title">About CodeErase & Roadmap</h2>
-                        <p class="page-subtitle">The vision and future of the ultimate coding playground.</p>
-                    </div>
-                </div>
-
-                <div class="glass-panel" style="padding: 40px; margin-bottom: 60px;">
-                    <h3 style="font-family:var(--font-head); font-size:28px; margin-bottom:20px; color:var(--primary)">Our Mission</h3>
-                    <p style="font-size: 18px; line-height: 1.8; color: var(--text-muted);">
-                        CodeErase was built to bridge the gap between simple web playgrounds and complex local development environments. We believe developers should be able to write and test any language, instantly, with zero setup, exactly as if it were deployed on a production server.
-                    </p>
-                </div>
-
-                <h3 style="font-family:var(--font-head); font-size:32px; margin-bottom:40px;">Product Roadmap</h3>
-                
-                <div class="roadmap">
-                    <div class="rm-item">
-                        <div class="rm-version">v1</div>
-                        <div class="rm-content glass-panel">
-                            <h3>The Foundation (Current)</h3>
-                            <ul>
-                                <li>Frontend SPA architecture</li>
-                                <li>Real-time HTML/CSS/JS web preview engine</li>
-                                <li>Multi-language editor support via CodeMirror</li>
-                                <li>Piston API integration for backend language execution</li>
-                                <li>Premium Dark UI design system</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="rm-item">
-                        <div class="rm-version" style="color:var(--text-muted); border-color:var(--text-muted)">v2</div>
-                        <div class="rm-content glass-panel" style="opacity: 0.7">
-                            <h3>Advanced Runtimes</h3>
-                            <ul>
-                                <li>Real database connections (PostgreSQL, MongoDB)</li>
-                                <li>File system access simulation</li>
-                                <li>NPM package auto-installation</li>
-                                <li>WebAssembly direct execution</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="rm-item">
-                        <div class="rm-version" style="color:var(--text-muted); border-color:var(--text-muted)">v3</div>
-                        <div class="rm-content glass-panel" style="opacity: 0.7">
-                            <h3>Docker Sandboxes</h3>
-                            <ul>
-                                <li>Full isolated Docker containers per project</li>
-                                <li>Terminal access (bash/zsh)</li>
-                                <li>Custom Dockerfile support</li>
-                                <li>Multi-container orchestration (Docker Compose)</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="rm-item">
-                        <div class="rm-version" style="color:var(--text-muted); border-color:var(--text-muted)">v4</div>
-                        <div class="rm-content glass-panel" style="opacity: 0.7">
-                            <h3>AI & Collaboration</h3>
-                            <ul>
-                                <li>AI Code review and generation</li>
-                                <li>Multiplayer real-time collaboration</li>
-                                <li>One-click deployment to Vercel/AWS</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </section>
 
         <!-- PAGE: SETTINGS -->
-        <div id="page-settings" class="page">
-            <div class="page-container">
-                <div class="page-header">
-                    <div>
-                        <h2 class="page-title">Settings</h2>
-                        <p class="page-subtitle">Customize your CodeErase experience.</p>
+        <section id="page-settings" class="page">
+            <div class="landing-container" style="max-width:720px">
+                <h2 style="font-family:var(--font-head);font-size:28px;margin-bottom:24px">Workspace Preferences</h2>
+                <div class="tilt-card" style="transform:none">
+                    <div style="margin-bottom:18px">
+                        <label style="display:block;margin-bottom:6px;font-size:13px;color:var(--text-muted)">Color Mode</label>
+                        <button class="btn btn-outline" onclick="app.toggleTheme()">
+                            <i class="fas fa-circle-half-stroke"></i> Switch Light / Dark Mode
+                        </button>
                     </div>
-                    <button class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
-                </div>
-
-                <div class="settings-layout">
-                    <div class="settings-nav">
-                        <div class="set-nav-item active">Appearance</div>
-                        <div class="set-nav-item">Editor Prefs</div>
-                        <div class="set-nav-item">Account</div>
-                        <div class="set-nav-item">Notifications</div>
+                    <div style="margin-bottom:18px">
+                        <label style="display:block;margin-bottom:6px;font-size:13px;color:var(--text-muted)">Developer Display Name</label>
+                        <input type="text" id="settings-name" class="proj-title-input" style="width:100%" value="Developer">
                     </div>
-                    
-                    <div class="settings-panel">
-                        <h3 style="font-family:var(--font-head); font-size:24px; margin-bottom:30px;">Appearance Settings</h3>
-                        
-                        <div class="form-group">
-                            <label>Theme</label>
-                            <select class="form-control">
-                                <option>CodeErase Dark (Default)</option>
-                                <option>Dracula</option>
-                                <option>Monokai</option>
-                                <option>GitHub Dark</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Font Family</label>
-                            <select class="form-control">
-                                <option>JetBrains Mono</option>
-                                <option>Fira Code</option>
-                                <option>Consolas</option>
-                                <option>Source Code Pro</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Font Size</label>
-                            <input type="number" class="form-control" value="15">
-                        </div>
-
-                        <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; margin-top:40px; padding-top:30px; border-top:1px solid var(--border)">
-                            <div>
-                                <label style="margin-bottom:4px; color:var(--text-main)">Enable Animations</label>
-                                <p style="font-size:14px; color:var(--text-muted)">Toggle micro-interactions and page transitions.</p>
-                            </div>
-                            <label style="position:relative; display:inline-block; width:60px; height:34px; flex-shrink:0;">
-                                <input type="checkbox" checked style="opacity:0; width:0; height:0;">
-                                <span style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:var(--primary); border-radius:34px; transition:.4s;"></span>
-                                <span style="position:absolute; content:''; height:26px; width:26px; left:4px; bottom:4px; background-color:black; border-radius:50%; transition:.4s; transform:translateX(26px);"></span>
-                            </label>
-                        </div>
+                    <div style="margin-bottom:18px">
+                        <label style="display:block;margin-bottom:6px;font-size:13px;color:var(--text-muted)">Editor Font Size (px)</label>
+                        <input type="number" id="settings-fontsize" class="proj-title-input" style="width:100%" value="14" min="11" max="24">
                     </div>
+                    <button class="btn btn-primary" onclick="app.saveSettings()">Apply Preferences</button>
                 </div>
             </div>
-        </div>
-
+        </section>
     </main>
+</div>
 
-    <!-- INITIAL NAME OVERLAY -->
-    <div class="welcome-overlay hidden" id="welcome-overlay">
-        <div class="welcome-modal">
-            <div class="welcome-logo">
-                <svg class="app-logo"><use href="#logo-svg"></use></svg>
-            </div>
-            <h2 style="font-family: var(--font-head); font-size: 32px; margin-bottom: 12px; color: var(--text-main);">Welcome to CodeErase</h2>
-            <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 16px;">The ultimate free coding playground. Enter your name to begin.</p>
-            <input type="text" id="user-name-input" class="welcome-input" placeholder="Your Name" autocomplete="off">
-            <button class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 18px; padding: 18px;" onclick="app.saveName()">Start Coding Now</button>
+<!-- Reset Confirmation Modal -->
+<div class="modal-backdrop" id="reset-modal">
+    <div class="modal-card">
+        <h3 style="font-family:var(--font-head);font-size:22px;margin-bottom:10px">Reset Workspace Code?</h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.6;margin-bottom:22px">
+            This will restore HTML, CSS, and JavaScript to the default 3D Holo-Cube starter template.
+        </p>
+        <div style="display:flex;justify-content:flex-end;gap:10px">
+            <button class="btn btn-outline" onclick="app.closeResetModal()">Cancel</button>
+            <button class="btn btn-primary" style="background:var(--error);color:#fff" onclick="app.confirmReset()">Confirm Reset</button>
         </div>
     </div>
 </div>
 
 <script>
-/**
- * CODEERASE - CORE APPLICATION LOGIC
- * Built entirely in pure JavaScript. No frameworks.
- */
-
 const app = {
-    // App State
-    userName: '',
-    pages: ['home', 'editor', 'challenges', 'collections', 'profile', 'search', 'about', 'settings'],
-    editorInst: null,
     currentLang: 'html',
-    
-    // Available Languages config
+    autoRun: true,
+    enabledWeb: { html: true, css: true, javascript: true },
+    editor: null,
+    previewTimer: null,
+    threeFinishIdx: 0,
+    mobilePane: 'editor',
     languages: [
-        { id: 'html', icon: 'fab fa-html5', mode: 'xml', label: 'HTML5', color: '#E34F26' },
-        { id: 'css', icon: 'fab fa-css3-alt', mode: 'css', label: 'CSS3', color: '#1572B6' },
-        { id: 'javascript', icon: 'fab fa-js', mode: 'javascript', label: 'JavaScript', color: '#F7DF1E' },
-        { id: 'python', icon: 'fab fa-python', mode: 'python', label: 'Python 3', color: '#3776AB' },
-        { id: 'java', icon: 'fab fa-java', mode: 'clike', label: 'Java', color: '#007396' },
-        { id: 'cpp', icon: 'fas fa-c', mode: 'clike', label: 'C++', color: '#00599C' },
-        { id: 'c', icon: 'fas fa-copyright', mode: 'clike', label: 'C', color: '#A8B9CC' },
-        { id: 'php', icon: 'fab fa-php', mode: 'php', label: 'PHP', color: '#777BB4' },
-        { id: 'go', icon: 'fab fa-golang', mode: 'go', label: 'Go', color: '#00ADD8' },
-        { id: 'rust', icon: 'fab fa-rust', mode: 'rust', label: 'Rust', color: '#000000' },
-        { id: 'swift', icon: 'fab fa-swift', mode: 'swift', label: 'Swift', color: '#F05138' },
-        { id: 'typescript', icon: 'fas fa-code', mode: 'javascript', label: 'TypeScript', color: '#3178C6' }
+        { id: 'html', icon: 'fab fa-html5', mode: 'xml', label: 'HTML5' },
+        { id: 'css', icon: 'fab fa-css3-alt', mode: 'css', label: 'CSS3' },
+        { id: 'javascript', icon: 'fab fa-js', mode: 'javascript', label: 'JavaScript' },
+        { id: 'typescript', icon: 'fas fa-code', mode: 'javascript', label: 'TypeScript' },
+        { id: 'python', icon: 'fab fa-python', mode: 'python', label: 'Python 3' },
+        { id: 'java', icon: 'fab fa-java', mode: 'clike', label: 'Java' },
+        { id: 'cpp', icon: 'fas fa-c', mode: 'clike', label: 'C++' },
+        { id: 'go', icon: 'fab fa-golang', mode: 'go', label: 'Go' },
+        { id: 'rust', icon: 'fab fa-rust', mode: 'rust', label: 'Rust' }
     ],
-
-    // Default source code per language to simulate "WOW" factor
-    files: {
-        html: `<!-- Welcome to CodeErase Real-Time Engine -->\n<div class="glass-box">\n  <div class="logo-circle"></div>\n  <h1>Hello CodeErase</h1>\n  <p>The premium real-time execution environment.</p>\n  <button onclick="triggerAlert()">Test Interaction</button>\n</div>`,
-        css: `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');\n\nbody {\n  font-family: 'Inter', sans-serif;\n  background: #0B0B0B;\n  background-image: radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.15), transparent 50%);\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 100vh;\n  margin: 0;\n  overflow: hidden;\n}\n\n.glass-box {\n  background: rgba(25, 25, 25, 0.6);\n  backdrop-filter: blur(16px);\n  -webkit-backdrop-filter: blur(16px);\n  padding: 50px;\n  border-radius: 24px;\n  border: 1px solid rgba(255,255,255,0.05);\n  text-align: center;\n  box-shadow: 0 20px 40px rgba(0,0,0,0.5);\n  transform: translateY(0);\n  transition: all 0.4s ease;\n}\n\n.glass-box:hover {\n  transform: translateY(-10px);\n  border-color: rgba(255, 215, 0, 0.3);\n  box-shadow: 0 30px 60px rgba(0,0,0,0.7);\n}\n\n.logo-circle {\n  width: 80px; height: 80px;\n  border-radius: 50%;\n  background: linear-gradient(135deg, #FFD700, #FF8C00);\n  margin: 0 auto 24px;\n  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);\n  animation: pulse 2s infinite alternate;\n}\n\nh1 {\n  color: #FFFFFF;\n  margin-top: 0;\n  font-size: 32px;\n  letter-spacing: -1px;\n}\n\np { color: #9CA3AF; margin-bottom: 30px; }\n\nbutton {\n  background: #FFD700;\n  color: #000;\n  border: none;\n  padding: 12px 28px;\n  border-radius: 12px;\n  font-weight: bold;\n  font-size: 16px;\n  cursor: pointer;\n  transition: all 0.3s;\n}\n\nbutton:hover {\n  background: #FFF;\n  transform: scale(1.05);\n  box-shadow: 0 0 20px rgba(255,215,0,0.4);\n}\n\n@keyframes pulse {\n  from { transform: scale(1); }\n  to { transform: scale(1.1); }\n}`,
-        javascript: `// Professional Console Output interceptor\nconsole.log("%c Welcome to CodeErase!", "color: #FFD700; font-size: 20px; font-weight: bold;");\nconsole.log("Environment: Premium Web Sandbox");\nconsole.log("Status: Fully Operational");\n\nfunction triggerAlert() {\n  console.log("User Interaction: Button clicked successfully.");\n  alert("CodeErase execution is working perfectly!");\n}`,
-        python: `def simulate_deployment(app_name):\n    """Simulates real backend execution."""\n    print(f"--- Deploying {app_name} ---")\n    print("Setting up virtual environment...")\n    print("Installing dependencies...")\n    print(f"\\n✅ Success! {app_name} is running in production mode.")\n    print("Server listening on port 8080")\n\nsimulate_deployment("CodeErase Python App")\n\n# Note: Press Run to execute via Piston API`,
-        java: `public class Main {\n    public static void main(String[] args) {\n        System.out.println("====== CodeErase Java Environment ======");\n        System.out.println("JVM Initialized.");\n        System.out.println("Memory Allocated: 512MB");\n        System.out.println("Status: Active and running flawlessly.");\n    }\n}`,
-        cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "C++ Compiler loaded successfully." << endl;\n    cout << "Executing binary natively..." << endl;\n    cout << "\\nHello from CodeErase High-Performance Environment!" << endl;\n    return 0;\n}`,
-        c: `#include <stdio.h>\n\nint main() {\n    printf("Native C execution working perfectly.\\n");\n    printf("Pointers and memory management ready to test.\\n");\n    return 0;\n}`,
-        php: `<?php\n  echo "PHP 8.2 Execution Engine\\n";\n  echo "------------------------\\n";\n  $status = "Operational";\n  echo "Server Status: " . $status . "\\n";\n?>`,
-        go: `package main\nimport "fmt"\n\nfunc main() {\n    fmt.Println("CodeErase Go (Golang) environment is ready.")\n    fmt.Println("Fast compilation, concurrent execution enabled.")\n}`,
-        rust: `fn main() {\n    println!("Rust compiler invoked.");\n    println!("Safe, concurrent, and fast!");\n    println!("Execution completed with zero memory leaks.");\n}`,
-        swift: `print("Swift 5.7 execution live.")\nprint("Ready for iOS and server-side logic testing.")`,
-        typescript: `interface Config {\n    env: string;\n    active: boolean;\n}\n\nconst setup: Config = {\n    env: "CodeErase Prod",\n    active: true\n};\n\nconsole.log(\`TypeScript compiled. Environment: \${setup.env}\`);`
+    defaults: {
+        html: `<div class="card-3d" id="box3d">\n  <div class="badge">3D LIVE SANDBOX</div>\n  <h1>CodeErase Studio</h1>\n  <p>Move cursor to tilt in 3D space or click to spin.</p>\n  <button onclick="pulseCube()">Trigger 3D Spin</button>\n</div>`,
+        css: `body {\n  margin: 0;\n  height: 100vh;\n  display: grid;\n  place-items: center;\n  background: radial-gradient(circle at 50% 20%, #1e293b, #090a0f);\n  color: #f8fafc;\n  font-family: system-ui, sans-serif;\n  perspective: 900px;\n}\n.card-3d {\n  background: rgba(21, 24, 34, 0.9);\n  border: 1px solid rgba(251, 191, 36, 0.4);\n  border-radius: 20px;\n  padding: 36px;\n  text-align: center;\n  transition: transform 0.25s ease;\n  box-shadow: 0 25px 50px rgba(0,0,0,0.5);\n}\n.badge {\n  font-family: monospace;\n  font-size: 11px;\n  color: #fbbf24;\n  margin-bottom: 12px;\n}\nbutton {\n  background: #fbbf24;\n  color: #090a0f;\n  border: none;\n  padding: 10px 20px;\n  border-radius: 8px;\n  font-weight: 700;\n  cursor: pointer;\n  margin-top: 14px;\n}`,
+        javascript: `let angle = 0;\nconsole.log("CodeErase Sandboxed Preview Ready.");\nfunction pulseCube() {\n  angle += 180;\n  const el = document.getElementById('box3d');\n  if (el) el.style.transform = \`rotateY(\${angle}deg)\`;\n  console.log("Rotated 3D card to " + angle + "deg");\n}`,
+        typescript: `interface Point3D { x: number; y: number; z: number; }\nconst origin: Point3D = { x: 10, y: 20, z: 30 };\nconsole.log("TypeScript Transpiler Output:", JSON.stringify(origin));`,
+        python: `print("Hello from Python 3 via Piston Remote Runtime!")\nfor i in range(1, 4):\n    print(f"Step {i}: Computed cube({i}) = {i**3}")`,
+        java: `public class Main {\n  public static void main(String[] args) {\n    System.out.println("Java 17 Remote Execution Active.");\n  }\n}`,
+        cpp: `#include <iostream>\nint main() {\n  std::cout << "C++ GCC Execution Ready." << std::endl;\n  return 0;\n}`,
+        go: `package main\nimport "fmt"\nfunc main() { fmt.Println("Go Runtime Ready.") }`,
+        rust: `fn main() { println!("Rust Compiler Ready."); }`
     },
+    files: {},
 
-    // Initialize Application
     init() {
-        this.bindNavEvents();
-        this.renderLangSidebar();
-        this.initCodeMirror();
-        this.generateBackgroundDecorations();
-        
-        // Handle User Name Login
-        this.checkUser();
-
-        // Render Mock Data pages
+        const saved = localStorage.getItem('codeerase_v2_files');
+        this.files = saved ? JSON.parse(saved) : { ...this.defaults };
+        const savedTheme = localStorage.getItem('codeerase_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        this.renderRail();
+        this.initEditor();
+        this.syncThemeIcons(savedTheme);
+        this.initResizer();
+        this.initThreeHero();
         this.renderChallenges();
-        this.renderCollections();
-        this.renderProfileProjects(); // Now empty per request
-        
-        // Setup logic
-        this.navigate('home');
-        
-        // Setup clock for logs
-        setInterval(() => {
-            const time = new Date().toLocaleTimeString();
-            document.querySelectorAll('.log-time.live').forEach(el => el.innerText = `[${time}]`);
-        }, 1000);
-        
-        // Listen for Fullscreen changes to update icon
-        document.addEventListener('fullscreenchange', () => {
-            const icon = document.getElementById('fullscreen-icon');
-            if (icon) {
-                icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
-            }
-        });
-    },
-    
-    // User Management
-    checkUser() {
-        const savedName = localStorage.getItem('codeerase_username');
-        if (savedName) {
-            this.setUserName(savedName);
-            document.getElementById('welcome-overlay').classList.add('hidden');
-        } else {
-            document.getElementById('welcome-overlay').classList.remove('hidden');
-            setTimeout(() => document.getElementById('user-name-input').focus(), 100);
-            
-            // Allow Enter key to submit
-            document.getElementById('user-name-input').addEventListener('keypress', (e) => {
-                if(e.key === 'Enter') this.saveName();
-            });
-        }
-    },
-    
-    saveName() {
-        const input = document.getElementById('user-name-input');
-        const name = input.value.trim() || 'Guest Developer';
-        localStorage.setItem('codeerase_username', name);
-        this.setUserName(name);
-        document.getElementById('welcome-overlay').classList.add('hidden');
-    },
-    
-    setUserName(name) {
-        this.userName = name;
-        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-        
-        // Update Sidebar
-        const sidebarAvatar = document.getElementById('sidebar-avatar');
-        if(sidebarAvatar) sidebarAvatar.innerText = initials;
-        const sidebarName = document.getElementById('sidebar-user-name');
-        if(sidebarName) sidebarName.innerText = name;
-        
-        // Update Profile Page
-        const profileName = document.getElementById('profile-page-name');
-        if(profileName) profileName.innerText = name;
-        const profileAvatar = document.getElementById('profile-page-avatar');
-        if(profileAvatar) profileAvatar.innerText = initials;
+        this.renderSavedList();
+        this.applyMobilePaneLayout();
+        window.addEventListener('resize', () => this.applyMobilePaneLayout());
+        this.log('CodeErase 3D Workspace initialized.', 'sys');
     },
 
-    // Background Animation Setup
-    generateBackgroundDecorations() {
-        const bg = document.getElementById('hero-bg');
-        if(!bg) return;
-        const snippets = [
-            'function init() {', 'const config = {}', '<div>CodeErase</div>',
-            'import React from "react"', 'class Premium {}', 'def execute():',
-            'SELECT * FROM users', 'border-radius: 20px;'
-        ];
-        for(let i=0; i<15; i++) {
-            const el = document.createElement('div');
-            el.className = 'floating-code';
-            el.innerText = snippets[Math.floor(Math.random() * snippets.length)];
-            el.style.left = `${Math.random() * 100}%`;
-            el.style.animationDuration = `${15 + Math.random() * 15}s`;
-            el.style.animationDelay = `${Math.random() * 10}s`;
-            el.style.fontSize = `${12 + Math.random() * 14}px`;
-            bg.appendChild(el);
-        }
-    },
-
-    // Navigation System
-    bindNavEvents() {
-        document.querySelectorAll('.nav-item').forEach(el => {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = el.getAttribute('data-page');
-                if(page) this.navigate(page);
-            });
-        });
-    },
-    
-    toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        if(sidebar) {
-            sidebar.classList.toggle('open');
-            if(sidebar.classList.contains('open')) {
-                overlay.classList.add('active');
-            } else {
-                overlay.classList.remove('active');
-            }
-        }
-    },
-
-    navigate(pageId) {
-        this.pages.forEach(p => {
-            const el = document.getElementById(`page-${p}`);
-            if(el) el.classList.remove('active');
-        });
-        const target = document.getElementById(`page-${pageId}`);
-        if(target) target.classList.add('active');
-        
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        const nav = document.getElementById(`nav-${pageId}`);
-        if(nav) nav.classList.add('active');
-        
-        // Close sidebar on mobile
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        if(sidebar && sidebar.classList.contains('open')) {
-            sidebar.classList.remove('open');
-            if(overlay) overlay.classList.remove('active');
-        }
-
-        // Fix CodeMirror rendering glitch on display:none to block
-        if(pageId === 'editor' && this.editorInst) {
-            setTimeout(() => this.editorInst.refresh(), 50);
-            this.updatePreview(); // Ensure preview runs
-        }
-    },
-
-    // Editor Initialization
-    renderLangSidebar() {
-        const sidebar = document.getElementById('editor-langs');
-        if(!sidebar) return;
-        
-        sidebar.innerHTML = this.languages.map(lang => `
-            <div class="lang-tab ${lang.id === 'html' ? 'active' : ''}" data-lang="${lang.id}" title="${lang.label}">
-                <i class="${lang.icon}"></i>
-                <div class="tooltip">${lang.label}</div>
-            </div>
+    renderRail() {
+        const rail = document.getElementById('lang-rail');
+        rail.innerHTML = this.languages.map(l => `
+            <button class="rail-btn ${l.id === this.currentLang ? 'active' : ''}" data-lang="${l.id}" title="${l.label}" onclick="app.switchLang('${l.id}')">
+                <i class="${l.icon}"></i>
+            </button>
         `).join('');
-
-        document.querySelectorAll('.lang-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const l = tab.getAttribute('data-lang');
-                document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                this.switchLang(l);
-            });
-        });
     },
 
-    initCodeMirror() {
-        this.editorInst = CodeMirror.fromTextArea(document.getElementById('main-editor'), {
+    initEditor() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'eclipse' : 'dracula';
+        this.editor = CodeMirror.fromTextArea(document.getElementById('code-textarea'), {
             lineNumbers: true,
-            theme: 'dracula',
+            theme: currentTheme,
             mode: 'xml',
-            indentUnit: 4,
-            tabSize: 4,
-            lineWrapping: true,
-            scrollbarStyle: "null"
+            indentUnit: 2,
+            tabSize: 2,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            autoCloseTags: true,
+            styleActiveLine: true,
+            lineWrapping: true
         });
 
-        this.editorInst.on('change', () => {
-            this.files[this.currentLang] = this.editorInst.getValue();
-            this.updateStats();
-            
-            // Auto-update web languages
-            if(['html','css','javascript'].includes(this.currentLang)) {
-                this.schedulePreviewUpdate();
+        this.editor.on('change', () => {
+            this.files[this.currentLang] = this.editor.getValue();
+            try {
+                localStorage.setItem('codeerase_v2_files', JSON.stringify(this.files));
+            } catch (e) {
+                this.log('LocalStorage quota exceeded.', 'warn');
             }
+            if (this.autoRun && ['html', 'css', 'javascript'].includes(this.currentLang)) {
+                clearTimeout(this.previewTimer);
+                this.previewTimer = setTimeout(() => this.updatePreview(), 380);
+            }
+        });
+
+        this.editor.on('cursorActivity', () => {
+            const pos = this.editor.getCursor();
+            document.getElementById('cursor-stats').textContent = `Ln ${pos.line + 1}, Col ${pos.ch + 1}`;
         });
 
         this.switchLang('html');
     },
 
-    switchLang(lang) {
-        this.currentLang = lang;
-        const config = this.languages.find(l => l.id === lang);
-        
-        this.editorInst.setOption('mode', config.mode);
-        this.editorInst.setValue(this.files[lang]);
-        
-        document.getElementById('current-lang-label').innerText = config.label;
-        document.getElementById('current-lang-label').style.color = config.color;
+    insertSymbol(sym) {
+        if (!this.editor) return;
+        this.editor.replaceSelection(sym);
+        this.editor.focus();
+    },
 
-        const previewSec = document.getElementById('preview-iframe');
-        const overlay = document.getElementById('mock-overlay');
-        
-        if(['html', 'css', 'javascript'].includes(lang)) {
-            previewSec.style.display = 'block';
-            overlay.style.display = 'none';
-            this.updatePreview();
-        } else {
-            previewSec.style.display = 'none';
-            overlay.style.display = 'flex';
-            this.logSystem(`Switched to ${config.label} environment. Ready to execute.`);
+    setMobilePane(pane) {
+        this.mobilePane = pane;
+        ['editor', 'preview', 'console'].forEach(p => {
+            const btn = document.getElementById(`mob-tab-${p}`);
+            if (btn) btn.classList.toggle('active', p === pane);
+        });
+        this.applyMobilePaneLayout();
+        if (pane === 'editor' && this.editor) {
+            setTimeout(() => this.editor.refresh(), 50);
         }
     },
 
-    // Throttled Preview Update
-    previewTimeout: null,
-    schedulePreviewUpdate() {
-        clearTimeout(this.previewTimeout);
-        this.previewTimeout = setTimeout(() => this.updatePreview(), 500);
-    },
+    applyMobilePaneLayout() {
+        const isMobile = window.innerWidth <= 900;
+        const editorCol = document.getElementById('editor-col');
+        const outputCol = document.getElementById('output-col');
+        const previewWrap = document.getElementById('preview-wrapper');
+        const consoleWrap = document.getElementById('console-wrapper');
+        if (!editorCol || !outputCol) return;
 
-    updatePreview() {
-        if(!['html', 'css', 'javascript'].includes(this.currentLang)) return;
-        
-        const iframe = document.getElementById('preview-iframe');
-        const doc = iframe.contentWindow.document;
-        
-        const html = this.files.html;
-        const css = `<style>${this.files.css}</style>`;
-        
-        // Script injection with console interceptor
-        const script = `
-        <script>
-            // Intercept console functions to pass to parent UI
-            ['log', 'error', 'warn', 'info'].forEach(method => {
-                const orig = console[method];
-                console[method] = function(...args) {
-                    window.parent.postMessage({type: method, data: args.join(' ')}, '*');
-                    orig.apply(console, args);
-                };
-            });
-            window.onerror = function(msg, url, line) {
-                window.parent.postMessage({type: 'error', data: msg + ' (Line ' + line + ')'}, '*');
-                return false;
-            };
-        <\/script>
-        <script>${this.files.javascript}<\/script>
-        `;
-
-        doc.open();
-        doc.write(`<!DOCTYPE html><html><head>${css}</head><body>${html}${script}</body></html>`);
-        doc.close();
-    },
-
-    toggleFullscreenPreview() {
-        const elem = document.getElementById('preview-section');
-        if (!document.fullscreenElement) {
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { /* Safari */
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { /* IE11 */
-                document.msExitFullscreen();
-            }
-        }
-    },
-
-    updateStats() {
-        const text = this.editorInst.getValue();
-        const chars = text.length;
-        const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-        const lines = text.split('\n').length;
-        document.getElementById('editor-stats').innerText = `Ln ${lines}, Wd ${words}, Ch ${chars}`;
-    },
-
-    // Console Logging System
-    logHTML(htmlStr) {
-        const out = document.getElementById('console-output');
-        const time = new Date().toLocaleTimeString();
-        out.innerHTML += `<div class="log-row"><span class="log-time">[${time}]</span><div class="log-msg">${htmlStr}</div></div>`;
-        out.scrollTop = out.scrollHeight;
-    },
-    
-    logSystem(msg) { this.logHTML(`<span class="log-sys">${msg}</span>`); },
-    logError(msg) { this.logHTML(`<span class="log-err">${msg}</span>`); },
-    logWarn(msg) { this.logHTML(`<span class="log-warn">${msg}</span>`); },
-    logInfo(msg) { this.logHTML(`<span>${msg.replace(/\n/g, '<br>')}</span>`); },
-
-    clearConsole() {
-        document.getElementById('console-output').innerHTML = '';
-        this.logSystem('Console cleared.');
-    },
-
-    formatCode() {
-        this.logSystem('Formatting code... (Simulation)');
-        setTimeout(() => this.logSystem('Code formatted successfully.'), 300);
-    },
-
-    copyCode() {
-        navigator.clipboard.writeText(this.files[this.currentLang]);
-        this.logSystem('Code copied to clipboard.');
-    },
-    
-    clearCode() {
-        this.editorInst.setValue('');
-        this.logSystem('Editor cleared.');
-    },
-
-    // Execution Engine (Piston API + Mock Fallback)
-    async runCode() {
-        const btn = document.getElementById('btn-run');
-        const origHtml = btn.innerHTML;
-        
-        if(['html', 'css', 'javascript'].includes(this.currentLang)) {
-            this.clearConsole();
-            this.logSystem(`Reloading Web Preview Engine...`);
-            this.updatePreview();
+        if (!isMobile) {
+            editorCol.classList.remove('mobile-hidden');
+            outputCol.classList.remove('mobile-hidden');
+            previewWrap.classList.remove('mobile-hidden');
+            consoleWrap.classList.remove('mobile-hidden');
+            consoleWrap.style.height = '200px';
             return;
         }
 
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running';
-        btn.disabled = true;
-        this.clearConsole();
-        
-        const config = this.languages.find(l => l.id === this.currentLang);
-        this.logSystem(`Initiating ${config.label} Execution Environment...`);
-        this.logSystem(`Connecting to compute cluster...`);
+        editorCol.classList.toggle('mobile-hidden', this.mobilePane !== 'editor');
+        outputCol.classList.toggle('mobile-hidden', this.mobilePane === 'editor');
+        previewWrap.classList.toggle('mobile-hidden', this.mobilePane !== 'preview');
+        consoleWrap.classList.toggle('mobile-hidden', this.mobilePane !== 'console');
+        if (this.mobilePane === 'console') {
+            consoleWrap.style.height = '100%';
+        }
+    },
 
-        // Wait to simulate complex backend allocation
-        await new Promise(r => setTimeout(r, 600));
+    switchLang(langId) {
+        this.currentLang = langId;
+        const cfg = this.languages.find(l => l.id === langId);
+        document.querySelectorAll('.rail-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === langId));
+        ['html', 'css', 'javascript'].forEach(w => {
+            const chip = document.getElementById(`chip-${w}`);
+            if (chip) chip.classList.toggle('active-tab', w === langId);
+        });
 
-        // Piston API Mapping
-        const pistonLangs = {
-            python: 'python', java: 'java', cpp: 'cpp', c: 'c', php: 'php',
-            go: 'go', rust: 'rust', swift: 'swift', typescript: 'typescript'
-        };
+        this.editor.setOption('mode', cfg.mode);
+        this.editor.setValue(this.files[langId] || '');
+        document.getElementById('active-lang-badge').textContent = cfg.label;
 
-        const pLang = pistonLangs[this.currentLang];
-        let success = false;
+        const isWeb = ['html', 'css', 'javascript'].includes(langId);
+        const disabledBanner = document.getElementById('disabled-layer-banner');
+        disabledBanner.style.display = (isWeb && !this.enabledWeb[langId]) ? 'inline' : 'none';
 
-        if (pLang) {
+        const overlay = document.getElementById('compiled-overlay');
+        if (isWeb) {
+            overlay.style.display = 'none';
+            document.getElementById('engine-indicator').textContent = 'Sandbox (srcdoc)';
+            this.updatePreview();
+        } else {
+            overlay.style.display = 'flex';
+            document.getElementById('compiled-title').textContent = `${cfg.label} Execution Mode`;
+            document.getElementById('engine-indicator').textContent = langId === 'typescript'
+                ? 'In-Browser TS'
+                : 'Piston Remote API';
+        }
+    },
+
+    toggleWebLayer(langId, enabled) {
+        this.enabledWeb[langId] = enabled;
+        const chip = document.getElementById(`chip-${langId}`);
+        if (chip) chip.classList.toggle('enabled', enabled);
+        if (this.currentLang === langId) {
+            document.getElementById('disabled-layer-banner').style.display = enabled ? 'none' : 'inline';
+        }
+        this.log(`${langId.toUpperCase()} layer ${enabled ? 'enabled' : 'disabled (code preserved)'}.`, 'sys');
+        this.updatePreview();
+    },
+
+    updatePreview() {
+        const iframe = document.getElementById('preview-iframe');
+        const html = this.enabledWeb.html ? (this.files.html || '') : '<!-- HTML layer disabled -->';
+        const css = this.enabledWeb.css ? `<style>${this.files.css || ''}</style>` : '';
+        const js = this.enabledWeb.javascript ? (this.files.javascript || '') : '';
+
+        const bridge = `<script>
+            ['log','info','warn','error'].forEach(fn => {
+                const orig = console[fn];
+                console[fn] = function(...args) {
+                    parent.postMessage({ source: 'codeerase-preview', type: fn, text: args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ') }, '*');
+                    orig.apply(console, args);
+                };
+            });
+            window.addEventListener('error', e => {
+                parent.postMessage({ source: 'codeerase-preview', type: 'error', text: e.message + ' (Line ' + e.lineno + ')' }, '*');
+            });
+            window.addEventListener('unhandledrejection', e => {
+                parent.postMessage({ source: 'codeerase-preview', type: 'error', text: 'Unhandled Promise Rejection: ' + e.reason }, '*');
+            });
+        <\/script>`;
+
+        iframe.srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${css}${bridge}</head><body>${html}<script>try {\n${js}\n} catch(err) { console.error(err.message); }<\/script></body></html>`;
+    },
+
+    async runCode() {
+        if (['html', 'css', 'javascript'].includes(this.currentLang)) {
+            this.updatePreview();
+            this.log('Live web preview updated.', 'sys');
+            if (window.innerWidth <= 900) this.setMobilePane('preview');
+            return;
+        }
+
+        if (this.currentLang === 'typescript') {
+            this.log('Transpiling & executing TypeScript in browser...', 'sys');
             try {
-                this.logSystem(`Compiling and executing via API...`);
-                const res = await fetch('https://emkc.org/api/v2/piston/execute', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        language: pLang,
-                        version: '*', // Auto-select latest
-                        files: [{ content: this.files[this.currentLang] }]
-                    })
-                });
-                
-                const data = await res.json();
-                
-                if (data.run && data.run.output) {
-                    this.logInfo(data.run.output);
-                    this.logSystem(`Execution finished with exit code ${data.run.code}.`);
-                    success = true;
-                }
-            } catch (e) {
-                // Silently fallback on network error
+                const jsCode = (this.files.typescript || '')
+                    .replace(/interface\s+\w+\s*\{[^}]*\}/gs, '')
+                    .replace(/:\s*[A-Za-z0-9_<>\[\]|]+/g, '');
+                const fn = new Function(jsCode);
+                fn();
+            } catch (err) {
+                this.log('TS Runtime Error: ' + err.message, 'err');
             }
+            if (window.innerWidth <= 900) this.setMobilePane('console');
+            return;
         }
 
-        if (!success) {
-            // Secure Mock Execution Fallback if API fails or rate limits
-            this.logWarn(`API execution unavailable. Falling back to local simulated runtime.`);
-            await new Promise(r => setTimeout(r, 400));
-            
-            const code = this.files[this.currentLang];
-            // Extract printable strings to make mock output look real
-            const strings = [...code.matchAll(/"([^"\\]*(?:\\.[^"\\]*)*)"/g)].map(m => m[1]);
-            
-            if (strings.length > 0) {
-                strings.forEach(s => this.logInfo(s.replace(/\\n/g, '<br>')));
+        const btn = document.getElementById('btn-run');
+        btn.disabled = true;
+        this.log(`Dispatching ${this.currentLang} source to Piston API (emkc.org)...`, 'sys');
+        try {
+            const res = await fetch('https://emkc.org/api/v2/piston/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    language: this.currentLang,
+                    version: '*',
+                    files: [{ content: this.files[this.currentLang] || '' }]
+                })
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status} from remote compiler.`);
+            const data = await res.json();
+            if (data.run && typeof data.run.output === 'string') {
+                this.log(data.run.output || '(Program exited with no stdout)', data.run.code === 0 ? 'info' : 'err');
             } else {
-                this.logInfo("Process executed successfully.");
+                throw new Error('Unexpected response format from remote execution API.');
             }
-            this.logSystem("Execution completed with exit code 0.");
+        } catch (err) {
+            this.log(`Remote Execution Error: ${err.message}. Note: Browsers cannot natively compile ${this.currentLang} offline without the external Piston API.`, 'err');
+        } finally {
+            btn.disabled = false;
+            if (window.innerWidth <= 900) this.setMobilePane('console');
         }
-
-        btn.innerHTML = origHtml;
-        btn.disabled = false;
     },
 
-    // Data Renderers for specific pages
+    formatCode() {
+        const val = this.editor.getValue().trim();
+        if (!val) return;
+        const lines = val.split('\n').map(l => l.trim());
+        let indent = 0;
+        const out = lines.map(line => {
+            if (/^[}\])]/.test(line) || /^<\/\w/.test(line)) indent = Math.max(0, indent - 1);
+            const str = '  '.repeat(indent) + line;
+            if (/[{[(]$/.test(line) || (/^<\w[^>]*[^/]>.*$/.test(line) && !/<\/\w+>$/.test(line))) indent++;
+            return str;
+        }).join('\n');
+        this.editor.setValue(out);
+        this.log('Formatted active editor buffer.', 'sys');
+    },
+
+    saveProject() {
+        const list = JSON.parse(localStorage.getItem('codeerase_saved_projects') || '[]');
+        const title = document.getElementById('project-title').value || 'Untitled';
+        list.unshift({ id: Date.now(), title, date: new Date().toLocaleString(), files: { ...this.files } });
+        localStorage.setItem('codeerase_saved_projects', JSON.stringify(list.slice(0, 12)));
+        this.renderSavedList();
+        this.log(`Saved snapshot "${title}" to local storage.`, 'sys');
+    },
+
+    downloadProject() {
+        const blob = new Blob([
+            `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="utf-8">\n<title>${document.getElementById('project-title').value}</title>\n<style>\n${this.files.css}\n</style>\n</head>\n<body>\n${this.files.html}\n<script>\n${this.files.javascript}\n<\/script>\n</body>\n</html>`
+        ], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'project-export.html';
+        a.click();
+        this.log('Exported project HTML bundle.', 'sys');
+    },
+
+    openResetModal() { document.getElementById('reset-modal').classList.add('open'); },
+    closeResetModal() { document.getElementById('reset-modal').classList.remove('open'); },
+    confirmReset() {
+        this.files = { ...this.defaults };
+        localStorage.setItem('codeerase_v2_files', JSON.stringify(this.files));
+        this.switchLang(this.currentLang);
+        this.closeResetModal();
+        this.log('Workspace reset to default template.', 'warn');
+    },
+
+    copyCode() {
+        navigator.clipboard.writeText(this.editor.getValue());
+        this.log('Copied current buffer to clipboard.', 'sys');
+    },
+
+    clearEditor() {
+        this.editor.setValue('');
+        this.log('Cleared active editor buffer.', 'warn');
+    },
+
+    clearConsole() {
+        document.getElementById('console-logs').innerHTML = '';
+    },
+
+    toggleAutoRun(val) { this.autoRun = val; },
+
+    toggleFullscreenPreview() {
+        const el = document.getElementById('preview-wrapper');
+        if (!document.fullscreenElement) el.requestFullscreen?.();
+        else document.exitFullscreen?.();
+    },
+
+    toggleTheme() {
+        const html = document.documentElement;
+        const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('codeerase_theme', next);
+        if (this.editor) {
+            this.editor.setOption('theme', next === 'light' ? 'eclipse' : 'dracula');
+        }
+        this.syncThemeIcons(next);
+        this.log(`Switched to ${next.toUpperCase()} theme.`, 'sys');
+    },
+
+    syncThemeIcons(theme) {
+        const iconCls = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        const labelTxt = theme === 'dark' ? 'Light' : 'Dark';
+        ['sidebar-theme-icon', 'mobile-theme-icon', 'toolbar-theme-icon'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.className = iconCls;
+        });
+        ['mobile-theme-label', 'toolbar-theme-label'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = labelTxt;
+        });
+    },
+
+    navigate(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(`page-${page}`)?.classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+        document.getElementById('sidebar').classList.remove('open');
+        if (page === 'editor' && this.editor) {
+            setTimeout(() => { this.editor.refresh(); this.updatePreview(); }, 60);
+        }
+    },
+
+    loadTemplate(key) {
+        if (!key) return;
+        if (key === 'particle') {
+            this.files.html = `<canvas id="c"></canvas>`;
+            this.files.css = `body{margin:0;background:#07090e;overflow:hidden}canvas{display:block}`;
+            this.files.javascript = `const c=document.getElementById('c'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const pts=Array.from({length:50},()=>({x:Math.random()*c.width,y:Math.random()*c.height,vx:Math.random()-0.5,vy:Math.random()-0.5}));function anim(){x.fillStyle='rgba(7,9,14,0.2)';x.fillRect(0,0,c.width,c.height);pts.forEach(p=>{p.x+=p.vx*2;p.y+=p.vy*2;if(p.x<0||p.x>c.width)p.vx*=-1;if(p.y<0||p.y>c.height)p.vy*=-1;x.fillStyle='#fbbf24';x.beginPath();x.arc(p.x,p.y,3,0,7);x.fill()});requestAnimationFrame(anim)}anim();`;
+        } else {
+            this.files = { ...this.defaults };
+        }
+        this.navigate('editor');
+        this.switchLang('html');
+    },
+
     renderChallenges() {
-        const list = document.getElementById('challenges-list');
-        if(!list) return;
-        const chals = [
-            {t: 'Reverse a Binary Tree', d: 'diff-hard', dl: 'Hard', c: 'Data Structures', p: '240 XP'},
-            {t: 'Build a CSS Grid Dashboard', d: 'diff-easy', dl: 'Easy', c: 'Web Dev', p: '50 XP'},
-            {t: 'Implement A* Pathfinding', d: 'diff-hard', dl: 'Hard', c: 'Algorithms', p: '300 XP'},
-            {t: 'Create a JWT Auth Flow in Node', d: 'diff-med', dl: 'Medium', c: 'Backend', p: '150 XP'},
-            {t: 'Two Sum Problem (Optimized)', d: 'diff-easy', dl: 'Easy', c: 'Algorithms', p: '50 XP'},
-            {t: 'WebGL Custom Shader', d: 'diff-hard', dl: 'Hard', c: 'Graphics', p: '400 XP'}
+        const items = [
+            { title: '3D Perspective Flip Card', diff: 'Beginner', xp: '120 XP' },
+            { title: 'Two Sum O(n) Hash Solver', diff: 'Intermediate', xp: '200 XP' },
+            { title: 'Spatial Grid Pathfinder', diff: 'Advanced', xp: '400 XP' }
         ];
-        list.innerHTML = chals.map(c => `
-            <div class="challenge-card">
-                <div class="chal-info">
-                    <span class="diff-badge ${c.d}">${c.dl}</span>
-                    <h3>${c.t}</h3>
-                    <div class="chal-meta">
-                        <span><i class="fas fa-folder"></i> ${c.c}</span>
-                        <span><i class="fas fa-star" style="color:var(--primary)"></i> Reward: ${c.p}</span>
-                        <span><i class="fas fa-users"></i> ${Math.floor(Math.random()*5000)} completed</span>
-                    </div>
+        document.getElementById('challenges-container').innerHTML = items.map(c => `
+            <div class="tilt-card" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;transform:none">
+                <div>
+                    <div style="font-family:var(--font-mono);font-size:12px;color:var(--primary)">${c.diff} · ${c.xp}</div>
+                    <h3 style="margin:4px 0 0">${c.title}</h3>
                 </div>
-                <button class="btn btn-primary" onclick="app.navigate('editor')">Start Challenge</button>
+                <button class="btn btn-primary btn-sm" onclick="app.navigate('editor')">Solve in IDE</button>
             </div>
         `).join('');
     },
 
-    renderCollections() {
-        const grid = document.getElementById('collections-grid');
-        if(!grid) return;
-        const cols = [
-            {t: 'UI Snippets', i: 'fa-layer-group'}, 
-            {t: 'Backend Microservices', i: 'fa-server'}, 
-            {t: 'Machine Learning Models', i: 'fa-brain'}, 
-            {t: 'Game Dev Assets', i: 'fa-gamepad'}, 
-            {t: 'CSS Animations', i: 'fa-magic'}, 
-            {t: 'React Hooks', i: 'fa-anchor'}
-        ];
-        grid.innerHTML = cols.map(c => `
-            <div class="collection-card">
-                <i class="fas ${c.i} col-icon"></i>
-                <h3 style="font-family:var(--font-head); font-size:22px;">${c.t}</h3>
-                <p style="color:var(--text-muted); margin-top:8px;">${Math.floor(Math.random()*50)+10} items saved</p>
+    renderSavedList() {
+        const list = JSON.parse(localStorage.getItem('codeerase_saved_projects') || '[]');
+        const container = document.getElementById('saved-list');
+        if (!list.length) {
+            container.innerHTML = `<div class="tilt-card" style="transform:none"><h3>No saved snapshots yet</h3><p>Click Save inside the editor to store a snapshot.</p></div>`;
+            return;
+        }
+        container.innerHTML = list.map((item, i) => `
+            <div class="tilt-card" style="transform:none">
+                <div style="font-size:11px;font-family:var(--font-mono);color:var(--text-muted)">${item.date}</div>
+                <h3>${item.title}</h3>
+                <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="app.restoreSnapshot(${i})">Restore Snapshot</button>
             </div>
         `).join('');
     },
 
-    renderProfileProjects() {
-        const grid = document.getElementById('profile-projects-grid');
-        if(!grid) return;
-        
-        grid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 60px 40px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 16px;">
-                <i class="fas fa-folder-open" style="font-size: 50px; color: var(--text-muted); margin-bottom: 20px; opacity: 0.5;"></i>
-                <h3 style="font-family: var(--font-head); font-size: 22px; margin-bottom: 10px;">No projects yet</h3>
-                <p style="color: var(--text-muted); margin-bottom: 24px;">Your workspace is clean. Go to the Editor to create your first project!</p>
-                <button class="btn btn-primary" onclick="app.navigate('editor')"><i class="fas fa-code"></i> Start Coding</button>
-            </div>
-        `;
+    restoreSnapshot(idx) {
+        const list = JSON.parse(localStorage.getItem('codeerase_saved_projects') || '[]');
+        if (list[idx]) {
+            this.files = { ...list[idx].files };
+            this.navigate('editor');
+            this.switchLang('html');
+        }
+    },
+
+    saveSettings() {
+        const name = document.getElementById('settings-name').value || 'Developer';
+        const size = document.getElementById('settings-fontsize').value || '14';
+        document.getElementById('sidebar-username').textContent = name;
+        document.querySelector('.CodeMirror').style.fontSize = size + 'px';
+        this.log('Preferences updated.', 'sys');
+    },
+
+    initResizer() {
+        const resizer = document.getElementById('panel-resizer');
+        const leftCol = document.getElementById('editor-col');
+        const container = document.getElementById('split-panes');
+        let dragging = false;
+        resizer.addEventListener('mousedown', () => { dragging = true; resizer.classList.add('dragging'); });
+        window.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            const rect = container.getBoundingClientRect();
+            const pct = Math.min(75, Math.max(25, ((e.clientX - rect.left) / rect.width) * 100));
+            leftCol.style.width = pct + '%';
+        });
+        window.addEventListener('mouseup', () => { dragging = false; resizer.classList.remove('dragging'); });
+    },
+
+    initThreeHero() {
+        const canvas = document.getElementById('three-hero-canvas');
+        if (!canvas || !window.THREE) return;
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+        camera.position.set(0, 1.2, 6);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const group = new THREE.Group();
+        scene.add(group);
+
+        this.coreMat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.85, roughness: 0.2 });
+        const wireMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, wireframe: true });
+
+        const core = new THREE.Mesh(new THREE.OctahedronGeometry(1.0, 0), this.coreMat);
+        const ring1 = new THREE.Mesh(new THREE.TorusGeometry(1.7, 0.06, 16, 64), this.coreMat);
+        const ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.35, 0.04, 16, 64), wireMat);
+        ring2.rotation.x = Math.PI / 3;
+        group.add(core, ring1, ring2);
+
+        const light1 = new THREE.DirectionalLight(0xffffff, 1.4);
+        light1.position.set(4, 6, 5);
+        scene.add(light1, new THREE.AmbientLight(0x94a3b8, 0.7));
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            const explode = parseFloat(document.getElementById('three-explode')?.value || '0.2');
+            core.rotation.y += 0.01;
+            core.rotation.x += 0.005;
+            ring1.rotation.z -= 0.008;
+            ring1.scale.setScalar(1 + explode * 0.35);
+            ring2.rotation.y += 0.012;
+            ring2.scale.setScalar(1 + explode * 0.2);
+            renderer.render(scene, camera);
+        };
+        animate();
+    },
+
+    cycleThreeFinish() {
+        const colors = [0xfbbf24, 0x38bdf8, 0xe2e8f0];
+        this.threeFinishIdx = (this.threeFinishIdx + 1) % colors.length;
+        if (this.coreMat) this.coreMat.color.setHex(colors[this.threeFinishIdx]);
+    },
+
+    log(msg, type = 'info') {
+        const box = document.getElementById('console-logs');
+        if (!box) return;
+        const row = document.createElement('div');
+        row.className = 'log-entry';
+        const cls = type === 'sys' ? 'log-sys' : type === 'err' ? 'log-err' : type === 'warn' ? 'log-warn' : '';
+        row.innerHTML = `<span class="log-ts">[${new Date().toLocaleTimeString()}]</span><span class="${cls}">${msg}</span>`;
+        box.appendChild(row);
+        box.scrollTop = box.scrollHeight;
     }
 };
 
-// Global event listener for iframe console messages
-window.addEventListener('message', function(e) {
-    if(!e.data) return;
-    if(e.data.type === 'log' || e.data.type === 'info') app.logInfo(e.data.data);
-    else if(e.data.type === 'error') app.logError(e.data.data);
-    else if(e.data.type === 'warn') app.logWarn(e.data.data);
+window.addEventListener('message', e => {
+    if (e.data && e.data.source === 'codeerase-preview') {
+        app.log(e.data.text, e.data.type === 'error' ? 'err' : e.data.type === 'warn' ? 'warn' : 'info');
+    }
 });
 
-// Boot App
 document.addEventListener('DOMContentLoaded', () => app.init());
-
 </script>
 </body>
 </html>
-```
