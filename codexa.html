@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Codexa is a practical coding academy with interactive lessons, coding challenges and guided projects.">
+<title>Codexa — Learn to Code. Build Anything.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2296%22%20height%3D%2296%22%20viewBox%3D%220%200%2048%2048%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ECodexa%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2248%22%20height%3D%2248%22%20rx%3D%2213%22%20fill%3D%22%23092223%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%2362efd1%22%20d%3D%22M24%207%2041%2017v5l-8-5-9-5-12%207%2012%207%205-3%208%205-13%208L7%2026V17z%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%2326a99d%22%20d%3D%22M7%2026l17%2010v6L7%2032z%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%23f8ad7c%22%20d%3D%22m24%2036%2013-8v6l-13%208z%22%2F%3E%0A%3C%2Fsvg%3E">
+<style>
+:root{color-scheme:dark;--bg:#071a1b;--surface:#0d2525;--raised:#123331;--ink:#f0fff9;--muted:#a9c9c2;--line:#29504b;--accent:#7ff4d9;--solid:#72f2d6;--on:#0c2524;--good:#84efbc;--bad:#ffabb9;--header:#071a1bed;--glow:#52e2c321;--shadow:#02121191;--mono:ui-monospace,Consolas,monospace}
+:root[data-theme=light]{color-scheme:light;--bg:#eff9f5;--surface:#fff;--raised:#dff2eb;--ink:#0b2c28;--muted:#355d55;--line:#b8dacf;--accent:#126a5b;--solid:#106c5c;--on:#fff;--good:#126444;--bad:#a32743;--header:#eff9f5ed;--glow:#55c8a824;--shadow:#23544824}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif}a{color:var(--accent)}button,input,select,textarea{font:inherit;color:inherit}button,a,input,select,textarea,summary{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:wait;opacity:.65}a,button{ -webkit-tap-highlight-color:transparent} :focus-visible{outline:3px solid var(--accent);outline-offset:4px}h1,h2,h3,p{margin:0 0 .65em}h1,h2,h3{line-height:1.08;letter-spacing:-.045em}h1{font-size:clamp(2.6rem,6.5vw,6.8rem)}h2{font-size:clamp(1.95rem,4vw,3.65rem)}h3{font-size:1.36rem}p{color:var(--muted)}code,pre,kbd{font-family:var(--mono)}pre{overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}.skip{position:fixed;top:8px;left:8px;z-index:20;transform:translateY(-170%)}.skip:focus{transform:none}
+.wrap{width:min(1180px,calc(100% - 56px));margin-inline:auto}.top{position:sticky;top:0;z-index:5;background:var(--header);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.bar{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:22px}.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:800;font-size:1.38rem;letter-spacing:-.045em;white-space:nowrap}.logo{width:33px;height:33px;border-radius:9px;background:var(--solid);color:var(--on);display:grid;place-items:center;font:600 16px var(--mono)}.nav{display:flex;align-items:center;gap:23px}.nav a{font-size:.88rem;color:var(--muted);text-decoration:none;white-space:nowrap}.nav a:hover,.nav a[aria-current=page]{color:var(--accent)}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.btn{display:inline-flex;justify-content:center;align-items:center;min-height:44px;padding:8px 16px;border:1px solid var(--line);border-radius:9px;background:var(--raised);color:var(--ink);font-weight:650;text-decoration:none;transition:transform .2s,border-color .2s,background .2s;font-size:.92rem}.btn:hover{transform:translateY(-2px);border-color:var(--accent)}.primary{background:var(--solid);border-color:var(--solid);color:var(--on)}.quiet{background:transparent}.eyebrow{font:500 .76rem var(--mono);color:var(--accent);letter-spacing:.13em;text-transform:uppercase;margin-bottom:20px;display:block}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 76% 47%,var(--glow),transparent 54%),linear-gradient(var(--glow) 1px,transparent 1px),linear-gradient(90deg,var(--glow) 1px,transparent 1px);background-size:auto,54px 54px,54px 54px}.hero-inner{display:grid;grid-template-columns:1.04fr .96fr;gap:44px;min-height:590px;align-items:center;padding-block:80px}.hero h1{font-size:clamp(3.25rem,6.2vw,6.55rem);line-height:.99;margin-bottom:24px}.hero h1 span{color:var(--accent)}.hero p{font-size:1.14rem;max-width:42ch;margin-bottom:25px}.hero .actions .btn{padding:12px 18px}.scene{perspective:1000px;position:relative;isolation:isolate}.scene::before{content:'';position:absolute;inset:18% -10% -12% 8%;border-radius:50%;background:#52e2c345;filter:blur(65px);z-index:-1;animation:tag 6s ease-in-out infinite}.hero-console{transform:rotateY(-13deg) rotateX(9deg);transform-style:preserve-3d;box-shadow:18px 26px 0 -5px #40a49342,0 30px 75px var(--shadow);border-radius:17px!important;background:#102727!important;color:#e8fff5;border-color:#386d62!important}.hero-console p{font-size:.85rem;color:#b4d7cb;margin:0}.hero-console .actions{padding:12px 16px;border-top:1px solid #31534f}.hero-console textarea,.hero-console .editor pre{font-size:.87rem}.hero-console .editor{min-height:190px}.hero-console .output{background:#081d1f;color:#c1f7db;min-height:49px;padding:10px 16px;border-top:1px solid #31534f}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#f8ad7c;box-shadow:13px 0 #6dd6bf,26px 0 #47867a;margin-right:36px}.window{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font:500 .75rem var(--mono);color:var(--muted)}.hero-console .window{color:#b4d7cb;border-color:#31534f}.float-tag{position:absolute;right:-10px;bottom:-24px;z-index:2;background:#123835;color:#e4fff3;border:1px solid #5ea99a;border-radius:8px;padding:9px 14px;font:500 .79rem var(--mono);box-shadow:0 12px 32px #0906137a;animation:tag 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px) rotateY(-9deg) rotateX(6deg)}}@keyframes tag{50%{transform:translateY(-7px)}}@keyframes enter{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:none}}.enter{animation:enter .35s ease both}.stats-band{border-bottom:1px solid var(--line)}.stats-band .grid{padding-block:22px}.stat{display:flex;align-items:baseline;gap:10px}.stat strong{font-size:1.6rem;color:var(--accent)}.small,.stat span{font-size:.86rem;color:var(--muted)}.section{padding-block:74px}.section+.section{border-top:1px solid var(--line)}.section h2{max-width:19ch}.section>p{max-width:68ch}.grid{display:grid;gap:16px}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{border:1px solid var(--line);border-radius:13px;background:var(--surface);min-width:0}.pad{padding:24px}.card{display:flex;flex-direction:column;align-items:flex-start;transition:transform .2s,border-color .2s}.card:hover{transform:translateY(-3px);border-color:var(--accent)}.card .actions{margin-top:auto;padding-top:8px}.chip{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:2px 8px;font:500 .73rem/1.6 var(--mono);color:var(--accent);margin-bottom:12px}.row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.list{display:grid;gap:8px}.lesson-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--ink);text-decoration:none}.lesson-row:hover{border-color:var(--accent)}.lesson-row span:last-child{color:var(--accent);flex-shrink:0}.splash{background:radial-gradient(ellipse at 90% 0%,var(--glow),transparent 72%),var(--surface)}.center{text-align:center}.center h2,.center p{margin-inline:auto}.center .actions{justify-content:center}details{border-top:1px solid var(--line);padding:14px 0}summary{cursor:pointer;font-weight:650}details p{margin:.75em 0 0}footer{border-top:1px solid var(--line);padding-block:30px}footer p{margin:0}.page{padding-block:42px 80px;min-height:72vh}.page h1{font-size:clamp(2.45rem,5vw,4.4rem);margin-bottom:.2em}.page-head{margin-bottom:28px}.filters{margin:18px 0 25px;display:flex;gap:12px;flex-wrap:wrap}label{display:block}input,select{background:var(--raised);border:1px solid var(--line);border-radius:7px;padding:9px 11px;min-height:44px;max-width:100%}.filters label{flex:1 1 155px}.filters input,.filters select{width:100%}.gap{margin-top:18px}.progress{height:8px;border-radius:8px;overflow:hidden;background:var(--raised);width:100%;display:block;appearance:none;border:0}.progress::-webkit-progress-bar{background:var(--raised)}.progress::-webkit-progress-value{background:var(--solid)}.progress::-moz-progress-bar{background:var(--solid)}
+.workspace{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:17px;align-items:start}.workspace h2,.exercise h2{font-size:1.55rem}.workspace h3,.exercise h3{font-size:1.14rem;margin-top:20px}.example,.output{padding:12px 14px;background:var(--raised);border-radius:7px;font-size:.86rem}.example{margin:10px 0}.exercise{margin-top:17px}.editor{position:relative;min-height:290px;background:#081d1f;color:#dffff2;overflow:hidden}.editor textarea,.editor pre{position:absolute;inset:0;margin:0;padding:17px;border:0;border-radius:0;font:400 .88rem/1.55 var(--mono);tab-size:2;letter-spacing:0;white-space:pre;overflow:auto;overflow-wrap:normal}.editor textarea{resize:none;width:100%;height:100%;background:transparent;color:transparent;caret-color:white;-webkit-text-fill-color:transparent}.editor textarea::selection{background:#80e8c945}.editor pre{pointer-events:none;scrollbar-width:none}.token-string{color:#b7ef99}.token-key{color:#81efd7}.token-number{color:#ffd1a6}.token-comment{color:#a9c4ba}.editor-tools{padding:11px;display:flex;gap:7px;flex-wrap:wrap}.editor-tools .btn{min-height:40px;padding:5px 10px}.preview{width:100%;border:0;background:white;min-height:170px;display:block;border-radius:0 0 12px 12px}.console{padding:12px;border-top:1px solid var(--line)}.output{min-height:46px}.good{color:var(--good)}.bad{color:var(--bad)}.quiz label{padding:8px 10px;display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;margin:6px 0}.quiz input[type=radio]{min-height:0;width:17px;height:17px;flex-shrink:0}.quiz fieldset{border:0;padding:0;margin:0}.quiz legend{padding:0;font-weight:650}.status{min-height:1.6em;margin:.4em 0}.mobile-tabs{display:none}.live{display:inline-flex;align-items:center;gap:6px;padding:0 5px}.live input{min-height:0}ul,ol{padding-left:22px}.link-group{display:flex;flex-wrap:wrap;gap:12px}.toast{position:fixed;bottom:18px;right:18px;z-index:10;background:var(--raised);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:12px 18px;max-width:min(430px,90vw);box-shadow:0 10px 30px var(--shadow)}.toast:empty{display:none}[hidden]{display:none!important}
+@media(max-width:900px){.bar{flex-wrap:wrap;padding-block:10px;gap:8px}.nav{order:3;overflow:auto;width:100%;padding:5px 0;gap:18px}.hero-inner{min-height:0;gap:28px}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:690px){.wrap{width:calc(100% - 30px)}.hero-inner,.g2,.workspace{grid-template-columns:1fr}.hero-inner{padding-block:55px 65px}.hero-console{transform:none;animation:none}.float-tag{right:0}.section{padding-block:45px}.g3{grid-template-columns:1fr}.stats-band .g3{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat{display:block}.stat span{display:block;font-size:.75rem}.pad{padding:17px}.mobile-tabs{display:flex;margin-bottom:11px}.workspace[data-pane=read] .code-pane,.workspace[data-pane=code] .read-pane{display:none}.page{padding-top:26px}.nav a{display:inline-flex;align-items:center;min-height:36px}.bar .primary{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+.hero{background:radial-gradient(ellipse at 81% 36%,var(--glow),transparent 62%),linear-gradient(var(--glow) 1px,transparent 1px),linear-gradient(90deg,var(--glow) 1px,transparent 1px);background-size:auto,52px 52px,52px 52px}
+.hero-inner{padding-top:112px;padding-bottom:100px}.hero h1{font-size:clamp(3rem,5.35vw,5.65rem);font-weight:800}.brand .logo{width:37px;height:37px}.free-label{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--surface);color:var(--accent);font-weight:700;letter-spacing:0}.scene{perspective:1000px}.hero-console{position:relative;z-index:1}.orbit{position:absolute;right:-30px;top:-78px;z-index:2;width:102px;height:102px;pointer-events:none;perspective:450px;animation:orbit-float 5s ease-in-out infinite}
+.cube{position:absolute;inset:22px;transform-style:preserve-3d;transform:rotateX(-25deg) rotateY(34deg);animation:cube-spin 16s linear infinite}.cube i{position:absolute;inset:0;display:grid;place-items:center;border:1px solid #a2ffde80;background:#125650e8;color:#d7fff3;font:700 21px var(--mono);box-shadow:inset 0 0 12px #75e7c64f}.cube i:nth-child(1){transform:translateZ(29px)}.cube i:nth-child(2){transform:rotateY(90deg) translateZ(29px);background:#0c3836}.cube i:nth-child(3){transform:rotateY(180deg) translateZ(29px)}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(29px);background:#0c3836}.cube i:nth-child(5){transform:rotateX(90deg) translateZ(29px);background:#bf7957}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(29px)}
+@keyframes orbit-float{50%{translate:0 -12px}}@keyframes cube-spin{to{transform:rotateX(-25deg) rotateY(394deg)}}@keyframes card-in{from{opacity:.25;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+@supports(animation-timeline:view()){.landing-content .section{animation:card-in linear both;animation-timeline:view();animation-range:entry 0% entry 65%}}
+.onboarding{max-width:940px;margin-inline:auto}.onboarding .page-head{text-align:center}.onboarding h1{font-size:clamp(2.45rem,6vw,4.4rem)}.level-card{width:100%;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:194px;color:var(--ink);padding:22px;gap:9px;transition:transform .2s,border-color .2s,box-shadow .2s}.level-card:hover,.level-card:focus-visible{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 14px 30px var(--shadow)}.level-card strong{font-size:1.28rem}.level-card .choice-action{color:var(--accent);margin-top:auto;font-weight:750}.level-icon{background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:5px 10px;color:var(--accent);font:700 17px var(--mono)}
+.guide{margin-bottom:18px}.guide-header{display:flex;align-items:center;justify-content:space-between;gap:10px}.guide .eyebrow{margin:0}.guide h2{font-size:clamp(1.5rem,3vw,2.2rem);margin:.7em 0 .45em}.guide-options{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.guide-feedback{min-height:1.6em}.guide-step{animation:enter .32s ease both}
+@media(max-width:690px){.hero-inner{padding-block:55px 72px}.orbit{scale:.65;right:-7px;top:-39px}.onboarding .page-head{text-align:left}.level-card{min-height:132px}}
+</style>
+</head>
+<body>
+<a class="skip btn primary" href="#main">Skip to content</a>
+<header class="top"><div class="wrap bar">
+<a class="brand" href="#home"><img class="logo" alt="" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2296%22%20height%3D%2296%22%20viewBox%3D%220%200%2048%2048%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ECodexa%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2248%22%20height%3D%2248%22%20rx%3D%2213%22%20fill%3D%22%23092223%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%2362efd1%22%20d%3D%22M24%207%2041%2017v5l-8-5-9-5-12%207%2012%207%205-3%208%205-13%208L7%2026V17z%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%2326a99d%22%20d%3D%22M7%2026l17%2010v6L7%2032z%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%23f8ad7c%22%20d%3D%22m24%2036%2013-8v6l-13%208z%22%2F%3E%0A%3C%2Fsvg%3E">Codexa</a>
+<nav class="nav" aria-label="Main navigation"><a href="#dashboard">Dashboard</a><a href="#courses">Courses</a><a href="#practice">Practice</a><a href="#projects">Projects</a><a href="#progress">Progress</a></nav>
+<div class="actions"><button class="btn quiet" id="theme" aria-label="Switch color theme">Light</button><a class="btn primary" href="#dashboard">Start learning ↗</a></div>
+</div></header>
+<main id="main" tabindex="-1"></main>
+<footer><div class="wrap row"><a class="brand" href="#home"><img class="logo" alt="" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2296%22%20height%3D%2296%22%20viewBox%3D%220%200%2048%2048%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3ECodexa%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2248%22%20height%3D%2248%22%20rx%3D%2213%22%20fill%3D%22%23092223%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%2362efd1%22%20d%3D%22M24%207%2041%2017v5l-8-5-9-5-12%207%2012%207%205-3%208%205-13%208L7%2026V17z%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%2326a99d%22%20d%3D%22M7%2026l17%2010v6L7%2032z%22%2F%3E%0A%20%20%3Cpath%20fill%3D%22%23f8ad7c%22%20d%3D%22m24%2036%2013-8v6l-13%208z%22%2F%3E%0A%3C%2Fsvg%3E">Codexa</a><p>Learn to Code. Build Anything.</p><div class="link-group"><a href="#sources">Learning references</a><a href="#progress">Your data</a></div></div></footer>
+<div id="toast" class="toast" role="status"></div>
+<script>
+
+
+
+const CURRICULUM = "@fund|Programming fundamentals|JS|Beginner|Start from zero|Write and debug small programs using variables, decisions, loops and functions.\n#Start from zero\nzero-code|What is code?|Explain how a computer follows an instruction|Code is a set of instructions written for a computer. A program is code that the computer can run. The editor is where you write it. Run asks the browser to execute it, and the console shows messages the program prints.|console.log(\"Hello!\");|Hello!|Typing in the editor changes the instructions. Press Run to execute them.|Change Hello! to I wrote my first line! and run it.|Keep the double quotes and replace only the text between them.|console.log(\"I wrote my first line!\");|I wrote my first line!|What does the Run button do?|Executes the code in the editor|Turns every line into a comment|Changes the instructions for you\nzero-text|Text, quotes and numbers|Tell a string apart from a number|A string is text surrounded by quotes. A number can be written without quotes and used in arithmetic. In this example the first line joins text, and the second line adds numbers.|console.log(\"2\" + \"3\");\\nconsole.log(2 + 3);|23\\n5|The quotes mark the text. They are not part of the printed result.|Use + twice. Print 45 by joining text, then print 9 by adding the same digits as numbers.|Use \"4\" and \"5\" on the first line. Leave their quotes off on the second line.|console.log(\"4\" + \"5\");\\nconsole.log(4 + 5);|45\\n9|Which expression adds two numbers?|4 + 5|\"4\" + \"5\"|\"4 + 5\"\nzero-fix|Read and fix your first error|Identify a missing closing quote|JavaScript checks punctuation before running a program. If a closing quote is missing, the browser reports a syntax error. Look at the line with the error, match each opening quote or parenthesis to its closing partner, and run the code again.|console.log(\"I fixed it!\");|I fixed it!|Read the error, then change one thing at a time so you can see which change fixes it.|Repair the starter code so it prints Ready! without errors.|Close the string with a second double quote before the closing parenthesis.|console.log(\"Ready!\");|Ready!|Why does an unmatched quote stop this example?|JavaScript cannot parse the string|The console ran out of space|The text must start with a lowercase letter\n#Thinking in steps\ninstructions|Instructions and algorithms|Trace a sequence of instructions|An algorithm is an ordered method for reaching a goal. Source code expresses that method using a language. A browser runs JavaScript according to rules for its syntax and behavior. Trace this program from the first statement to the last.|console.log(\"Wash\");\\nconsole.log(\"Dry\");|Wash\\nDry|Reordering instructions changes the result even when each instruction is valid.|Write two statements that print Mix, then Bake.|Use one console.log call for each step.|console.log(\"Mix\");\\nconsole.log(\"Bake\");|Mix\\nBake|Which comes first when this example runs?|Wash|Dry|Both at the same time\n#Write small programs\r\nvariables|Variables and types|Store and inspect a value|A variable gives a value a name. Use const when the binding stays the same and let when it needs reassignment. JavaScript distinguishes a number from text even when both look like digits.|const tickets = 3;\\nconsole.log(typeof tickets);|number|Putting quotes around a number makes it a string.|Create a string named city and print its type.|Use typeof city inside console.log.|const city = \"Kochi\";\\nconsole.log(typeof city);|string|What type is \"7\"?|String|Number|Boolean\noperators|Operators and input/output|Calculate a result from input values|An operator combines or transforms values. A function parameter can receive an input value, and the return value is its output. Use parentheses to make the calculation order clear.|function cost(price) { return price * 2 + 1; }\\nconsole.log(cost(4));|9|+ can join strings, so keep prices numeric.|Write total(price, qty) that returns their product.|Use the multiplication operator *.|\\function total(price, qty) { return price * qty; }|@total:[[ [4,3],12 ],[[9,0],0],[[2.5,4],10]]|What does return give to the caller?|A value|A new argument|A printed line\ndecisions|Conditions and branches|Choose behavior using a Boolean condition|An if block runs when its condition is true. The else block runs when the condition is false. Use strict equality to compare without automatic conversion.|const seats = 0;\\nif (seats === 0) console.log(\"Full\");\\nelse console.log(\"Open\");|Full|= assigns a value. === compares values.|Write label(seats) that returns Full for zero and Open otherwise.|A conditional expression or an if/else both work.|function label(seats) { return seats === 0 ? \"Full\" : \"Open\"; }|@label:[[[0],\"Full\"],[[1],\"Open\"],[[12],\"Open\"]]|What is 0 === \"0\"?|False|True|It throws\nloops|Loops and counters|Repeat work a fixed number of times|A for loop initializes a counter, checks a condition before each pass, and updates the counter after each pass. The condition decides when repetition stops.|for (let i = 1; i <= 3; i++) console.log(i);|1\\n2\\n3|Using < instead of <= changes whether the final value is included.|Print the numbers 2, 3 and 4 on separate lines with a loop.|Start the counter at 2 and include 4.|for (let i = 2; i <= 4; i++) console.log(i);|2\\n3\\n4|How many passes does i = 0; i < 3; i++ make?|Three|Two|Four\nfunctions|Functions and scope|Return a reusable result|A function groups code under a name. Parameters give it inputs. Variables declared inside the function are local to that function. Return sends a value back and ends that invocation.|function double(n) {\\n  const result = n * 2;\\n  return result;\\n}\\nconsole.log(double(6));|12|Logging a value inside a function does not return it to the caller.|Write square(n) so it returns n multiplied by itself.|Use return, then the multiplication expression.|function square(n) { return n * n; }|@square:[[[3],9],[[0],0],[[-4],16]]|Where can the caller directly access result?|Only inside double|Anywhere after calling double|Only in console.log\ndebug|Debug a receipt|Use a failing example to find a logic error|Debugging starts by reproducing the failure. Check the actual value against the expected one, then narrow down which step changed it. A receipt is a useful mini-project because zero and multiple quantities expose different errors.|const subtotal = 5 * 3;\\nconsole.log(subtotal, subtotal + 2);|15 17|Adding a unit price to the quantity does not calculate a subtotal.|Implement receipt(price, qty, shipping) returning subtotal plus shipping.|Multiply price and quantity before adding shipping.|function receipt(price, qty, shipping) { return price * qty + shipping; }|@receipt:[[[5,3,2],17],[[8,0,4],4],[[2.5,2,0],5]]|What makes a useful bug report?|Inputs, actual result and expected result|Only the filename|Only the corrected code\n@html|HTML|HTML|Beginner|Programming fundamentals recommended|Structure accessible pages with semantic content, links and forms.\n#Page structure\nhtml-doc|Documents, elements and attributes|Build a valid page outline|The doctype requests standards mode. The head describes the document and the body holds content. Tags form elements, and attributes such as lang add information to an element.|<!doctype html>\\n<html lang=\"en\"><head><title>Field notes</title></head><body><h1>Field notes</h1><p>A journal.</p></body></html>|A heading and a short paragraph.|A title appears in the browser tab. Put visible text in the body.|Add a top-level heading that reads Field notes and a paragraph.|Use h1 and p inside body.|<!doctype html>\\n<html lang=\"en\"><head><title>Field notes</title></head><body><h1>Field notes</h1><p>A journal.</p></body></html>|h1=Field notes;p|Where does the document title belong?|In head|Inside h1|After body\nhtml-media|Links and images|Add meaningful navigation and alternative text|An anchor with href points to a destination. Link text should describe that destination. An img uses src for its image and alt to convey the meaningful content if the image is unavailable or read aloud.|<a href=\"#map\">Read the trail map</a>\\n<h2 id=\"map\">Trail map</h2>|A link to the heading on the same page.|Avoid using Click here when the destination could be named.|Add a link to #map with text Trail map and an element with id map.|The href begins with #, the id does not.|<a href=\"#map\">Trail map</a>\\n<h2 id=\"map\">Routes</h2>|a[href=\"#map\"]=Trail map;#map|Which attribute supplies alternative text for an image?|alt|title|href\nhtml-data|Lists and tables|Choose list or table markup for data|Use ul for items whose order is unimportant and ol for ordered steps. Use a table for rows and columns of related data. A caption describes the table and th identifies headers.|<table><caption>Trail lengths</caption><tr><th scope=\"col\">Trail</th><th scope=\"col\">Length</th></tr><tr><td>Lake</td><td>2 km</td></tr></table>|A two-column table with a caption.|Tables describe tabular data. CSS handles layout.|Write an ordered list with Pack and Leave as its first two items.|Use ol, with one li per item.|<ol><li>Pack</li><li>Leave</li></ol>|ol > li:first-child=Pack;ol > li:nth-child(2)=Leave|Which element marks a column heading?|th|td|ol\nhtml-form|Forms and accessible labels|Associate a label with an input|A form collects user input. A label's for value must match an input's id. The input name is the key used on submission, and required enables basic browser validation.|<form><label for=\"email\">Email address</label><input id=\"email\" name=\"email\" type=\"email\" required><button>Join</button></form>|A labeled email field and submit button.|A placeholder can disappear and should not be the only label.|Create a required text input with id name and an associated Name label.|Match label for to the input id.|<form><label for=\"name\">Name</label><input id=\"name\" name=\"name\" required><button>Join</button></form>|label[for=\"name\"]=Name;input#name[required]|Which pair associates a label and input?|for and id|name and placeholder|type and value\nhtml-profile|Semantic profile page|Organize a personal webpage with landmarks|Semantic elements communicate page structure. Use main for the primary content and nav for a group of navigation links. Put descriptive headings in a sensible order so readers can scan the outline.|<header><h1>Mira Patel</h1></header>\\n<main><h2>About me</h2><p>I build small web tools.</p></main>|A title above a primary About me section.|Choose headings by their place in the hierarchy. CSS controls size.|Create a main landmark containing a heading and a short bio paragraph.|Place h1 and p inside main for this one-section page.|<main><h1>Mira Patel</h1><p>I build small web tools.</p></main>|main h1;main p|Which landmark holds the page's primary content?|main|footer|nav\n@css|CSS|CSS|Beginner|HTML|Style readable pages and build layouts that adapt to screen size.\n#Style and layout\ncss-select|Selectors, color and typography|Target a class and style its text|A selector matches elements. A rule gives each matching element declarations such as color, font-family or font-size. Inheritance passes some properties, including color, to descendants.|.notice { color: rebeccapurple; font-family: system-ui; font-size: 1.2rem; }|The preview notice uses purple text and a system font.|.notice matches a class. #notice matches an ID.|Make .notice blue and set font-weight to 700.|Use color and font-weight in one rule.|.notice { color: blue; font-weight: 700; }|@css:color,font-weight|What does a selector starting with a dot match?|A class|An ID|An attribute value only\ncss-box|Box model and positioning|Control the size and spacing of a card|Padding separates content from its border. Margin separates the box from neighbors. With border-box, a declared width includes border and padding. Relative positioning keeps the element in normal flow and can anchor absolute descendants.|.notice { box-sizing: border-box; width: 220px; padding: 16px; border: 1px solid; margin: 12px; }|A bordered notice whose border box is 220 pixels wide.|With content-box, padding and border add to the declared width.|Apply border-box and padding to .notice.|Use box-sizing and padding declarations.|.notice { box-sizing: border-box; padding: 16px; }|@css:box-sizing,padding|Which property sets space inside the border?|padding|margin|position\ncss-flex|Flexbox and Grid|Choose an appropriate layout for a group|Flexbox lays out items along one main axis. Grid defines rows and columns, making it useful for two-dimensional arrangements. Gap adds spacing between items in either layout.|.layout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }|Two equal-width columns in the preview.|Grid columns are declared on the container, not individual cards.|Make .layout a flex container that wraps and uses a gap.|Set display, flex-wrap and gap.|.layout { display: flex; flex-wrap: wrap; gap: 12px; }|@css:display,flex-wrap,gap|Which layout directly defines tracks in both directions?|Grid|Flexbox|Inline flow\ncss-responsive|Responsive layout and motion|Adapt layout and respect motion preferences|A media query applies CSS only when a condition matches. Start with one column and add columns when there is room. A transition interpolates between states, while a keyframes animation specifies a sequence. Use prefers-reduced-motion to reduce optional motion.|.layout { display: grid; gap: 12px; }\\n@media (min-width: 520px) { .layout { grid-template-columns: 1fr 1fr; } }\\n.notice { transition: opacity .2s; }\\n@media (prefers-reduced-motion: reduce) { .notice { transition: none; } }|One or two columns, depending on the preview width.|A fixed viewport-sized width can overflow a narrow screen.|Add display and gap to .layout, then add a min-width rule for a second column.|Put the grid-template-columns declaration inside @media.|.layout { display: grid; gap: 12px; }\\n@media (min-width: 520px) { .layout { grid-template-columns: 1fr 1fr; } }|@css:display,gap,grid-template-columns|Which media feature reads the user's motion preference?|prefers-reduced-motion|min-width|orientation\n@js|JavaScript|JS|Intermediate|Programming fundamentals and HTML|Manipulate data, connect to the DOM and handle asynchronous work.\n#Data and interactions\njs-arrays|Arrays and objects|Read and transform a list of records|An array is an ordered collection indexed from zero. An object groups named properties. Map calls a function for each array item and returns a new array of the results.|const books = [{ title: \"Atlas\" }, { title: \"Tides\" }];\\nconsole.log(books.map(book => book.title).join(\", \"));|Atlas, Tides|Index 1 is the second element. Object property names are case-sensitive.|Write titles(books) returning an array of title strings.|Map each object to its title property.|function titles(books) { return books.map(book => book.title); }|@titles:[[[[{\"title\":\"Atlas\"},{\"title\":\"Tides\"}]],[\"Atlas\",\"Tides\"]],[[[]],[]],[[[{\"title\":\"Dunes\"}]],[\"Dunes\"]]]|Does map return a new array?|True|False\njs-dom|DOM and events|Update page text in response to a click|The DOM represents a document as objects. querySelector returns the first element matching a CSS selector. Add an event listener to run a function when a button is activated, and use textContent for plain text.|<button id=\"show\">Show</button><p id=\"status\">Waiting</p>\\n<script>document.querySelector(\"#show\").addEventListener(\"click\", () => { document.querySelector(\"#status\").textContent = \"Ready\"; });<\/script>|Clicking Show changes Waiting to Ready.|A script can run before the element exists. Put it after the elements for this example.|Create a button with id show and make it update #status to Ready.|Select #show, add a click listener, then assign textContent.|<button id=\"show\">Show</button><p id=\"status\">Waiting</p>\\n<script>document.querySelector(\"#show\").addEventListener(\"click\", () => { document.querySelector(\"#status\").textContent = \"Ready\"; });<\/script>|button#show;#status|Which property sets plain text without parsing it as HTML?|textContent|innerHTML|outerHTML\njs-storage|Local storage and JSON|Encode a value for browser storage|localStorage stores strings by origin. JSON.stringify converts arrays and plain objects to JSON text, and JSON.parse reconstructs the data. Opaque sandbox previews block access to localStorage, so use the coding check for serialization and run a storage experiment on localhost.|const encoded = JSON.stringify({ theme: \"dark\" });\\nconsole.log(JSON.parse(encoded).theme);|dark|JSON.parse can throw when stored text is corrupted.|Write serialize(items) returning the JSON text for an array.|Call JSON.stringify on the argument.|function serialize(items) { return JSON.stringify(items); }|@serialize:[[[[\"a\",\"b\"]],\"[\\\"a\\\",\\\"b\\\"]\"],[[[]],\"[]\"],[[[2]],\"[2]\"]]|What type does localStorage store?|String|Array|Boolean\njs-async|Promises, fetch and errors|Await a response and handle rejection|A promise represents a future result. await pauses the current async function until settlement. A fetch can resolve with an HTTP error status, so check response.ok before reading data. Use a passed-in fetch function to test without making a network request.|async function demo() {\\n  try { console.log(await Promise.resolve(\"ready\")); }\\n  catch (error) { console.log(error.message); }\\n}\\nawait demo();|ready|Forgetting await can leave you with a promise where you expected a value.|Implement read(fetcher) calling fetcher(\"/data\"), throwing Error(\"Request failed\") if response.ok is false, and returning response.json() otherwise.|Use await for the fetcher call and check ok before parsing.|async function read(fetcher) { const response = await fetcher(\"/data\"); if (!response.ok) throw new Error(\"Request failed\"); return response.json(); }|@fetch|Does fetch automatically reject on every HTTP 404 response?|False|True\n@py|Python|Python|Beginner|Programming fundamentals recommended|Build local scripts with collections, functions, files and classes.\n#Language and scripts\npy-types|Syntax, variables and strings|Print a formatted value|Python uses indentation to group statements. Assign a name with = and print values with print(). An f-string inserts an expression inside braces.|city = \"Pune\"\\ncount = 3\\nprint(f\"{city}: {count}\")|Pune: 3|Omitting the f leaves the braces as ordinary text.|Create a variable score equal to 7 and print Score: 7 using an f-string.|Use f before the opening quote and score in braces.|score = 7\\nprint(f\"Score: {score}\")|Score: 7|What does an f-string evaluate inside braces?|An expression|A file path|Only a comment\npy-col|Lists, tuples, sets and dictionaries|Pick a collection for the job|Lists preserve order and can change. Tuples group values in a fixed sequence. Sets store unique hashable values. Dictionaries map keys to values.|miles = {\"lake\": 2, \"ridge\": 5}\\nprint(miles[\"ridge\"])\\nprint(len({\"lake\", \"lake\", \"ridge\"}))|5\\n2|Set order should not determine display order. Sort when order matters.|Create a dictionary with apples mapped to 4 and print the stored count.|Index by the string key \"apples\".|counts = {\"apples\": 4}\\nprint(counts[\"apples\"])|4|Which collection maps keys to values?|Dictionary|Set|Tuple\npy-flow|Conditions, loops and functions|Sum selected values in a function|Use def to define a function, for to visit each item, and if to decide what to include. A return outside the loop sends the accumulated value back after every item has been processed.|def total_positive(values):\\n    total = 0\\n    for value in values:\\n        if value > 0:\\n            total += value\\n    return total\\nprint(total_positive([-2, 3, 4]))|7|Indenting return inside the loop exits on the first pass.|Write count_even(values) and print its result for [1, 2, 4].|A value is even when value % 2 equals zero.|def count_even(values):\\n    return sum(1 for value in values if value % 2 == 0)\\nprint(count_even([1, 2, 4]))|2|What does return do inside a loop?|Ends the function|Skips only the current item|Prints the value\npy-files|Modules, files and exceptions|Read text and handle a missing file|A module groups reusable code. pathlib.Path models filesystem paths, and read_text reads a file with a specified encoding. Catch FileNotFoundError when a missing file is an expected case.|from pathlib import Path\\ntry:\\n    text = Path(\"notes.txt\").read_text(encoding=\"utf-8\")\\n    print(text)\\nexcept FileNotFoundError:\\n    print(\"No notes yet\")|With no notes.txt in the current directory, prints No notes yet.|A broad except can hide programming errors. Catch the specific expected exception.|Print the content of tasks.txt, or Missing when the file does not exist.|Change the filename and the exception handler's message.|from pathlib import Path\\ntry:\\n    print(Path(\"tasks.txt\").read_text(encoding=\"utf-8\"))\\nexcept FileNotFoundError:\\n    print(\"Missing\")|Missing if tasks.txt is absent|Which exception indicates a missing file here?|FileNotFoundError|TypeError|KeyError\npy-class|Classes and objects|Create a small Python tracker|A class defines behavior for a type of object. __init__ sets up an instance. self is the instance passed to its methods, so two instances can keep separate values.|class Counter:\\n    def __init__(self):\\n        self.count = 0\\n    def add(self):\\n        self.count += 1\\nvisits = Counter()\\nvisits.add()\\nprint(visits.count)|1|Without self, a local variable disappears when the method returns.|Create two counters and increment only the first. Print 1 then 0.|Call Counter() twice and use different variable names.|class Counter:\\n    def __init__(self):\\n        self.count = 0\\n    def add(self):\\n        self.count += 1\\na = Counter()\\nb = Counter()\\na.add()\\nprint(a.count)\\nprint(b.count)|1\\n0|Where should a per-instance count be stored?|On self|In a local variable in add|In an import statement\n@java|Java|Java|Intermediate|Programming fundamentals|Run local Java programs with types, methods, objects and collections.\n#Language and objects\njava-start|Java syntax and types|Compile and run a typed program|A Java program can start at public static void main(String[] args). Declare types such as int and String. The JDK can launch a single source file directly with java Main.java.|public class Main {\\n  public static void main(String[] args) {\\n    int seats = 4;\\n    System.out.println(\"Seats: \" + seats);\\n  }\\n}|Seats: 4|Match the filename Main.java to the public class name Main.|Declare an int named tickets equal to 6 and print Tickets: 6.|Keep the declaration and print call inside main.|public class Main { public static void main(String[] args) { int tickets = 6; System.out.println(\"Tickets: \" + tickets); } }|Tickets: 6|What is the type of the variable seats?|int|String|boolean\njava-flow|Operators, branches, loops and arrays|Process an array with a method|An array has a fixed length. An enhanced for loop visits each element. A static method can return an int to its caller, and an if statement can filter elements before addition.|public class Main {\\n  static int sumPositive(int[] values) {\\n    int total = 0;\\n    for (int value : values) if (value > 0) total += value;\\n    return total;\\n  }\\n  public static void main(String[] args) {\\n    System.out.println(sumPositive(new int[]{-2, 3, 4}));\\n  }\\n}|7|Arrays use length without parentheses. String uses length().|Write countEven and print the count in {1, 2, 4}.|Use value % 2 == 0 inside the loop.|public class Main { static int countEven(int[] values) { int count = 0; for (int value : values) if (value % 2 == 0) count++; return count; } public static void main(String[] args) { System.out.println(countEven(new int[]{1, 2, 4})); } }|2|What does an enhanced for loop visit?|Each array value|Only the first element|Only the last element\njava-objects|Classes, objects and constructors|Initialize object state in a constructor|A constructor has the class name and no return type. It initializes new objects. Use this.field to distinguish an instance field from a parameter with the same name.|public class Main {\\n  final String name;\\n  Main(String name) { this.name = name; }\\n  public static void main(String[] args) {\\n    Main item = new Main(\"Compass\");\\n    System.out.println(item.name);\\n  }\\n}|Compass|Adding void turns a constructor-looking declaration into a method.|Give Main an int field called pages, set it in a constructor and print it.|Assign this.pages from the pages parameter.|public class Main { final int pages; Main(int pages) { this.pages = pages; } public static void main(String[] args) { System.out.println(new Main(32).pages); } }|32|Which name must a constructor have?|The class name|main|new\njava-interfaces|Inheritance and interfaces|Use an interface as a contract|A class extends a superclass and implements interfaces. An interface can declare a method that implementing classes provide. Code can use the interface type and call the method without depending on a specific class.|interface Named { String name(); }\\nclass Route implements Named { public String name() { return \"Ridge\"; } }\\npublic class Main { public static void main(String[] args) { Named route = new Route(); System.out.println(route.name()); } }|Ridge|An implementation of an interface's public method must stay public.|Add a Lake class implementing Named and print Lake through the interface.|Implement public String name() in Lake.|interface Named { String name(); } class Lake implements Named { public String name() { return \"Lake\"; } } public class Main { public static void main(String[] args) { Named item = new Lake(); System.out.println(item.name()); } }|Lake|Which keyword declares that a class fulfills an interface?|implements|extends|new\njava-list|Collections and exceptions|Build a small reading list application|ArrayList is a resizable collection. List<String> promises that entries are strings. When parsing user input, catch NumberFormatException and show a helpful result so invalid input does not end the program abruptly.|import java.util.ArrayList;\\nimport java.util.List;\\npublic class Main {\\n  public static void main(String[] args) {\\n    List<String> books = new ArrayList<>();\\n    books.add(\"Atlas\");\\n    try { System.out.println(books.get(Integer.parseInt(\"0\"))); }\\n    catch (NumberFormatException error) { System.out.println(\"Use a number\"); }\\n  }\\n}|Atlas|List indices begin at zero. Check bounds separately from checking number format.|Change the index text to abc and handle the parse failure.|Use Integer.parseInt inside try and catch NumberFormatException.|import java.util.List;\\npublic class Main { public static void main(String[] args) { List<String> books = List.of(\"Atlas\"); try { System.out.println(books.get(Integer.parseInt(\"abc\"))); } catch (NumberFormatException error) { System.out.println(\"Use a number\"); } } }|Use a number|Which collection can grow when you add items?|ArrayList|A fixed-length array|An int\n@tools|Developer skills|Mixed|Intermediate|Programming fundamentals|Use Git, SQL, APIs, testing and data structures in practical workflows.\n#Tools and problem solving\ngit|Git and GitHub|Create and inspect a local commit|Git records snapshots of tracked files. git add stages changes, git commit records the staged snapshot, and git log shows history. GitHub can host a remote repository for collaboration, and a pull request proposes merging a branch.|git init\\ngit add README.md\\ngit commit -m \"Add notes\"\\ngit log --oneline|A new commit with the message Add notes, after creating README.md and configuring Git identity.|Editing a file after staging does not update the staged snapshot until you add it again.|Create README.md, stage it, commit it and inspect the last commit.|Use a disposable directory, then git log -1 --oneline.|git init\\ngit add README.md\\ngit commit -m \"Add notes\"\\ngit log -1 --oneline|A short commit hash followed by Add notes|Which command stages a file?|git add|git log|git status\nsql|SQL with SQLite|Filter, group and order rows|SELECT names what to return, WHERE filters rows before grouping, and ORDER BY controls the order of the results. GROUP BY and COUNT can summarize records by category.|CREATE TABLE trails (name TEXT, km INTEGER);\\nINSERT INTO trails VALUES ('Lake', 2), ('Ridge', 5), ('Hill', 4);\\nSELECT name FROM trails WHERE km >= 4 ORDER BY km DESC;|Ridge, then Hill.|Row order is only guaranteed when the query specifies it.|Return trail names under 5 km, shortest first.|Filter with WHERE and order by km ascending.|CREATE TABLE trails (name TEXT, km INTEGER);\\nINSERT INTO trails VALUES ('Lake', 2), ('Ridge', 5), ('Hill', 4);\\nSELECT name FROM trails WHERE km < 5 ORDER BY km ASC;|Lake, then Hill|Which clause filters individual rows before grouping?|WHERE|ORDER BY|GROUP BY\napi-json|APIs and JSON|Read a field from an API-shaped payload|An HTTP API defines endpoints, requests and responses. A JSON object uses double-quoted keys and cannot contain comments. In a client, validate the fields you consume and handle a missing field deliberately.|const response = JSON.parse('{\"current\":{\"temperature_2m\":22}}');\\nconsole.log(response.current.temperature_2m);|22|JavaScript object syntax and JSON text have different rules for quotes and trailing commas.|Write reading(payload) returning current.temperature_2m, or null if it is missing.|Use optional chaining with the nullish coalescing operator.|function reading(payload) { return payload.current?.temperature_2m ?? null; }|@reading:[[[{\"current\":{\"temperature_2m\":0}}],0],[[{}],null],[[{\"current\":{\"temperature_2m\":22}}],22]]|What encloses a JSON object key?|Double quotes|Single quotes|Backticks\nweb-dev|Putting a web page together|Connect semantic markup, styles and behavior|HTML describes the content, CSS handles layout, and JavaScript responds to interaction. Keep navigation meaningful and choose a button when the user triggers an action on the current page.|<main><h1>Trail notes</h1><button id=\"toggle\">Show details</button><p id=\"info\" hidden>Bring water.</p></main>\\n<script>document.querySelector(\"#toggle\").onclick = () => { const info = document.querySelector(\"#info\"); info.hidden = !info.hidden; };<\/script>|Clicking Show details toggles the paragraph.|An anchor with no meaningful destination is a poor substitute for a button.|Add a button and a hidden paragraph inside main. Wire the button to reveal the paragraph.|Set the paragraph's hidden property to false on click.|<main><button id=\"reveal\">Show details</button><p id=\"info\" hidden>Bring water.</p></main>\\n<script>document.querySelector(\"#reveal\").onclick = () => { document.querySelector(\"#info\").hidden = false; };<\/script>|main button;main p[hidden]|Which element is intended to trigger an action?|button|a without a destination|p\ntesting|Debugging and software tests|Test normal and boundary values|A test compares actual behavior with an explicit expectation. A boundary value is near a threshold where behavior can change. An equality check at that threshold can expose an off-by-one error.|const freeShipping = total => total >= 50;\\nconsole.log(freeShipping(49) === false, freeShipping(50) === true);|true true|Only testing a total far above 50 misses the boundary case.|Implement eligible(total) for totals of 25 or more.|Test 24.99, 25 and 26.|function eligible(total) { return total >= 25; }|@eligible:[[[24.99],false],[[25],true],[[26],true]]|Which input best tests a threshold of 25?|25|100|500\ndsa|Data structures and search|Find an item in a list|An array is useful when order matters. A set answers membership questions and removes duplicates. A linear search visits elements until it finds a match, so an unsuccessful search can examine every item.|const names = [\"lake\", \"ridge\", \"hill\"];\\nconsole.log(names.indexOf(\"ridge\"), names.indexOf(\"river\"));|1 -1|Do not treat index zero as false when checking whether a search found an item.|Write position(items, target) returning the first matching index or -1.|Compare each item with === or use indexOf.|function position(items, target) { return items.indexOf(target); }|@position:[[[[\"lake\",\"ridge\"],\"lake\"],0],[[[1,2,1],1],0],[[[],\"river\"],-1]]|What is a failed indexOf result?|-1|0|null\r\n\r\n";
+const projectRows = [
+['profile','Personal profile','Beginner','html-profile','Use semantic landmarks and descriptive headings.','Add a heading, an About section, and a meaningful link.','The page has one main landmark and a working section link.', '<main><h1>My name</h1><!-- Add a bio and section link --></main>', '<main><h1>Mira Patel</h1><a href="#bio">Read my bio</a><section id="bio"><h2>About me</h2><p>I build trail maps.</p></section></main>'],
+['calc','Calculator','Beginner','operators','Convert input strings into numbers and display the result.','Add two labeled inputs, listen for button activation, and handle blank input.','2 + 3 shows 5, and an empty field prompts for both numbers.', '<label>First number <input id="a" type="number"></label>\n<!-- Add the second number and result -->', '<label>First number <input id="a" type="number"></label> <label>Second number <input id="b" type="number"></label><button id="add">Add</button><output id="result"></output><script>add.onclick=()=>{const a=document.querySelector("#a").valueAsNumber,b=document.querySelector("#b").valueAsNumber;result.textContent=Number.isFinite(a+b)?a+b:"Enter both numbers"};<\/script>'],
+['clock','Digital clock','Beginner','js-dom','Format a Date and refresh the DOM every second.','Display the first reading immediately, then schedule periodic updates.','The clock shows local time and the seconds update.', '<time id="clock">--:--:--</time>\n<script>// Define and schedule a render function.<\/script>', '<time id="clock">--:--:--</time><script>function tick(){clock.textContent=new Date().toLocaleTimeString();}tick();setInterval(tick,1000);<\/script>'],
+['guess','Number guessing game','Beginner','decisions','Compare an input against a target and give directional feedback.','Start with a fixed target, handle invalid guesses, and then try a random target.','Guesses below, above and equal to 7 get distinct responses.', '<label>Guess 1–10 <input id="guess" type="number" min="1" max="10"></label><button id="check">Check</button><output id="feedback"></output>', '<label>Guess 1–10 <input id="guess" type="number" min="1" max="10"></label><button id="check">Check</button><output id="feedback"></output><script>check.onclick=()=>{const n=guess.valueAsNumber;feedback.textContent=!Number.isInteger(n)||n<1||n>10?"Use a whole number from 1 to 10":n===7?"Correct":n<7?"Too low":"Too high";};<\/script>'],
+['quiz','Simple quiz','Beginner','js-dom','Check a selected answer and explain the result.','Write a question, offer two choices, and provide feedback for either answer.','Both answers produce meaningful feedback.', '<p>Which planet is closest to the Sun?</p><!-- Add answer buttons and feedback -->', '<p>Which planet is closest to the Sun?</p><button data-answer="yes">Mercury</button> <button data-answer="no">Venus</button><p id="feedback" role="status"></p><script>document.querySelectorAll("[data-answer]").forEach(button=>button.onclick=()=>{feedback.textContent=button.dataset.answer==="yes"?"Correct. Mercury is closest.":"Try again. Venus is second."});<\/script>'],
+['todo','To-do application','Intermediate','js-dom','Create and remove list items without inserting user text as HTML.','Handle form submission, render the task, and attach a remove button.','Empty tasks are ignored and each task can be removed independently.', '<form id="task"><label>Task <input id="entry"></label><button>Add</button></form><ul id="items"></ul>', '<form id="task"><label>Task <input id="entry" required></label><button>Add</button></form><ul id="items"></ul><script>task.onsubmit=e=>{e.preventDefault();const text=entry.value.trim();if(!text)return;const li=document.createElement("li"),remove=document.createElement("button");li.textContent=text+" ";remove.textContent="Remove";remove.onclick=()=>li.remove();li.append(remove);items.append(li);task.reset();entry.focus();};<\/script>'],
+['weather','Weather dashboard','Intermediate','js-async','Fetch current temperatures from the Open-Meteo API.','Start with fixed coordinates for Delhi, check HTTP status, and display units and errors.','A successful request shows degrees Celsius. A failed request shows an error.', '<button id="weather">Get Delhi weather</button><p id="reading" role="status"></p>\n<script>// Fetch and show current.temperature_2m.<\/script>', '<button id="weather">Get Delhi weather</button><p id="reading" role="status"></p><script>weather.onclick=async()=>{reading.textContent="Loading…";try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.21&current=temperature_2m");if(!r.ok)throw Error("HTTP "+r.status);const d=await r.json();reading.textContent=d.current.temperature_2m+" "+d.current_units.temperature_2m;}catch(error){reading.textContent="Weather unavailable: "+error.message;}};<\/script>',true],
+['expense','Expense tracker','Intermediate','js-arrays','Track valid numeric entries and derive a running total.','Read the number, reject invalid values, and calculate totals in cents.','2.15 and 1.09 give 3.24. Negative amounts are ignored.', '<label>Expense <input id="amount" type="number" min="0.01" step=".01"></label><button id="record">Record</button><output id="sum"></output>', '<label>Expense <input id="amount" type="number" min="0.01" step=".01"></label><button id="record">Record</button><output id="sum">0.00</output><ul id="entries"></ul><script>let cents=0;record.onclick=()=>{const value=amount.valueAsNumber;if(!amount.checkValidity()||!Number.isFinite(value))return;cents+=Math.round(value*100);const item=document.createElement("li");item.textContent=value.toFixed(2);entries.append(item);sum.textContent=(cents/100).toFixed(2);};<\/script>'],
+['notes','Notes application','Intermediate','js-storage','Capture text and export a note as a local file.','Add a textarea and generate a text download with a Blob URL.','Exporting the note creates a text file containing the exact text. Use a downloaded HTML file for the download test.', '<label>Note <textarea id="note"></textarea></label><button id="download">Export note</button>', '<label>Note <textarea id="note"></textarea></label><button id="download">Export note</button><script>download.onclick=()=>{const url=URL.createObjectURL(new Blob([note.value],{type:"text/plain"}));const a=document.createElement("a");a.href=url;a.download="note.txt";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};<\/script>'],
+['portfolio','Interactive portfolio','Intermediate','css-responsive','Build an accessible, responsive project gallery.','Create cards, place them in a responsive grid, and add keyboard-operable details.','The gallery works at narrow widths and each disclosure opens by keyboard.', '<main><h1>My work</h1><section id="gallery"><!-- Add cards --></section></main>', '<style>#gallery{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr))}details{padding:1rem;border:1px solid #777}</style><main><h1>My work</h1><section id="gallery" aria-label="Projects"><details><summary>Trail map</summary><p>A responsive guide to local routes.</p></details><details><summary>Reading log</summary><p>A tracker for finished books.</p></details></section></main>'],
+['rest','REST API client','Advanced','api-json','Separate request handling from JSON rendering.','Request a known endpoint, inspect status and format the returned JSON.','The response is readable JSON on success and a status message on error.', '<button id="request">Load forecast data</button><pre id="response"></pre>', '<button id="request">Load forecast data</button><pre id="response"></pre><script>request.onclick=async()=>{response.textContent="Loading…";try{const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.21&current=temperature_2m");if(!r.ok)throw Error("HTTP "+r.status);response.textContent=JSON.stringify(await r.json(),null,2);}catch(e){response.textContent=e.message;}};<\/script>',true],
+['data','Data dashboard','Advanced','testing','Render a filtered collection and recalculate aggregate values.','Define sample trail records, filter by minimum distance, and update count and total.','At 3 km, Ridge and Hill are shown with a total of 9 km.', '<label>Minimum km <input id="minimum" type="number" value="0"></label><ul id="rows"></ul><output id="total"></output>', '<label>Minimum km <input id="minimum" type="number" value="0"></label><ul id="rows"></ul><output id="total"></output><script>const trails=[["Lake",2],["Ridge",5],["Hill",4]];function render(){const list=trails.filter(([,km])=>km>=Number(minimum.value));rows.replaceChildren(...list.map(([name,km])=>{const li=document.createElement("li");li.textContent=name+" · "+km+" km";return li;}));total.textContent=list.length+" trails · "+list.reduce((sum,[,km])=>sum+km,0)+" km";}minimum.oninput=render;render();<\/script>'],
+['multipage','Multi-page field guide','Advanced','web-dev','Connect separate documents with relative links.','Save the workspace file as index.html, create routes.html, and add a link back to index.html.','Both links resolve when opened from the same directory. Download the code to test separate pages.', '<main><h1>Field guide</h1><!-- Link to routes.html --></main>', '<main><h1>Field guide</h1><a href="routes.html">Browse routes</a></main>\n<!-- In routes.html, add <main><h1>Routes</h1><p>Lake loop · 2 km</p><a href="index.html">Field guide</a></main> -->']
+];
+const projects = projectRows.map(([id,title,level,pre,objective,steps,expected,starter,solution,network]) => ({id,title,level,pre,objective,steps,expected,starter,solution,network,lang:'HTML'}));
+const courses = [];
+const lessons = [];
+const nl = value => value.replaceAll('\\n','\n');
+let course, module;
+for (const line of CURRICULUM.trim().split(/\r?\n/)) {
+  const [id,...data] = line.split('|');
+  if (id.startsWith('@')) {
+    const [title,lang,level,pre,summary] = data;
+    course = {id:id.slice(1),title,lang,level,pre,summary,modules:[],lessons:[]};
+    courses.push(course);
+  } else if (id.startsWith('#')) {
+    module = {title:id.slice(1),lessons:[]};
+    course.modules.push(module);
+  } else {
+    const [title,objective,explanation,example,expected,mistake,task,hint,solution,test,question,...options] = data;
+    const lang = id === 'js-dom' || id === 'web-dev' ? 'HTML' : id === 'sql' ? 'SQL' : id === 'git' ? 'Shell' : course.lang === 'Mixed' ? 'JS' : course.lang;
+    const lesson = {id,title,objective,explanation,example:nl(example),expected:nl(expected),mistake,task,hint,solution:nl(solution).replace(/^\\function/,'function'),test:nl(test),question,options,course,lang};
+    module.lessons.push(lesson);
+    lessons.push(lesson);
+    course.lessons.push(lesson);
+  }
+}
+const lessonMap = Object.fromEntries(lessons.map(l => [l.id,l]));
+const guidedSteps = {
+  'zero-code':[
+    ['Meet the editor','The editor is where you type instructions. The console is where you read the messages those instructions produce.','Where do you type code?','In the editor','In the console','You write in the editor and read the result in the console.'],
+    ['Read one instruction','console.log means “show this in the console.” The parentheses hold what to show. The quotation marks tell JavaScript that Hello! is text.','What will console.log("Hello!") show?','Hello!','console.log','The console shows the text between the quotes.']
+  ],
+  'zero-text':[
+    ['Tell text from a number','If 4 has quotes around it, JavaScript treats it as text. Without quotes, it treats 4 as a number.','Which value is text?','"4"','4','The quotes identify a string.'],
+    ['Predict the result','With two strings, + joins them. With two numbers, + adds them. Think about the type of each value before reading the result.','What does 4 + 5 give?','9','45','The values have no quotes, so JavaScript adds the numbers.']
+  ],
+  'zero-fix':[
+    ['Find the missing partner','Quotes come in pairs. In console.log("Ready!); the opening quote tells JavaScript to start reading text, but there is no closing quote.','Which character is missing?','A closing double quote','An opening parenthesis','Put a closing quote after Ready! to end the string.'],
+    ['Change one thing and retry','Run the broken line first and look at the console. Then add the missing quote and run again. Comparing those two runs shows whether your change fixed the problem.','What do you do after making the fix?','Run the corrected code','Delete the console output','Running the code again lets you check that it prints Ready! without an error.']
+  ]
+};
+const guidedCount = item => guidedSteps[item.id]?.length || 0;
+const projectMap = Object.fromEntries(projects.map(p => [p.id,p]));
+const sourceLinks = [
+ ['MDN Curriculum and Web Docs','https://developer.mozilla.org/en-US/curriculum/'],
+ ['Python tutorial','https://docs.python.org/3/tutorial/'],
+ ['Dev.java learning guides','https://dev.java/learn/'],
+ ['Git tutorial','https://git-scm.com/docs/gittutorial'],
+ ['SQLite language reference','https://sqlite.org/lang.html'],
+ ['freeCodeCamp curriculum repository','https://github.com/freeCodeCamp/freeCodeCamp'],
+ ['Open-Meteo API documentation','https://open-meteo.com/en/docs']
+];
+const $ = (s,root=document) => root.querySelector(s);
+const $$ = (s,root=document) => [...root.querySelectorAll(s)];
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const app = $('#main');
+const key = 'codexa-v1';
+const storage = {
+  read(name) { try { return JSON.parse(localStorage.getItem(name)); } catch { return null; } },
+  save(value) { try { localStorage.setItem(key,JSON.stringify(value)); return true; } catch { return false; } }
+};
+const experienceOptions = [
+  ['beginner','○','I’m a beginner','Start with what code is and write your first line with step-by-step guidance.','Start from zero'],
+  ['some','◐','I know a little bit','Already tried HTML or the basics? Choose any course and start at the lesson you need.','Choose a course'],
+  ['intermediate','●','I’m intermediate','Choose any course, including JavaScript, Java, or developer skills, at your own pace.','Choose a course']
+];
+const isExperience = value => experienceOptions.some(([id])=>id===value);
+function blank() { return {version:1,theme:'dark',experience:null,guided:{},enrolled:[],done:[],answers:{},attempts:{},drafts:{},projects:{},activity:[],last:null,days:[],legacy:null}; }
+let state = { ...blank(), ...storage.read(key) };
+if (!storage.read(key)) {
+  const legacy = storage.read('bgct2');
+  if (legacy && typeof legacy === 'object') state.legacy = {name:legacy.profile?.name || '',xp:Number(legacy.xp)||0,completed:Object.values(legacy.prog || {}).flat().length};
+}
+const runnable = item => ['JS','HTML','CSS'].includes(item.lang);
+const liveCount = lessons.filter(runnable).length;
+const courseDone = course => course.lessons.filter(l => state.done.includes(l.id)).length;
+const badgeList = () => [
+  ['First lesson',state.done.length >= 1],
+  ['Five lessons',state.done.length >= 5],
+  ['Challenge passed',Object.values(state.attempts).some(a=>a.passed)],
+  ['Project saved',Object.keys(state.projects).length > 0],
+  ['Track complete',courses.some(c=>courseDone(c)===c.lessons.length)]
+].filter(([,earned])=>earned).map(([title])=>title);
+let toastTimer;
+function notify(text) { $('#toast').textContent = text; clearTimeout(toastTimer); toastTimer = setTimeout(()=>$('#toast').textContent='',3600); }
+function persist() { if (!storage.save(state)) notify('Browser storage is unavailable. Export your data before closing.'); }
+function activity(text) {
+  const now = new Date();
+  state.activity.unshift({text,time:now.toISOString()});
+  state.activity = state.activity.slice(0,30);
+  const day = [now.getFullYear(),now.getMonth()+1,now.getDate()].map(n=>String(n).padStart(2,'0')).join('-');
+  if (!state.days.includes(day)) state.days.push(day);
+  persist();
+}
+function theme() {
+  document.documentElement.dataset.theme = state.theme;
+  $('#theme').textContent = state.theme === 'dark' ? 'Light' : 'Dark';
+}
+$('#theme').onclick = () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; theme(); persist(); };
+theme();
+function download(name,value,type='text/plain') {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([value],{type}));
+  a.download = name;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function btn(text,href,primary=false) { return `<a class="btn ${primary?'primary':''}" href="#${href}">${text}</a>`; }
+function page(title,description,body) { return `<div class="wrap page enter"><div class="page-head"><h1>${esc(title)}</h1><p>${esc(description)}</p></div>${body}</div>`; }
+function stat(value,label) { return `<div class="stat"><strong>${value}</strong><span>${label}</span></div>`; }
+function progress(value,max,label) { return `<progress class="progress" value="${value}" max="${max}" aria-label="${esc(label)}"></progress>`; }
+function card(title,chip,description,actions='') {
+  return `<article class="panel pad card"><span class="chip">${esc(chip)}</span><h3>${esc(title)}</h3><p>${esc(description)}</p><div class="actions">${actions}</div></article>`;
+}
+function lessonRow(l) { return `<a class="lesson-row" href="#lesson/${l.id}"><span>${esc(l.title)}</span><span class="small">${state.done.includes(l.id)?'✓ Complete':runnable(l)?'In browser ↗':'Local tools ↗'}</span></a>`; }
+function courseCard(c) {
+  return card(c.title,`${c.level} · ${c.lessons.length * 12} min`,c.summary,
+    `<span class="small">${c.lessons.length} lessons · ${esc(c.pre)}</span>${btn('View course →','course/'+c.id)}`);
+}
+function projectCard(p) { return card(p.title,p.level,p.objective,btn(state.projects[p.id]?'Open saved project →':'Open project →','project/'+p.id)); }
+function startRoute() {
+  return state.experience || state.last ? 'dashboard' : 'start';
+}
+
+function experiencePage() {
+  return page('How much coding have you done?','Choose a starting point. Every lesson and project is free.',
+    `<div class="grid g3">${experienceOptions.map(([id,icon,title,description,action])=>`<button class="panel level-card" data-experience="${id}"><span class="level-icon" aria-hidden="true">${icon}</span><strong>${title}</strong><span class="small">${description}</span><span class="choice-action">${action} →</span></button>`).join('')}</div>
+    <p class="small gap">You can change your starting point from the dashboard.</p>`).replace('wrap page enter','wrap page enter onboarding');
+}
+
+function landing() {
+  return `<div class="hero"><div class="wrap hero-inner">
+    <div class="enter"><span class="eyebrow free-label">Free coding academy</span><h1>Learn to Code.<br><span>Build Anything.</span></h1><p>Write your first line with a step-by-step lesson, or pick up a new language where you’re ready to begin.</p><div class="actions">${btn('Start Learning Free ↗',startRoute(),true)}${btn('Explore Courses','courses')}</div></div>
+    <div class="scene"><div class="orbit" aria-hidden="true"><div class="cube"><i>&lt;/&gt;</i><i>{ }</i><i>↗</i><i>[ ]</i><i>✦</i><i></i></div></div><div class="panel hero-console"><div class="window"><span class="dot"></span> first-program.js</div><div id="demo-editor"></div><div class="actions"><button id="demo-run" class="btn primary">▶ Run code</button><p>Edit the message and run it.</p></div><pre class="output" id="demo-output" role="status">Output appears here.</pre></div><div class="float-tag" aria-hidden="true">&lt;/&gt; &nbsp; JavaScript playground</div></div>
+  </div></div>
+  <div class="stats-band"><div class="wrap grid g3">${stat(courses.length,'learning tracks')}${stat(lessons.length,'structured lessons')}${stat(projects.length,'guided projects')}</div></div>
+  <div class="wrap landing-content">
+    <section class="section"><span class="eyebrow">How it works</span><h2>A short path from concept to code.</h2><div class="grid g3">
+      ${card('Learn one idea at a time','Learn','Read a short explanation, predict what code will do, then run it yourself.',btn('Try a lesson →','lesson/zero-code'))}
+      ${card('Test your own code','Practice','Solve a focused problem and check your result against real cases.',btn('Try a challenge →','challenge/functions'))}
+      ${card('Finish something useful','Build','Work from starter code, save your progress, and download a project.',btn('See projects →','projects'))}</div></section>
+    <section class="section"><span class="eyebrow">Learning roadmap</span><h2>Start with the fundamentals.</h2><p>Work through the roadmap in order, or choose the track that matches what you already know.</p><div class="grid g3">${courses.map(courseCard).join('')}</div></section>
+    <section class="section"><span class="eyebrow">Project showcase</span><h2>Build beyond the lesson.</h2><div class="grid g3">${[projects[0],projects[5],projects[11]].map(projectCard).join('')}</div></section>
+    <section class="section"><div class="panel splash pad"><div class="grid g2"><div><span class="eyebrow">Your progress</span><h2>Pick up where you left off.</h2><p>Your dashboard keeps completed lessons, practice results, and project drafts on this device.</p>${btn('View dashboard →','dashboard')}</div><div class="list">${courses.slice(0,3).map(c=>`<div class="panel pad"><div class="row"><strong>${c.title}</strong><span class="small">${courseDone(c)} / ${c.lessons.length}</span></div>${progress(courseDone(c),c.lessons.length,c.title)}</div>`).join('')}</div></div></div></section>
+    <section class="section"><span class="eyebrow">FAQ</span><h2>Before you start.</h2>
+      <details><summary>Do I need any coding experience?</summary><p>Choose “I’m a beginner” and Codexa will explain what code is, show how to run it, and help you fix your first error. If you already know the basics, you can go straight to any course.</p></details>
+      <details><summary>Which languages run in the browser?</summary><p>JavaScript, HTML and CSS run in the workspace. Python, Java, Git and SQLite lessons have local setup and exercises.</p></details>
+      <details><summary>Where is my work saved?</summary><p>Progress and drafts stay in this browser. Export a backup from Progress when you want to move to a different browser.</p></details>
+      <details><summary>Is Codexa free?</summary><p>Yes. Every lesson, challenge, and project is free. You can start without an account.</p></details>
+    </section>
+    <section class="section center"><h2>Write your first line today.</h2><p>Pick your starting point and get straight to learning.</p><div class="actions">${btn('Start Learning Free ↗',startRoute(),true)}</div></section>
+  </div>`;
+}
+
+function dashboard() {
+  const enrolled = courses.filter(c=>state.enrolled.includes(c.id));
+  const suggestedCourse=courses.find(c=>c.id===({some:'html',intermediate:'js'})[state.experience]) || courses[0];
+  const recommendation = [...enrolled.flatMap(c=>c.lessons),...suggestedCourse.lessons,...lessons].find(l=>!state.done.includes(l.id));
+  const next = lessonMap[state.last] || recommendation || lessons[0];
+  return page(state.legacy?.name ? 'Welcome, '+state.legacy.name : 'Learning dashboard','Resume a lesson, review recent work, or open a project.',
+    `<div class="grid g3">${stat(state.done.length,'lessons completed')}${stat(Object.keys(state.projects).length,'saved projects')}${stat(badgeList().length,'achievements')}</div>
+    <div class="grid g2 gap"><div class="panel pad splash"><span class="eyebrow">Continue learning</span><h2>${esc(next.title)}</h2><p>${esc(next.course.title)}</p>${btn('Open lesson →','lesson/'+next.id,true)}</div>
+    <div class="panel pad"><h3>Recommended next</h3>${recommendation?lessonRow(recommendation):'<p>All current lessons are complete.</p>'}<h3 class="gap">Achievements</h3><p>${badgeList().join(' · ')||'Finish a lesson to earn your first achievement.'}</p></div></div>
+    <div class="grid g2 gap"><div class="panel pad"><h3>Enrolled courses</h3>${enrolled.length?enrolled.map(c=>`<p>${btn(c.title,'course/'+c.id)} ${courseDone(c)} / ${c.lessons.length}</p>`).join(''):`<p>Open any lesson to enroll in its course.</p>${btn('Explore courses','courses')}`}</div>
+    <div class="panel pad"><h3>Recent activity</h3>${state.activity.length?`<ul>${state.activity.slice(0,6).map(a=>`<li>${esc(a.text)}</li>`).join('')}</ul>`:'<p>Completed lessons and saved projects will appear here.</p>'}</div></div>
+    <div class="gap"><h3>Saved projects</h3><div class="grid g3">${projects.filter(p=>state.projects[p.id]).map(projectCard).join('')||'<p>Start a guided project and save your draft here.</p>'}</div></div>
+    <div class="actions gap">${btn('Change experience level','start')}${btn('Browse all courses','courses')}</div>`);
+}
+
+function courseExplorer() {
+  return page('Course explorer','Find a track by language, difficulty, time, objective or prerequisite.',
+    `<div class="filters"><label>Objective or prerequisite<input type="search" id="course-search" placeholder="e.g. accessibility or HTML"></label>
+    <label>Language<select id="language"><option value="">All languages</option>${[...new Set(courses.map(c=>c.lang))].map(l=>`<option>${l}</option>`).join('')}</select></label>
+    <label>Difficulty<select id="level"><option value="">All levels</option><option>Beginner</option><option>Intermediate</option></select></label>
+    <label>Duration<select id="duration"><option value="999">Any duration</option><option value="60">Up to 1 hour</option><option value="90">Up to 90 minutes</option></select></label></div><div id="course-results" class="grid g3"></div>`);
+}
+function updateCourses() {
+  const q = $('#course-search').value.trim().toLowerCase();
+  const lang = $('#language').value;
+  const level = $('#level').value;
+  const max = Number($('#duration').value);
+  $('#course-results').innerHTML = courses.filter(c=>(!lang||c.lang===lang)&&(!level||c.level===level)&&c.lessons.length*12<=max&&
+    [c.title,c.summary,c.pre,...c.lessons.map(l=>l.objective)].join(' ').toLowerCase().includes(q)).map(courseCard).join('') || '<p>No tracks match these filters.</p>';
+}
+function coursePage(c) {
+  const count=courseDone(c);
+  return page(c.title,c.summary,`<div class="panel pad"><div class="row"><div><strong>${count} of ${c.lessons.length} lessons complete</strong><p class="small">Prerequisites · ${esc(c.pre)} · Approximately ${c.lessons.length*12} minutes</p></div>
+    ${btn(count?'Continue':'Start course','lesson/'+(c.lessons.find(l=>!state.done.includes(l.id))||c.lessons[0]).id,true)}</div>${progress(count,c.lessons.length,c.title)}
+    ${count===c.lessons.length?'<button class="btn gap" id="certificate">Download completion certificate</button>':''}</div>
+    ${c.modules.map(m=>`<section class="gap"><h3>${esc(m.title)}</h3><div class="list">${m.lessons.map(lessonRow).join('')}</div></section>`).join('')}`);
+}
+function highlighter(code) {
+  const tokens = /("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|`(?:\\.|[^`\\])*`|\/\/[^\n]*|#[ \t][^\n]*|<!--[\s\S]*?-->|\b(?:const|let|function|return|async|await|if|else|for|class|new|try|catch|true|false|null|def|print|public|static|void|int|SELECT|FROM|WHERE|ORDER|BY|CREATE|TABLE|import|while)\b|\b\d+(?:\.\d+)?\b|<\/?[\w-]+)/g;
+  let result = '', offset = 0;
+  for (const match of code.matchAll(tokens)) {
+    const t = match[0];
+    const type = /^\/\/|^#|^<!--/.test(t)?'comment':/^["'`]/.test(t)?'string':/^\d/.test(t)?'number':'key';
+    result += esc(code.slice(offset,match.index)) + `<span class="token-${type}">${esc(t)}</span>`;
+    offset = match.index+t.length;
+  }
+  return result+esc(code.slice(offset))+'\n';
+}
+function editor(node, initial, label) {
+  node.innerHTML = '<div class="editor"><pre aria-hidden="true"></pre><textarea spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off"></textarea></div>';
+  const field = $('textarea',node), color = $('pre',node);
+  field.setAttribute('aria-label',label);
+  function sync() { color.scrollTop=field.scrollTop; color.scrollLeft=field.scrollLeft; }
+  function update() { color.innerHTML=highlighter(field.value); sync(); }
+  field.addEventListener('input',update);
+  field.addEventListener('scroll',sync);
+  return {get value(){return field.value;}, set value(value){field.value=value;update();}, focus(){field.focus();}, init(){this.value=initial;return this;}}.init();
+}
+const scriptTag = source => '<script>'+source+'<'+'/script>';
+const csp = (network=false, worker=false) => `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; connect-src ${network?'https://api.open-meteo.com':"'none'"}; worker-src ${worker?'blob:':"'none'"}">`;
+const opaque = () => {
+  const frame=document.createElement('iframe');
+  frame.setAttribute('sandbox','allow-scripts');
+  return frame;
+};
+const workerHead = `
+const reply = self.postMessage.bind(self);
+reply({started:true});
+let lines = [];
+const show = v => typeof v === 'string' ? v : (JSON.stringify(v) ?? String(v));
+const console = Object.fromEntries(['log','info','warn','error'].map(key => [key,(...v)=> {
+  if (lines.length < 100) lines.push(v.map(show).join(' ').slice(0,1000));
+}]));
+(async () => {`;
+function runWorker(code, tail='return null;') {
+  return new Promise(resolve=>{
+    const frame=opaque();
+    frame.hidden=true;
+    const token=globalThis.crypto?.randomUUID?.() || Math.random().toString(36);
+    const body = workerHead+'\n'+code+'\n'+tail+`
+    })().then(result=>reply({lines,result}),error=>reply({lines,error:error?.message || String(error)}));`;
+    const encoded = JSON.stringify(body).replaceAll('<','\\u003c');
+    const source = `
+      const token = ${JSON.stringify(token)};
+      const url = URL.createObjectURL(new Blob([${encoded}],{type:'text/javascript'}));
+      const send = value => { parent.postMessage({token,value},'*'); worker.terminate(); URL.revokeObjectURL(url); };
+      let worker;
+      try {
+        worker = new Worker(url);
+        worker.onmessage = event => {
+          if (event.data?.started===true) parent.postMessage({token,started:true},'*');
+          else send(event.data);
+        };
+        worker.onerror = event => { event.preventDefault(); send({error:event.message || 'Worker could not execute this code.'}); };
+      } catch (error) { parent.postMessage({token,value:{error:error.message}},'*'); URL.revokeObjectURL(url); }
+    `;
+    function end(value) { clearTimeout(timer); window.removeEventListener('message',receive); frame.remove(); resolve(value); }
+    function receive(event) {
+      if (event.source===frame.contentWindow && event.data?.token===token) {
+        if (event.data.started===true) {
+          clearTimeout(timer);
+          timer=setTimeout(()=>end({error:'Execution timed out. Check for an endless loop or an unresolved promise.'}),2500);
+          return;
+        }
+        const v=event.data.value;
+        end(v && typeof v==='object' ? v : {error:'Invalid execution response.'});
+      }
+    }
+    let timer=setTimeout(()=>end({error:'Execution timed out while starting the browser worker.'}),6500);
+    window.addEventListener('message',receive);
+    frame.srcdoc='<!doctype html>'+csp(false,true)+scriptTag(source);
+    document.body.append(frame);
+  });
+}
+function formatOutput(v) {
+  const lines=Array.isArray(v.lines)?v.lines.join('\n'):'';
+  return v.error ? [lines,'Error: '+v.error].filter(Boolean).join('\n') : lines || 'Finished with no console output.';
+}
+const cssDemo = '<main class="layout"><div class="notice">Lake trail</div><div class="notice">Ridge trail</div><div class="notice">Hill trail</div></main>';
+let cleanupPreview = ()=>{};
+function previewWeb(item,code,host,output) {
+  cleanupPreview();
+  const frame=opaque();
+  frame.className='preview';
+  frame.title='Sandboxed code preview';
+  const relay = scriptTag(`
+    const report = (...parts) => parent.postMessage({kind:'codexa-console',text:parts.map(p=>{
+      try{return typeof p==='string'?p:(JSON.stringify(p) ?? String(p));}catch{return '[unserializable]';}
+    }).join(' ')},'*');
+    for(const name of ['log','info','warn','error']) console[name]=(...parts)=>report(...parts);
+    addEventListener('error',e=>report('Error:',e.message));
+    addEventListener('unhandledrejection',e=>report('Error:',e.reason?.message || e.reason));
+    addEventListener('click',e=>{
+      const link=e.target.closest?.('a[href^="#"]');
+      const target=link && document.getElementById(link.getAttribute('href').slice(1));
+      if(target) { e.preventDefault(); target.scrollIntoView(); }
+    });
+  `);
+  const style = '<style>body{font:16px/1.55 system-ui,sans-serif;margin:18px;color:#17142e}button,input,textarea{font:inherit}output{display:block}pre{white-space:pre-wrap}</style>';
+  const content=item.lang==='CSS' ? '<style>'+code.replace(/<\s*\/\s*style/gi,'')+'</style>'+cssDemo : code;
+  frame.srcdoc='<!doctype html>'+csp(item.network)+relay+style+content;
+  let count=0;
+  output.textContent='Preview running.';
+  function receive(event) {
+    if (event.source!==frame.contentWindow || event.data?.kind!=='codexa-console' || typeof event.data.text!=='string' || count>=100) return;
+    output.textContent=(count++ ? output.textContent+'\n' : '')+event.data.text.slice(0,1000);
+  }
+  window.addEventListener('message',receive);
+  cleanupPreview=()=>{window.removeEventListener('message',receive);frame.remove();};
+  host.replaceChildren(frame);
+}
+function cssCheck(item,code) {
+  const sheet = new CSSStyleSheet();
+  const expected = new CSSStyleSheet();
+  sheet.replaceSync(code);
+  expected.replaceSync(item.solution);
+  function rules(list,contexts=[]) {
+    return [...list].flatMap(r=>r.selectorText ? [{r,contexts}] : r.cssRules ? rules(r.cssRules,[...contexts,r.conditionText||'']) : []);
+  }
+  const supplied=rules(sheet.cssRules);
+  return rules(expected.cssRules).flatMap(({r,contexts})=>[...r.style].map(property=>{
+    const match=supplied.some(candidate=>candidate.r.selectorText===r.selectorText && candidate.contexts.join()===contexts.join() && candidate.r.style.getPropertyValue(property)===r.style.getPropertyValue(property));
+    return {ok:match,text:`${r.selectorText} · ${property}: ${r.style.getPropertyValue(property)}${contexts.length?' within '+contexts.join(', '):''}`};
+  }));
+}
+function checkWebInteraction(item,code) {
+  const test=item.id==='js-dom'
+    ? {button:'#show',target:'#status',verify:'target.textContent.trim() === "Ready"',text:'Activating Show updates the status to Ready'}
+    : {button:'main button',target:'main p',verify:'!target.hidden',text:'Activating the button reveals the paragraph'};
+  return new Promise(resolve=>{
+    const frame=opaque();
+    frame.hidden=true;
+    const token=globalThis.crypto?.randomUUID?.() || Math.random().toString(36);
+    function finish(ok) {
+      clearTimeout(timer);
+      window.removeEventListener('message',receive);
+      frame.remove();
+      resolve({ok,text:test.text});
+    }
+    function receive(event) {
+      if(event.source===frame.contentWindow && event.data?.token===token) finish(event.data.ok===true);
+    }
+    const timer=setTimeout(()=>finish(false),1500);
+    window.addEventListener('message',receive);
+    const script=`
+      addEventListener('DOMContentLoaded',()=>{
+        const button=document.querySelector(${JSON.stringify(test.button)});
+        const target=document.querySelector(${JSON.stringify(test.target)});
+        button?.click();
+        setTimeout(()=>parent.postMessage({token:${JSON.stringify(token)},ok:!!button&&!!target&&(${test.verify})},'*'),80);
+      });
+    `;
+    frame.srcdoc='<!doctype html>'+csp()+scriptTag(script)+code;
+    document.body.append(frame);
+  });
+}
+async function validateCode(item,code) {
+  if (item.lang==='HTML') {
+    const template=document.createElement('template');
+    template.innerHTML=code;
+    const checks=item.test.split(';').map(test=>{
+      const i=test.lastIndexOf('=');
+      const hasText=i>=0 && i>test.lastIndexOf(']');
+      const selector=hasText?test.slice(0,i):test;
+      const node=template.content.querySelector(selector);
+      return {ok:!!node&&(!hasText||node.textContent.trim()===test.slice(i+1)),text:hasText?selector+' reads '+test.slice(i+1):selector+' exists'};
+    });
+    if ((item.id==='js-dom'||item.id==='web-dev') && checks.every(c=>c.ok)) checks.push(await checkWebInteraction(item,code));
+    return checks;
+  }
+  if (item.lang==='CSS') return cssCheck(item,code);
+  if (item.test==='@fetch') {
+    const tail=`
+      const payload={ok:true};
+      const result=await read(async url=>({ok:url==='/data',json:async()=>payload}));
+      let rejected=false;
+      try {await read(async()=>({ok:false}));} catch(error){rejected=error.message==='Request failed';}
+      return [result===payload,rejected];
+    `;
+    const v=await runWorker(code,tail);
+    return v.error?[{ok:false,text:v.error}]:[
+      {ok:v.result?.[0]===true,text:'Reads /data and returns parsed JSON'},
+      {ok:v.result?.[1]===true,text:'Rejects an HTTP error with the expected message'}
+    ];
+  }
+  const match=/^@(\w+):(.+)$/.exec(item.test);
+  if (match) {
+    const [,name,json]=match;
+    const cases=JSON.parse(json);
+    const tail=`return await Promise.all(${JSON.stringify(cases)}.map(async ([args,expected]) =>
+      JSON.stringify(await ${name}(...args))===JSON.stringify(expected)
+    ));`;
+    const v=await runWorker(code,tail);
+    return v.error?[{ok:false,text:v.error}]:cases.map(([args,expected],i)=>({ok:v.result?.[i]===true,text:name+'('+args.map(arg=>JSON.stringify(arg)).join(', ')+') → '+JSON.stringify(expected)}));
+  }
+  const v=await runWorker(code);
+  return [{ok:!v.error&&v.lines?.join('\n').trim()===item.test.trim(),text:v.error||'Expected console: '+item.test.replaceAll('\n',' / ')}];
+}
+const setup = {
+  Python:['lesson.py','python lesson.py','Install Python 3. On Windows, py lesson.py is also available with the Python launcher.'],
+  Java:['Main.java','java Main.java','Install a current JDK and use the Java launcher in the directory where you saved Main.java.'],
+  SQL:['lesson.sql','sqlite3 :memory: ".read lesson.sql"','Install the SQLite command-line shell. The in-memory database starts fresh each time.'],
+  Shell:['git-steps.txt','git --version','Install Git. Create a disposable directory and a README.md, configure your Git identity if needed, and enter each command from the exercise.']
+};
+const fileNames={JS:'program.js',HTML:'project.html',CSS:'style.css',Python:'lesson.py',Java:'Main.java',SQL:'lesson.sql',Shell:'git-steps.txt'};
+const workspaceEditor = item => `<div class="panel code-pane" id="code-pane">
+  <div class="window"><span class="dot"></span>${item.lang} · ${runnable(item)?'Browser workspace':'Local-runtime workspace'}</div>
+  <div id="workspace-editor"></div><div class="editor-tools">
+    ${runnable(item)?'<button class="btn primary" id="run">▶ Run</button>':''}
+    <button class="btn" id="save-code">Save</button><button class="btn" id="reset-code">Reset</button>
+    <button class="btn" id="copy-code">Copy</button><button class="btn" id="download-code">Download</button>
+    ${runnable(item)&&item.lang!=='JS'&&!item.network?'<label class="small live"><input type="checkbox" id="live-preview"> Live preview</label>':''}
+  </div><div class="console"><span class="small">${runnable(item)?'Console':'Run on your device'}</span>
+  <pre id="editor-output" class="output" role="status">${runnable(item)?'Run your code to see what happens.':esc(setup[item.lang][1])}</pre>
+  ${runnable(item)?'':`<p class="small">${esc(setup[item.lang][2])}</p>`}</div><div id="preview-host"></div>
+  </div>`;
+function wireEditor(item,mode) {
+  const project=mode==='project', challenge=mode==='challenge';
+  const draftKey=mode+'/'+item.id;
+  const signature=/^@([a-zA-Z]+):/.exec(item.test || '')?.[1];
+  const functionHeader=signature && item.solution.match(/^function [^(]+\([^)]*\) \{/);
+  const starter=item.id==='zero-fix'?'console.log("Ready!);':project?item.starter:challenge?
+    (functionHeader ? functionHeader[0]+'\n  // Return the result here.\n}' :
+      item.lang==='JS'?'// '+item.task:item.lang==='CSS'?'/* '+item.task+' */':'<!-- '+item.task+' -->'):item.example;
+  const draft=project?state.projects[item.id]?.code:state.drafts[draftKey];
+  const field=editor($('#workspace-editor'),draft??starter,`${item.lang} code editor`);
+  const output=$('#editor-output');
+  const run=$('#run');
+  if(run) run.onclick=async()=>{
+    if(item.lang!=='JS') {previewWeb(item,field.value,$('#preview-host'),output);return;}
+    run.disabled=true;
+    output.textContent='Running…';
+    try { output.textContent=formatOutput(await runWorker(field.value)); } finally { run.disabled=false; }
+  };
+  const live=$('#live-preview');
+  if(live) {
+    let refresh;
+    $('#workspace-editor textarea').addEventListener('input',()=>{
+      clearTimeout(refresh);
+      if(live.checked) refresh=setTimeout(()=>{if(live.isConnected && live.checked) run.click();},450);
+    });
+    live.addEventListener('change',()=>{if(live.checked) run.click();});
+  }
+  $('#save-code').onclick=()=>{
+    if(project) {state.projects[item.id]={code:field.value,savedAt:new Date().toISOString()};activity('Saved '+item.title);}
+    else {state.drafts[draftKey]=field.value;persist();}
+    notify('Draft saved.');
+  };
+  $('#reset-code').onclick=()=>{if(confirm('Reset the editor to its starter code?')) {field.value=starter;field.focus();}};
+  $('#copy-code').onclick=async()=>{
+    try {await navigator.clipboard.writeText(field.value);notify('Copied to clipboard.');}
+    catch {const textarea=$('#workspace-editor textarea');textarea.focus();textarea.select();notify('Code selected. Use your device’s Copy command.');}
+  };
+  $('#download-code').onclick=()=>download(project?item.id+'.html':fileNames[item.lang],field.value);
+  const check=$('#check-code');
+  if(check) check.onclick=async()=>{
+    if(!field.value.trim()) {$('#check-result').textContent='Enter code before checking.';return;}
+    check.disabled=true;
+    const result=$('#check-result');
+    result.textContent='Checking…';
+    try {
+      const checks=await validateCode(item,field.value);
+      const passed=checks.length>0&&checks.every(c=>c.ok);
+      const previous=state.attempts[item.id];
+      state.attempts[item.id]={count:(previous?.count||0)+1,passed:passed||!!previous?.passed};
+      activity((passed?'Passed ': 'Attempted ')+item.title+' challenge');
+      result.innerHTML=checks.map(c=>`<div class="${c.ok?'good':'bad'}">${c.ok?'✓':'×'} ${esc(c.text)}</div>`).join('');
+      if(!challenge) updateCompletion(item);
+    } catch(error) { result.textContent='Check could not run: '+error.message; }
+    finally { check.disabled=false; }
+  };
+  $('#use-solution')?.addEventListener('click',()=>{if(confirm('Replace the current editor text with the reference solution?')) {field.value=item.solution;notify('Reference solution loaded.');}});
+}
+function paneButtons() { return '<div class="mobile-tabs actions" role="group" aria-label="Workspace view"><button class="btn" data-pane-button="read" aria-controls="read-pane" aria-pressed="true">Instructions</button><button class="btn" data-pane-button="code" aria-controls="code-pane" aria-pressed="false">Code & preview</button></div>'; }
+function wirePanes() {
+  for(const b of $$('[data-pane-button]')) b.onclick=()=>{
+    $('.workspace').dataset.pane=b.dataset.paneButton;
+    for(const other of $$('[data-pane-button]')) other.setAttribute('aria-pressed',other===b?'true':'false');
+  };
+}
+function quizMarkup(item) {
+  const order = item.id.split('').reduce((sum,c)=>sum+c.charCodeAt(0),0)%item.options.length;
+  const items=item.options.map((text,i)=>({text,i}));
+  return `<form id="quiz" class="quiz"><fieldset><legend>${esc(item.question)}</legend>
+  ${items.slice(order).concat(items.slice(0,order)).map(({text,i})=>`<label><input type="radio" name="answer" value="${i}" required> ${esc(text)}</label>`).join('')}
+  </fieldset><div class="actions gap"><button class="btn" type="submit">Check answer</button><button class="btn quiet" type="reset">Retry</button></div>
+  <p id="quiz-result" role="status" class="status"></p></form>`;
+}
+function wireQuiz(item,recordId=item.id,correct=0,explanation=item.explanation) {
+  const quiz=$('#quiz');
+  quiz.onsubmit=e=>{
+    e.preventDefault();
+    const answer=Number(new FormData(quiz).get('answer'));
+    const passed=answer===correct;
+    const prev=state.answers[recordId];
+    state.answers[recordId]={tries:(prev?.tries||0)+1,correct:(prev?.correct||0)+Number(passed)};
+    persist();
+    const feedback=$('#quiz-result');
+    feedback.className='status '+(passed?'good':'bad');
+    feedback.textContent=`${passed?'Correct. 1 / 1.':'Incorrect. 0 / 1. Answer: '+item.options[correct]+'.'} ${explanation}${passed?'':' Review '+item.title+' and try again.'}`;
+    if ($('#complete-lesson')) updateCompletion(item);
+  };
+  quiz.onreset=()=>{$('#quiz-result').textContent='';};
+}
+function completionRequirements(item) {
+  const missing=[];
+  if(guidedCount(item)) {
+    if((state.guided[item.id]||0)<guidedCount(item)) missing.push('finish the walkthrough');
+    if(!state.attempts[item.id]?.passed) missing.push('pass the coding exercise');
+  }
+  if(!state.answers[item.id]?.correct) missing.push('answer the knowledge check correctly');
+  return missing;
+}
+function updateCompletion(item) {
+  const complete=$('#complete-lesson');
+  if(!complete || state.done.includes(item.id)) return;
+  const missing=completionRequirements(item);
+  complete.disabled=missing.length>0;
+  $('#completion-note').textContent=missing.length?'To finish: '+missing.join(', ')+'.':'Ready to mark complete.';
+}
+function wireGuide(item) {
+  const region=$('#guided-lesson');
+  if(!region) return;
+  const steps=guidedSteps[item.id];
+  function draw(focus=false) {
+    const index=state.guided[item.id]||0;
+    if(index>=steps.length) {
+      region.innerHTML='<div class="guide-step"><div class="guide-header"><span class="eyebrow">Walkthrough complete</span></div><h2>Try it yourself</h2><p>Edit the code, run it, then check the practice exercise below the editor.</p><button class="btn primary" id="guide-editor">Open code editor</button></div>';
+      const open=$('#guide-editor');
+      open.onclick=()=>{
+        $('[data-pane-button="code"]').click();
+        $('#workspace-editor textarea').focus();
+      };
+      if(focus) open.focus();
+      return;
+    }
+    const [title,body,question,correct,wrong,reason]=steps[index];
+    const answers=index%2 ? [wrong,correct] : [correct,wrong];
+    region.innerHTML=`<div class="guide-step"><div class="guide-header"><span class="eyebrow">Guided lesson</span><span class="small">Step ${index+1} of ${steps.length}</span></div><h2 tabindex="-1">${esc(title)}</h2><p>${esc(body)}</p>
+      <strong>${esc(question)}</strong><div class="guide-options">${answers.map(answer=>`<button class="btn" data-guide-answer="${answer===correct}">${esc(answer)}</button>`).join('')}</div>
+      <p class="guide-feedback" role="status"></p><button class="btn primary" id="guide-next" hidden>Continue →</button></div>`;
+    if(focus) $('h2',region).focus();
+    for(const button of $$('[data-guide-answer]',region)) button.onclick=()=>{
+      const feedback=$('.guide-feedback',region);
+      const passed=button.dataset.guideAnswer==='true';
+      feedback.textContent=(passed?'Correct. ':'Try again. ')+reason;
+      feedback.classList.toggle('good',passed);
+      feedback.classList.toggle('bad',!passed);
+      if(passed) {
+        $('#guide-next').hidden=false;
+        for(const choice of $$('[data-guide-answer]',region)) choice.disabled=true;
+        $('#guide-next').focus();
+      }
+    };
+    $('#guide-next').onclick=()=>{
+      state.guided[item.id]=index+1;
+      persist();
+      draw(true);
+      updateCompletion(item);
+    };
+  }
+  draw();
+}
+function lessonPage(item,challenge) {
+  const completed=state.done.includes(item.id);
+  return page(challenge?'Challenge · '+item.title:item.title,`${item.course.title} · ${item.course.level} · ${runnable(item)?'Runs in browser':'Local runtime required'}`,
+  `<div class="actions" style="margin-bottom:13px">${btn('← '+(challenge?'Practice':item.course.title),challenge?'practice':'course/'+item.course.id)}</div>
+  ${!challenge&&guidedCount(item)?'<section class="panel pad guide" id="guided-lesson" aria-label="Guided walkthrough"></section>':''}
+  ${paneButtons()}<div class="workspace" data-pane="read"><article class="panel pad read-pane" id="read-pane">
+    <span class="eyebrow">${challenge?'Expected behavior':'Learning objective'}</span><h2>${esc(challenge?item.task:item.objective)}</h2>
+    <p>${esc(item.explanation)}</p><h3>Worked example</h3><pre class="example"><code>${esc(item.example)}</code></pre>
+    <h3>Expected example output</h3><pre class="example">${esc(item.expected)}</pre><h3>Common mistake</h3><p>${esc(item.mistake)}</p>
+  </article>${workspaceEditor(item)}</div>
+  <section class="panel pad exercise"><h2>${challenge?'Check your work':'Practice exercise'}</h2><p>${esc(item.task)}</p>
+  ${runnable(item)?'<button class="btn primary" id="check-code">Run exercise checks</button><div id="check-result" role="status" class="status"></div>':
+    `<p class="small">Run your file locally and compare with this target:</p><pre class="example">${esc(item.test)}</pre>`}
+  <details><summary>Hint</summary><p>${esc(item.hint)}</p></details>
+  <details><summary>Reference solution</summary><pre class="example"><code>${esc(item.solution)}</code></pre><p>${esc(item.hint)} ${esc(item.mistake)}</p><button class="btn" id="use-solution">Load solution in editor</button></details>
+  ${challenge?'':`<h3>Knowledge check</h3>${quizMarkup(item)}<div class="actions gap"><button class="btn primary" id="complete-lesson" ${completed||!completionRequirements(item).length?'':'disabled'}>${completed?'✓ Completed':'Mark lesson complete'}</button>${completed?nextLink(item):'<span id="next-lesson"></span>'}</div><p class="small" id="completion-note">${completed?'Saved to your progress.':''}</p>`}</section>`);
+}
+function nextLink(item) {
+  const index=item.course.lessons.indexOf(item);
+  const next=item.course.lessons[index+1];
+  if(next) return btn('Next lesson →','lesson/'+next.id);
+  const nextCourse=courses[courses.indexOf(item.course)+1];
+  return btn('Course overview','course/'+item.course.id)+(nextCourse?btn('Next track: '+nextCourse.title+' →','course/'+nextCourse.id):'');
+}
+function projectPage(item) {
+  return page(item.title,item.level+' · Guided project',`<div class="actions" style="margin-bottom:13px">${btn('← Projects','projects')}</div>
+    ${paneButtons()}<div class="workspace" data-pane="read"><article class="panel pad read-pane" id="read-pane">
+    <span class="eyebrow">Learning objective</span><h2>${esc(item.objective)}</h2><p>Prerequisite · <a href="#lesson/${item.pre}">${esc(lessonMap[item.pre].title)}</a></p>
+    <h3>Milestones</h3><ol><li>Run the starter and inspect its markup.</li><li>${esc(item.steps)}</li><li>Run the testing checklist, then save your draft.</li></ol>
+    <h3>Expected behavior & testing checklist</h3><ul><li>${esc(item.expected)}</li><li>Try the project using keyboard controls.</li><li>Check the console for errors and reload your saved draft.</li></ul>
+    ${item.network?'<p>This preview can request data from Open-Meteo. The rest of the academy works offline.</p>':''}
+    <details><summary>Reference solution</summary><pre class="example"><code>${esc(item.solution)}</code></pre><button class="btn" id="use-solution">Load solution in editor</button></details></article>${workspaceEditor(item)}</div>`);
+}
+const assessments = [
+  {id:'output',title:'Predict the output',kind:'Output prediction',lesson:'loops',question:'What appears on the console?',code:'let n = 1;\nfor (let i = 0; i < 3; i++) n *= 2;\nconsole.log(n);',options:['2','6','8','16'],answer:2,reason:'There are three passes. The successive values of n are 2, 4 and 8.'},
+  {id:'debugging',title:'Find the bug',kind:'Debugging',lesson:'decisions',question:'Why is this condition wrong?',code:'let tickets = 3;\nif (tickets = 0) console.log("Full");',options:['It assigns 0 instead of comparing.','console.log can only print numbers.','JavaScript requires a switch.'],answer:0,reason:'A single equals sign assigns. Use tickets === 0 for a strict comparison.'},
+  {id:'blank',title:'Complete the expression',kind:'Fill in the code',lesson:'api-json',question:'Which expression belongs in the blank?',code:'const text = ___({name: "Lake"});\nconsole.log(typeof text); // string',options:['JSON.parse','JSON.stringify','Object.keys'],answer:1,reason:'JSON.stringify converts a JavaScript object to JSON text.'},
+  {id:'scope',title:'Function scope',kind:'True or false',lesson:'functions',question:'A variable declared with const inside a function is directly accessible from outside that function.',options:['True','False'],answer:1,reason:'A const binding has block scope. Return the value to make it available to the caller.'},
+  {id:'landmarks',title:'Page landmarks',kind:'Multiple choice',lesson:'html-profile',question:'Which element groups the primary navigation links?',options:['aside','nav','figure'],answer:1,reason:'nav marks a major group of navigation links and exposes a navigation landmark.'},
+  {id:'sql-filter',title:'Filtering rows',kind:'Conceptual',lesson:'sql',question:'Which query returns trails under 5 km, shortest first?',options:['SELECT name FROM trails WHERE km < 5 ORDER BY km;','SELECT name FROM trails ORDER BY km DESC;','SELECT name FROM trails WHERE km > 5;'],answer:0,reason:'WHERE selects the qualifying rows. ORDER BY km defaults to ascending order.'}
+];
+function practice() {
+  const day = new Date();
+  const pool = lessons.filter(l=>l.lang==='JS');
+  const daily = pool[(day.getFullYear()*366+day.getMonth()*31+day.getDate())%pool.length];
+  return page('Practice center','Build fluency with tested exercises, short assessments, and guided mini-projects.',
+  `<div class="panel pad splash"><div class="row"><div><span class="eyebrow">Start here</span><h3>Calculate a receipt total</h3><p>Use three inputs and check your function against three cases.</p></div>${btn('Open challenge →','challenge/debug',true)}</div></div>
+  <section class="gap"><h2>Daily practice</h2><div class="grid g3">${card(daily.title,'Daily drill',daily.task,btn('Open daily drill →','challenge/'+daily.id))}</div></section>
+  <section class="gap"><h2>Coding challenges</h2><p>${liveCount} browser-checked exercises, including output, function, markup and stylesheet checks.</p>
+    <div class="grid g3">${lessons.filter(runnable).map(l=>card(l.title,l.lang+' · '+l.course.level,l.task,btn(state.attempts[l.id]?.passed?'Retry challenge →':'Open challenge →','challenge/'+l.id))).join('')}</div></section>
+  <section class="gap"><h2>Assessments</h2><div class="grid g3">${assessments.map(a=>card(a.title,a.kind,a.question,btn('Take assessment →','assessment/'+a.id))).join('')}</div></section>
+  <section class="gap"><h2>Mini-projects</h2><div class="grid g3">${projects.filter(p=>p.level==='Beginner').map(projectCard).join('')}</div></section>`);
+}
+function assessmentPage(a) {
+  const topic=lessonMap[a.lesson];
+  return page(a.title,a.kind,`<div class="panel pad quiz">${a.code?`<pre class="example"><code>${esc(a.code)}</code></pre>`:''}${quizMarkup(a)}
+  <div class="actions gap">${btn('Review '+esc(topic.title),'lesson/'+topic.id)}${btn('← Practice','practice')}</div></div>`);
+}
+function projectExplorer() {
+  return page('Projects','Open a guided build, save your code, and download it to keep.',
+    ['Beginner','Intermediate','Advanced'].map(level=>`<section class="gap"><h2>${level}</h2><div class="grid g3">${projects.filter(p=>p.level===level).map(projectCard).join('')}</div></section>`).join(''));
+}
+function streak() {
+  const day=new Date();
+  const stamp=()=>[day.getFullYear(),day.getMonth()+1,day.getDate()].map(n=>String(n).padStart(2,'0')).join('-');
+  if (!state.days.includes(stamp())) day.setDate(day.getDate()-1);
+  let count=0;
+  while (state.days.includes(stamp())) {count++;day.setDate(day.getDate()-1);}
+  return count;
+}
+function progressPage() {
+  const scores=Object.values(state.answers);
+  const total=scores.reduce((sum,a)=>sum+a.tries,0);
+  const correct=scores.reduce((sum,a)=>sum+a.correct,0);
+  const passed=Object.values(state.attempts).filter(a=>a.passed).length;
+  const attempts=Object.values(state.attempts).reduce((sum,a)=>sum+a.count,0);
+  const skills=lessons.filter(l=>state.done.includes(l.id)).map(l=>l.objective);
+  return page('Learning progress','See what you have completed and manage the data saved on this device.',
+  `<div class="grid g3">${stat(state.done.length+'/'+lessons.length,'lessons completed')}${stat(passed+'/'+liveCount,'coding challenges passed')}${stat(streak(),'day learning streak')}</div>
+  <div class="grid g2 gap"><section class="panel pad"><h3>Course completion</h3>${courses.map(c=>`<div class="gap"><div class="row"><a href="#course/${c.id}">${esc(c.title)}</a><span class="small">${courseDone(c)} / ${c.lessons.length}</span></div>${progress(courseDone(c),c.lessons.length,c.title)}</div>`).join('')}</section>
+  <section class="panel pad"><h3>Quiz & challenge performance</h3><p>${total?correct+' of '+total+' submitted answers correct ('+Math.round(correct/total*100)+'%).':'Submit an assessment or a lesson knowledge check to see your score.'}</p><p>${attempts} coding challenge attempts.</p>
+  <h3>Skills learned</h3>${skills.length?`<ul>${skills.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:'<p>Complete a lesson to add its learning objective here.</p>'}
+  <h3>Milestones</h3><p>${badgeList().join(' · ')||'Your achievements will appear here.'}</p></section></div>
+  <section class="panel pad gap"><h3>Project history</h3>${Object.keys(state.projects).length?`<ul>${projects.filter(p=>state.projects[p.id]).map(p=>`<li><a href="#project/${p.id}">${esc(p.title)}</a> · ${esc(new Date(state.projects[p.id].savedAt).toLocaleDateString())}</li>`).join('')}</ul>`:'<p>Saved project drafts will appear here.</p>'}</section>
+  <section class="panel pad gap"><h3>Learning data</h3><p>Progress and drafts are stored on this browser. Save a backup to move devices.</p>
+  ${state.legacy?`<p>Original BG Code Tutor record · ${state.legacy.completed} completed lessons and ${state.legacy.xp} XP. Your Codexa curriculum progress starts independently.</p>`:''}
+  <div class="actions"><button class="btn" id="export">Export data</button><button class="btn" id="import">Import backup</button><input hidden type="file" id="backup-file" accept=".json,application/json" aria-label="Choose learning backup"><button class="btn" id="clear">Clear Codexa data</button></div></section>`);
+}
+function parseBackup(value) {
+  if (!value || typeof value!=='object') throw Error('Choose a Codexa or BG Code Tutor backup.');
+  if(value.version!==1) {
+    if(typeof value.prog!=='object'||value.prog===null||Array.isArray(value.prog)) throw Error('Unrecognized backup format.');
+    return {...state,legacy:{name:String(value.profile?.name||'').slice(0,80),xp:Number(value.xp)||0,completed:Object.values(value.prog).flat().length}};
+  }
+  const next=blank();
+  next.theme=value.theme==='light'?'light':'dark';
+  next.experience=isExperience(value.experience)?value.experience:null;
+  for(const [field,ids] of [['enrolled',courses.map(c=>c.id)],['done',Object.keys(lessonMap)]]) {
+    if(!Array.isArray(value[field])) throw Error('The backup is missing '+field+'.');
+    next[field]=[...new Set(value[field].filter(id=>ids.includes(id)))];
+  }
+  for(const l of lessons) {
+    const guided=value.guided?.[l.id];
+    if(Number.isSafeInteger(guided)&&guided>0&&guided<=guidedCount(l)) next.guided[l.id]=guided;
+    for(const kind of ['lesson','challenge']) {
+      const k=kind+'/'+l.id, draft=value.drafts?.[k];
+      if(typeof draft==='string') next.drafts[k]=draft;
+    }
+    const attempt=value.attempts?.[l.id];
+    if(Number.isSafeInteger(attempt?.count)&&attempt.count>=1) next.attempts[l.id]={count:attempt.count,passed:attempt.passed===true};
+  }
+  for(const id of [...Object.keys(lessonMap),...assessments.map(a=>'quiz/'+a.id)]) {
+    const score=value.answers?.[id];
+    if(Number.isSafeInteger(score?.tries)&&Number.isSafeInteger(score?.correct)&&score.correct>=0&&score.tries>=score.correct) next.answers[id]={tries:score.tries,correct:score.correct};
+  }
+  for(const p of projects) {
+    const saved=value.projects?.[p.id];
+    if(typeof saved?.code==='string' && typeof saved.savedAt==='string' && Number.isFinite(Date.parse(saved.savedAt))) next.projects[p.id]={code:saved.code,savedAt:saved.savedAt};
+  }
+  if(typeof value.last==='string'&&Object.hasOwn(lessonMap,value.last)) next.last=value.last;
+  if(Array.isArray(value.activity)) next.activity=value.activity.filter(a=>typeof a?.text==='string'&&typeof a.time==='string').slice(0,30).map(a=>({text:a.text.slice(0,250),time:a.time}));
+  if(Array.isArray(value.days)) next.days=[...new Set(value.days.filter(d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)))];
+  if(value.legacy&&typeof value.legacy==='object') next.legacy={name:String(value.legacy.name||'').slice(0,80),xp:Number(value.legacy.xp)||0,completed:Number(value.legacy.completed)||0};
+  return next;
+}
+function wireProgress() {
+  $('#export').onclick=()=>download('codexa-progress.json',JSON.stringify(state,null,2),'application/json');
+  const file=$('#backup-file');
+  $('#import').onclick=()=>file.click();
+  file.onchange=async()=>{
+    if(!file.files.length) return;
+    try {
+      if(file.files[0].size>5_000_000) throw Error('Backup exceeds 5 MB.');
+      const raw=JSON.parse(await file.files[0].text());
+      const next=parseBackup(raw);
+      if(!confirm(raw.version===1?'Replace the current Codexa progress with this backup?':'Import the original BG Code Tutor summary?')) return;
+      state=next;persist();theme();render();notify('Backup imported.');
+    } catch(error) {notify(error.message);} finally {file.value='';}
+  };
+  $('#clear').onclick=()=>{if(confirm('Clear your Codexa progress, drafts and project history?')){state=blank();persist();theme();render();notify('Codexa data cleared.');}};
+}
+function certificate(c) {
+  const name=(prompt('Name to print on your certificate',state.legacy?.name||'')||'').trim().slice(0,80);
+  if(!name) return;
+  const cv=document.createElement('canvas');
+  cv.width=1000;cv.height=620;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#071a1b';ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.strokeStyle='#72f2d6';ctx.lineWidth=2;ctx.strokeRect(30,30,940,560);
+  ctx.textAlign='center';
+  for(const [text,y,size,color] of [['CODEXA / CERTIFICATE OF COMPLETION',132,23,'#72f2d6'],[name,253,56,'#f0fff9'],['completed the learning track',328,24,'#a9c9c2'],[c.title,414,44,'#72f2d6'],[c.lessons.length+' lessons · '+new Date().toLocaleDateString(),508,22,'#a9c9c2']]) {
+    ctx.fillStyle=color;ctx.font=`600 ${size}px system-ui`;ctx.fillText(text,500,y,880);
+  }
+  const a=document.createElement('a');a.download='Codexa-'+c.id+'-certificate.png';a.href=cv.toDataURL('image/png');a.click();
+}
+function sourcesPage() {
+  return page('Learning references','Explore the documentation behind the courses.',
+  `<section class="panel pad"><h3>Reference material</h3><ul>${sourceLinks.map(([title,url])=>`<li><a href="${url}" target="_blank" rel="noopener noreferrer">${esc(title)}</a></li>`).join('')}</ul></section>`);
+}
+let renderedPath='';
+function render() {
+  const path=location.hash.slice(1)||'home';
+  if(path==='main') {app.focus();return;}
+  const [route,id]=path.split('/');
+  const item=Object.hasOwn(lessonMap,id)?lessonMap[id]:null;
+  const course=courses.find(c=>c.id===id);
+  const project=Object.hasOwn(projectMap,id)?projectMap[id]:null;
+  const assessment=assessments.find(a=>a.id===id);
+  cleanupPreview();cleanupPreview=()=>{};
+  const mainRoute=({course:'courses',lesson:'courses',challenge:'practice',assessment:'practice',project:'projects'})[route]||route;
+  for(const link of $$('.nav a')) {
+    if(link.hash==='#'+mainRoute) link.setAttribute('aria-current','page');
+    else link.removeAttribute('aria-current');
+  }
+  if(route==='home') {
+    app.innerHTML=landing();
+    const demo=editor($('#demo-editor'),'const learner = "you";\nconst message = "Hello, " + learner + "!";\n\nconsole.log(message);','JavaScript preview editor');
+    const run=$('#demo-run'),output=$('#demo-output');
+    run.onclick=async()=>{run.disabled=true;output.textContent='Running…';try{output.textContent=formatOutput(await runWorker(demo.value));}finally{run.disabled=false;}};
+  } else if(route==='start'||(route==='dashboard'&&startRoute()==='start')) {
+    app.innerHTML=experiencePage();
+    for(const choice of $$('[data-experience]')) choice.onclick=()=>{
+      state.experience=choice.dataset.experience;
+      persist();
+      const first=courses[0].lessons.find(l=>!state.done.includes(l.id));
+      location.hash=state.experience==='beginner'&&first?'lesson/'+first.id:'courses';
+    };
+  } else if(route==='dashboard') app.innerHTML=dashboard();
+  else if(route==='courses') {
+    app.innerHTML=courseExplorer();
+    for(const field of $$('.filters input,.filters select')) field.addEventListener('input',updateCourses);
+    updateCourses();
+  } else if(route==='course'&&course) {
+    app.innerHTML=coursePage(course);
+    $('#certificate')?.addEventListener('click',()=>certificate(course));
+  } else if((route==='lesson'||(route==='challenge'&&item&&runnable(item)))&&item) {
+    const challenge=route==='challenge';
+    if(!challenge) {
+      if(!state.enrolled.includes(item.course.id)) state.enrolled.push(item.course.id);
+      state.last=item.id;
+      persist();
+    }
+    app.innerHTML=lessonPage(item,challenge);
+    wireEditor(item,route);
+    wirePanes();
+    if(!challenge) {
+      wireQuiz(item);
+      wireGuide(item);
+      updateCompletion(item);
+      $('#complete-lesson').onclick=()=>{
+        if(state.done.includes(item.id)) {notify('This lesson is already complete.');return;}
+        if(completionRequirements(item).length) return;
+        state.done.push(item.id);
+        const next=[...item.course.lessons.slice(item.course.lessons.indexOf(item)+1),...courses.slice(courses.indexOf(item.course)+1).flatMap(c=>c.lessons)].find(l=>!state.done.includes(l.id));
+        state.last=next?.id||lessons.find(l=>!state.done.includes(l.id))?.id||item.id;
+        activity('Completed '+item.title);
+        $('#complete-lesson').textContent='✓ Completed';
+        $('#completion-note').textContent='Saved to your progress.';
+        $('#next-lesson').outerHTML=nextLink(item);
+        notify('Lesson complete');
+      };
+    }
+  } else if(route==='practice') app.innerHTML=practice();
+  else if(route==='assessment'&&assessment) {
+    app.innerHTML=assessmentPage(assessment);
+    wireQuiz({...assessment,title:lessonMap[assessment.lesson].title},'quiz/'+assessment.id,assessment.answer,assessment.reason);
+  } else if(route==='projects') app.innerHTML=projectExplorer();
+  else if(route==='project'&&project) {app.innerHTML=projectPage(project);wireEditor(project,'project');wirePanes();}
+  else if(route==='progress') {app.innerHTML=progressPage();wireProgress();}
+  else if(route==='sources') app.innerHTML=sourcesPage();
+  else app.innerHTML=page('Page unavailable','This course, lesson, or project may have moved.',btn('Browse courses','courses',true));
+  document.title=route==='home'?'Codexa — Learn to Code. Build Anything.':($('h1',app)?.textContent||'Learn')+' · Codexa';
+  if(path!==renderedPath) {window.scrollTo(0,0);if(renderedPath) app.focus({preventScroll:true});renderedPath=path;}
+}
+window.addEventListener('hashchange',render);
+$('.skip').addEventListener('click',event=>{event.preventDefault();app.focus();});
+render();
+
+</script></body></html>
