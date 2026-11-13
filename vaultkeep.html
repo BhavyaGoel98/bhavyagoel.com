@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src blob: data:; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>VaultKeep · Your purchases, protected</title>
+<style>
+:root{color-scheme:light;--bg:#f1f5f9;--paper:#fff;--ink:#0f172a;--muted:#475569;--line:#cbd5e1;--accent:#0f766e;--wash:#d9f5ee} [data-theme=dark]{color-scheme:dark;--bg:#0b1220;--paper:#131e30;--ink:#f1f5f9;--muted:#b0bfd0;--line:#35465c;--accent:#65e4d0;--wash:#173b3b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}h1,h2,h3,p{margin:0 0 .7em}h1,h2,h3{line-height:1.12;letter-spacing:-.035em}h1{font-size:clamp(2.8rem,7vw,6.7rem)}h2{font-size:clamp(1.8rem,4vw,3.5rem)}a{color:var(--accent)}button,input,select,textarea{font:inherit;color:inherit}button,.btn,summary,input,select{min-height:44px}button,.btn{display:inline-flex;align-items:center;justify-content:center;padding:.55rem .95rem;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none;font-weight:650}button:hover,.btn:hover{border-color:var(--accent);transform:translateY(-2px)}button:disabled{opacity:.6;cursor:default;transform:none}.primary{background:#0f766e;color:white;border-color:#0f766e}:focus-visible{outline:3px solid #0d9488;outline-offset:3px}input,select,textarea{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:.55rem;width:100%;min-width:0}input[type=checkbox]{width:auto;vertical-align:middle}label{display:block;font-weight:600}small,.muted{color:var(--muted)}.row{display:flex;flex-wrap:wrap;gap:.65rem;align-items:center}.spread{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1rem}.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:1.25rem;overflow-wrap:anywhere}.panel strong.metric{font-size:2rem;display:block}.wrap{width:min(1240px,calc(100% - 2rem));margin:auto}.landing section{padding:clamp(3rem,8vw,8rem) 0;scroll-margin-top:5rem}.landing section:nth-of-type(even){background:var(--paper)}header{position:sticky;top:0;z-index:3;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}header .wrap{min-height:65px}.brand{font-size:1.25rem;font-weight:850;text-decoration:none;color:var(--ink)}.brand span,.eyebrow{color:var(--accent)}.eyebrow{font-weight:750;letter-spacing:.12em;text-transform:uppercase;font-size:.76rem}nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 .55rem;text-decoration:none}.hero{min-height:calc(100svh - 66px);display:grid;align-items:center;background:radial-gradient(ellipse at 80% 45%,var(--wash),transparent 65%)}.hero-grid,.split{display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:2rem}.hero h1 span{color:var(--accent)}.hero p{max-width:44ch}.scene{height:clamp(285px,38vw,490px);display:grid;place-items:center;perspective:850px;overflow:hidden}.vault{position:relative;width:58%;aspect-ratio:1.13;transform-style:preserve-3d;transform:rotateX(var(--rx,13deg)) rotateY(var(--ry,-19deg));transition:transform .24s ease}.door,.back{position:absolute;inset:0;border-radius:27px;border:2px solid #71d7c8;background:linear-gradient(140deg,#54bfae8a,#124b55e0);box-shadow:inset 0 0 0 12px #aff7e62b,0 20px 70px #0d94885c}.back{transform:translate3d(24px,18px,-65px)}.door{display:grid;place-items:center;transform:translateZ(20px)}.dial{width:43%;aspect-ratio:1;border-radius:50%;border:8px double #b8f3e7;display:grid;place-items:center;color:white;font-size:2rem}.ticket{position:absolute;background:#fffaf0;color:#12353a;padding:1rem;border-radius:12px;font-weight:800;box-shadow:0 10px 30px #0f172a40;animation:float 5s ease-in-out infinite;--z:90px;--r:-16deg;left:-25%;top:12%}.ticket:last-child{left:auto;right:-28%;top:67%;--z:100px;--r:13deg;animation-delay:-2s}@keyframes float{0%,100%{transform:translate3d(0,0,var(--z)) rotate(var(--r))}50%{transform:translate3d(0,-12px,var(--z)) rotate(calc(var(--r) + 7deg))}}.strip,.final{background:#0d3f3c;color:white;padding:1.2rem 0}.strip .row{justify-content:space-around}.final{text-align:center}.landing details{border-bottom:1px solid var(--line);padding:.5rem 0}.landing summary{cursor:pointer;font-weight:700;padding:.55rem 0}.landing footer{padding:2rem 0}.reveal{animation:arrive .45s both}@keyframes arrive{from{opacity:.35;transform:translateY(10px)}}.pending{opacity:.25;transform:translateY(10px)}.shell{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh}.side{background:var(--paper);padding:1rem;border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow:auto}.side nav a{display:flex;border-radius:8px}.side nav a[aria-current=page]{background:var(--wash);font-weight:750}.workspace{padding:clamp(1rem,3vw,3rem);width:min(100%,1450px);margin:auto;align-self:start}.workspace h1{font-size:clamp(2rem,5vw,3.3rem)}.workspace h2{font-size:1.55rem}.stack>*+*{margin-top:1rem}.badge{display:inline-block;border-radius:100px;background:var(--wash);color:var(--accent);padding:.22rem .65rem;font-size:.83rem;font-weight:700}.list{grid-template-columns:1fr}.thumb{width:100%;height:145px;object-fit:contain;background:var(--bg);border-radius:12px}.asset{max-width:200px}.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,145px),1fr));gap:.65rem}.mobile{display:none}dialog{max-height:90dvh;width:min(690px,calc(100% - 1rem));border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink);padding:1.25rem;box-shadow:0 24px 100px #0006}dialog::backdrop{background:#0a1525b5}#toast{position:fixed;bottom:1rem;right:1rem;z-index:8;background:#0d3f3c;color:white;padding:.65rem 1rem;border-radius:10px;max-width:calc(100vw - 2rem)}#toast:empty{display:none}.bar{height:.55rem;background:var(--wash);border-radius:1rem;overflow:hidden}.bar span{display:block;height:100%;background:#0d9488}.skip{position:absolute;left:-1000px}.skip:focus{left:1rem;top:1rem;z-index:10}
+@media(max-width:840px){header nav{display:none}.hero-grid,.split{grid-template-columns:1fr;gap:1rem}.shell{display:block}.side{display:none}.workspace{padding-bottom:105px}.mobile{display:flex;position:fixed;bottom:0;left:0;right:0;justify-content:space-around;background:var(--paper);border-top:1px solid var(--line);z-index:3}.mobile a{font-size:.82rem;padding:0 .2rem}#toast{bottom:65px}}@media(max-width:375px){header .btn,header button{padding:.4rem}.ticket{padding:.55rem;font-size:.85rem}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;transform:none!important}.ticket{transform:rotate(var(--r))!important}.pending{opacity:1}}[data-motion=off] *{animation:none!important;transition:none!important}.pending[data-static]{opacity:1;transform:none}@media print{.side,.mobile,.actions,#toast,dialog{display:none!important}.shell{display:block}body,.panel{background:white;color:black}.workspace{padding:0}}
+</style></head><body><a class="skip" href="#main">Skip to content</a><div id="root"></div><dialog id="modal" aria-labelledby="modal-title"></dialog><div id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const root=document.querySelector('#root'), modal=document.querySelector('#modal'), toast=document.querySelector('#toast');
+const categories=['Appliances','Electronics','Furniture','Accessories','Other'];
+const currencies=['INR','USD','EUR','GBP','CAD','AUD','JPY','SGD','AED'];
+const routes={dashboard:'Dashboard',items:'All Items',expiring:'Expiring Soon',returns:'Returns',categories:'Categories',reports:'Reports',reminders:'Reminders',settings:'Settings'};
+const thresholds=[1,3,7,14,30], photoLimit=8*1024*1024, itemLimit=20;
+const defaults={theme:'light',motion:false,alerts:true,windows:thresholds};
+let prefs={...defaults}, records=[], reminders={}, db, ready=false, loadError='', toastTimer, urls=[], dialogUrls=[];
+let filters={q:'',category:'',status:'',store:'',from:'',to:'',sort:'new',view:'grid'};
+try{prefs={...defaults,...JSON.parse(localStorage.getItem('vaultkeep-ui')||'{}')}}catch{}
+function applyPrefs(){
+ document.documentElement.dataset.theme=prefs.theme==='dark'?'dark':'light';
+ document.documentElement.dataset.motion=prefs.motion?'off':'on';
+ try{localStorage.setItem('vaultkeep-ui',JSON.stringify(prefs))}catch{}
+}
+applyPrefs();
+const reduced=()=>prefs.motion||matchMedia('(prefers-reduced-motion: reduce)').matches||(navigator.hardwareConcurrency||8)<=2||(navigator.deviceMemory||8)<=2;
+function say(message){toast.textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.textContent='',6000)}
+function el(tag, attrs={}, ...children){
+ const node=document.createElement(tag);
+ for(const [key,value] of Object.entries(attrs)){
+  if(key.startsWith('on'))node.addEventListener(key.slice(2),value);
+  else if(key==='class')node.className=value;
+  else if(value!==false&&value!=null)node.setAttribute(key,value===true?'':value);
+ }
+ for(const child of children.flat(Infinity))if(child!=null&&child!==false)node.append(child instanceof Node?child:document.createTextNode(String(child)));
+ return node;
+}
+const btn=(label,fn,cls='',disabled=false)=>el('button',{type:'button',class:cls,onclick:fn,disabled},label);
+const link=(label,path,cls='')=>el('a',{href:'#'+path,class:cls},label);
+const row=(...children)=>el('div',{class:'row'},children);
+const panel=(...children)=>el('div',{class:'panel'},children);
+const p=(s,cls='')=>el('p',{class:cls},s);
+const heading=(s)=>el('h2',{},s);
+function id(){return globalThis.crypto?.randomUUID?.()||Array.from(crypto.getRandomValues(new Uint8Array(16)),n=>n.toString(16).padStart(2,'0')).join('')}
+function localDate(d=new Date()){return [d.getFullYear(),d.getMonth()+1,d.getDate()].map((v,i)=>String(v).padStart(i?2:4,'0')).join('-')}
+function dateNumber(s){
+ if(typeof s!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(s))return NaN;
+ const [y,m,d]=s.split('-').map(Number), t=new Date(0);
+ t.setUTCFullYear(y,m-1,d);
+ return y>0&&t.toISOString().slice(0,10)===s?t.getTime()/86400000:NaN;
+}
+function days(s,base=localDate()){return dateNumber(s)-dateNumber(base)}
+function addDays(s,n){return new Date((dateNumber(s)+n)*86400000).toISOString().slice(0,10)}
+function monthEnd(s,n){
+ const [y,m,d]=s.split('-').map(Number), t=new Date(0);
+ t.setUTCFullYear(y,m-1+n,1);
+ const end=new Date(t);end.setUTCMonth(end.getUTCMonth()+1,0);
+ t.setUTCDate(Math.min(d,end.getUTCDate()));
+ return t.toISOString().slice(0,10);
+}
+function warranty(i){return i.exact||(i.months>0?monthEnd(i.purchase,i.months):'')}
+function status(i,base=localDate()){const end=warranty(i);if(!end)return 'No warranty';const n=days(end,base);return n<0?'Expired':n<=30?'Expiring':'Active'}
+function deadlines(items){return items.flatMap(i=>[['Warranty',warranty(i)],['Return',i.returnDate]].filter(x=>x[1]).map(([type,date])=>({i,type,date,n:days(date)}))).sort((a,b)=>a.date.localeCompare(b.date))}
+function money(value,currency){return new Intl.NumberFormat(undefined,{style:'currency',currency}).format(value)}
+function pretty(s){return s?new Intl.DateTimeFormat(undefined,{dateStyle:'medium',timeZone:'UTC'}).format(new Date(dateNumber(s)*86400000)):'—'}
+function validate(i){
+ if(!i||typeof i!=='object')throw Error('Invalid item.');
+ for(const k of ['name','store','model','serial','notes','tags'])if(typeof i[k]!=='string'||i[k].length>(k==='notes'?4000:200))throw Error('Invalid '+k+'.');
+ if(!i.name.trim()||!categories.includes(i.category)||!currencies.includes(i.currency))throw Error('Enter a name and select a category and currency.');
+ if(!Number.isFinite(i.price)||i.price<0||i.price>1e10)throw Error('Price must be between 0 and 10 billion.');
+ if(!Number.isInteger(i.months)||i.months<0||i.months>600)throw Error('Warranty months must be a whole number from 0 to 600.');
+ if(!Number.isFinite(dateNumber(i.purchase))||i.purchase>localDate())throw Error('Enter a valid purchase date no later than today.');
+ for(const k of ['exact','returnDate'])if(typeof i[k]!=='string'||(i[k]&&(!Number.isFinite(dateNumber(i[k]))||i[k]<i.purchase)))throw Error('Deadlines must be valid dates on or after purchase.');
+ if(i.months&&!i.exact&&!Number.isFinite(dateNumber(warranty(i))))throw Error('Calculated warranty date is outside the supported range.');
+ return i;
+}
+function openDb(){
+ return new Promise((resolve,reject)=>{
+  const req=indexedDB.open('vaultkeep',1);
+  req.onupgradeneeded=()=>{const d=req.result; if(!d.objectStoreNames.contains('items'))d.createObjectStore('items',{keyPath:'id'});if(!d.objectStoreNames.contains('state'))d.createObjectStore('state')};
+  req.onsuccess=()=>{req.result.onversionchange=()=>{req.result.close();say('Storage was updated in another tab. Reload VaultKeep.')};resolve(req.result)};
+  req.onerror=()=>reject(req.error);req.onblocked=()=>reject(Error('Close other VaultKeep tabs and reload.'));
+ });
+}
+function request(store,op){
+ return new Promise((resolve,reject)=>{
+  try{const tx=db.transaction(store,'readonly'), req=op(tx.objectStore(store));tx.oncomplete=()=>resolve(req.result);tx.onabort=()=>reject(tx.error)}catch(e){reject(e)}
+ });
+}
+function write(names,op){
+ return new Promise((resolve,reject)=>{
+  try{const tx=db.transaction(names,'readwrite');let issue;tx.oncomplete=resolve;tx.onabort=()=>reject(issue||tx.error);
+   const fail=e=>{issue=e;tx.abort()};try{op(tx,fail)}catch(e){fail(e)}
+  }catch(e){reject(e)}
+ });
+}
+async function refresh(){records=await request('items',s=>s.getAll());reminders=await request('state',s=>s.get('reminders'))||{}}
+function message(e){return e?.name==='QuotaExceededError'?'Storage is full. Remove images or free browser storage and try again.':e?.message||'Storage could not be updated. Reload and try again.'}
+async function saveItems(items,expected=[]){
+ await write(['items'],(tx,fail)=>{
+  const store=tx.objectStore('items'), read=store.getAll();
+  read.onsuccess=()=>{
+   const existing=new Map(read.result.map(i=>[i.id,i]));
+   if(expected.some(old=>!existing.has(old.id)||existing.get(old.id).revision!==old.revision))return fail(Error('This item changed in another tab. Reopen it and try again.'));
+   if(existing.size+items.filter(i=>!existing.has(i.id)).length>itemLimit)return fail(Error('The personal vault is limited to 20 items.'));
+   for(const i of items)store.put({...i,revision:id()});
+  };
+ });
+ await refresh();
+}
+const sampleRows=[
+ ['Breeze 1.5T inverter AC','Appliances',38990,'Northstar Home',-340,12,0],
+ ['Aster noise-cancelling headphones','Electronics',7499,'Signal Studio',-9,12,14],
+ ['Juniper writing desk','Furniture',12490,'Oak & Grain',-120,24,0],
+ ['Orbit USB-C hub','Accessories',2499,'Signal Studio',-367,12,0],
+ ['Cedar air fryer','Appliances',6290,'Northstar Home',-18,12,30],
+ ['Prism 27-inch monitor','Electronics',18490,'Pixel Supply',-725,24,0],
+ ['Harbor reading chair','Furniture',16750,'Oak & Grain',-210,12,0],
+ ['Dune camera strap','Accessories',1290,'Field Supply',-4,6,14],
+ ['Sparrow robot vacuum','Appliances',20999,'Northstar Home',-430,12,0],
+ ['Atlas mechanical keyboard','Electronics',5490,'Pixel Supply',-32,12,0]
+];
+function samples(){return sampleRows.map(([name,category,price,store,offset,months,ret],n)=>({id:'sample-'+n,name,category,price,store,months,currency:'INR',purchase:addDays(localDate(),offset),exact:'',returnDate:ret?addDays(localDate(),offset+ret):'',model:'VK-'+(100+n),serial:'',notes:'Fictional VaultKeep demo record.',tags:'demo',created:n,images:[]}))}
+const context=()=>location.hash.slice(1).split('/'), isDemo=()=>context()[0]==='demo', path=(page)=> (isDemo()?'demo/':'vault/')+page;
+const go=(page)=>{location.hash=path(page)};
+function photoURL(blob,scope=urls){const url=URL.createObjectURL(blob);scope.push(url);return url}
+function clearURLs(list){list.splice(0).forEach(url=>URL.revokeObjectURL(url))}
+modal.addEventListener('close',()=>{if(!modal.open){clearURLs(dialogUrls)}});
+function closeDialog(){modal.close();clearURLs(dialogUrls)}
+function dialog(title,...body){
+ clearURLs(dialogUrls);
+ modal.replaceChildren(el('div',{class:'row spread'},el('h2',{id:'modal-title'},title),btn('Close',closeDialog)),...body);
+ if(!modal.open)modal.showModal();else modal.querySelector('button').focus();
+}
+function confirmAction(title,copy,action){
+ const confirm=btn(title,async()=>{confirm.disabled=true;try{await action();closeDialog();render()}catch(e){say(message(e));confirm.disabled=false}},'primary');
+ dialog(title,p(copy),row(btn('Cancel',closeDialog),confirm));
+}
+function theme(){prefs.theme=prefs.theme==='dark'?'light':'dark';applyPrefs()}
+function upgrade(){
+ dialog('VaultKeep Pro',p('Pro is a preview. Billing and paid access are disabled in this standalone edition.'),pricing(),row(link('Open Pro demo','demo/reports','btn primary'),btn('Integration requirements',integrations)));
+}
+function integrations(){
+ dialog('Service configuration',p('All remote integrations are disabled.'),el('ul',{},
+ el('li',{},'Billing: an authenticated POST /payments/orders creates the Razorpay order server-side. POST /payments/verify validates the order signature and captured amount, currency and account. Verify signed webhooks using the raw request body, process idempotently and reconcile payment state. GET /entitlements returns server-authoritative access.'),
+ el('li',{},'AI: authenticated POST /ocr accepts an explicitly approved photo, validates size and type, rate-limits requests, calls the provider with a server-held key and returns proposed fields for review.'),
+ el('li',{},'Sync: authenticated /sync endpoints would store versioned ciphertext. A separate client implementation must encrypt before upload, manage key derivation and recovery, and securely wrap vault keys for authorized devices or family members.')));
+}
+function pricing(){return el('div',{class:'grid'},panel(el('h3',{},'Free'),p('₹0'),p('Up to 20 items. Local photos, warranty and return tracking, reminders and backups.')),panel(el('h3',{},'Pro · preview'),p('₹49/month · ₹399/year · ₹799 lifetime'),p('Configurable proposed prices. Unlimited records, AI extraction, optional encrypted sync, family sharing and advanced reporting are planned.')))}
+function landing(){
+ const sections=[
+ ['features','Keep the details that matter'],['how','From purchase to protection'],['privacy','Private by default'],['pricing','A vault that starts free'],['faq','Frequently asked questions']
+ ];
+ const top=el('header',{},el('div',{class:'wrap row spread'},link('◈ VaultKeep','home','brand'),el('nav',{'aria-label':'Landing'},[['Features','features'],['How It Works','how'],['Privacy','privacy'],['Pricing','pricing'],['FAQ','faq']].map(([l,k])=>link(l,'home/'+k))),row(btn('Theme',theme),link('Open Vault','vault/dashboard','btn primary')),el('details',{class:'landing-more'},el('summary',{},'Menu'),el('div',{class:'row'},[['Features','features'],['How It Works','how'],['Privacy','privacy'],['Pricing','pricing'],['FAQ','faq']].map(([label,key])=>link(label,'home/'+key,'btn'))))));
+ const scene=el('div',{class:'scene','aria-hidden':'true'},el('div',{class:'vault'},el('div',{class:'back'}),el('div',{class:'door'},el('div',{class:'dial'},'◈')),el('div',{class:'ticket'},'RECEIPT',el('br'), '▰ ▰ ▰'),el('div',{class:'ticket'},'▦  RETURN',el('br'),'14 days')));
+ if(!reduced()){
+  const vault=scene.firstElementChild;
+  scene.addEventListener('pointermove',e=>{const b=scene.getBoundingClientRect();vault.style.setProperty('--rx',(22-(e.clientY-b.top)/b.height*32)+'deg');vault.style.setProperty('--ry',(-30+(e.clientX-b.left)/b.width*55)+'deg')});
+  scene.addEventListener('pointerleave',()=>{vault.style.removeProperty('--rx');vault.style.removeProperty('--ry')});
+ }else scene.querySelectorAll('.ticket').forEach(t=>t.style.animation='none');
+ const hero=el('section',{class:'hero'},el('div',{class:'wrap hero-grid'},el('div',{},p('Your purchases. Your protection. Your vault.','eyebrow'),el('h1',{},'Every purchase.',el('br'),el('span',{},'Protected.')),p('Give receipts, warranties and return dates one private home. Find what you need when it matters.'),row(link('Start Free','vault/dashboard','btn primary'),link('Explore Demo','demo/dashboard','btn'))),scene));
+ const section=(key,title,...content)=>el('section',{id:key},el('div',{class:'wrap'},heading(title),content));
+ const features=[['▤','Receipt capture','Photograph or upload receipts and product images. Review every image before saving.'],['◷','Warranty timelines','See the coverage end date for every item and what expires next.'],['↶','Returns','Keep return windows visible before they close.'],['⌕','Instant search','Find a model, serial number or store across your records.'],['◇','Offline storage','Work with your vault directly in this browser.']];
+ const featureDetail=panel();
+ function pickFeature(n){const [symbol,title,copy]=features[n];featureDetail.replaceChildren(p(symbol,'eyebrow'),el('h3',{},title),p(copy),link('Try in demo','demo/'+['items','expiring','returns','items','settings'][n],'btn'))}
+ pickFeature(0);
+ const preview=panel();function showPreview(mode){
+  const demo=samples(), list=mode==='all'?demo.slice(0,3):deadlines(demo).filter(d=>d.n>=0&&d.n<=30&&d.type===mode).slice(0,4);
+  preview.replaceChildren(p('Fictional sample data','eyebrow'),row(btn('Recent items',()=>showPreview('all')),btn('Warranties',()=>showPreview('Warranty')),btn('Returns',()=>showPreview('Return'))),el('ul',{},list.map(x=>el('li',{},x.i?x.i.name+' · '+pretty(x.date):x.name+' · '+money(x.price,x.currency)))),link('Explore sample dashboard','demo/dashboard','btn primary'));
+ }showPreview('all');
+ const faq=[
+ ['Do I need an account?','No. Your personal vault runs in your browser.'],['Where are my receipts stored?','IndexedDB in the browser profile and origin you use. VaultKeep does not encrypt these records itself.'],['Can I use it offline?','Yes. Open a local copy of the HTML file or keep the page open. Served pages have no service worker to guarantee offline reloads.'],['What if I clear browser data?','Your records may be erased. Download a JSON backup first.'],['Can I move to another device?','Export a JSON backup and restore it on the other device. Backups contain your private records and photos.'],['Will reminders run while closed?','Background delivery is not guaranteed. Export an ICS file and import it into a calendar that supports alerts.'],['How are warranty dates calculated?','VaultKeep adds calendar months and clamps to the last day when needed. You can enter the exact date from your warranty.'],['Does OCR read my receipt?','This edition previews extraction from a fictional sample. Manual entry and local photo storage work with your own receipts.'],['Can I subscribe to Pro?','The prices and Pro interface are proposals. Payments are disabled.']];
+ root.replaceChildren(top,el('main',{id:'main',class:'landing'},hero,el('div',{class:'strip'},el('div',{class:'wrap row'},'No account required','Works offline','Your photos stay local')),
+ section('problem','When a receipt goes missing, so does time.',el('div',{class:'grid'},panel(el('h3',{},'A drawer full of paper'),p('Faded receipts and scattered screenshots make it hard to prove a purchase.')),panel(el('h3',{},'A deadline you can see'),p('Keep proof of purchase and the last day to act together.')))),
+ section(sections[0][0],sections[0][1],row(features.map(([s,t],n)=>btn(s+' '+t,()=>pickFeature(n)))),featureDetail),
+ section(sections[1][0],sections[1][1],el('div',{class:'grid'},[['▤','Capture','Add receipts and product photos from your camera or files.'],['◷','Set dates','Enter the purchase date, coverage and return deadline.'],['✓','Act in time','Review your upcoming deadlines or send them to your calendar.']].map(([s,t,c])=>panel(p(s,'eyebrow'),el('h3',{},t),p(c))))),
+ section('preview','See what’s coming up',preview),
+ section(sections[2][0],sections[2][1],el('div',{class:'split'},panel(el('h3',{},'◈  Your browser is your vault'),p('Photos and records stay in IndexedDB. VaultKeep has no trackers or automatic uploads.')),p('Use a private browser profile and keep backups somewhere safe. Optional cloud sync is disabled and would require a separate encrypted sync service.'))),
+ section('comparison','Before and after VaultKeep',el('div',{class:'grid'},panel(el('h3',{},'Before'),p('Search email and drawers. Guess at return dates. Re-enter details when making a claim.')),panel(el('h3',{},'With VaultKeep'),p('Search once. Review deadlines together. Open or print the record when you need it.')))),
+ section(sections[3][0],sections[3][1],pricing(),row(link('Start Free','vault/dashboard','btn primary'),btn('Preview Pro',upgrade))),
+ section(sections[4][0],sections[4][1],faq.map(([q,a])=>el('details',{},el('summary',{},q),p(a)))),
+ el('section',{class:'final'},el('div',{class:'wrap'},heading('Give every purchase a place.'),link('Open VaultKeep','vault/dashboard','btn'))),
+ el('footer',{},el('div',{class:'wrap row spread'},link('◈ VaultKeep','home','brand'),p('Your purchases. Your protection. Your vault.')))));
+ if(!reduced()&&'IntersectionObserver' in window){
+  const observer=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){entry.target.classList.remove('pending');entry.target.classList.add('reveal');observer.unobserve(entry.target)}},{threshold:.06});
+  root.querySelectorAll('section:not(.hero) > .wrap').forEach(e=>{e.classList.add('pending');observer.observe(e)});
+ }
+ const target=context()[1];if(target)requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView());else window.scrollTo(0,0);
+}
+function nav(mobile,page){
+ const keys=mobile?['dashboard','items','reminders','settings']:Object.keys(routes);
+ return el('nav',{class:mobile?'mobile':'','aria-label':mobile?'Mobile workspace':'Workspace'},keys.map(k=>el('a',{href:'#'+path(k),'aria-current':k===page?'page':null},mobile&&k==='dashboard'?'Overview':routes[k])),mobile?null:link('Home','home'));
+}
+function metric(label,n){
+ const value=el('strong',{class:'metric'},n);
+ if(typeof n==='number'&&n>0&&!reduced()){
+  const start=performance.now();function tick(now){const t=Math.min(1,(now-start)/300);value.textContent=Math.round(n*t);if(t<1&&value.isConnected)requestAnimationFrame(tick)}requestAnimationFrame(tick);
+ }
+ return panel(p(label,'muted'),value);
+}
+function itemCard(i){
+ const image=i.images.find(x=>x.kind==='product')||i.images[0];
+ const card=panel(image?el('img',{class:'thumb',loading:'lazy',alt:image.kind==='receipt'?'Receipt photo':'Product photo',src:photoURL(image.blob)}):null,el('h3',{},link(i.name,path('item/'+i.id))),p(i.category+(i.store?' · '+i.store:''),'muted'),row(el('span',{class:'badge'},status(i)),money(i.price,i.currency)));
+ if(!reduced()&&matchMedia('(pointer:fine)').matches){
+  card.addEventListener('pointermove',e=>{const b=card.getBoundingClientRect();card.style.transform='perspective(900px) rotateY('+((e.clientX-b.left)/b.width-.5)*4+'deg)'});
+  card.addEventListener('pointerleave',()=>card.style.transform='');
+ }
+ return card;
+}
+function showItems(items,view='grid'){return items.length?el('div',{class:'grid '+(view==='list'?'list':'')},items.map(itemCard)):panel(p('No items to show.','muted'))}
+function totals(items){const t={};for(const i of items)t[i.currency]=(t[i.currency]||0)+i.price;return Object.entries(t).map(([c,n])=>money(n,c)).join(' · ')||'—'}
+function timeline(list){
+ return list.length?el('ul',{},list.map(d=>el('li',{},link(d.i.name,path('item/'+d.i.id)),' · '+d.type+' · '+pretty(d.date)+' · '+(d.n===0?'Today':d.n>0?'In '+d.n+' days':-d.n+' days ago')))):p('No deadlines in this view.','muted');
+}
+function categoryView(items){
+ return el('div',{class:'grid'},categories.map(c=>{
+  const count=items.filter(i=>i.category===c).length;
+  return panel(el('h3',{},c),p(count+' '+(count===1?'item':'items')),el('div',{class:'bar','aria-hidden':'true'},el('span',{style:'width:'+(items.length?count/items.length*100:0)+'%'})),btn('Browse '+c,()=>{filters.category=c;go('items')}));
+ }));
+}
+function dashboard(items){
+ const upcoming=deadlines(items).filter(d=>d.n>=0&&d.n<=30);
+ return [el('div',{class:'grid'},metric('Stored products',items.length),metric('Active warranties',items.filter(i=>['Active','Expiring'].includes(status(i))).length),metric('Warranties due in 30 days',upcoming.filter(d=>d.type==='Warranty').length),metric('Returns due in 30 days',upcoming.filter(d=>d.type==='Return').length),metric('Expired coverage',items.filter(i=>status(i)==='Expired').length),metric('Tracked purchase value',totals(items))),panel(heading('Next 30 days'),timeline(upcoming)),heading('Categories'),categoryView(items),heading('Recently added'),showItems([...items].sort((a,b)=>b.created-a.created).slice(0,4))];
+}
+function options(values){return values.map(x=>Array.isArray(x)?el('option',{value:x[0]},x[1]):el('option',{value:x},x))}
+function labeled(name,control){return el('label',{},name,control)}
+function nextDeadline(i){return Math.min(...[warranty(i),i.returnDate].filter(Boolean).map(s=>days(s)).filter(n=>n>=0),Infinity)}
+function filtered(items,f){
+ const q=f.q.trim().toLowerCase();
+ const list=items.filter(i=>(!q||[i.name,i.store,i.model,i.serial,i.notes,i.tags].some(s=>s.toLowerCase().includes(q)))&&(!f.category||f.category===i.category)&&(!f.status||f.status===status(i))&&(!f.store||f.store===i.store)&&(!f.from||i.purchase>=f.from)&&(!f.to||i.purchase<=f.to));
+ const sorts={new:(a,b)=>b.purchase.localeCompare(a.purchase),price:(a,b)=>a.currency.localeCompare(b.currency)||b.price-a.price,deadline:(a,b)=>(nextDeadline(a)-nextDeadline(b))||a.name.localeCompare(b.name),name:(a,b)=>a.name.localeCompare(b.name)};
+ return list.sort(sorts[f.sort]||sorts.new);
+}
+function browse(items){
+ const result=el('div'), summary=el('p',{role:'status',class:'muted'});
+ function update(){clearURLs(urls);const list=filtered(items,filters);summary.textContent=list.length+' of '+items.length+' items';result.replaceChildren(list.length?showItems(list,filters.view):panel(p('No matching items. Clear filters or add a record.')))}
+ const inputs=[['q','Search','search'],['category','Category',[['','All categories'],...categories]],['status','Warranty status',[['','All statuses'],'Active','Expiring','Expired','No warranty']],['store','Store',[['','All stores'],...new Set(items.map(i=>i.store).filter(Boolean).sort())]],['from','Purchased from','date'],['to','Purchased through','date'],['sort','Sort',[['new','Purchase date'],['price','Price by currency'],['deadline','Nearest deadline'],['name','Name']]],['view','Layout',[['grid','Grid'],['list','List']]]];
+ const controls=inputs.map(([key,label,type])=>{const input=Array.isArray(type)?el('select',{},options(type)):el('input',{type});input.value=filters[key];input.addEventListener('input',()=>{filters[key]=input.value;update()});return labeled(label,input)});
+ update();return [panel(el('div',{class:'filters'},controls),btn('Clear filters',()=>{filters={q:'',category:'',status:'',store:'',from:'',to:'',sort:'new',view:'grid'};render()})),summary,result];
+}
+function detail(i){
+ const values=[['Category',i.category],['Purchase',pretty(i.purchase)],['Price',money(i.price,i.currency)],['Store',i.store],['Warranty months',i.months],['Warranty ends',pretty(warranty(i))],['Return deadline',pretty(i.returnDate)],['Model',i.model],['Serial number',i.serial],['Tags',i.tags],['Notes',i.notes]];
+ return [panel(el('span',{class:'badge'},status(i)),el('dl',{class:'grid'},values.map(([label,value])=>el('div',{},el('dt',{class:'muted'},label),el('dd',{},value===''?'—':value))))),
+ i.images.length?panel(heading('Photos'),row(i.images.map(x=>el('div',{class:'asset'},el('img',{class:'thumb',src:photoURL(x.blob),alt:x.kind+' photo'}),btn('Download '+x.kind,()=>download(x.blob,x.name)))))):null,
+ el('div',{class:'row actions'},isDemo()?null:[btn('Edit',()=>edit(i),'primary'),btn('Duplicate',()=>edit(i,true)),btn('Delete',()=>confirmAction('Delete item','This permanently removes the item and its photos from this browser.',async()=>{
+  await write(['items'],(tx,fail)=>{const s=tx.objectStore('items'),r=s.get(i.id);r.onsuccess=()=>{if(r.result?.revision!==i.revision)return fail(Error('Item changed in another tab. Reopen it.'));s.delete(i.id)}});
+  await refresh();go('items');
+ }))],btn('Print / Save as PDF',()=>window.print()),btn('Download calendar dates',()=>exportICS([i])))];
+}
+function imageSignature(type,b){
+ return (type==='image/png'&&b.length>=8&&[137,80,78,71,13,10,26,10].every((v,n)=>b[n]===v))||(type==='image/jpeg'&&b[0]===255&&b[1]===216&&b[2]===255)||(type==='image/webp'&&String.fromCharCode(...b.slice(0,4))==='RIFF'&&String.fromCharCode(...b.slice(8,12))==='WEBP');
+}
+async function verifyImage(blob){
+ if(!blob.size||blob.size>photoLimit||!imageSignature(blob.type,new Uint8Array(await blob.slice(0,12).arrayBuffer())))throw Error('Choose a valid JPEG, PNG or WebP image under 8 MB.');
+ const url=URL.createObjectURL(blob);
+ try{const img=new Image();img.src=url;await img.decode();if(img.naturalWidth*img.naturalHeight>60000000)throw Error('Use a photo under 60 megapixels.');return img}
+ catch{throw Error('The photo could not be read or exceeds 60 megapixels.')}
+ finally{URL.revokeObjectURL(url)}
+}
+async function photo(file,kind){
+ const img=await verifyImage(file);let blob=file;
+ if(Math.max(img.naturalWidth,img.naturalHeight)>1800||file.size>1500000){
+  const scale=Math.min(1,1800/Math.max(img.naturalWidth,img.naturalHeight)), canvas=el('canvas',{width:Math.max(1,Math.round(img.naturalWidth*scale)),height:Math.max(1,Math.round(img.naturalHeight*scale))});
+  try{const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);const jpeg=await new Promise(r=>canvas.toBlob(r,'image/jpeg',.83));if(jpeg&&jpeg.size<file.size)blob=jpeg}catch{}
+ }
+ const originalName=file.name.slice(0,160), name=blob.type!==file.type?originalName.replace(/\.[^.]+$/,'')+'.jpg':originalName;
+ return {kind,name,originalName,originalSize:file.size,blob};
+}
+function edit(old,duplicate=false){
+ if(!ready)return say('Personal vault storage is unavailable.');
+ if((!old||duplicate)&&records.length>=itemLimit)return upgrade();
+ const initial=old?{...old,name:duplicate?old.name.slice(0,193)+' (copy)':old.name}: {purchase:localDate(),currency:'INR',category:'Other',months:0};
+ let photos=[...(old?.images||[])], busy=false;
+ const fields=[['name','Item name','text'],['category','Category',categories],['purchase','Purchase date','date'],['currency','Currency',currencies],['price','Price','number'],['store','Store','text'],['months','Warranty months','number'],['exact','Exact warranty end (optional)','date'],['returnDate','Return deadline (optional)','date'],['model','Model','text'],['serial','Serial number','text'],['tags','Tags','text'],['notes','Notes','textarea']];
+ const controls={};
+ const form=el('form',{class:'stack'}), preview=el('div',{class:'grid'}), feedback=p('','muted');feedback.setAttribute('role','status');
+ const submit=el('button',{type:'submit',class:'primary'},'Save item');
+ function previews(){
+  clearURLs(dialogUrls);preview.replaceChildren(...photos.map((x,n)=>{
+   const replace=el('input',{type:'file',accept:'image/jpeg,image/png,image/webp',onchange:e=>addPhotos(e.target,x.kind,n)});
+   return panel(el('img',{class:'thumb',alt:x.kind+' photo',src:photoURL(x.blob,dialogUrls)}),p(x.name),labeled('Replace '+x.kind,replace),btn('Remove',()=>{if(!busy){photos.splice(n,1);previews()}}));
+  }));
+ }
+ async function addPhotos(input,kind,replace){
+  if(busy)return;
+  const selected=[...input.files];input.value='';
+  if(!selected.length)return;
+  if(photos.length+selected.length-(replace===undefined?0:1)>8){feedback.textContent='Keep up to eight photos per item.';return}
+  busy=true;submit.disabled=true;feedback.textContent='Checking photos…';
+  try{
+   const next=[...photos];
+   for(const f of selected){
+    const candidate=await photo(f,kind);
+    if(next.some((x,n)=>n!==replace&&(x.originalName||x.name)===f.name&&(x.originalSize||x.blob.size)===f.size))throw Error('That photo has already been attached.');
+    if(replace===undefined)next.push(candidate);else next[replace]=candidate;
+   }
+   if(form.isConnected&&modal.open){photos=next;previews();feedback.textContent='Photos ready.'}
+  }catch(e){feedback.textContent=message(e)}finally{busy=false;submit.disabled=false}
+ }
+ function extraction(){
+  const sample=samples()[1], receipt=el('pre',{},'SIGNAL STUDIO\nAster noise-cancelling headphones\n'+pretty(sample.purchase)+'\n'+money(sample.price,sample.currency));
+  const review=el('dialog',{'aria-label':'Review fictional extraction'},heading('Review sample extraction'),p('Fictional sample. Your photos have not been scanned or uploaded. Confirming copies the displayed values into this form.'),receipt,row(btn('Cancel',()=>review.close()),btn('Use sample values',()=>{for(const k of ['name','store','purchase','price','currency','category'])controls[k].value=sample[k];review.close();feedback.textContent='Sample values copied. Review and save the form.'},'primary')));
+  review.addEventListener('close',()=>review.remove());form.append(review);review.showModal();
+ }
+ form.append(el('div',{class:'grid'},fields.map(([k,label,type])=>{
+  const input=Array.isArray(type)?el('select',{},options(type)):type==='textarea'?el('textarea',{maxlength:4000,rows:3}):el('input',{type,maxlength:200,required:['name','purchase','price'].includes(k),min:type==='number'?0:null,max:k==='months'?600:k==='price'?1e10:k==='purchase'?localDate():null,step:k==='price'?'0.01':k==='months'?1:null});
+  input.value=initial[k]??'';controls[k]=input;return labeled(label,input);
+ })),p('Warranty adds calendar months and uses the last day if needed. An exact date overrides that calculation. Dates are inclusive.','muted'),
+ el('div',{class:'grid'},['receipt','product'].flatMap(kind=>[labeled('Upload '+kind+' photos',el('input',{type:'file',accept:'image/jpeg,image/png,image/webp',multiple:true,onchange:e=>addPhotos(e.target,kind)})),labeled('Capture '+kind+' photo',el('input',{type:'file',accept:'image/*',capture:'environment',onchange:e=>addPhotos(e.target,kind)}))])),
+ p('JPEG, PNG or WebP, up to 8 MB each and eight photos total. If camera capture is unavailable, upload a file.','muted'),preview,btn('Preview AI extraction',extraction),feedback,row(btn('Cancel',closeDialog),submit));
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();if(busy)return;
+  busy=true;submit.disabled=true;feedback.textContent='Saving…';
+  try{
+   const values=Object.fromEntries(Object.entries(controls).map(([k,v])=>[k,v.value.trim()]));
+   const i=validate({...values,price:Number(values.price),months:Number(values.months),id:old&&!duplicate?old.id:id(),created:old&&!duplicate?old.created:Date.now(),images:photos});
+   await saveItems([i],old&&!duplicate?[old]:[]);closeDialog();go('item/'+i.id);render();say('Item saved.');
+  }catch(e){feedback.textContent=message(e)}finally{busy=false;submit.disabled=false}
+ });
+ dialog(duplicate?'Duplicate item':old?'Edit item':'Add an item',form);previews();
+}
+function reminderCandidates(items){
+ if(!prefs.alerts)return [];
+ return deadlines(items).flatMap(d=>{
+  if(d.n<0)return [];
+  const windows=prefs.windows.filter(n=>thresholds.includes(n)&&d.n<=n).sort((a,b)=>a-b);
+  if(!windows.length)return [];
+  const windowDays=windows[0], key=[d.i.id,d.type,d.date,windowDays].join('|'), state=reminders[key]||{};
+  return [{...d,key,state,windowDays}];
+ });
+}
+function visibleReminder(state,now=Date.now()){return !state.dismissed&&!(state.until>now)}
+async function reminderChange(key,patch){
+ await write(['state'],tx=>{const s=tx.objectStore('state'),r=s.get('reminders');r.onsuccess=()=>{const current=r.result||{};s.put({...current,[key]:{...current[key],...patch}},'reminders')}});
+ await refresh();render();
+}
+function reminderView(items){
+ if(isDemo())return [p('Sample reminders are read-only.'),panel(timeline(deadlines(items).filter(d=>d.n>=0&&d.n<=30)))];
+ const list=reminderCandidates(items).filter(d=>visibleReminder(d.state));
+ const update=async(key,state)=>{try{await reminderChange(key,state)}catch(e){say(message(e))}};
+ return [p('Reminders refresh when this page opens or becomes visible.'),list.length?el('div',{class:'grid'},list.map(d=>panel(el('h3',{},link(d.i.name,path('item/'+d.i.id))),p(d.type+' · '+pretty(d.date)+' · '+(d.state.read?'Read':'Unread')),row(btn('Mark read',()=>update(d.key,{read:true}),'',d.state.read),btn('Snooze 24 hours',()=>update(d.key,{until:Date.now()+86400000})),btn('Dismiss',()=>update(d.key,{dismissed:true})))))):panel(p('You’re caught up.')),btn('Download calendar reminders',()=>exportICS(items))];
+}
+async function notify(){
+ if(!('Notification' in window))return say('Browser notifications are unavailable here.');
+ try{const permission=await Notification.requestPermission();if(permission==='granted'){prefs.notify=true;applyPrefs();await deliverNotification()}else say('Notification permission was not granted.')}catch(e){say(message(e))}
+}
+async function deliverNotification(){
+ if(!prefs.notify||!('Notification' in window)||Notification.permission!=='granted')return;
+ const current=reminderCandidates(records).filter(d=>visibleReminder(d.state)&&!d.state.read).map(d=>d.key).sort().join(',');
+ if(!current||await request('state',s=>s.get('notified'))===current)return;
+ try{new Notification('VaultKeep deadline reminder',{body:'Open your vault to review upcoming deadlines.'});await write(['state'],tx=>tx.objectStore('state').put(current,'notified'))}catch{say('This browser cannot show standalone notifications. Calendar export is available.')}
+}
+function download(blob,name){
+ const url=URL.createObjectURL(blob), a=el('a',{href:url,download:name});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+}
+const textFile=(s,type,name)=>download(new Blob([s],{type}),name);
+function exportCSV(items){
+ const keys=['name','category','purchase','currency','price','store','months','exact','returnDate','model','serial','notes','tags'];
+ const quote=v=>{let s=String(v);if(typeof v==='string'&&/^[\s\uFEFF]*[=+@-]|^[\t\r\n]/u.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"'};
+ textFile('\uFEFF'+[keys.concat('calculatedWarrantyEnd').map(quote).join(','),...items.map(i=>keys.map(k=>quote(i[k])).concat(quote(warranty(i))).join(','))].join('\r\n'),'text/csv;charset=utf-8','vaultkeep.csv');
+}
+const binary64=blob=>new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result.split(',')[1]);r.onerror=()=>reject(r.error);r.readAsDataURL(blob)});
+async function backup(items){
+ const feedback=el('p',{role:'status'},'Preparing local backup…');
+ dialog('Export JSON backup',feedback,p('The backup includes private records and photos. Store it securely.'));
+ try{
+  const result=[];
+  for(const i of items){
+   feedback.textContent='Encoding item '+(result.length+1)+' of '+items.length+'…';
+   const images=[];
+   for(const x of i.images)images.push({kind:x.kind,name:x.name,type:x.blob.type,base64:await binary64(x.blob)});
+   const {revision,...data}=i;result.push({...data,images});
+  }
+  if(!feedback.isConnected)return;
+  feedback.textContent='Backup ready.';
+  modal.append(btn('Download backup',()=>textFile(JSON.stringify({format:'vaultkeep',version:1,imageEncoding:'base64',items:result}),'application/json','vaultkeep-'+localDate()+'.json'),'primary'));
+ }catch(e){feedback.textContent=message(e)}
+}
+const portableLimit=itemLimit*8*Math.ceil(photoLimit/3)*4+2*1024*1024;
+async function decodeBackup(raw,progress){
+ if(raw?.format!=='vaultkeep'||raw.version!==1||raw.imageEncoding!=='base64'||!Array.isArray(raw.items)||raw.items.length>itemLimit)throw Error('Choose a VaultKeep version 1 backup with up to 20 items.');
+ const ids=new Set(), result=[];
+ for(const entry of raw.items){
+  progress('Validating item '+(result.length+1)+' of '+raw.items.length+'…');
+  validate(entry);
+  if(typeof entry.id!=='string'||!/^[a-z0-9-]{1,64}$/i.test(entry.id)||ids.has(entry.id)||!Number.isSafeInteger(entry.created)||entry.created<0||!Array.isArray(entry.images)||entry.images.length>8)throw Error('Backup contains invalid or repeated item IDs, metadata or images.');
+  ids.add(entry.id);
+  const images=[];
+  for(const x of entry.images){
+   if(!x||!['receipt','product'].includes(x.kind)||typeof x.name!=='string'||x.name.length>160||typeof x.type!=='string'||typeof x.base64!=='string'||x.base64.length>Math.ceil(photoLimit/3)*4)throw Error('Invalid photo in backup.');
+   const data=atob(x.base64), bytes=new Uint8Array(data.length);
+   for(let n=0;n<data.length;n++)bytes[n]=data.charCodeAt(n);
+   const blob=new Blob([bytes],{type:x.type});await verifyImage(blob);
+   images.push({kind:x.kind,name:x.name,blob});
+  }
+  const fields=['id','name','category','currency','price','purchase','store','months','exact','returnDate','model','serial','tags','notes','created'];
+  result.push({...Object.fromEntries(fields.map(k=>[k,entry[k]])),images});
+ }
+ return result;
+}
+function restore(){
+ const feedback=el('p',{role:'status'}), preview=el('div',{class:'stack'});
+ const input=el('input',{type:'file',accept:'.json,application/json',onchange:async()=>{
+  const file=input.files[0];input.value='';preview.replaceChildren();if(!file)return;
+  input.disabled=true;
+  try{
+   if(file.size>portableLimit)throw Error('This file exceeds the maximum VaultKeep backup size.');
+   feedback.textContent='Reading local backup…';
+   const incoming=await decodeBackup(JSON.parse(await file.text()),s=>feedback.textContent=s);
+   if(!feedback.isConnected)return;
+   await refresh();
+   const existing=new Set(records.map(i=>i.id)), duplicates=incoming.filter(i=>existing.has(i.id)).length;
+   const handling=el('select',{},options([['skip','Skip matching IDs'],['copy','Import matching IDs as copies']]));
+   feedback.textContent=incoming.length+' valid items, including '+duplicates+' matching IDs. Available slots: '+(itemLimit-records.length)+'.';
+   const save=btn('Import items',async()=>{
+    save.disabled=true;feedback.textContent='Importing…';
+    try{
+     let count=0;
+     await write(['items'],(tx,fail)=>{
+      const s=tx.objectStore('items'), r=s.getAll();
+      r.onsuccess=()=>{
+       const ids=new Set(r.result.map(i=>i.id));
+       const additions=incoming.flatMap(i=>ids.has(i.id)?handling.value==='copy'?[{...i,id:id()}]:[]:[i]);
+       if(ids.size+additions.length>itemLimit)return fail(Error('Import exceeds the 20-item limit. Choose skip or free up space.'));
+       count=additions.length;for(const i of additions)s.add({...i,revision:id()});
+      };
+     });
+     await refresh();closeDialog();render();say('Imported '+count+' items.');
+    }catch(e){feedback.textContent=message(e);save.disabled=false}
+   },'primary',!incoming.length);
+   preview.append(el('ul',{},incoming.map(i=>el('li',{},i.name+' · '+i.images.length+' photos'+(existing.has(i.id)?' · matching ID':'')))),labeled('Duplicate handling',handling),save);
+  }catch(e){feedback.textContent='Restore could not continue. '+message(e)}finally{input.disabled=false}
+ }});
+ dialog('Restore JSON backup',p('Preview records before importing. Existing records are kept.'),labeled('Select a backup',input),feedback,preview);
+}
+function exportICS(items){
+ const upcoming=deadlines(items).filter(d=>d.n>=0);
+ if(!upcoming.length)return say('There are no upcoming deadlines to export.');
+ const dt=s=>s.replaceAll('-',''), stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+ const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//VaultKeep//Calendar Reminders//EN','CALSCALE:GREGORIAN'];
+ for(const d of upcoming){
+  lines.push('BEGIN:VEVENT','UID:'+d.i.id+'-'+d.type+'-'+d.date+'@vaultkeep.local','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+dt(d.date),'DTEND;VALUE=DATE:'+dt(addDays(d.date,1)),'SUMMARY:VaultKeep '+d.type.toLowerCase()+' deadline');
+  for(const n of thresholds)lines.push('BEGIN:VALARM','TRIGGER:-P'+n+'D','ACTION:DISPLAY','DESCRIPTION:VaultKeep deadline reminder','END:VALARM');
+  lines.push('END:VEVENT');
+ }
+ lines.push('END:VCALENDAR','');textFile(lines.join('\r\n'),'text/calendar;charset=utf-8','vaultkeep-deadlines.ics');
+}
+function reports(items){
+ const has=isDemo();
+ return [panel(heading('Purchase value by currency'),p(totals(items)),p('Totals are grouped by currency. No exchange rates are applied.','muted')),panel(heading('Local exports'),row(btn('Export CSV',()=>exportCSV(items)),btn('Back up JSON + photos',()=>backup(items)),btn('Download calendar reminders',()=>exportICS(items))),p('ZIP export is unavailable in this offline edition. The portable JSON backup contains all photos.','muted')),panel(heading(has?'Advanced reporting · Pro demo':'Advanced reporting · Pro'),has?timeline(deadlines(items).filter(d=>d.n<0)):p('Preview historical deadline reports using fictional records.'),has?null:btn('Preview Pro',upgrade))];
+}
+function settings(items){
+ const estimate=el('p',{role:'status'},'Calculating storage…');
+ const bytes=items.reduce((sum,i)=>sum+i.images.reduce((n,x)=>n+x.blob.size,0),0);
+ estimate.textContent=(bytes/1048576).toFixed(2)+' MB in stored photos.';
+ navigator.storage?.estimate?.().then(s=>{if(s.quota)estimate.textContent+=' Browser origin usage: '+((s.usage||0)/1048576).toFixed(2)+' MB.'}).catch(()=>{});
+ const check=(label,checked,action)=>labeled(label,el('input',{type:'checkbox',checked,onchange:e=>{action(e.target.checked);applyPrefs()}}));
+ return [
+ panel(heading('Appearance'),row(btn('Switch theme',theme),check('Reduce motion',prefs.motion,v=>{prefs.motion=v;queueMicrotask(render)}))),
+ panel(heading('Deadline reminders'),check('Show in-app reminders',prefs.alerts,v=>prefs.alerts=v),row(thresholds.map(n=>check(n+' days',prefs.windows.includes(n),v=>{prefs.windows=v?[...prefs.windows,n]:prefs.windows.filter(x=>x!==n)}))),row(btn('Enable browser notifications',notify,'',isDemo()),btn('Turn off notifications',()=>{prefs.notify=false;applyPrefs();say('VaultKeep notifications are off.')},'',isDemo())),p('Notifications are optional and run when VaultKeep is open. Closed-browser delivery is not guaranteed. Calendar clients handle imported ICS alerts.')),
+ panel(heading('Storage and backups'),estimate,p('Clearing browser data can erase items. Backups contain plaintext data and Base64-encoded image bytes in VaultKeep JSON schema version 1.'),row(btn('Back up JSON + photos',()=>backup(items)),btn('Restore JSON',restore,'',!ready||isDemo()),btn('Delete all personal data',()=>confirmAction('Delete all data','This permanently deletes personal items, images and reminder history in this browser. Download a backup first.',async()=>{await write(['items','state'],tx=>{tx.objectStore('items').clear();tx.objectStore('state').clear()});await refresh()}),'',!ready||isDemo()))),
+ panel(heading('Privacy and installation'),p('Items and photos stay in IndexedDB for this browser profile and origin. IndexedDB does not provide application-level encryption. Private browsing or storage policies can remove data.'),p(location.protocol==='file:'?'You opened a local file. Browser storage for file URLs varies.':'You opened a served copy. Keep using the same scheme, hostname and port for your saved data.'),p('Serve this file from its folder using python -m http.server 8000, then open http://localhost:8000/vaultkeep.html. HTTPS also provides a stable origin. Bookmark the page or use your browser’s shortcut feature when offered. This file has no service worker or separate manifest, so installability and served offline reloads vary.'),p('Service worker API: '+('serviceWorker' in navigator?'available on this origin':'unavailable on this origin')+'.'),btn('Run internal checks',()=>say(runTests()))),
+ panel(heading('Demo and pricing'),p('The demo uses fictional records and never writes them to your personal vault.'),row(link(isDemo()?'Open personal vault':'Open demo',isDemo()?'vault/dashboard':'demo/dashboard','btn'),isDemo()?btn('Reset demo view',()=>{resetFilters();go('dashboard');render();say('Demo reset.')}):null,btn('Pro preview',upgrade),btn('Service configuration',integrations)))
+ ];
+}
+function resetFilters(){filters={q:'',category:'',status:'',store:'',from:'',to:'',sort:'new',view:'grid'}}
+function render(){
+ clearURLs(urls);
+ const [mode,page,itemId]=context();
+ if(!['demo','vault'].includes(mode)){landing();return}
+ const items=isDemo()?samples():records, item=items.find(i=>i.id===itemId);
+ const title=page==='item'?(item?.name||'Item unavailable'):(routes[page]||'Dashboard');
+ const action=isDemo()?btn('Personal vault',()=>location.hash='vault/dashboard'):btn('Add item',()=>edit(),'primary',!ready);
+ let content;
+ if(!isDemo()&&!ready&&page!=='settings')content=[panel(p(loadError||'Opening your local vault…'),loadError?btn('Retry',()=>location.reload()):el('div',{class:'bar','aria-hidden':'true'}))];
+ else switch(page){
+  case 'items':content=browse(items);break;
+  case 'item':content=item?detail(item):[panel(p('This item is unavailable.'),link('Back to all items',path('items'),'btn'))];break;
+  case 'expiring':content=[panel(heading('Warranty deadlines in the next 30 days'),timeline(deadlines(items).filter(d=>d.type==='Warranty'&&d.n>=0&&d.n<=30)))];break;
+  case 'returns':content=[panel(heading('Open return windows'),timeline(deadlines(items).filter(d=>d.type==='Return'&&d.n>=0))),panel(heading('Closed return windows'),timeline(deadlines(items).filter(d=>d.type==='Return'&&d.n<0).reverse()))];break;
+  case 'categories':content=[categoryView(items)];break;
+  case 'reports':content=reports(items);break;
+  case 'reminders':content=reminderView(items);break;
+  case 'settings':content=settings(items);break;
+  default:content=dashboard(items);
+ }
+ const unread=isDemo()?0:reminderCandidates(items).filter(d=>visibleReminder(d.state)&&!d.state.read).length;
+ const mobileMore=el('details',{class:'mobile-more actions'},el('summary',{},'More pages'),row(['expiring','returns','categories','reports'].map(k=>link(routes[k],path(k),'btn'))));
+ root.replaceChildren(el('div',{class:'shell'},el('aside',{class:'side'},link('◈ VaultKeep','home','brand'),nav(false,page)),el('main',{id:'main',class:'workspace stack'},el('div',{class:'row spread actions'},p(isDemo()?'Fictional sample vault':'Personal vault','eyebrow'),row(link('Home','home','btn'),link(unread?'Reminders ('+unread+')':'Reminders',path('reminders'),'btn'),action)),el('h1',{},title),mobileMore,content),nav(true,page)));
+}
+function runTests(){
+ const assert=(condition,label)=>{if(!condition)throw Error('Failed: '+label)};
+ try{
+  assert(monthEnd('2024-01-31',1)==='2024-02-29','leap February');
+  assert(monthEnd('2024-02-29',12)==='2025-02-28','non-leap anniversary');
+  assert(!Number.isFinite(dateNumber('2025-02-29')),'invalid date');
+  const items=samples(), i=items[0];
+  assert(status({...i,exact:'2025-01-10'},'2025-01-10')==='Expiring','inclusive deadline');
+  assert(status({...i,exact:'2025-01-10'},'2025-01-11')==='Expired','expired after deadline');
+  assert(!visibleReminder({until:11},10)&&visibleReminder({until:10},10)&&!visibleReminder({dismissed:true},10),'reminder state');
+  assert(filtered(items,{q:'signal studio',category:'Accessories',sort:'name'}).length===1,'search and category');
+  assert(validate(i)===i,'valid data');
+  let invalid=false;try{validate({...i,price:-1})}catch{invalid=true}assert(invalid,'invalid price');
+  return '9 internal checks passed.';
+ }catch(e){return e.message}
+}
+let previousMode;
+window.addEventListener('hashchange',()=>{
+ if(location.hash==='#main')return;
+ if(modal.open)closeDialog();
+ const mode=context()[0];
+ if(mode!==previousMode){resetFilters();previousMode=mode}
+ render();if(['vault','demo'].includes(mode))window.scrollTo(0,0);
+});
+document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();const main=document.getElementById('main');main.tabIndex=-1;main.focus()});
+document.addEventListener('visibilitychange',async()=>{
+ if(document.visibilityState!=='visible'||!ready)return;
+ try{await refresh();if(!modal.open&&['vault','demo'].includes(context()[0]))render();if(!isDemo())await deliverNotification()}catch(e){say(message(e))}
+});
+document.head.append(el('style',{},'.landing-more,.mobile-more{display:none}@media(max-width:840px){.landing-more{display:block;width:100%}.landing-more:not([open]){width:auto}.landing-more summary{cursor:pointer;padding:.5rem}.mobile-more{display:block}.mobile-more summary{cursor:pointer}}[data-motion=off] .pending{opacity:1;transform:none}'));
+previousMode=context()[0];render();
+(async()=>{
+ try{db=await openDb();await refresh();ready=true;if(context()[0]==='vault')render();if(!isDemo())await deliverNotification()}
+ catch(e){loadError='Vault storage is unavailable. Use a regular browser profile on localhost or HTTPS. '+message(e);if(context()[0]==='vault')render()}
+})();
+</script></body></html>
+
+
+
+
+
