@@ -207,7 +207,7 @@ h2.sec-title{font-size:38px;font-weight:800;line-height:1;margin-bottom:8px;colo
 
 /* PROJECTS (now clickable links) */
 .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-a.proj-card{background:white;border:2px solid var(--blue-900);border-radius:16px;padding:16px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;transition:.18s;box-shadow:4px 4px 0 rgba(15,32,64,.08);cursor:pointer;text-decoration:none;color:inherit;min-height:190px}
+.proj-card{background:white;border:2px solid var(--blue-900);border-radius:16px;padding:16px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;transition:.18s;box-shadow:4px 4px 0 rgba(15,32,64,.08);cursor:pointer;text-decoration:none;color:inherit;min-height:190px}
 a.proj-card:hover{transform:translate(-2px,-2px) rotate(-.4deg);box-shadow:7px 7px 0 var(--blue-900)}
 .proj-tag{font-size:10px;letter-spacing:0.08em;font-weight:800;color:var(--blue-500);background:#EFF6FF;padding:4px 8px;border-radius:999px;align-self:flex-start;border:1px solid #DBEAFE;text-transform:uppercase}
 .proj-name{font-family:'Space Grotesk';font-weight:800;font-size:16px;color:var(--blue-900)}
@@ -215,9 +215,9 @@ a.proj-card:hover{transform:translate(-2px,-2px) rotate(-.4deg);box-shadow:7px 7
 .proj-link{font-weight:800;font-size:11px;color:var(--blue-700);display:inline-flex;align-items:center;gap:4px;transition:.2s}
 a.proj-card:hover .proj-link{gap:8px;color:var(--blue-900)}
 .proj-num{position:absolute;right:10px;bottom:4px;font-family:'Space Grotesk';font-weight:800;font-size:32px;color:rgba(15,32,64,.05);pointer-events:none}
-a.proj-card:nth-child(3n+1){border-top:4px solid var(--yellow)}
-a.proj-card:nth-child(3n+2){border-top:4px solid var(--blue-500)}
-a.proj-card:nth-child(3n+3){border-top:4px solid var(--blue-900)}
+.proj-card:nth-child(3n+1){border-top:4px solid var(--yellow)}
+.proj-card:nth-child(3n+2){border-top:4px solid var(--blue-500)}
+.proj-card:nth-child(3n+3){border-top:4px solid var(--blue-900)}
 
 /* CONSULT */
 .consult{background:linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 100%);color:white;padding:56px 0;text-align:center;border-top:4px solid var(--yellow);border-bottom:4px solid var(--yellow);position:relative;overflow:hidden}
@@ -274,6 +274,25 @@ footer{background:var(--blue-900);color:#C7D2FE;padding:32px 0 20px;border-top:4
   .consult h2{font-size:30px}
   .stats{flex-wrap:wrap;gap:18px}
 }
+/* Android and Roblox portfolio sections */
+.platform-nav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.platform-nav a{color:var(--blue-700);font-weight:800;font-size:13px;display:inline-flex;gap:7px;align-items:center}
+.platform-grid{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,225px),1fr));gap:12px}
+.platform-grid li{display:flex;align-items:center;gap:12px;background:white;border:1.5px solid var(--blue-900);border-radius:14px;padding:14px 16px;box-shadow:3px 3px 0 rgba(15,32,64,.08);font-family:'Space Grotesk',sans-serif;font-weight:800;color:var(--blue-900)}
+.platform-grid i{color:#08734c;background:#e1f8ee;border-radius:9px;width:36px;height:36px;display:grid;place-items:center;flex:none}
+.roblox-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);overflow:hidden;background:#111e38;color:white;border:2px solid var(--blue-900);border-radius:20px;box-shadow:5px 5px 0 rgba(15,32,64,.13)}
+.roblox-copy{padding:clamp(22px,4vw,42px);display:grid;justify-items:start;align-content:center;gap:10px}
+.roblox-copy h3{font-size:clamp(27px,4vw,46px);line-height:1.1}
+.roblox-copy p{max-width:53ch;color:#d3e1f7;font-size:14px}
+.roblox-profile{color:#ffe17c;font-weight:700;font-size:13px}
+.roblox-links{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:5px}
+.roblox-scene{position:relative;isolation:isolate;overflow:hidden;min-height:215px;background:radial-gradient(ellipse at 70% 85%,#395383 0%,#1a2951 44%,#090e25 95%)}
+.roblox-scene::before{content:'';position:absolute;top:15%;right:20%;width:52px;height:52px;border-radius:50%;background:#e6edff;box-shadow:0 0 32px #bad0ff77}
+.roblox-scene::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#080d23a8,transparent 55%);pointer-events:none}
+.roblox-roof{position:absolute;bottom:0;width:29%;height:var(--height);left:var(--left);background:linear-gradient(90deg,#101a33 79%,#0b1329 79%);border-top:2px solid #7282a7;transform:skewY(-7deg);transform-origin:bottom right}
+.roblox-roof::after{content:'';position:absolute;inset:23px 30% 0 12%;background:radial-gradient(ellipse at center,#a8bafb 0 23%,transparent 26%) 0 0 / 19px 23px;opacity:.43}
+.proj-card.proj-static{cursor:default}
+@media(max-width:650px){.roblox-card{grid-template-columns:1fr}.roblox-scene{min-height:185px;order:-1}}
 </style>
 </head>
 <body>
@@ -325,7 +344,7 @@ footer{background:var(--blue-900);color:#C7D2FE;padding:32px 0 20px;border-top:4
         <div class="stats">
           <div class="stat"><b class="counter" data-target="1">0</b><span>BRAND FOUNDED</span></div>
           <div class="stat"><b class="counter" data-target="4">0</b><span>VERIFIED CERTS</span></div>
-          <div class="stat"><b class="counter" data-target="13">0</b><span>PROJECTS BUILT</span></div>
+          <div class="stat"><b class="counter" data-target="17">0</b><span>PROJECTS BUILT</span></div>
           <div class="stat"><b class="counter" data-target="10">0</b><span>YEARS OLD</span></div>
         </div>
       </div>
@@ -549,10 +568,53 @@ footer{background:var(--blue-900);color:#C7D2FE;padding:32px 0 20px;border-top:4
           <div class="eye reveal">BHAVYA'S PERSONAL WORK</div>
           <h2 class="sec-title reveal">Bhavya's <span class="hl">Projects</span></h2>
         </div>
-        <span style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--muted)" class="reveal">13 Software Prototypes</span>
+        <span style="font-family:'JetBrains Mono';font-size:12px;font-weight:700;color:var(--muted)" class="reveal">17 Software Prototypes</span>
       </div>
       <div class="sec-bar blue reveal"></div>
+      <div class="platform-nav reveal">
+        <a href="#android-apps"><i class="fa-brands fa-android" aria-hidden="true"></i> Android Apps</a>
+        <a href="#roblox"><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Roblox</a>
+      </div>
       <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+  </section>
+
+  <section id="android-apps" class="sec sec-cream">
+    <div class="container">
+      <h2 class="sec-title reveal">Android <span class="hl">Apps</span></h2>
+      <div class="sec-bar blue reveal"></div>
+      <ul class="platform-grid reveal">
+        <li><i class="fa-brands fa-android" aria-hidden="true"></i>Ledgerly</li>
+        <li><i class="fa-brands fa-android" aria-hidden="true"></i>BillGuard</li>
+        <li><i class="fa-brands fa-android" aria-hidden="true"></i>VaultKeep</li>
+        <li><i class="fa-brands fa-android" aria-hidden="true"></i>Fix Keeper</li>
+        <li><i class="fa-brands fa-android" aria-hidden="true"></i>Vasooli</li>
+        <li><i class="fa-brands fa-android" aria-hidden="true"></i>Price Pulse</li>
+        <li><i class="fa-brands fa-android" aria-hidden="true"></i>Cabinet Care</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="roblox" class="sec sec-white">
+    <div class="container">
+      <h2 class="sec-title reveal">Roblox</h2>
+      <div class="sec-bar blue reveal"></div>
+      <article class="roblox-card reveal">
+        <div class="roblox-copy">
+          <span class="proj-tag">My first Roblox game</span>
+          <h3>Midnight Relay</h3>
+          <p>A short rooftop obby set at night. Jump between dark buildings where the gaps are hard to see. The entire course fits in one small lobby.</p>
+          <div class="roblox-links">
+            <a class="btn-yellow" href="https://www.roblox.com/games/94717297434348/" target="_blank" rel="noopener noreferrer">View on Roblox <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            <a class="roblox-profile" href="https://www.roblox.com/users/10247333331/profile" target="_blank" rel="noopener noreferrer">Bhavya7913 (@BGH7912)</a>
+          </div>
+        </div>
+        <div class="roblox-scene" aria-hidden="true">
+          <span class="roblox-roof" style="--left:-3%;--height:43%"></span>
+          <span class="roblox-roof" style="--left:31%;--height:54%"></span>
+          <span class="roblox-roof" style="--left:68%;--height:65%"></span>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -563,7 +625,7 @@ footer{background:var(--blue-900);color:#C7D2FE;padding:32px 0 20px;border-top:4
       <h2 class="reveal">Let's Build Something <span style="color:var(--yellow)">Extraordinary</span></h2>
       <p class="reveal d1">Explore my personal software prototypes, developer experiments, or reach out directly for BG Fame workshops.</p>
       <div class="consult-btns reveal d2">
-        <a href="#projects" class="btn-yellow">Explore All 13 Projects <i class="fa-solid fa-layer-group"></i></a>
+        <a href="#projects" class="btn-yellow">Explore All 17 Projects <i class="fa-solid fa-layer-group"></i></a>
         <a href="mailto:bgfameai7@gmail.com?subject=Workshop Inquiry - BG Fame" class="btn-ghost">Email BG Fame <i class="fa-solid fa-envelope"></i></a>
       </div>
     </div>
@@ -753,21 +815,34 @@ const projects = [
    desc:"A game related to planets — users need to destroy planets, unlock new weapons, and get to know about the planet destroyed."},
   {tag:"Universe Information",href:"universe-explorer.html",name:"Universe Explorer",
    desc:"Explore the entire universe — from planets to superclusters — in one immersive interactive experience."},
-  {tag:"Payment Tracker",href:"vasooli.html",name:"Vasooli",
+  {tag:"Payment Tracker · Web + Android",href:"vasooli.html",name:"Vasooli",
    desc:"Recover overdue payments with smart reminders, legal tools, and MSME-backed recovery workflows."},
   {tag:"Scam Detection",href:"ScamProof.html",name:"ScamProof",
    desc:"Detect scams, verify suspicious messages, and protect yourself with AI-powered fraud analysis."},
-  {tag: "Pricing & Profit Analytics",href: "pricepulse.html",name: "PricePulse", desc: "Track product costs, analyze profit margins, identify loss-making products, and optimize your pricing with a smart business dashboard."}
-
+  {tag: "Pricing & Profit Analytics · Web + Android",href: "pricepulse.html",name: "PricePulse", desc: "Track product costs, analyze profit margins, identify loss-making products, and optimize your pricing with a smart business dashboard."},
+  {tag:"Property Maintenance · Web + Android",href:"https://bhavyagoel.com/fixkeeper.html",name:"FixKeeper",
+   desc:"Log repairs, track maintenance costs, and schedule recurring upkeep across rental properties and units."},
+  {tag:"Medicine Inventory · Web + Android",href:"cabinet-care.html",name:"Cabinet Care",
+   desc:"Organize household medicines by cabinet, keep tabs on stock, and spot packages approaching expiry."},
+  {tag:"Receipts & Warranties · Web + Android",href:"https://bhavyagoel.com/vaultkeep.html",name:"Vault Keep",
+   desc:"Keep receipts, warranties, and return deadlines in one place so you can find them when you need them."},
+  {tag:"Personal Journal · Web + Android",name:"Ledgerly",
+   desc:"Privately log and rate restaurants, dishes, and purchases so you can find your favorites again."}
 ];
+function projectHref(href) {
+  if (location.protocol === 'file:' && href !== 'cabinet-care.html') {
+    return new URL(href, 'https://bhavyagoel.com/').href;
+  }
+  return href;
+}
 document.getElementById('projectsGrid').innerHTML = projects.map((p,i)=>`
-  <a href="${p.href}" class="proj-card reveal d${(i%3)+1}">
+  ${p.href ? `<a href="${projectHref(p.href)}"` : '<article'} class="proj-card reveal d${(i%3)+1}${p.href ? '' : ' proj-static'}">
     <span class="proj-tag">${p.tag}</span>
     <div class="proj-name">${p.name}</div>
     <div class="proj-desc">${p.desc}</div>
-    <span class="proj-link">Open Project →</span>
+    ${p.href ? '<span class="proj-link">Open Project →</span>' : ''}
     <span class="proj-num">${String(i+1).padStart(2,'0')}</span>
-  </a>`).join('');
+  </${p.href ? 'a' : 'article'}>`).join('');
 document.querySelectorAll('#projectsGrid .reveal').forEach(el => io.observe(el));
 
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
