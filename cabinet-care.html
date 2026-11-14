@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#103d34">
+  <title>Cabinet Care — Household Medicine Inventory</title>
+  <style>
+    :root{color-scheme:light;--bg:#f7f7f0;--surface:#fffffa;--ink:#18352c;--muted:#53685f;--line:#dce3d8;--brand:#105544;--deep:#103d34;--accent:#d9eea4;--mint:#dceee5;--amber:#f9e7ba;--alert:#795003;--rose:#f9e3dd;--danger:#893625;--shadow:0 12px 35px #203b2510;--sans:Inter,system-ui,-apple-system,sans-serif}
+    :root[data-theme=dark]{color-scheme:dark;--bg:#14221c;--surface:#1c2e26;--ink:#ecf3e7;--muted:#b4cabc;--line:#3c5246;--brand:#bfe7cb;--mint:#263f34;--amber:#46391d;--alert:#ffe19a;--rose:#4d2a25;--danger:#ffbaa9;--shadow:0 12px 35px #0003}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans)} button,input,select,textarea{font:inherit} button{cursor:pointer} [hidden]{display:none!important} a{color:inherit} button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #48a780;outline-offset:3px}
+    .top{border-bottom:1px solid var(--line);background:var(--surface)} .wrap{width:min(1180px,calc(100% - 72px));margin:auto} .top-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:75px}.brand{display:flex;align-items:center;gap:12px;font-size:19px;font-weight:780;letter-spacing:-.04em;text-decoration:none;white-space:nowrap}.brand-mark{display:grid;place-items:center;width:36px;height:36px;background:var(--deep);color:#e5f3ba;border-radius:10px;font-size:25px;line-height:1;font-weight:500}.nav{display:flex;gap:6px;align-items:center}.nav button{background:transparent;color:var(--muted);border:0;border-radius:8px;padding:9px 13px;font-weight:670}.nav button[aria-current=page]{background:var(--mint);color:var(--brand)}.head-action{white-space:nowrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:9px 15px;border:1px solid transparent;border-radius:9px;font-weight:740;text-decoration:none;transition:background .18s,transform .18s}.btn:hover{transform:translateY(-2px)}.primary{background:var(--brand);color:var(--surface)}.light{background:var(--accent);color:#18352c}.secondary{background:var(--surface);color:var(--ink);border-color:var(--line)}.danger{color:var(--danger)}
+    main{padding:36px 0 55px}.hero{position:relative;isolation:isolate;display:grid;grid-template-columns:1.1fr 1fr;align-items:center;overflow:hidden;min-height:324px;background:#103e34;color:#f6f8e8;border-radius:22px;padding:35px 44px;animation:arrive .6s both}.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 79% 63%,#326651,transparent 46%),linear-gradient(130deg,#194b3c,#0a342d)}.hero-copy{z-index:1}.eyebrow{font-size:10px;font-weight:775;text-transform:uppercase;letter-spacing:.16em;color:#d3e99e;display:flex;align-items:center;gap:8px}.eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:#cfe68a;box-shadow:0 0 14px #d8f49880}.hero h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-.055em;font-size:clamp(40px,5.7vw,75px);line-height:.98;margin:15px 0}.hero p{max-width:40ch;font-size:15px;color:#d8e6d9;margin:0 0 23px}.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.hero-scan{color:#eff9e5;font-weight:700;background:none;border:0;padding:9px 4px;min-height:42px;text-underline-offset:4px}.hero-scan:hover{text-decoration:underline}
+    .scene{height:280px;position:relative;display:grid;place-items:center;perspective:780px;transform-style:preserve-3d}.scene::before,.scene::after{content:"";position:absolute;border:1px solid #c7e3b42b;border-radius:50%;width:325px;height:228px;transform:rotate(-25deg);pointer-events:none}.scene::after{width:384px;height:270px;transform:rotate(-25deg)}.scene-shadow{position:absolute;top:77%;width:230px;height:26px;border-radius:50%;background:#0227208f;filter:blur(11px);transform:rotate(-9deg)}.floating{transform-style:preserve-3d;animation:float 5s ease-in-out infinite}.cabinet{position:relative;width:204px;height:178px;transform-style:preserve-3d;transform:rotateX(var(--rx,12deg)) rotateY(var(--ry,-23deg)) rotateZ(-6deg);transition:transform .28s ease}.cabinet .face{position:absolute;inset:0;border:1px solid #e2e9c6;border-radius:12px;background:#bed5af;box-shadow:inset 0 0 0 10px #dbe8c5,inset 0 12px 24px #34564888;transform:translateZ(43px)}.cabinet .back{position:absolute;inset:0;border-radius:10px;background:#678f75;transform:translateZ(-43px)}.cabinet .side{position:absolute;left:161px;top:0;width:86px;height:178px;border:1px solid #b6c5a3;border-radius:8px;background:linear-gradient(110deg,#b1c6a3,#759582);transform:rotateY(90deg)}.cabinet .top-face{position:absolute;left:0;top:-43px;width:204px;height:86px;border-radius:8px;background:linear-gradient(120deg,#eff1d2,#9db69e);transform:rotateX(90deg)}.shelf{position:absolute;height:4px;left:10px;right:10px;top:89px;background:#eff2d1;border-radius:2px;box-shadow:0 3px 5px #355b4f78}.medicine{position:absolute;bottom:99px;border-radius:5px 5px 3px 3px;box-shadow:inset -5px 0 #0002,0 3px 6px #355b4f80}.medicine.one{left:28px;width:27px;height:44px;background:#f8f7df}.medicine.two{left:71px;width:57px;height:34px;background:#f2ca77}.medicine.three{left:146px;width:25px;height:51px;background:#7c9c7d}.medicine.four{left:28px;bottom:13px;width:55px;height:39px;background:#f0d198}.medicine.five{left:104px;bottom:13px;width:27px;height:51px;background:#f5f6da}.medicine.six{left:147px;bottom:13px;width:28px;height:42px;background:#d29a7d}.medicine::after{content:"";position:absolute;left:4px;right:4px;top:40%;height:34%;border-top:2px solid #103e344a;border-bottom:1px solid #103e344a}.door{position:absolute;left:0;top:0;width:204px;height:178px;border:8px solid #e5edca;border-radius:12px;background:linear-gradient(130deg,#f0f8de20,#b7d6ac3b);box-shadow:inset 0 0 0 1px #fbfff2a5;transform-origin:left;transform:translateZ(50px) rotateY(-21deg);animation:door 7s ease-in-out infinite}.door span{position:absolute;right:11px;top:73px;width:6px;height:26px;background:#eff4d5;border-radius:4px;box-shadow:2px 2px 5px #153e32af}.spark{position:absolute;color:#d6eca7;font-size:20px;animation:twinkle 3s ease-in-out infinite}.spark-a{top:29px;right:12%}.spark-b{bottom:42px;left:13%;animation-delay:-1.3s}.spark-c{right:11%;bottom:64px;font-size:11px;animation-delay:-.8s}
+    @keyframes float{50%{transform:translateY(-11px)}} @keyframes door{50%{transform:translateZ(50px) rotateY(-34deg)}} @keyframes twinkle{50%{opacity:.3;scale:.7}} @keyframes arrive{from{opacity:0;transform:translateY(11px)}}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:17px 0 34px}.stat{position:relative;text-align:left;padding:15px 19px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);animation:arrive .5s both;display:grid;grid-template-columns:1fr auto;gap:4px 8px;transition:transform .2s}.stat:hover{transform:translateY(-3px)}.stat:nth-child(2){animation-delay:.08s}.stat:nth-child(3){animation-delay:.16s}.stat-label{font-weight:700;color:var(--muted)}.stat-number{font:36px/1 Georgia,serif;grid-column:1}.stat-icon{grid-column:2;grid-row:1/3;align-self:center;background:var(--mint);border-radius:9px;color:var(--brand);width:36px;height:36px;display:grid;place-items:center;font-size:20px}.stat:nth-child(2) .stat-icon{background:var(--amber);color:var(--alert)}.stat:nth-child(3) .stat-icon{background:var(--rose);color:var(--danger)}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:15px}.section-head h2,.page-heading{font:400 clamp(29px,4vw,42px)/1.1 Georgia,serif;letter-spacing:-.043em;margin:0}.description{color:var(--muted);margin:8px 0 0}.panel{background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);animation:arrive .45s both;overflow:hidden}.toolbar{display:grid;grid-template-columns:minmax(150px,1fr) minmax(110px,180px) minmax(120px,175px);gap:11px;padding:14px;border-bottom:1px solid var(--line)}.field{display:grid;gap:5px;color:var(--ink);font-weight:670;min-width:0}.field input,.field select,.field textarea,.toolbar input,.toolbar select{width:100%;min-width:0;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 10px;min-height:41px;box-sizing:border-box}.field textarea{min-height:68px;resize:vertical}.field small,.muted{color:var(--muted);font-weight:400}.table-wrap{overflow-x:auto}.table{width:100%;border-collapse:collapse;text-align:left}.table th{background:var(--bg);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.table th,.table td{padding:11px 16px;vertical-align:middle}.table tbody tr+tr{border-top:1px solid var(--line)}.table tbody tr:hover{background:var(--bg)}.item-info{display:flex;gap:11px;align-items:center;min-width:145px}.item-icon{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:8px;background:var(--mint);color:var(--brand);font-size:17px}.item-image{width:34px;height:34px;object-fit:cover;border-radius:8px}.item-name{padding:0;background:none;border:0;color:var(--ink);text-align:left;font-weight:750;text-underline-offset:3px;overflow-wrap:anywhere}.item-name:hover{text-decoration:underline}.item-sub{display:block;color:var(--muted);font-size:11px;overflow-wrap:anywhere}.pill{display:inline-block;white-space:nowrap;border-radius:25px;padding:4px 8px;background:var(--mint);color:var(--brand);font-size:11px;font-weight:750}.pill.soon{background:var(--amber);color:var(--alert)}.pill.expired{background:var(--rose);color:var(--danger)}.empty{text-align:center;color:var(--muted);padding:36px 16px}.sample-note{margin:0;padding:11px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
+    .settings{padding:22px;display:grid;gap:23px}.settings-block{display:grid;gap:10px}.settings-block+.settings-block{padding-top:17px;border-top:1px solid var(--line)}.settings-block h3{font-size:17px;margin:0}.settings-block p{margin:0}.setting-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.button-row{display:flex;flex-wrap:wrap;gap:8px}.footer{border-top:1px solid var(--line);color:var(--muted);padding:14px 0 24px;font-size:12px}.footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.footer a{text-underline-offset:3px}
+    dialog{width:min(550px,calc(100% - 22px));max-height:calc(100dvh - 24px);overflow:auto;padding:0;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);box-shadow:0 20px 70px #071c3655}dialog[open]{animation:arrive .25s both}dialog::backdrop{background:#081b17a8;backdrop-filter:blur(4px)}.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:13px;padding:15px 19px;border-bottom:1px solid var(--line)}.dialog-head h2{font:29px/1.1 Georgia,serif;margin:0}.close-btn{min-width:39px;min-height:39px;padding:0;font-size:20px}.dialog-body{padding:17px 19px;display:grid;gap:13px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.photo-box{padding:10px;border:1px dashed var(--line);border-radius:10px;display:grid;gap:8px}.photo-box input{max-width:100%;color:var(--ink)}.photo-preview{max-width:100%;max-height:130px;border-radius:7px;justify-self:start}.dialog-foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;padding:13px 19px;border-top:1px solid var(--line)}.dialog-foot .danger{margin-right:auto}.message{position:fixed;bottom:14px;right:14px;max-width:min(400px,calc(100% - 28px));padding:12px 15px;background:#103d34;color:#f3f8e9;border:1px solid #688d75;border-radius:10px;z-index:3;box-shadow:var(--shadow);animation:arrive .2s both}.error-text{color:var(--danger);margin:0}.detail-grid{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail-grid dt{color:var(--muted);font-size:12px}.detail-grid dd{margin:0;font-weight:730;overflow-wrap:anywhere}.detail-notes{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+    @media(max-width:800px){.wrap{width:calc(100% - 36px)}.hero{padding:28px 26px}.scene::after{width:255px;height:210px}.scene::before{width:218px;height:180px}}
+    @media(max-width:580px){.wrap{width:calc(100% - 24px)}.top-inner{flex-wrap:wrap;gap:7px 12px;padding:10px 0 7px}.nav{order:3;flex-basis:100%;justify-content:center;border-top:1px solid var(--line);padding-top:7px}.nav button{flex:1;padding-inline:5px}.brand{font-size:17px}.head-action{padding-inline:9px}main{padding-top:16px}.hero{grid-template-columns:1fr;padding:24px 20px 0}.hero h1{max-width:12ch}.hero p{margin-bottom:11px}.scene{height:195px;scale:.83}.summary{gap:6px;margin:10px 0 24px}.stat{padding:10px 8px;grid-template-columns:1fr;gap:3px}.stat-label{font-size:11px}.stat-icon{display:none}.stat-number{font-size:29px}.toolbar{grid-template-columns:1fr 1fr;gap:6px;padding:9px}.toolbar input{grid-column:1/-1}.table th,.table td{padding:9px 8px}.setting-fields{grid-template-columns:1fr}.section-head{gap:7px}.settings{padding:15px}.footer{padding-bottom:16px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+    @media(max-width:580px){
+      .scene{margin-top:13px;height:205px;scale:.78}
+      .table,.table tbody{display:block}.table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+      .table tr{display:grid;grid-template-columns:1fr 1fr;gap:6px 11px;padding:12px}
+      .table td{display:block;min-width:0;padding:0;overflow-wrap:anywhere}
+      .table td:first-child,.table td:last-child{grid-column:1/-1}
+      .table td[data-label]::before{content:attr(data-label);display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
+    }
+  </style>
+</head>
+<body>
+  <header class="top"><div class="wrap top-inner">
+    <a class="brand" href="#dashboard"><span class="brand-mark" aria-hidden="true">+</span>Cabinet Care</a>
+    <nav class="nav" aria-label="Cabinet Care">
+      <button type="button" data-view="dashboard" data-t="dashboard" aria-current="page">Overview</button>
+      <button type="button" data-view="inventory" data-t="inventory">Inventory</button>
+      <button type="button" data-view="settings" data-t="settings">Settings</button>
+    </nav>
+    <button class="btn primary head-action" type="button" data-add><span aria-hidden="true">+</span><span data-t="add">Add medicine</span></button>
+  </div></header>
+
+  <main class="wrap">
+    <div id="overview">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <span class="eyebrow" data-t="eyebrow">Your household medicine cabinet</span>
+          <h1 id="hero-title" data-t="headline">A clearer cabinet.</h1>
+          <p data-t="intro">See what you have, what’s running low, and what’s nearing expiry.</p>
+          <div class="hero-actions">
+            <button class="btn light" type="button" data-add><span aria-hidden="true">+</span><span data-t="add">Add medicine</span></button>
+            <button class="hero-scan" type="button" id="open-scan" data-t="scanPack">Scan a package ↗</button>
+          </div>
+        </div>
+        <div class="scene" id="scene" aria-hidden="true">
+          <div class="scene-shadow"></div><span class="spark spark-a">✦</span><span class="spark spark-b">✧</span><span class="spark spark-c">✦</span>
+          <div class="floating"><div class="cabinet">
+            <div class="back"></div><div class="side"></div><div class="top-face"></div>
+            <div class="face"><span class="shelf"></span><span class="medicine one"></span><span class="medicine two"></span><span class="medicine three"></span><span class="medicine four"></span><span class="medicine five"></span><span class="medicine six"></span></div>
+            <div class="door"><span></span></div>
+          </div></div>
+        </div>
+      </section>
+      <div class="summary" aria-label="Inventory summary">
+        <button class="stat" type="button" data-filter="all"><span class="stat-label" data-t="total">Medicines</span><strong class="stat-number" id="count-total">0</strong><span class="stat-icon" aria-hidden="true">▤</span></button>
+        <button class="stat" type="button" data-filter="soon"><span class="stat-label" data-t="soon">Expiring soon</span><strong class="stat-number" id="count-soon">0</strong><span class="stat-icon" aria-hidden="true">◷</span></button>
+        <button class="stat" type="button" data-filter="low"><span class="stat-label" data-t="low">Low stock</span><strong class="stat-number" id="count-low">0</strong><span class="stat-icon" aria-hidden="true">↓</span></button>
+      </div>
+    </div>
+
+    <section id="inventory-panel" aria-labelledby="inventory-title">
+      <div class="section-head"><div><h2 id="inventory-title" data-t="inventoryTitle">Medicine inventory</h2><p class="description" id="inventory-caption"></p></div></div>
+      <div class="panel">
+        <div class="toolbar">
+          <input id="search" type="search" data-placeholder="search" aria-label="Search medicines" placeholder="Search medicines…">
+          <select id="filter-cabinet" aria-label="Filter by cabinet"></select>
+          <select id="filter-status" aria-label="Filter by stock and expiry">
+            <option value="all" data-t="allStatuses">All statuses</option><option value="soon" data-t="soon">Expiring soon</option><option value="expired" data-t="expired">Expired</option><option value="low" data-t="low">Low stock</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table class="table" id="medicine-table">
+          <thead><tr><th scope="col" data-t="medicine">Medicine</th><th scope="col" data-t="cabinet">Cabinet</th><th scope="col" data-t="quantity">Stock</th><th scope="col" data-t="expiry">Expiry</th><th scope="col" data-t="status">Status</th></tr></thead>
+          <tbody id="medicine-rows"></tbody>
+        </table></div>
+        <div id="empty" class="empty" hidden></div>
+        <p id="sample-note" class="sample-note" data-t="sampleNote" hidden>Sample medicines are included so you can try the inventory. Remove them in Settings.</p>
+      </div>
+    </section>
+
+    <section id="settings-panel" aria-labelledby="settings-title" hidden>
+      <div class="section-head"><div><h1 class="page-heading" id="settings-title" data-t="settings">Settings</h1><p class="description" data-t="settingsIntro">Manage reminders, appearance, and your local inventory.</p></div></div>
+      <div class="panel settings">
+        <section class="settings-block"><h3 data-t="preferences">Preferences</h3><div class="setting-fields">
+          <label class="field"><span data-t="reminderWindow">Expiry alert window</span><select id="setting-days"><option value="7" data-t="days7">7 days</option><option value="14" data-t="days14">14 days</option><option value="30" data-t="days30">30 days</option></select></label>
+          <label class="field"><span data-t="theme">Theme</span><select id="setting-theme"><option value="light" data-t="light">Light</option><option value="dark" data-t="dark">Dark</option></select></label>
+          <label class="field"><span data-t="language">Language</span><select id="setting-language"><option value="en">English</option><option value="hi">हिन्दी</option></select></label>
+        </div><p class="muted" data-t="alertsHere">Expiry alerts appear in the dashboard while Cabinet Care is open.</p></section>
+        <section class="settings-block"><h3 data-t="backup">Back up or share a copy</h3><p class="muted" data-t="backupText">A backup can include personal notes and photos. Share it only with people you trust.</p><div class="button-row">
+          <button type="button" class="btn secondary" id="export-json" data-t="exportBackup">Download backup</button>
+          <button type="button" class="btn secondary" id="import-json" data-t="importBackup">Import backup</button>
+          <button type="button" class="btn secondary" id="export-csv" data-t="exportCsv">Export CSV</button>
+          <input type="file" id="backup-file" accept=".json,application/json" hidden>
+        </div></section>
+        <section class="settings-block" id="sample-settings"><h3 data-t="sampleData">Sample inventory</h3><div class="button-row"><button type="button" class="btn secondary danger" id="clear-samples" data-t="removeSamples">Remove sample medicines</button></div></section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="wrap"><span data-t="footer">Stored in this browser · Inventory only</span><a href="portfolio.html" data-t="portfolio">← Portfolio</a></div></footer>
+
+  <dialog id="editor" aria-labelledby="editor-title"><form id="medicine-form">
+    <div class="dialog-head"><h2 id="editor-title">Add medicine</h2><button type="button" class="btn secondary close-btn" data-close aria-label="Close">×</button></div>
+    <div class="dialog-body">
+      <div class="photo-box" id="photo-box">
+        <label class="field" for="photo" data-t="photoLabel">Packaging photo</label>
+        <input id="photo" type="file" accept="image/*" capture="environment">
+        <img id="photo-preview" class="photo-preview" alt="Packaging photo" hidden>
+        <div class="button-row"><button type="button" class="btn secondary" id="scan-photo" data-t="readPhoto" disabled>Read photo</button><button type="button" class="btn secondary" id="remove-photo" data-t="removePhoto" hidden>Remove photo</button></div>
+        <small class="muted" id="photo-status" role="status" data-t="photoHint">Photo reading needs internet to load. Review the suggested fields.</small>
+      </div>
+      <div class="form-grid">
+        <label class="field"><span data-t="name">Name</span><input name="name" required maxlength="100"></label>
+        <label class="field"><span data-t="brand">Brand</span><input name="brand" maxlength="100"></label>
+        <label class="field"><span data-t="quantity">Stock</span><input name="quantity" type="number" required min="0" max="100000" step="1" value="1"></label>
+        <label class="field"><span data-t="unit">Unit</span><input name="unit" maxlength="30" data-placeholder="unitsExample" placeholder="e.g. tablets"></label>
+        <label class="field"><span data-t="expiry">Expiry</span><input name="expiry" type="date" min="1900-01-01" max="9999-12-31" required></label>
+        <label class="field"><span data-t="cabinet">Cabinet</span><input name="cabinet" list="cabinet-options" maxlength="80" required><datalist id="cabinet-options"></datalist></label>
+      </div>
+      <label class="field"><span data-t="notes">Notes</span><textarea name="notes" maxlength="1000"></textarea></label>
+      <p id="form-error" class="error-text" role="alert" hidden></p>
+    </div>
+    <div class="dialog-foot"><button type="button" class="btn secondary" data-close data-t="cancel">Cancel</button><button type="submit" class="btn primary" id="save-medicine" data-t="save">Save medicine</button></div>
+  </form></dialog>
+
+  <dialog id="detail" aria-labelledby="detail-title">
+    <div class="dialog-head"><h2 id="detail-title"></h2><button type="button" class="btn secondary close-btn" data-close aria-label="Close">×</button></div>
+    <div class="dialog-body"><img id="detail-photo" class="photo-preview" alt="Packaging photo" hidden><dl class="detail-grid" id="detail-fields"></dl><p id="detail-notes" class="detail-notes" hidden></p><p id="detail-error" class="error-text" role="alert" hidden></p></div>
+    <div class="dialog-foot"><button type="button" class="btn secondary danger" id="delete-medicine" data-t="delete">Delete</button><button type="button" class="btn primary" id="edit-medicine" data-t="edit">Edit medicine</button></div>
+  </dialog>
+  <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+  <script>
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const editor = $('editor');
+    const detail = $('detail');
+    const form = $('medicine-form');
+    const field = name => form.elements.namedItem(name);
+    const key = 'cabinet-care-inventory-v1';
+    const day = 86400000;
+    const limit = 50;
+    const english = {
+      dashboard:'Overview',inventory:'Inventory',settings:'Settings',add:'Add medicine',eyebrow:'Your household medicine cabinet',headline:'A clearer cabinet.',intro:'See what you have, what’s running low, and what’s nearing expiry.',scanPack:'Scan a package ↗',total:'Medicines',soon:'Expiring soon',low:'Low stock',inventoryTitle:'Medicine inventory',search:'Search medicines…',allCabinets:'All cabinets',allStatuses:'All statuses',expired:'Expired',medicine:'Medicine',cabinet:'Cabinet',quantity:'Stock',expiry:'Expiry',status:'Status',inDate:'In date',name:'Name',brand:'Brand',unit:'Unit',notes:'Notes',unitsExample:'e.g. tablets',cancel:'Cancel',save:'Save medicine',edit:'Edit medicine',delete:'Delete',close:'Close',photoLabel:'Packaging photo',readPhoto:'Read photo',removePhoto:'Remove photo',photoHint:'Photo reading needs internet to load. Review the suggested fields.',photoBusy:'Reading the packaging…',photoDone:'Review the suggested fields. Fill in any details the scan missed.',photoNone:'No usable text found. You can fill in the details manually.',photoFail:'Photo reading failed. Keep the photo and enter the details manually.',photoInvalid:'Could not open that image. Try a supported image file.',settingsIntro:'Manage reminders, appearance, and your local inventory.',preferences:'Preferences',reminderWindow:'Expiry alert window',theme:'Theme',language:'Language',days7:'7 days',days14:'14 days',days30:'30 days',light:'Light',dark:'Dark',alertsHere:'Expiry alerts appear in the dashboard while Cabinet Care is open.',backup:'Back up or share a copy',backupText:'A backup can include personal notes and photos. Share it only with people you trust.',exportBackup:'Download backup',importBackup:'Import backup',exportCsv:'Export CSV',sampleData:'Sample inventory',removeSamples:'Remove sample medicines',sampleNote:'Sample medicines are included so you can try the inventory. Remove them in Settings.',sample:'Sample',footer:'Stored in this browser · Inventory only',portfolio:'← Portfolio',empty:'Your cabinet is empty. Add a medicine to start tracking it.',noMatches:'No medicines match these filters.',saved:'Medicine saved.',removed:'Medicine deleted.',samplesRemoved:'Sample medicines removed.',confirmDelete:'Delete this medicine from this browser?',confirmImport:'Replace your current inventory with this backup?',imported:'Backup imported.',badBackup:'This file is not a valid Cabinet Care backup.',storageFail:'Changes could not be saved. Check available browser storage and try again.',storageReadFail:'The saved inventory could not be loaded in this browser.',limit:'This version can store up to 50 medicines. Remove an entry before adding another.',required:'Enter a medicine name and cabinet.',caption:'{shown} of {total} medicines · Low stock is 3 units or fewer.'
+    };
+    const hindi = {
+      dashboard:'सारांश',inventory:'दवाओं की सूची',settings:'सेटिंग्स',add:'दवा जोड़ें',eyebrow:'घर की दवाइयों की अलमारी',headline:'दवाइयाँ अब व्यवस्थित।',intro:'देखें कौन-सी दवाइयाँ हैं, कौन-सी कम हैं और किनकी तारीख पास है।',scanPack:'पैक स्कैन करें ↗',total:'दवाइयाँ',soon:'जल्द समाप्त',low:'कम स्टॉक',inventoryTitle:'दवाओं की सूची',search:'दवाइयाँ खोजें…',allCabinets:'सभी अलमारियाँ',allStatuses:'सभी स्थितियाँ',expired:'समाप्त',medicine:'दवा',cabinet:'अलमारी',quantity:'मात्रा',expiry:'समाप्ति तारीख',status:'स्थिति',inDate:'तारीख बाकी',name:'नाम',brand:'ब्रांड',unit:'इकाई',notes:'नोट्स',unitsExample:'जैसे गोलियाँ',cancel:'रद्द करें',save:'दवा सहेजें',edit:'दवा बदलें',delete:'हटाएँ',close:'बंद करें',photoLabel:'पैक की तस्वीर',readPhoto:'तस्वीर पढ़ें',removePhoto:'तस्वीर हटाएँ',photoHint:'तस्वीर पढ़ने की सुविधा लोड करने के लिए इंटरनेट चाहिए। सुझाई गई जानकारी जाँचें।',photoBusy:'पैक पढ़ा जा रहा है…',photoDone:'सुझाई गई जानकारी जाँचें और बाकी विवरण भरें।',photoNone:'पढ़ने योग्य टेक्स्ट नहीं मिला। विवरण स्वयं भरें।',photoFail:'तस्वीर पढ़ी नहीं जा सकी। विवरण स्वयं भरें।',photoInvalid:'तस्वीर नहीं खुली। दूसरी फ़ाइल चुनें।',settingsIntro:'अलर्ट, थीम और दवाओं की सूची सँभालें।',preferences:'पसंद',reminderWindow:'समाप्ति से पहले अलर्ट',theme:'थीम',language:'भाषा',days7:'7 दिन',days14:'14 दिन',days30:'30 दिन',light:'हल्की',dark:'गहरी',alertsHere:'Cabinet Care खुला होने पर सारांश में अलर्ट दिखते हैं।',backup:'बैकअप लें या कॉपी साझा करें',backupText:'बैकअप में निजी नोट्स और तस्वीरें हो सकती हैं। इसे केवल भरोसेमंद लोगों से साझा करें।',exportBackup:'बैकअप डाउनलोड करें',importBackup:'बैकअप खोलें',exportCsv:'CSV डाउनलोड करें',sampleData:'नमूना सूची',removeSamples:'नमूना दवाइयाँ हटाएँ',sampleNote:'अभ्यास के लिए नमूना दवाइयाँ दी गई हैं। इन्हें सेटिंग्स में हटा सकते हैं।',sample:'नमूना',footer:'इसी ब्राउज़र में सुरक्षित · केवल सूची प्रबंधन',portfolio:'← पोर्टफ़ोलियो',empty:'अलमारी खाली है। पहली दवा जोड़ें।',noMatches:'इन फ़िल्टर से कोई दवा नहीं मिली।',saved:'दवा सहेजी गई।',removed:'दवा हटाई गई।',samplesRemoved:'नमूना दवाइयाँ हटा दी गईं।',confirmDelete:'इस ब्राउज़र से यह दवा हटाएँ?',confirmImport:'मौजूदा सूची को बैकअप से बदलें?',imported:'बैकअप खोल लिया गया।',badBackup:'यह मान्य Cabinet Care बैकअप नहीं है।',storageFail:'बदलाव सहेजे नहीं जा सके। ब्राउज़र में जगह जाँचें।',storageReadFail:'इस ब्राउज़र में सहेजी गई सूची नहीं खुली।',limit:'इस संस्करण में 50 दवाइयाँ रख सकते हैं। नई दवा जोड़ने के लिए एक दवा हटाएँ।',required:'दवा और अलमारी का नाम भरें।',caption:'{total} में से {shown} दवाइयाँ · 3 या कम इकाइयाँ कम स्टॉक हैं।'
+    };
+    const defaults = {days:14, theme:'light', language:'en'};
+    const sampleNames = [
+      ['Digital thermometer covers','',18,'covers',111,'First aid'],
+      ['Oral rehydration salts','',2,'sachets',9,'Kitchen cabinet'],
+      ['Antacid tablets','',10,'tablets',46,'Kitchen cabinet'],
+      ['Saline nasal spray','',1,'bottle',5,'First aid']
+    ];
+    const localDate = date => new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0,10);
+    const sampleDate = offset => { const date = new Date(); date.setDate(date.getDate() + offset); return localDate(date); };
+    const initial = {settings:{...defaults}, items:sampleNames.map(([name,brand,quantity,unit,offset,cabinet],i) => ({id:`sample-${i}`,name,brand,quantity,unit,expiry:sampleDate(offset),cabinet,notes:'',photo:'',sample:true}))};
+    let state = initial;
+    let storageReadError = false;
+    try {
+      const saved = localStorage.getItem(key);
+      if (saved) state = validateBackup(JSON.parse(saved));
+    } catch { storageReadError = true; }
+    const t = label => (state.settings.language === 'hi' ? hindi : english)[label];
+    let timer;
+    let activeId;
+    let detailId;
+    let photo = '';
+    let photoVersion = 0;
+    let scanning = false;
+    let loadingImage = false;
+    let scanLibrary;
+
+    function validDate(value) {
+      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || value < '1900-01-01') return false;
+      const time = Date.parse(value);
+      return Number.isFinite(time) && new Date(time).toISOString().slice(0,10) === value;
+    }
+
+    function validateBackup(value) {
+      const lengths = {id:100,name:100,brand:100,unit:30,cabinet:80,notes:1000};
+      if (!Array.isArray(value?.items) || value.items.length > limit) throw new Error('Invalid inventory');
+      const ids = new Set();
+      const items = value.items.map(item => {
+        if (!item || Object.entries(lengths).some(([name,size]) => typeof item[name] !== 'string' || item[name].length > size) || !item.id || ids.has(item.id) || !item.name.trim() || !item.cabinet.trim() || !validDate(item.expiry) || !Number.isInteger(item.quantity) || item.quantity < 0 || item.quantity > 100000 || typeof item.photo !== 'string' || item.photo.length > 350000 || (item.photo && !/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(item.photo))) throw new Error('Invalid medicine');
+        ids.add(item.id);
+        return {id:item.id,name:item.name,brand:item.brand,unit:item.unit,cabinet:item.cabinet,notes:item.notes,quantity:item.quantity,expiry:item.expiry,photo:item.photo,sample:item.sample === true};
+      });
+      const choices = value.settings ?? {};
+      const settings = {
+        days:[7,14,30].includes(choices.days) ? choices.days : defaults.days,
+        theme:choices.theme === 'dark' ? 'dark' : 'light',
+        language:choices.language === 'hi' ? 'hi' : 'en'
+      };
+      return {items,settings};
+    }
+
+    function notify(label) {
+      const message = $('message');
+      message.textContent = t(label);
+      message.hidden = false;
+      clearTimeout(timer);
+      timer = setTimeout(() => { message.hidden = true; }, 5200);
+    }
+
+    function inlineError(id,label) {
+      $(id).textContent = label ? t(label) : '';
+      $(id).hidden = !label;
+    }
+
+    function persist(next) {
+      try {
+        localStorage.setItem(key,JSON.stringify(next));
+        state = next;
+        return true;
+      } catch { return false; }
+    }
+
+    function expiryDays(item) {
+      return Math.round((Date.parse(item.expiry) - Date.parse(localDate(new Date()))) / day);
+    }
+
+    function expiryStatus(item) {
+      const days = expiryDays(item);
+      if (days < 0) return 'expired';
+      return days <= state.settings.days ? 'soon' : 'inDate';
+    }
+
+    function formatDate(date) {
+      return new Intl.DateTimeFormat(state.settings.language === 'hi' ? 'hi-IN' : 'en-IN',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(date));
+    }
+
+    function renderLocale() {
+      document.documentElement.lang = state.settings.language;
+      document.documentElement.dataset.theme = state.settings.theme;
+      for (const el of document.querySelectorAll('[data-t]')) el.textContent = t(el.dataset.t);
+      for (const el of document.querySelectorAll('[data-placeholder]')) el.placeholder = t(el.dataset.placeholder);
+      for (const el of document.querySelectorAll('.close-btn')) el.setAttribute('aria-label',t('close'));
+      $('search').setAttribute('aria-label',t('search'));
+      $('filter-cabinet').setAttribute('aria-label',t('cabinet'));
+      $('filter-status').setAttribute('aria-label',t('status'));
+      $('setting-days').value = state.settings.days;
+      $('setting-theme').value = state.settings.theme;
+      $('setting-language').value = state.settings.language;
+    }
+
+    function currentView() {
+      const view = location.hash.slice(1);
+      return ['inventory','settings'].includes(view) ? view : 'dashboard';
+    }
+
+    function renderView() {
+      const view = currentView();
+      $('overview').hidden = view !== 'dashboard';
+      $('inventory-panel').hidden = view === 'settings';
+      $('settings-panel').hidden = view !== 'settings';
+      for (const button of document.querySelectorAll('[data-view]')) {
+        if (button.dataset.view === view) button.setAttribute('aria-current','page');
+        else button.removeAttribute('aria-current');
+      }
+    }
+
+    function itemRow(item) {
+      const row = document.createElement('tr');
+      const info = row.insertCell();
+      const group = document.createElement('div');
+      group.className = 'item-info';
+      if (item.photo) {
+        const image = document.createElement('img');
+        image.className = 'item-image';
+        image.src = item.photo;
+        image.alt = '';
+        group.append(image);
+      } else {
+        const icon = document.createElement('span');
+        icon.className = 'item-icon';
+        icon.setAttribute('aria-hidden','true');
+        icon.textContent = '+';
+        group.append(icon);
+      }
+      const labels = document.createElement('div');
+      const button = document.createElement('button');
+      button.className = 'item-name';
+      button.type = 'button';
+      button.textContent = item.name;
+      button.addEventListener('click',() => openDetail(item));
+      labels.append(button);
+      const secondary = [item.brand,item.sample ? t('sample') : ''].filter(Boolean).join(' · ');
+      if (secondary) {
+        const sub = document.createElement('span');
+        sub.className = 'item-sub';
+        sub.textContent = secondary;
+        labels.append(sub);
+      }
+      group.append(labels);
+      info.append(group);
+      const values = {cabinet:item.cabinet,quantity:[item.quantity,item.unit].filter(value => value !== '').join(' '),expiry:formatDate(item.expiry)};
+      for (const [label,value] of Object.entries(values)) {
+        const fieldCell = row.insertCell();
+        fieldCell.dataset.label = t(label);
+        fieldCell.textContent = value;
+      }
+      const cell = row.insertCell();
+      const expiry = expiryStatus(item);
+      for (const label of [expiry,item.quantity <= 3 ? 'low' : null].filter(Boolean)) {
+        if (label === 'inDate' && item.quantity <= 3) continue;
+        const badge = document.createElement('span');
+        badge.className = `pill ${label === 'low' ? 'soon' : label}`;
+        badge.textContent = t(label);
+        if (cell.firstChild) cell.append(' ');
+        cell.append(badge);
+      }
+      return row;
+    }
+
+    function renderInventory() {
+      const items = state.items;
+      const cabinet = $('filter-cabinet');
+      const selected = cabinet.value;
+      const cabinets = [...new Set(items.map(item => item.cabinet))].sort((a,b) => a.localeCompare(b));
+      cabinet.replaceChildren(new Option(t('allCabinets'),''),...cabinets.map(name => new Option(name,name)));
+      cabinet.value = cabinets.includes(selected) ? selected : '';
+      $('cabinet-options').replaceChildren(...cabinets.map(name => new Option(name,name)));
+      const search = $('search').value.trim().toLocaleLowerCase();
+      const status = $('filter-status').value;
+      const filtered = items.filter(item => {
+        const searchable = [item.name,item.brand,item.cabinet,item.notes].join(' ').toLocaleLowerCase();
+        const statusMatch = status === 'all' || (status === 'low' ? item.quantity <= 3 : expiryStatus(item) === status);
+        return (!cabinet.value || item.cabinet === cabinet.value) && statusMatch && searchable.includes(search);
+      }).sort((a,b) => a.expiry.localeCompare(b.expiry) || a.name.localeCompare(b.name));
+      $('count-total').textContent = items.length;
+      $('count-soon').textContent = items.filter(item => expiryStatus(item) === 'soon').length;
+      $('count-low').textContent = items.filter(item => item.quantity <= 3).length;
+      $('medicine-rows').replaceChildren(...filtered.map(itemRow));
+      $('medicine-table').hidden = !filtered.length;
+      $('empty').hidden = !!filtered.length;
+      $('empty').textContent = t(items.length ? 'noMatches' : 'empty');
+      $('inventory-caption').textContent = t('caption').replace('{shown}',filtered.length).replace('{total}',items.length);
+      const samples = items.some(item => item.sample);
+      $('sample-note').hidden = !samples;
+      $('sample-settings').hidden = !samples;
+    }
+
+    function syncPhoto() {
+      const preview = $('photo-preview');
+      preview.hidden = !photo;
+      if (photo) preview.src = photo;
+      else preview.removeAttribute('src');
+      $('scan-photo').disabled = !photo || scanning || loadingImage;
+      $('save-medicine').disabled = loadingImage;
+      $('remove-photo').hidden = !photo;
+    }
+
+    function openEditor(item,focusPhoto = false) {
+      if (!item && state.items.length >= limit) { notify('limit'); return; }
+      activeId = item?.id;
+      photo = item?.photo ?? '';
+      photoVersion++;
+      scanning = false;
+      loadingImage = false;
+      form.reset();
+      if (item) for (const name of ['name','brand','quantity','unit','expiry','cabinet','notes']) field(name).value = item[name];
+      $('editor-title').textContent = t(item ? 'edit' : 'add');
+      $('photo-status').textContent = t('photoHint');
+      inlineError('form-error');
+      syncPhoto();
+      editor.showModal();
+      if (focusPhoto) $('photo').focus();
+      else field('name').focus();
+    }
+
+    function openDetail(item) {
+      detailId = item.id;
+      $('detail-title').textContent = item.name;
+      const entries = {brand:item.brand,cabinet:item.cabinet,quantity:`${item.quantity} ${item.unit}`.trim(),expiry:formatDate(item.expiry),status:t(expiryStatus(item))};
+      const fields = Object.entries(entries).filter(([,value]) => value).map(([label,value]) => {
+        const group = document.createElement('div');
+        const title = document.createElement('dt');
+        const text = document.createElement('dd');
+        title.textContent = t(label);
+        text.textContent = value;
+        group.append(title,text);
+        return group;
+      });
+      $('detail-fields').replaceChildren(...fields);
+      $('detail-notes').textContent = item.notes;
+      $('detail-notes').hidden = !item.notes;
+      $('detail-photo').hidden = !item.photo;
+      if (item.photo) $('detail-photo').src = item.photo;
+      else $('detail-photo').removeAttribute('src');
+      inlineError('detail-error');
+      detail.showModal();
+    }
+
+    for (const button of document.querySelectorAll('[data-view]')) button.addEventListener('click',() => {
+      if (button.dataset.view === 'dashboard') {
+        $('filter-status').value = 'all';
+        $('filter-cabinet').value = '';
+        $('search').value = '';
+        renderInventory();
+      }
+      location.hash = button.dataset.view;
+    });
+    for (const button of document.querySelectorAll('[data-filter]')) button.addEventListener('click',() => {
+      $('filter-status').value = button.dataset.filter;
+      $('filter-cabinet').value = '';
+      $('search').value = '';
+      location.hash = 'inventory';
+      renderInventory();
+    });
+    window.addEventListener('hashchange',() => { renderView(); window.scrollTo(0,0); });
+    for (const button of document.querySelectorAll('[data-add]')) button.addEventListener('click',() => openEditor());
+    $('open-scan').addEventListener('click',() => openEditor(null,true));
+    for (const button of document.querySelectorAll('[data-close]')) button.addEventListener('click',() => button.closest('dialog').close());
+    $('search').addEventListener('input',renderInventory);
+    for (const id of ['filter-cabinet','filter-status']) $(id).addEventListener('change',renderInventory);
+    window.addEventListener('focus',renderInventory);
+
+    form.addEventListener('submit',event => {
+      event.preventDefault();
+      if (loadingImage) return;
+      const item = Object.fromEntries(['name','brand','unit','cabinet','expiry','notes'].map(name => [name,field(name).value.trim()]));
+      if (!item.name || !item.cabinet || !validDate(item.expiry)) { inlineError('form-error','required'); return; }
+      item.quantity = field('quantity').valueAsNumber;
+      item.id = activeId || (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+      item.photo = photo;
+      const items = activeId ? state.items.map(existing => existing.id === activeId ? item : existing) : [...state.items,item];
+      if (!persist({...state,items})) { inlineError('form-error','storageFail'); return; }
+      editor.close();
+      renderInventory();
+      notify('saved');
+    });
+
+    $('edit-medicine').addEventListener('click',() => {
+      const item = state.items.find(item => item.id === detailId);
+      detail.close();
+      if (item) openEditor(item);
+    });
+    $('delete-medicine').addEventListener('click',() => {
+      if (!confirm(t('confirmDelete'))) return;
+      if (!persist({...state,items:state.items.filter(item => item.id !== detailId)})) { inlineError('detail-error','storageFail'); return; }
+      detail.close();
+      renderInventory();
+      notify('removed');
+    });
+
+    for (const setting of ['days','theme','language']) $('setting-'+setting).addEventListener('change',event => {
+      const settings = {...state.settings,[setting]:setting === 'days' ? Number(event.target.value) : event.target.value};
+      if (!persist({...state,settings})) notify('storageFail');
+      renderLocale();
+      renderInventory();
+    });
+    $('clear-samples').addEventListener('click',() => {
+      if (!persist({...state,items:state.items.filter(item => !item.sample)})) { notify('storageFail'); return; }
+      renderInventory();
+      notify('samplesRemoved');
+    });
+
+    function download(name,content,mime) {
+      const url = URL.createObjectURL(new Blob([content],{type:mime}));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = name;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url),1500);
+    }
+    $('export-json').addEventListener('click',() => download('cabinet-care-backup.json',JSON.stringify({...state,version:1},null,2),'application/json'));
+    $('export-csv').addEventListener('click',() => {
+      const keys = ['name','brand','quantity','unit','expiry','cabinet','notes'];
+      const quote = value => {
+        let text = String(value);
+        if (/^[\s\uFEFF]*[=+@-]/.test(text) || /^[\t\r\n]/.test(text)) text = "'" + text;
+        return '"' + text.replaceAll('"','""') + '"';
+      };
+      const rows = [keys.join(','),...state.items.map(item => keys.map(field => quote(item[field])).join(','))];
+      download('cabinet-care-inventory.csv','\uFEFF'+rows.join('\r\n'),'text/csv;charset=utf-8');
+    });
+    $('import-json').addEventListener('click',() => $('backup-file').click());
+    $('backup-file').addEventListener('change',async event => {
+      const file = event.target.files[0];
+      event.target.value = '';
+      if (!file) return;
+      let next;
+      try {
+        if (file.size > 19000000) throw new Error('Backup too large');
+        const value = JSON.parse(await file.text());
+        if (value.version !== 1) throw new Error('Unsupported backup version');
+        next = validateBackup(value);
+      } catch { notify('badBackup'); return; }
+      if (!confirm(t('confirmImport'))) return;
+      if (!persist(next)) { notify('storageFail'); return; }
+      renderLocale();
+      renderInventory();
+      notify('imported');
+    });
+
+    async function imageData(file) {
+      if (!file.type.startsWith('image/') || file.size > 25000000) throw new Error('Unsupported photo');
+      const image = await createImageBitmap(file);
+      try {
+        const ratio = Math.min(1,1000 / Math.max(image.width,image.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1,Math.round(image.width * ratio));
+        canvas.height = Math.max(1,Math.round(image.height * ratio));
+        const context = canvas.getContext('2d',{alpha:false});
+        context.fillStyle = '#fff';
+        context.fillRect(0,0,canvas.width,canvas.height);
+        context.drawImage(image,0,0,canvas.width,canvas.height);
+        const data = canvas.toDataURL('image/jpeg',.73);
+        if (data.length <= 350000) return data;
+        return canvas.toDataURL('image/jpeg',.42);
+      } finally { image.close(); }
+    }
+
+    $('photo').addEventListener('change',async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const version = ++photoVersion;
+      scanning = false;
+      loadingImage = true;
+      syncPhoto();
+      try {
+        const result = await imageData(file);
+        if (version !== photoVersion || !editor.open) return;
+        if (result.length > 350000) throw new Error('Photo is too large');
+        photo = result;
+        $('photo-status').textContent = t('photoHint');
+      } catch {
+        if (version === photoVersion && editor.open) {
+          event.target.value = '';
+          $('photo-status').textContent = t('photoInvalid');
+        }
+      } finally {
+        if (version === photoVersion && editor.open) { loadingImage = false; syncPhoto(); }
+      }
+    });
+
+    $('remove-photo').addEventListener('click',() => {
+      photoVersion++;
+      photo = '';
+      scanning = false;
+      loadingImage = false;
+      $('photo').value = '';
+      $('photo-status').textContent = t('photoHint');
+      syncPhoto();
+    });
+
+    function loadOcr() {
+      if (scanLibrary) return scanLibrary;
+      scanLibrary = new Promise((resolve,reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';
+        script.onload = () => resolve(globalThis.Tesseract);
+        script.onerror = () => { script.remove(); reject(new Error('OCR library unavailable')); };
+        document.head.append(script);
+      }).catch(error => { scanLibrary = undefined; throw error; });
+      return scanLibrary;
+    }
+
+    function readExpiry(text) {
+      const match = text.match(/(?:\bEXP(?:IRY|IRES|IRATION|\.?\s*DATE)?\b|USE\s*BY|BEST\s*BEFORE)[\s.:=-]*(\d{4}[-/. ]+\d{1,2}[-/. ]+\d{1,2}|\d{1,2}[-/. ]+\d{1,2}[-/. ]+(?:\d{4}|\d{2})|\d{1,2}[-/. ]+(?:\d{4}|\d{2}))\b/i);
+      if (!match) return '';
+      const parts = match[1].trim().split(/[-/.\s]+/);
+      let year;
+      let month;
+      let date;
+      if (parts.length === 2) {
+        [month,year] = parts;
+        if (year.length === 2) year = '20'+year;
+        date = new Date(Date.UTC(Number(year),Number(month),0)).getUTCDate();
+      } else {
+        [date,month,year] = parts;
+        if (date.length === 4) [year,month,date] = parts;
+        if (year.length === 2) year = '20'+year;
+      }
+      const result = `${year}-${String(month).padStart(2,'0')}-${String(date).padStart(2,'0')}`;
+      return validDate(result) ? result : '';
+    }
+
+    $('scan-photo').addEventListener('click',async () => {
+      if (!photo || scanning || loadingImage) return;
+      const current = photo;
+      const version = photoVersion;
+      scanning = true;
+      syncPhoto();
+      $('photo-status').textContent = t('photoBusy');
+      let worker;
+      try {
+        const api = await loadOcr();
+        worker = await api.createWorker('eng');
+        if (!editor.open || version !== photoVersion) return;
+        const {data:{text}} = await worker.recognize(current);
+        if (!editor.open || version !== photoVersion) return;
+        const name = text.split('\n').map(line => line.trim()).find(line => /[a-z]{3}/i.test(line) && !/\b(mfg|exp|batch|mrp|dose|keep|store|ip|usp)\b/i.test(line));
+        const expiry = readExpiry(text);
+        if (name && !field('name').value.trim()) field('name').value = name.slice(0,100);
+        if (expiry && !field('expiry').value) field('expiry').value = expiry;
+        $('photo-status').textContent = t(name || expiry ? 'photoDone' : 'photoNone');
+      } catch {
+        if (editor.open && version === photoVersion) $('photo-status').textContent = t('photoFail');
+      } finally {
+        if (editor.open && version === photoVersion) { scanning = false; syncPhoto(); }
+        if (worker) await worker.terminate().catch(() => {});
+      }
+    });
+
+    const scene = $('scene');
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    scene.addEventListener('pointermove',event => {
+      if (event.pointerType === 'touch' || reducedMotion.matches) return;
+      const box = scene.getBoundingClientRect();
+      scene.style.setProperty('--rx',`${12 - ((event.clientY-box.top)/box.height-.5)*22}deg`);
+      scene.style.setProperty('--ry',`${-23 + ((event.clientX-box.left)/box.width-.5)*40}deg`);
+    });
+    scene.addEventListener('pointerleave',() => { scene.style.removeProperty('--rx'); scene.style.removeProperty('--ry'); });
+
+    renderLocale();
+    renderView();
+    renderInventory();
+    if (storageReadError) notify('storageReadFail');
+  </script>
+</body>
+</html>
